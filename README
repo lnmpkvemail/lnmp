@@ -1,0 +1,12 @@
+LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat、Debian VPS(VDS)或独立主机安装LNMP(Nginx、MySQL、PHP、phpMyAdmin)生产环境的Shell程序。
+
+
+LNMP一键安装包 0.8已经在DiaHosting、VPSYOU、PhotonVPS、瑞豪开源VPS、BuyVM、Linode等几家美国VPS的CentOS、Debian的32位和64位系统上测试通过。
+
+安装方法：http://lnmp.org/install.html
+
+技术支持：
+
+LNMP官网：http://www.lnmp.org/
+
+技术支持论坛：http://bbs.vpser.net/forum-25-1.html
