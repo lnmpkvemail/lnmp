@@ -1,0 +1,98 @@
+#!/bin/bash
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+
+# Check if user is root
+if [ $(id -u) != "0" ]; then
+    printf "Error: You must be root to run this script!\n"
+    exit 1
+fi
+
+printf "=========================================================================\n"
+printf "Manager for LNMP V1.1  ,  Written by Licess \n"
+printf "=========================================================================\n"
+printf "LNMP is a tool to auto-compile & install Nginx+MySQL+PHP on Linux \n"
+printf "This script is a tool to Manage status of lnmp \n"
+printf "For more information please visit http://www.lnmp.org \n"
+printf "\n"
+printf "Usage: /root/lnmp {start|stop|reload|restart|kill|status}\n"
+printf "=========================================================================\n"
+
+NGINXPIDFILE=/usr/local/nginx/logs/nginx.pid
+PHPFPMPIDFILE=/usr/local/php/logs/php-fpm.pid
+
+function_start()
+{
+    printf "Starting LNMP...\n"
+    /etc/init.d/nginx start
+
+    /etc/init.d/php-fpm start
+
+    /etc/init.d/mysql start
+}
+
+function_stop()
+{
+    printf "Stoping LNMP...\n"
+    /etc/init.d/nginx stop
+
+    /etc/init.d/php-fpm stop
+
+    /etc/init.d/mysql stop
+}
+
+function_reload()
+{
+    printf "Reload LNMP...\n"
+    /etc/init.d/nginx reload
+
+    /etc/init.d/php-fpm reload
+
+    /etc/init.d/mysql reload
+}
+
+function_kill()
+{
+    killall nginx
+    killall php-cgi
+    killall php-fpm
+    killall mysqld
+}
+
+function_status()
+{
+    /etc/init.d/nginx status
+
+    if [ -f $PHPFPMPIDFILE ]; then
+      printf "php-fpm is runing!\n"
+    else
+	printf "php-fpm is stop!\n"
+    fi
+
+    /etc/init.d/mysql status
+}
+
+case "$1" in
+	start)
+		function_start
+		;;
+	stop)
+		function_stop
+		;;
+	restart)
+		function_stop
+		function_start
+		;;
+	reload)
+		function_reload
+		;;
+	kill)
+		function_kill
+		;;
+	status)
+		function_status
+		;;
+	*)
+		printf "Usage: /root/lnmp {start|stop|reload|restart|kill|status}\n"
+esac
+exit

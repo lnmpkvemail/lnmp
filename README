@@ -1,12 +1,110 @@
-LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat、Debian VPS(VDS)或独立主机安装LNMP(Nginx、MySQL、PHP、phpMyAdmin)生产环境的Shell程序。
+					LNMP一键安装包 - Readme
+
+LNMP一键安装包是什么?
+—————————————————————
 
 
-LNMP一键安装包 0.8已经在DiaHosting、VPSYOU、PhotonVPS、瑞豪开源VPS、BuyVM、Linode等几家美国VPS的CentOS、Debian的32位和64位系统上测试通过。
+LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat、Debian/Ubuntu VPS服务器或独立主机安装LNMP(Nginx、MySQL/MariaDB、PHP、phpMyAdmin)生产环境的Shell程序。
 
-安装方法：http://lnmp.org/install.html
+LNMP官网：http://lnmp.org
 
-技术支持：
+作者:licess <www@lnmp.org>
+--------------------------------------------------------------------------------
 
-LNMP官网：http://www.lnmp.org/
 
-技术支持论坛：http://bbs.vpser.net/forum-25-1.html
+
+安装
+————
+详细安装教程参考：http://lnmp.org/install.html
+
+安装前建议使用screen，执行：screen -S lnmp 后
+CentOS系统下执行：wget -c http://soft.vpser.net/lnmp/lnmp1.1-full.tar.gz && tar zxf lnmp1.1-full.tar.gz && cd lnmp1.1-full && ./centos.sh
+Debian系统下执行：wget -c http://soft.vpser.net/lnmp/lnmp1.1-full.tar.gz && tar zxf lnmp1.1-full.tar.gz && cd lnmp1.1-full && ./debian.sh
+Ubuntu系统下执行：wget -c http://soft.vpser.net/lnmp/lnmp1.1-full.tar.gz && tar zxf lnmp1.1-full.tar.gz && cd lnmp1.1-full && ./ubuntu.sh
+
+如断线可使用screen -r lnmp 恢复。
+
+LNMP升级到LNMPA，需在lnmp1.1-full目录下执行：
+./apache.sh
+
+常用组件
+————————
+以下需在lnmp1.1-full目录下操作
+
+FTP服务器：
+可选1，执行：./pureftpd.sh 安装，http://yourIP/ftp/ 进行管理。
+可选2，执行：./proftpd.sh 安装，/root/proftpd_vhost.sh 添加FTP账号。
+
+升级脚本：
+可选1，执行：./upgrade_nginx.sh 可升级至任意Nginx版本。
+可选2，执行：./upgrade_php.sh   可升级至大部分PHP版本。
+可选3，执行：./upgrade_mysql.sh 可升级至任意MySQL版本，MySQL升级风险较大，虽然会自动备份数据，依然建议自行再备份一下。
+可选4，执行：./upgrade_mysql2mariadb.sh 可从MySQL升级至Mariadb，虽然会自动备份数据，依然建议自行再备份一下。
+可选5，执行：./upgrade_mariadb.sh 可升级已安装的Mariadb，虽然会自动备份数据，依然建议自行再备份一下。
+可选6，执行：./upgrade_lnmpa_php.sh 可升级LNMPA的PHP至大部分版本。
+
+缓存加速：
+可选1，执行: ./xcache.sh 安装，安装时需选择版本和设置密码， http://yourIP/xcache/ 进行管理，用户名 admin，密码为安装xcache时设置的。
+可选2，执行：./redis.sh 安装。
+可选3，执行：./memcached.sh 安装。
+可选4，执行：./opcache.sh 安装，http://yourIP/ocp.php 进行管理。
+可选5，执行：./eaccelerator.sh 安装。
+
+图像处理：
+可选1，执行：./imageMagick.sh 安装，imageMagick路径：/usr/local/imagemagick/bin/。
+
+解密：
+可选1，执行：./ionCube.sh 安装。
+
+其他：
+可选1，执行：./php5.2.17.sh 可安装一个不与LNMP冲突的PHP 5.2.17单独存在，使用时需要将nginx虚拟主机配置文件里的 php-cgi.sock 修改为 php-cgi52.sock。
+可选2，执行：./reset_mysql_root_password.sh 可重置MySQL/MariaDB的root密码。
+可选3，执行：./check502.sh  可检测php-fpm是否挂掉,502报错时重启，配合crontab使用。
+可选4，执行：./cut_nginx_logs.sh 日志切割脚本。
+可选5，执行：./remove_disable_function.sh 运行此脚本可删掉禁用函数。
+可选6，如需卸载LNMP或LNMPA可执行：./uninstall.sh 按提示选择安装。
+
+状态管理
+————————
+
+LNMP状态管理：/root/lnmp {start|stop|reload|restart|kill|status}
+LNMPA状态管理：/root/lnmpa {start|stop|reload|restart|kill|status}
+Nginx状态管理：/etc/init.d/nginx {start|stop|reload|restart}
+MySQL状态管理：/etc/init.d/mysql {start|stop|restart|reload|force-reload|status}
+MariaDB状态管理：/etc/init.d/mariadb {start|stop|restart|reload|force-reload|status}
+PHP-FPM状态管理：/etc/init.d/php-fpm {start|stop|quit|restart|reload|logrotate}
+PureFTPd状态管理：/etc/init.d/pureftpd {start|stop|restart|kill|status}
+Apache状态管理：/etc/init.d/httpd {start|stop|restart|graceful|graceful-stop|configtest|status}
+
+添加虚拟主机：/root/vhost.sh
+phpinfo：http://yourIP/phpinfo.php
+PHPMyAdmin：http://yourIP/phpmyadmin/
+PHP探针：http://yourIP/p.php
+PureFtp用户管理：http://yourIP/ftp/
+Xcache管理界面：http://yourIP/xcache/
+Zend Opcache管理界面：http://yourIP/ocp.php
+
+LNMP相关目录文件
+————————————————
+目录位置
+Nginx：/usr/local/nginx/
+MySQL：/usr/local/mysql/
+MariaDB：/usr/local/mariadb/
+PHP：/usr/local/php/
+PHPMyAdmin：/home/wwwroot/default/phpmyadmin/
+默认虚拟主机网站目录：/home/wwwroot/default/
+Nginx日志目录：/home/wwwlogs/
+
+配置文件：
+Nginx主配置文件：/usr/local/nginx/conf/nginx.conf
+MySQL/MariaDB配置文件：/etc/my.cnf
+PHP配置文件：/usr/local/php/etc/php.ini
+PureFtpd配置文件：/usr/local/pureftpd/pure-ftpd.conf
+PureFtpd MySQL配置文件：/usr/local/pureftpd/pureftpd-mysql.conf
+Apache配置文件：/usr/local/apache/conf/httpd.conf
+
+
+技术支持
+————————
+
+技术支持论坛：http://bbs.vpser.net/forum-25-1.html 
