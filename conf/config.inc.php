@@ -149,4 +149,5 @@ $cfg['SaveDir'] = 'save';
  * You can find more configuration options in the documentation
  * in the doc/ folder or at <http://docs.phpmyadmin.net/>.
  */
+$cfg['VersionCheck'] = false;
 ?>

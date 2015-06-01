@@ -1,170 +1,165 @@
 #!/bin/bash
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
 
 # Check if user is root
 if [ $(id -u) != "0" ]; then
-    echo "Error: You must be root to run this script, use sudo sh $0"
+    echo "Error: You must be root to run this script, please use root to install lnmp"
     exit 1
 fi
 
-clear
-echo "========================================================================="
-echo "Uninstall LNMP or LNMPA,  Written by Licess"
-echo "========================================================================="
-echo "A tool to auto-compile & install Nginx+MySQL+PHP on Linux "
-echo ""
-echo "For more information please visit http:/www.lnmp.org/"
-echo ""
-echo 'Please backup your mysql data and configure files first!!!!!'
-echo ""
-echo "========================================================================="
+cur_dir=$(pwd)
+Stack=$1
+
+LNMP_Ver='1.2'
+
+. include/main.sh
+
 shopt -s extglob
-if [ -s /usr/local/mariadb/bin/mysql ]; then
-	ismysql="no"
-else
-	ismysql="yes"
-fi
 
-echo ""
-	uninstall=""
-	echo "INPUT 1 to uninstall LNMP"
-	echo "INPUT 2 to uninstall LNMPA"
-	read -p "(Please input 1 or 2):" uninstall
+Check_DB
+Get_OS_Bit
+Get_Dist_Name
 
-	case "$uninstall" in
-	1)
-	echo "You will uninstall LNMP"
-	echo -e "\033[31mPlease backup your configure files and mysql data!!!!!!\033[0m"
-	echo 'The following directory or files will be remove!'
-	cat << EOF
-/usr/local/php
+clear
+echo "+------------------------------------------------------------------------+"
+echo "|          LNMP V${LNMP_Ver} for ${DISTRO} Linux Server, Written by Licess          |"
+echo "+------------------------------------------------------------------------+"
+echo "|        A tool to auto-compile & install Nginx+MySQL+PHP on Linux       |"
+echo "+------------------------------------------------------------------------+"
+echo "|          For more information please visit http://www.lnmp.org         |"
+echo "+------------------------------------------------------------------------+"
+
+Uninstall_LNMP()
+{
+    echo "Stoping LNMP..."
+    lnmp stop
+
+    Remove_StartUp nginx
+    Remove_StartUp ${DB_Name}
+    Remove_StartUp php-fpm
+    echo "Deleting LNMP files..."
+    rm -rf /usr/local/nginx
+    rm -rf /usr/local/${DB_Name}/!(var|data)
+    rm -rf /usr/local/php
+    rm -rf /usr/local/zend
+
+    rm -f /etc/my.cnf
+    rm -f /etc/init.d/nginx
+    rm -f /etc/init.d/${DB_Name}
+    rm -f /etc/init.d/php-fpm
+    rm -f /bin/lnmp
+    echo "LNMP Uninstall completed."
+}
+
+Uninstall_LNMPA()
+{
+    echo "Stoping LNMPA..."
+    lnmp stop
+
+    Remove_StartUp nginx
+    Remove_StartUp ${DB_Name}
+    Remove_StartUp httpd
+    echo "Deleting LNMPA files..."
+    rm -rf /usr/local/nginx
+    rm -rf /usr/local/${DB_Name}/!(var|data)
+    rm -rf /usr/local/php
+    rm -rf /usr/local/apache
+    rm -rf /usr/local/zend
+
+    rm -f /etc/my.cnf
+    rm -f /etc/init.d/nginx
+    rm -f /etc/init.d/${DB_Name}
+    rm -f /etc/init.d/httpd
+    rm -f /bin/lnmp
+    echo "LNMPA Uninstall completed."
+}
+
+Uninstall_LAMP()
+{
+    echo "Stoping LAMP..."
+    lnmp stop
+
+    Remove_StartUp httpd
+    Remove_StartUp ${DB_Name}
+    echo "Deleting LAMP files..."
+    rm -rf /usr/local/apache
+    rm -rf /usr/local/php
+    rm -rf /usr/local/${DB_Name}/!(var|data)
+    rm -rf /usr/local/zend
+
+    rm -f /etc/my.cnf
+    rm -f /etc/init.d/httpd
+    rm -f /etc/init.d/${DB_Name}
+    rm -f /bin/lnmp
+    echo "LAMP Uninstall completed."
+}
+
+    Check_Stack
+    echo "Current Stack: ${Get_Stack}"
+
+    action=""
+    echo "Enter 1 to uninstall LNMP"
+    echo "Enter 2 to uninstall LNMPA"
+    echo "Enter 2 to uninstall LAMP"
+    read -p "(Please input 1, 2 or 3):" action
+
+    case "$action" in
+    1|[lL][nN][nM][pP])
+        echo "You will uninstall LNMP"
+        Echo_Red "Please backup your configure files and mysql data!!!!!!"
+        Echo_Red "The following directory or files will be remove!"
+        cat << EOF
 /usr/local/nginx
-/usr/local/mysql
+${MySQL_Dir}
+/usr/local/php
+/etc/init.d/nginx
+/etc/init.d/${DB_Name}
+/etc/init.d/php-fpm
 /usr/local/zend
 /etc/my.cnf
-/root/vhost.sh
-/root/lnmp
-/root/run.sh
-/etc/init.d/php-fpm
-/etc/init.d/nginx
-/etc/init.d/mysql
+/bin/lnmp
 EOF
-	;;
-	2)
-	echo "You will uninstall LNMPA"
-	echo -e "\033[31mPlease backup your configure files and mysql data!!!!!!\033[0m"
-	echo 'The following directory or files will be remove!'
-	cat << EOF
-/usr/local/php
+        sleep 3
+        Press_Start
+        Uninstall_LNMP
+    ;;
+    2|[lL][nN][nM][pP][aA])
+        echo "You will uninstall LNMPA"
+        Echo_Red "Please backup your configure files and mysql data!!!!!!"
+        Echo_Red "The following directory or files will be remove!"
+        cat << EOF
 /usr/local/nginx
-/usr/local/mysql
-/usr/local/zend
+${MySQL_Dir}
+/usr/local/php
 /usr/local/apache
-/etc/my.cnf
-/root/vhost.sh
-/root/lnmp
-/root/run.sh
-/etc/init.d/php-fpm
 /etc/init.d/nginx
-/etc/init.d/mysql
+/etc/init.d/${DB_Name}
 /etc/init.d/httpd
+/usr/local/zend
+/etc/my.cnf
+/bin/lnmp
 EOF
-	esac
-
-	echo -e "\033[31mPlease backup your configure files and mysql data!!!!!!\033[0m"
-
-	get_char()
-	{
-	SAVEDSTTY=`stty -g`
-	stty -echo
-	stty cbreak
-	dd if=/dev/tty bs=1 count=1 2> /dev/null
-	stty -raw
-	stty echo
-	stty $SAVEDSTTY
-	}
-	echo ""
-	echo "Press any key to start uninstall or Press Ctrl+c to cancel"
-	char=`get_char`
-
-function uninstall_lnmp
-{
-	/etc/init.d/nginx stop
-	if [ "$ismysql" = "no" ]; then
-		/etc/init.d/mariadb stop
-	else
-		/etc/init.d/mysql stop
-	fi
-	/etc/init.d/php-fpm stop
-
-	rm -rf /usr/local/php
-	rm -rf /usr/local/nginx
-	if [ "$ismysql" = "no" ]; then
-		rm -rf /usr/local/mariadb/!(var|data)
-	else
-		rm -rf /usr/local/mysql/!(var|data)
-	fi
-	rm -rf /usr/local/zend
-
-	rm -f /etc/my.cnf
-	rm -f /root/vhost.sh
-	rm -f /root/lnmp
-	rm -f /root/run.sh
-	rm -f /etc/init.d/php-fpm
-	rm -f /etc/init.d/nginx
-	if [ "$ismysql" = "no" ]; then
-		rm -f /etc/init.d/mariadb
-	else
-		rm -f /etc/init.d/mysql
-	fi
-	echo "LNMP Uninstall completed."
-}
-
-function uninstall_lnmpa
-{
-	/etc/init.d/nginx stop
-	if [ "$ismysql" = "no" ]; then
-		/etc/init.d/mariadb stop
-	else
-		/etc/init.d/mysql stop
-	fi
-	/etc/init.d/php-fpm stop
-
-	rm -rf /usr/local/php
-	rm -rf /usr/local/nginx
-	if [ "$ismysql" = "no" ]; then
-		rm -rf /usr/local/mariadb/!(var|data)
-	else
-		rm -rf /usr/local/mysql/!(var|data)
-	fi
-	rm -rf /usr/local/zend
-	rm -rf /usr/local/apache
-
-	rm -f /etc/my.cnf
-	rm -f /root/vhost.sh
-	rm -f /root/lnmp
-	rm -f /root/run.sh
-	rm -f /etc/init.d/php-fpm
-	rm -f /etc/init.d/nginx
-	if [ "$ismysql" = "no" ]; then
-		rm -f /etc/init.d/mariadb
-	else
-		rm -f /etc/init.d/mysql
-	fi
-	rm -f /etc/init.d/httpd
-	echo "LNMPA Uninstall completed."
-}
-
-if [ "$uninstall" = "1" ]; then
-	uninstall_lnmp
-else
-	uninstall_lnmpa
-fi
-
-echo "========================================================================="
-echo "Uninstall LNMP or LNMPA,  Written by Licess"
-echo "========================================================================="
-echo "A tool to auto-compile & install Nginx+MySQL+PHP on Linux "
-echo ""
-echo "For more information please visit http://www.lnmp.org/"
-echo ""
-echo "========================================================================="
+        sleep 3
+        Press_Start
+        Uninstall_LNMPA
+    ;;
+    3|[lL][aA][nM][pP])
+        echo "You will uninstall LAMP"
+        Echo_Red "Please backup your configure files and mysql data!!!!!!"
+        Echo_Red "The following directory or files will be remove!"
+        cat << EOF
+/usr/local/apache
+${MySQL_Dir}
+/etc/init.d/httpd
+/etc/init.d/${DB_Name}
+/usr/local/php
+/usr/local/zend
+/etc/my.cnf
+/bin/lnmp
+EOF
+        sleep 3
+        Press_Start
+        Uninstall_LAMP
+    ;;
+    esac

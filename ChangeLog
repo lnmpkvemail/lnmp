@@ -1,5 +1,26 @@
 更新记录
 
+2015年6月1日发布LNMP 1.2
+
+完全重写优化安装脚本、升级脚本及组件安装等大部分脚本；
+状态管理、虚拟主机管理、FTP管理及数据库管理全部采用lnmp命令替换，去掉/root/vhost.sh和/root/lnmp脚本；
+Nginx、MySQL/MariaDB、PHP的升级脚本整合为upgrade.sh;
+缓存、加速、imageMagick、ionCube等的安装卸载采用addons.sh进行；
+增加SSH防护工具DenyHosts、Failban安装脚本及DenyHosts被封IP删除脚本；
+增加新的备份脚本backup.sh；
+支持的Linux发行版：CentOS 5-7、RHEL 6-7、Fedora 20-21、Aliyun、Debian 6-8、Raspbian、Ubuntu 10.10-15.04；
+支持ARM平台，Raspberry Pi已测试；
+MySQL安装时可选5.1.73、5.5.42、5.6.23，MariaDB可选5.5.42、10.0.17；
+PHP安装时可选5.2.17、5.3.29、5.4.41、5.5.25、5.6.9；
+安装时增加内存优化jemalloc或gperftools；
+Apache安装时可选2.2.29或2.4.12；
+Apache日志统一到/home/wwwlogs/下；
+更新Nginx至1.8.0；
+更新Zend Guard Loader至支持PHP 5.6；
+Nginx配置文件进行了调整，启用php和pathinfo采用include方式，增加ssl范例配置；
+
+
+
 2014年6月1日发布LNMP 1.1
 
 调整优化脚本安装脚本；
