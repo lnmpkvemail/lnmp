@@ -158,7 +158,6 @@ EOF
     /usr/local/mariadb/bin/mysql -u root -p${mysql_root_password} -h localhost < /tmp/mariadb_sec_script
 
     rm -f /tmp/mariadb_sec_script
-    mv /usr/local/mariadb /usr/local/mariadb$(date +"%Y%m%d")
 
     echo "import backup databases..."
     /usr/local/mariadb/bin/mysql -u root -p${mysql_root_password} < /root/mariadb_all_backup$(date +"%Y%m%d").sql
