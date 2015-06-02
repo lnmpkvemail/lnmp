@@ -222,13 +222,21 @@ Add_VHost()
     chown -R www:www ${vhostdir}
 
     cat >/usr/local/apache/conf/vhost/${domain}.conf<<eof
-<VirtualHost *:88>
+<VirtualHost *:80>
 ServerAdmin webmaster@example.com
 php_admin_value open_basedir "${vhostdir}:/tmp/:/var/tmp/:/proc/"
 DocumentRoot "${vhostdir}"
 ServerName ${domain}
 ErrorLog "/home/wwwlogs/${al_name}-error_log"
 CustomLog "/home/wwwlogs/${al_name}-access_log" common
+<Directory "${vhostdir}">
+    SetOutputFilter DEFLATE
+    Options FollowSymLinks
+    AllowOverride All
+    Order allow,deny
+    Allow from all
+    DirectoryIndex index.html index.php
+</Directory>
 </VirtualHost>
 eof
 
