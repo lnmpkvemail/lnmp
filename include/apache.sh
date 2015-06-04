@@ -80,6 +80,8 @@ Install_Apache_24()
     \cp ${cur_dir}/conf/mod_remoteip.conf /usr/local/apache/conf/extra/mod_remoteip.conf
     mkdir /usr/local/apache/conf/vhost
 
+    sed -i 's/NameVirtualHost .*//g' /usr/local/apache/conf/extra/httpd-vhosts.conf
+
     \cp ${cur_dir}/init.d/init.d.httpd /etc/init.d/httpd
     chmod +x /etc/init.d/httpd
 }
