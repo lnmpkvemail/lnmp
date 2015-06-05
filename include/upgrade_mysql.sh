@@ -26,7 +26,7 @@ Backup_MySQL()
     lnmp stop
     mv /etc/init.d/mysql /etc/init.d/mysql.bak.${Upgrade_Date}
     mv /etc/my.cnf /etc/my.conf.bak.${Upgrade_Date}
-    mv /usr/local/mysql /usr/local/oldmysql${Upgrade_Date}
+    cp -a /usr/local/mysql /usr/local/oldmysql${Upgrade_Date}
 }
 
 Upgrade_MySQL51()
@@ -239,7 +239,7 @@ StartAll()
     fi
 
     echo "Repair databases..."
-    /usr/local/mysql/bin/mysql_upgrade -u root -p$mysql_root_password
+    /usr/local/mysql/bin/mysql_upgrade -u root -p${mysql_root_password}
 
     ln -sf /usr/local/mysql/bin/mysql /usr/bin/mysql
     ln -sf /usr/local/mysql/bin/mysqldump /usr/bin/mysqldump
@@ -248,11 +248,11 @@ StartAll()
 
     lnmp start
     if [[ -s /usr/local/mysql/bin/mysql && -s /usr/local/mysql/bin/mysqld_safe && -s /etc/my.cnf ]]; then
-            Echo_Green "======== upgrade MySQL completed ======"
-        else
-            Echo_Red "======== upgrade MySQL failed ======"
-            Echo_Red "upgrade MySQL log: /root/upgrade_mysql.log"
-            echo "You upload upgrade_mysql.log to LNMP Forum for help."
+        Echo_Green "======== upgrade MySQL completed ======"
+    else
+        Echo_Red "======== upgrade MySQL failed ======"
+        Echo_Red "upgrade MySQL log: /root/upgrade_mysql.log"
+        echo "You upload upgrade_mysql.log to LNMP Forum for help."
     fi
 }
 

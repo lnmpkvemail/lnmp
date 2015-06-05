@@ -27,7 +27,7 @@ Backup_MariaDB()
 
     mv /etc/init.d/mariadb /etc/init.d/mariadb.bak.${Upgrade_Date}
     mv /etc/my.cnf /etc/my.conf.mariadb.bak.${Upgrade_Date}
-    mv /usr/local/mariadb /usr/local/oldmariadb${Upgrade_Date}
+    cp -a /usr/local/mariadb /usr/local/oldmariadb${Upgrade_Date}
 }
 
 Upgrade_MariaDB()
@@ -178,10 +178,10 @@ EOF
 
     lnmp start
     if [[ -s /usr/local/mariadb/bin/mysql && -s /usr/local/mariadb/bin/mysqld_safe && -s /etc/my.cnf ]]; then
-            Echo_Green "======== upgrade MariaDB completed ======"
-        else
-            Echo_Red "======== upgrade MariaDB failed ======"
-            Echo_Red "upgrade MariaDB log: /root/upgrade_mariadb.log"
-            echo "You upload upgrade_mariadb.log to LNMP Forum for help."
+        Echo_Green "======== upgrade MariaDB completed ======"
+    else
+        Echo_Red "======== upgrade MariaDB failed ======"
+        Echo_Red "upgrade MariaDB log: /root/upgrade_mariadb.log"
+        echo "You upload upgrade_mariadb.log to LNMP Forum for help."
     fi
 }

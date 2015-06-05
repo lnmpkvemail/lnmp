@@ -12,7 +12,7 @@ Verify_MySQL_Password()
     fi
 }
 
-Backup_MySQL()
+Backup_MySQL2()
 {
     echo "Starting backup all databases..."
     echo "If the database is large, the backup time will be longer."
@@ -25,14 +25,10 @@ Backup_MySQL()
     fi
     lnmp stop
     echo "Remove autostart..."
-    if [ -s /etc/debian_version ]; then
-    update-rc.d -f mysql remove
-    elif [ -s /etc/redhat-release ]; then
-    chkconfig mysql off
-    fi
+    Remove_StartUp mysql
     mv /etc/init.d/mysql /etc/init.d/mysql2mariadb.bak.${Upgrade_Date}
     mv /etc/my.cnf /etc/my.conf.mysql2mariadbbak.${Upgrade_Date}
-    mv /usr/local/mysql /usr/local/mysql2mariadb${Upgrade_Date}
+    cp -a /usr/local/mysql /usr/local/mysql2mariadb${Upgrade_Date}
 }
 
 Upgrade_MySQL2MariaDB()
@@ -106,7 +102,7 @@ Upgrade_MySQL2MariaDB()
     fi
     echo "============================check files=================================="
 
-    Backup_MySQL
+    Backup_MySQL2
     
     echo "Starting upgrade MySQL to MariaDB..."
     Tar_Cd mariadb-${mariadb_version}.tar.gz mariadb-${mariadb_version}
@@ -123,10 +119,10 @@ Upgrade_MySQL2MariaDB()
     sed '/skip-external-locking/i\datadir = /usr/local/mariadb/var' -i /etc/my.cnf
     sed '/skip-external-locking/i\user = mariadb' -i /etc/my.cnf
     if [ $installinnodb = "y" ]; then
-    sed -i 's:#innodb:innodb:g' /etc/my.cnf
-    sed -i 's:/usr/local/mariadb/data:/usr/local/mariadb/var:g' /etc/my.cnf
+        sed -i 's:#innodb:innodb:g' /etc/my.cnf
+        sed -i 's:/usr/local/mariadb/data:/usr/local/mariadb/var:g' /etc/my.cnf
     else
-    sed '/skip-external-locking/i\default-storage-engine=MyISAM\nloose-skip-innodb' -i /etc/my.cnf
+        sed '/skip-external-locking/i\default-storage-engine=MyISAM\nloose-skip-innodb' -i /etc/my.cnf
     fi
 
     echo -e "\nexpire_logs_days = 10" >> /etc/my.cnf
@@ -177,11 +173,7 @@ EOF
     ln -sf /usr/local/mariadb/bin/mysqld_safe /usr/bin/mysqld_safe
 
     echo "Add to autostart..."
-    if [ -s /etc/debian_version ]; then
-    update-rc.d -f mariadb defaults
-    elif [ -s /etc/redhat-release ]; then
-    chkconfig --level 345 mariadb on
-    fi
+    StartUp mariadb
     echo "Stopping MariaDB..."
     /etc/init.d/mariadb stop
 
@@ -189,10 +181,10 @@ EOF
 
     lnmp start
     if [[ -s /usr/local/mariadb/bin/mysql && -s /usr/local/mariadb/bin/mysqld_safe && -s /etc/my.cnf ]]; then
-            Echo_Green "======== upgrade MySQL to MariaDB completed ======"
-        else
-            Echo_Red "======== upgrade MySQL to MariaDB failed ======"
-            Echo_Red "upgrade MariaDB log: /root/upgrade_mysql2mariadb.log"
-            echo "You upload upgrade_mysql2mariadb.log to LNMP Forum for help."
+        Echo_Green "======== upgrade MySQL to MariaDB completed ======"
+    else
+        Echo_Red "======== upgrade MySQL to MariaDB failed ======"
+        Echo_Red "upgrade MariaDB log: /root/upgrade_mysql2mariadb.log"
+        echo "You upload upgrade_mysql2mariadb.log to LNMP Forum for help."
     fi
 }
