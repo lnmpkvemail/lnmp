@@ -3,20 +3,20 @@
 Add_LNMP_Startup()
 {
     echo "Add Startup and Starting LNMP..."
+    \cp ${cur_dir}/conf/lnmp /bin/lnmp
+    chmod +x /bin/lnmp
     StartUp nginx
     /etc/init.d/nginx start
     if [[ "${DBSelect}" = "4" || "${DBSelect}" = "5" ]]; then
         StartUp mariadb
         /etc/init.d/mariadb start
-        sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#' ${cur_dir}/conf/lnmp
+        sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#' /bin/lnmp
     else
         StartUp mysql
         /etc/init.d/mysql start
     fi
     StartUp php-fpm
     /etc/init.d/php-fpm start
-    \cp ${cur_dir}/conf/lnmp /bin/lnmp
-    chmod +x /bin/lnmp
     if [ "${PHPSelect}" = "1" ]; then
         sed -i 's#/usr/local/php/var/run/php-fpm.pid#/usr/local/php/logs/php-fpm.pid#' /bin/lnmp
     fi
@@ -25,37 +25,37 @@ Add_LNMP_Startup()
 Add_LNMPA_Startup()
 {
     echo "Add Startup and Starting LNMPA..."
+    \cp ${cur_dir}/conf/lnmpa /bin/lnmp
+    chmod +x /bin/lnmp
     StartUp nginx
     /etc/init.d/nginx start
     if [[ "${DBSelect}" = "4" || "${DBSelect}" = "5" ]]; then
         StartUp mariadb
         /etc/init.d/mariadb start
-        sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#' ${cur_dir}/conf/lnmpa
+        sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#' /bin/lnmp
     else
         StartUp mysql
         /etc/init.d/mysql start
     fi
     StartUp httpd
     /etc/init.d/httpd start
-    \cp ${cur_dir}/conf/lnmpa /bin/lnmp
-    chmod +x /bin/lnmp
 }
 
 Add_LAMP_Startup()
 {
     echo "Add Startup and Starting LAMP..."
+    \cp ${cur_dir}/conf/lamp /bin/lnmp
+    chmod +x /bin/lnmp
     StartUp httpd
     /etc/init.d/httpd start
     if [[ "${DBSelect}" = "4" || "${DBSelect}" = "5" ]]; then
         StartUp mariadb
         /etc/init.d/mariadb start
-        sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#' ${cur_dir}/conf/lamp
+        sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#' /bin/lnmp
     else
         StartUp mysql
         /etc/init.d/mysql start
     fi
-    \cp $cur_dir/conf/lamp /bin/lnmp
-    chmod +x /bin/lnmp
 }
 
 Check_Nginx_Files()
