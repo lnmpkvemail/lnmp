@@ -200,6 +200,34 @@ binlog_format=mixed
 # but will not function as a master if omitted
 server-id   = 1
 
+#loose-innodb-trx=0 
+#loose-innodb-locks=0 
+#loose-innodb-lock-waits=0 
+#loose-innodb-cmp=0 
+#loose-innodb-cmp-per-index=0
+#loose-innodb-cmp-per-index-reset=0
+#loose-innodb-cmp-reset=0 
+#loose-innodb-cmpmem=0 
+#loose-innodb-cmpmem-reset=0 
+#loose-innodb-buffer-page=0 
+#loose-innodb-buffer-page-lru=0 
+#loose-innodb-buffer-pool-stats=0 
+#loose-innodb-metrics=0 
+#loose-innodb-ft-default-stopword=0 
+#loose-innodb-ft-inserted=0 
+#loose-innodb-ft-deleted=0 
+#loose-innodb-ft-being-deleted=0 
+#loose-innodb-ft-config=0 
+#loose-innodb-ft-index-cache=0 
+#loose-innodb-ft-index-table=0 
+#loose-innodb-sys-tables=0 
+#loose-innodb-sys-tablestats=0 
+#loose-innodb-sys-indexes=0 
+#loose-innodb-sys-columns=0 
+#loose-innodb-sys-fields=0 
+#loose-innodb-sys-foreign=0 
+#loose-innodb-sys-foreign-cols=0
+
 # Uncomment the following if you are using InnoDB tables
 #innodb_data_home_dir = /usr/local/mysql/data
 #innodb_data_file_path = ibdata1:10M:autoextend
@@ -238,7 +266,8 @@ EOF
         sed -i 's:#innodb:innodb:g' /etc/my.cnf
         sed -i 's:/usr/local/mysql/data:/usr/local/mysql/var:g' /etc/my.cnf
     else
-        sed '/skip-external-locking/i\innodb=OFF\nignore-builtin-innodb\nskip-innodb\ndefault-storage-engine=MyISAM\ndefault-tmp-storage-engine=MyISAM' -i /etc/my.cnf
+        sed -i '/skip-external-locking/i\innodb=OFF\nignore-builtin-innodb\nskip-innodb\ndefault-storage-engine=MyISAM\ndefault-tmp-storage-engine=MyISAM' /etc/my.cnf
+        sed -i 's/#loose-innodb/loose-innodb/g' /etc/my.cnf
     fi
 
     /usr/local/mysql/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=/usr/local/mysql/var --user=mysql
@@ -256,8 +285,4 @@ EOF
     ln -sf /usr/local/mysql/include/mysql /usr/include/mysql
 
     MySQL_Sec_Setting
-
-    if [ "${InstallInnodb}" = "n" ]; then
-        /usr/local/mysql/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=/usr/local/mysql/var --user=mysql
-    fi
 }
