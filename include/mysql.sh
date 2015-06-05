@@ -18,7 +18,7 @@ MySQL_ARM_Patch()
 MySQL_Sec_Setting()
 {
     if [ -d "/proc/vz" ];then
-    ulimit -s unlimited
+        ulimit -s unlimited
     fi
     /etc/init.d/mysql start
 
@@ -56,9 +56,9 @@ Install_MySQL_51()
     rm -f /etc/my.cnf
     Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}
     if [ "${InstallInnodb}" = "y" ]; then
-    ./configure --prefix=/usr/local/mysql --with-extra-charsets=complex --enable-thread-safe-client --enable-assembler --with-mysqld-ldflags=-all-static --with-charset=utf8 --enable-thread-safe-client --with-big-tables --with-readline --with-ssl --with-embedded-server --enable-local-infile --with-plugins=innobase ${MySQL51MAOpt}
+        ./configure --prefix=/usr/local/mysql --with-extra-charsets=complex --enable-thread-safe-client --enable-assembler --with-mysqld-ldflags=-all-static --with-charset=utf8 --enable-thread-safe-client --with-big-tables --with-readline --with-ssl --with-embedded-server --enable-local-infile --with-plugins=innobase ${MySQL51MAOpt}
     else
-    ./configure --prefix=/usr/local/mysql --with-extra-charsets=complex --enable-thread-safe-client --enable-assembler --with-mysqld-ldflags=-all-static --with-charset=utf8 --enable-thread-safe-client --with-big-tables --with-readline --with-ssl --with-embedded-server --enable-local-infile ${MySQL51MAOpt}
+        ./configure --prefix=/usr/local/mysql --with-extra-charsets=complex --enable-thread-safe-client --enable-assembler --with-mysqld-ldflags=-all-static --with-charset=utf8 --enable-thread-safe-client --with-big-tables --with-readline --with-ssl --with-embedded-server --enable-local-infile ${MySQL51MAOpt}
     fi
     sed -i '/set -ex;/,/done/d' Makefile
     make && make install
@@ -235,10 +235,10 @@ EOF
 
     sed '/skip-external-locking/i\datadir = /usr/local/mysql/var' -i /etc/my.cnf
     if [ "${InstallInnodb}" = "y" ]; then
-    sed -i 's:#innodb:innodb:g' /etc/my.cnf
-    sed -i 's:/usr/local/mysql/data:/usr/local/mysql/var:g' /etc/my.cnf
+        sed -i 's:#innodb:innodb:g' /etc/my.cnf
+        sed -i 's:/usr/local/mysql/data:/usr/local/mysql/var:g' /etc/my.cnf
     else
-    sed '/skip-external-locking/i\default-storage-engine=MyISAM\nloose-skip-innodb' -i /etc/my.cnf
+        sed '/skip-external-locking/i\innodb=OFF\nignore-builtin-innodb\nskip-innodb\ndefault-storage-engine=MyISAM\ndefault-tmp-storage-engine=MyISAM' -i /etc/my.cnf
     fi
 
     /usr/local/mysql/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=/usr/local/mysql/var --user=mysql
@@ -256,4 +256,8 @@ EOF
     ln -sf /usr/local/mysql/include/mysql /usr/include/mysql
 
     MySQL_Sec_Setting
+
+    if [ "${InstallInnodb}" = "n" ]; then
+        /usr/local/mysql/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=/usr/local/mysql/var --user=mysql
+    fi
 }
