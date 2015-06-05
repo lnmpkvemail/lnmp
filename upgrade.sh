@@ -56,7 +56,7 @@ fi
         Upgrade_Nginx 2>&1 | tee /root/upgrade_nginx${Upgrade_Date}.log
     ;;
     2|[mM][yY][sS][qQ][lL])
-        Upgrade_MySQL 2>&1 | tee /root/upgradel_mysq${Upgrade_Date}.log
+        Upgrade_MySQL 2>&1 | tee /root/upgrade_mysq${Upgrade_Date}.log
     ;;
     3|[mM][aA][rR][iI][aA][dD][bB])
         Upgrade_MariaDB 2>&1 | tee /root/upgrade_mariadb${Upgrade_Date}.log
