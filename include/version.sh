@@ -46,6 +46,9 @@ if [ "${PHPSelect}" = "1" ]; then
     PhpMyAdmin_Ver='phpMyAdmin-4.0.10.10-all-languages'
 else
     PhpMyAdmin_Ver='phpMyAdmin-4.4.7-all-languages'
+    if [ "${DBSelect}" = "1" ]; then
+        PhpMyAdmin_Ver='phpMyAdmin-4.0.10.10-all-languages'
+    fi
 fi
 APR_Ver='apr-1.5.1'
 APR_Util_Ver='apr-util-1.5.4'
