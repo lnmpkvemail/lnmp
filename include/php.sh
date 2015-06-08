@@ -561,9 +561,23 @@ eof
 
     #add iptables firewall rules
     if [ -s /sbin/iptables ]; then
-    /sbin/iptables -I INPUT -p tcp --dport 80 -j ACCEPT
-    /sbin/iptables -I INPUT -p tcp --dport 3306 -j DROP
-    /sbin/iptables-save
+        /sbin/iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+        /sbin/iptables -I INPUT -p tcp --dport 3306 -j DROP
+        if [ "$PM" = "yum" ]; then
+            service iptables save
+        elif [ "$PM" = "apt" ]; then
+            iptables-save > /etc/iptables.rules
+            cat >/etc/network/if-post-down.d/iptables<<EOF
+#!/bin/bash
+iptables-save > /etc/iptables.rules
+EOF
+            chmod +x /etc/network/if-post-down.d/iptables
+            cat >/etc/network/if-pre-up.d/iptables<<EOF
+#!/bin/bash
+iptables-restore < /etc/iptables.rules
+EOF
+            chmod +x /etc/network/if-pre-up.d/iptables
+        fi
     fi
 }
 

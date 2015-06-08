@@ -123,10 +123,11 @@ Install_Pureftpd()
     StartUp pureftpd
 
     if [ -s /sbin/iptables ]; then
-    /sbin/iptables -I INPUT -p tcp --dport 21 -j ACCEPT
-    /sbin/iptables -I INPUT -p tcp --dport 20 -j ACCEPT
-    /sbin/iptables -I INPUT -p tcp --dport 20000:30000 -j ACCEPT
-    /sbin/iptables-save
+        if [ "$PM" = "yum" ]; then
+            service iptables save
+        elif [ "$PM" = "apt" ]; then
+            iptables-save > /etc/iptables.rules
+        fi
     fi
 
     if [[ -s /usr/local/pureftpd/sbin/pure-config.pl && -s /usr/local/pureftpd/pure-ftpd.conf && -s /etc/init.d/pureftpd && ${Is_SQL_Import} -eq 0 ]]; then
