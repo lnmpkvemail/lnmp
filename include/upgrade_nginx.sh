@@ -6,6 +6,14 @@ Upgrade_Nginx()
     Nginx_Modules_Arguments=""
     Cur_Nginx_Version=`/usr/local/nginx/sbin/nginx -v 2>&1 | cut -c22-`
 
+    if [ -s /usr/local/include/jemalloc/jemalloc.h ] && /usr/local/nginx/sbin/nginx -V 2>&1|grep -Eqi 'ljemalloc'; then
+        NginxMAOpt="--with-ld-opt='-ljemalloc'"
+    elif [ -s /usr/local/include/gperftools/tcmalloc.h ] && grep -Eqi "google_perftools_profiles" /usr/local/nginx/conf/nginx.conf; then
+        NginxMAOpt='--with-google_perftools_module'
+    else
+        NginxMAOpt=""
+    fi
+
     Nginx_Version=""
     echo "Current Nginx Version:${Cur_Nginx_Version}"
     echo "You can get version number from http://nginx.org/en/download.html"
@@ -39,7 +47,7 @@ Upgrade_Nginx()
     echo "============================check files=================================="
 
     Tar_Cd nginx-${Nginx_Version}.tar.gz nginx-${Nginx_Version}
-    ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_spdy_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${Nginx_Modules_Arguments}
+    ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_spdy_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${NginxMAOpt} ${Nginx_Modules_Arguments}
     make
 
     mv /usr/local/nginx/sbin/nginx /usr/local/nginx/sbin/nginx.${Upgrade_Date}
