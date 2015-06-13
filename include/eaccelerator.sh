@@ -95,6 +95,7 @@ Install_eAccelerator()
     echo "====== Installing eAccelerator ======"
     Press_Install
 
+    sed -ni '1,/;eaccelerator/p;/;ionCube/,$ p' /usr/local/php/etc/php.ini
     Get_PHP_Ext_Dir
     zend_ext="${zend_ext_dir}eaccelerator.so"
     if [ -s "${zend_ext}" ]; then
@@ -118,7 +119,6 @@ Install_eAccelerator()
 
     mkdir -p /usr/local/eaccelerator_cache
     rm -rf /usr/local/eaccelerator_cache/*
-    sed -ni '1,/;eaccelerator/p;/;ionCube/,$ p' /usr/local/php/etc/php.ini
 
     cat >ea.ini<<EOF
 [eaccelerator]

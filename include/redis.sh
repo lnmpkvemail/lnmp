@@ -24,6 +24,7 @@ Install_Redis()
     echo "====== Installing Redis ======"
     Press_Install
     
+    sed -i '/redis.so/d' /usr/local/php/etc/php.ini
     Get_PHP_Ext_Dir
     zend_ext="${zend_ext_dir}redis.so"
     if [ -s "${zend_ext}" ]; then
@@ -55,7 +56,6 @@ Install_Redis()
     if [ -s ${PHPRedis_Ver} ]; then
         rm -rf ${PHPRedis_Ver}
     fi
-    sed -i '/redis.so/d' /usr/local/php/etc/php.ini
 
     Download_Files http://pecl.php.net/get/${PHPRedis_Ver}.tgz ${PHPRedis_Ver}.tgz
     Tar_Cd ${PHPRedis_Ver}.tgz ${PHPRedis_Ver}
