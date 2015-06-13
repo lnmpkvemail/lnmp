@@ -561,6 +561,7 @@ eof
 
     #add iptables firewall rules
     if [ -s /sbin/iptables ]; then
+        /sbin/iptables -I INPUT -s 127.0.0.1 -d 127.0.0.1 -j ACCEPT
         /sbin/iptables -I INPUT -p tcp --dport 80 -j ACCEPT
         /sbin/iptables -I INPUT -p tcp --dport 3306 -j DROP
         if [ "$PM" = "yum" ]; then
