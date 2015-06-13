@@ -19,7 +19,7 @@ Install_PHPMemcached()
     Get_Dist_Name
     if [ "$PM" = "yum" ]; then
         yum install cyrus-sasl-devel -y
-        Get_CentOS_Version
+        CentOS_Version
         if [ "${CentOS_Version}" = "5" ]; then
             yum install gcc44 gcc44-c++ libstdc++44-devel -y
             export CC="gcc44"
@@ -65,6 +65,8 @@ Install_Memcached()
     echo "====== Installing memcached ======"
     Press_Install
 
+    sed -i '/memcache.so/d' /usr/local/php/etc/php.ini
+    sed -i '/memcached.so/d' /usr/local/php/etc/php.ini
     Get_PHP_Ext_Dir
     zend_ext=${zend_ext_dir}${PHP_ZTS}
     if [ -s "${zend_ext}" ]; then
