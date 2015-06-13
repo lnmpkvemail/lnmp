@@ -55,6 +55,7 @@ Install_Nginx()
 open_basedir=/home/wwwroot/default:/tmp/:/proc/
 EOF
     chmod 644 /home/wwwroot/default/.user.ini
+    chattr +i /home/wwwroot/default/.user.ini
     fi
 
     \cp init.d/init.d.nginx /etc/init.d/nginx
