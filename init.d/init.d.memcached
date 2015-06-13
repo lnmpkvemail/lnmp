@@ -17,6 +17,7 @@
 # Description:        memcached - Memory caching daemon
 ### END INIT INFO
 
+IP=127.0.0.1
 PORT=11211
 USER=root
 MAXCONN=1024
@@ -28,7 +29,7 @@ prog="memcached"
 
 start () {
     echo -n $"Starting $prog: "
-    memcached -d -p $PORT -u $USER -m $CACHESIZE -c $MAXCONN -P /var/run/memcached.pid $OPTIONS
+    memcached -d -l $IP -p $PORT -u $USER -m $CACHESIZE -c $MAXCONN -P /var/run/memcached.pid $OPTIONS
     if [ "$?" != 0 ] ; then
         echo " failed"
         exit 1
