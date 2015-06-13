@@ -292,6 +292,7 @@ EOF
 open_basedir=${vhostdir}:/tmp/:/proc/
 EOF
 chmod 644 ${vhostdir}/.user.ini
+chattr +i ${vhostdir}/.user.ini
 
     /etc/init.d/php-fpm restart
 
