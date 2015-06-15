@@ -69,7 +69,7 @@ done
 
 echo "Delete old backup files..."
 rm -f ${Backup_Home}${OldWWWBackup}
-rm -f ${Backup_Home}$}OldDBBackup}
+rm -f ${Backup_Home}${OldDBBackup}
 
 if [ ${Enable_FTP} = 0 ]; then
     echo "Uploading backup files to ftp..."
