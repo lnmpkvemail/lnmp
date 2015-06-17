@@ -58,8 +58,18 @@ Install_Apache_24()
     fi
     Tar_Cd ${Apache_Version}.tar.gz ${Apache_Version}
     cd srclib
-    Download_Files ${Download_Mirror}/web/apache/${APR_Ver}.tar.gz ${APR_Ver}.tar.gz
-    Download_Files ${Download_Mirror}/web/apache/${APR_Util_Ver}.tar.gz ${APR_Util_Ver}.tar.gz
+    if [ -s "${cur_dir}/src/${APR_Ver}.tar.gz" ]; then
+        echo "${APR_Ver}.tar.gz [found]"
+        cp ${cur_dir}/src/${APR_Ver}.tar.gz .
+    else
+        Download_Files ${Download_Mirror}/web/apache/${APR_Ver}.tar.gz ${APR_Ver}.tar.gz
+    fi
+    if [ -s "${cur_dir}/src/${APR_Util_Ver}.tar.gz" ]; then
+        echo "${APR_Util_Ver}.tar.gz [found]"
+        cp ${cur_dir}/src/${APR_Util_Ver}.tar.gz .
+    else
+        Download_Files ${Download_Mirror}/web/apache/${APR_Util_Ver}.tar.gz ${APR_Util_Ver}.tar.gz
+    fi
     tar zxf ${APR_Ver}.tar.gz
     tar zxf ${APR_Util_Ver}.tar.gz
     mv ${APR_Ver} apr
