@@ -119,8 +119,8 @@ extension = \"${PHP_ZTS}\"" /usr/local/php/etc/php.ini
     if [ -s /sbin/iptables ]; then
         /sbin/iptables -I INPUT -p tcp -s 127.0.0.1 --dport 11211 -j ACCEPT
         /sbin/iptables -I INPUT -p udp -s 127.0.0.1 --dport 11211 -j ACCEPT
-        /sbin/iptables -I INPUT -p tcp --dport 11211 -j DROP
-        /sbin/iptables -I INPUT -p udp --dport 11211 -j DROP
+        /sbin/iptables -A INPUT -p tcp --dport 11211 -j DROP
+        /sbin/iptables -A INPUT -p udp --dport 11211 -j DROP
     fi
 
     echo "Starting Memcached..."
