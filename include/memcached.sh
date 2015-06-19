@@ -19,8 +19,8 @@ Install_PHPMemcached()
     Get_Dist_Name
     if [ "$PM" = "yum" ]; then
         yum install cyrus-sasl-devel -y
-        CentOS_Version
-        if [ "${CentOS_Version}" = "5" ]; then
+        Get_Dist_Version
+        if echo "${CentOS_Version}" | grep -Eqi '^5.'; then
             yum install gcc44 gcc44-c++ libstdc++44-devel -y
             export CC="gcc44"
             export CXX="g++44"
