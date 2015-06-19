@@ -121,6 +121,11 @@ extension = \"${PHP_ZTS}\"" /usr/local/php/etc/php.ini
         /sbin/iptables -I INPUT -p udp -s 127.0.0.1 --dport 11211 -j ACCEPT
         /sbin/iptables -A INPUT -p tcp --dport 11211 -j DROP
         /sbin/iptables -A INPUT -p udp --dport 11211 -j DROP
+        if [ "$PM" = "yum" ]; then
+            service iptables save
+        elif [ "$PM" = "apt" ]; then
+            iptables-save > /etc/iptables.rules
+        fi
     fi
 
     echo "Starting Memcached..."
@@ -147,5 +152,16 @@ Uninstall_Memcached()
     rm -rf /usr/local/libmemcached
     rm -rf /usr/local/memcached
     rm -rf /etc/init.d/memcached
+    if [ -s /sbin/iptables ]; then
+        /sbin/iptables -D INPUT -p tcp -s 127.0.0.1 --dport 11211 -j ACCEPT
+        /sbin/iptables -D INPUT -p udp -s 127.0.0.1 --dport 11211 -j ACCEPT
+        /sbin/iptables -D INPUT -p tcp --dport 11211 -j DROP
+        /sbin/iptables -D INPUT -p udp --dport 11211 -j DROP
+        if [ "$PM" = "yum" ]; then
+            service iptables save
+        elif [ "$PM" = "apt" ]; then
+            iptables-save > /etc/iptables.rules
+        fi
+    fi
     echo "Uninstall Memcached completed."
 }

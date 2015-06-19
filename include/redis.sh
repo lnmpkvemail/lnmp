@@ -51,7 +51,18 @@ Install_Redis()
     mkdir -p /usr/local/redis/etc/
     \cp redis.conf  /usr/local/redis/etc/
     sed -i 's/daemonize no/daemonize yes/g' /usr/local/redis/etc/redis.conf
+    sed -i 's/# bind 127.0.0.1/bind 127.0.0.1/g' /usr/local/redis/etc/redis.conf
     cd ../
+
+    if [ -s /sbin/iptables ]; then
+        /sbin/iptables -I INPUT -p tcp -s 127.0.0.1 --dport 6379 -j ACCEPT
+        /sbin/iptables -A INPUT -p tcp --dport 6379 -j DROP
+        if [ "$PM" = "yum" ]; then
+            service iptables save
+        elif [ "$PM" = "apt" ]; then
+            iptables-save > /etc/iptables.rules
+        fi
+    fi
 
     if [ -s ${PHPRedis_Ver} ]; then
         rm -rf ${PHPRedis_Ver}
@@ -88,5 +99,14 @@ Uninstall_Redis()
     echo "Delete Redis files..."
     rm -rf /usr/local/redis
     rm -rf /etc/init.d/redis
+    if [ -s /sbin/iptables ]; then
+        /sbin/iptables -D INPUT -p tcp -s 127.0.0.1 --dport 6379 -j ACCEPT
+        /sbin/iptables -D INPUT -p tcp --dport 6379 -j DROP
+        if [ "$PM" = "yum" ]; then
+            service iptables save
+        elif [ "$PM" = "apt" ]; then
+            iptables-save > /etc/iptables.rules
+        fi
+    fi
     echo "Uninstall Redis completed."
 }
