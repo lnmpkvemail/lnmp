@@ -31,9 +31,6 @@ Install_Redis()
         rm -f "${zend_ext}"
     fi
 
-    sed -i '/the dl()/i\
-    extension = "redis.so"' /usr/local/php/etc/php.ini
-
     cd ${cur_dir}/src
     if [ "${ver}" = "1" ]; then
         Download_Files http://download.redis.io/releases/${Redis_Stable_Ver}.tar.gz ${Redis_Stable_Ver}.tar.gz
