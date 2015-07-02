@@ -19,7 +19,7 @@
 
 # Pure-FTPd Settings
 PURE_PERL="/usr/local/pureftpd/sbin/pure-config.pl"
-PURE_CONF="/usr/local/pureftpd/pure-ftpd.conf"
+PURE_CONF="/usr/local/pureftpd/etc/pure-ftpd.conf"
 PURE_PID="/var/run/pure-ftpd.pid"
 RETVAL=0
 prog="Pure-FTPd"
