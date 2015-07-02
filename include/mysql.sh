@@ -33,7 +33,7 @@ MySQL_Sec_Setting()
     use mysql;
     update user set password=password('${MysqlRootPWD}') where user='root';
     delete from user where not (user='root') ;
-    delete from user where user='root' and password=''; 
+    delete from user where user='root' and password='';
     drop database test;
     DROP USER ''@'%';
     flush privileges;
@@ -44,7 +44,7 @@ EOF
     rm -f /tmp/mysql_sec_script
 
     echo -e "\nexpire_logs_days = 10" >> /etc/my.cnf
-    sed -i '/skip-external-locking/a\max_connections = 1000' /etc/my.cnf
+    sed -i '/skip-external-locking/a\max_connections = 500' /etc/my.cnf
 
     /etc/init.d/mysql restart
     /etc/init.d/mysql stop
@@ -185,7 +185,7 @@ myisam_sort_buffer_size = 8M
 # All interaction with mysqld must be made via Unix sockets or named pipes.
 # Note that using this option without enabling named pipes on Windows
 # (via the "enable-named-pipe" option) will render mysqld useless!
-# 
+#
 #skip-networking
 
 # Replication Master Server (default)
@@ -200,32 +200,32 @@ binlog_format=mixed
 # but will not function as a master if omitted
 server-id   = 1
 
-#loose-innodb-trx=0 
-#loose-innodb-locks=0 
-#loose-innodb-lock-waits=0 
-#loose-innodb-cmp=0 
+#loose-innodb-trx=0
+#loose-innodb-locks=0
+#loose-innodb-lock-waits=0
+#loose-innodb-cmp=0
 #loose-innodb-cmp-per-index=0
 #loose-innodb-cmp-per-index-reset=0
-#loose-innodb-cmp-reset=0 
-#loose-innodb-cmpmem=0 
-#loose-innodb-cmpmem-reset=0 
-#loose-innodb-buffer-page=0 
-#loose-innodb-buffer-page-lru=0 
-#loose-innodb-buffer-pool-stats=0 
-#loose-innodb-metrics=0 
-#loose-innodb-ft-default-stopword=0 
-#loose-innodb-ft-inserted=0 
-#loose-innodb-ft-deleted=0 
-#loose-innodb-ft-being-deleted=0 
-#loose-innodb-ft-config=0 
-#loose-innodb-ft-index-cache=0 
-#loose-innodb-ft-index-table=0 
-#loose-innodb-sys-tables=0 
-#loose-innodb-sys-tablestats=0 
-#loose-innodb-sys-indexes=0 
-#loose-innodb-sys-columns=0 
-#loose-innodb-sys-fields=0 
-#loose-innodb-sys-foreign=0 
+#loose-innodb-cmp-reset=0
+#loose-innodb-cmpmem=0
+#loose-innodb-cmpmem-reset=0
+#loose-innodb-buffer-page=0
+#loose-innodb-buffer-page-lru=0
+#loose-innodb-buffer-pool-stats=0
+#loose-innodb-metrics=0
+#loose-innodb-ft-default-stopword=0
+#loose-innodb-ft-inserted=0
+#loose-innodb-ft-deleted=0
+#loose-innodb-ft-being-deleted=0
+#loose-innodb-ft-config=0
+#loose-innodb-ft-index-cache=0
+#loose-innodb-ft-index-table=0
+#loose-innodb-sys-tables=0
+#loose-innodb-sys-tablestats=0
+#loose-innodb-sys-indexes=0
+#loose-innodb-sys-columns=0
+#loose-innodb-sys-fields=0
+#loose-innodb-sys-foreign=0
 #loose-innodb-sys-foreign-cols=0
 
 # Uncomment the following if you are using InnoDB tables

@@ -102,7 +102,7 @@ Upgrade_MariaDB()
     echo "============================check files=================================="
 
     Backup_MariaDB
-    
+
     echo "Starting upgrade MariaDB..."
     Tar_Cd mariadb-${mariadb_version}.tar.gz mariadb-${mariadb_version}
     cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_READLINE=1 -DWITH_SSL=bundled -DWITH_ZLIB=system -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1
@@ -125,7 +125,7 @@ Upgrade_MariaDB()
     fi
 
     echo -e "\nexpire_logs_days = 10" >> /etc/my.cnf
-    sed -i '/skip-external-locking/a\max_connections = 1000' /etc/my.cnf
+    sed -i '/skip-external-locking/a\max_connections = 500' /etc/my.cnf
 
 cat > /etc/ld.so.conf.d/mariadb.conf<<EOF
 /usr/local/mariadb/lib
@@ -149,7 +149,7 @@ cat > /tmp/mariadb_sec_script<<EOF
 use mysql;
 update user set password=password('${mysql_root_password}') where user='root';
 delete from user where not (user='root') ;
-delete from user where user='root' and password=''; 
+delete from user where user='root' and password='';
 drop database test;
 DROP USER ''@'%';
 flush privileges;

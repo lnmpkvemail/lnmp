@@ -24,7 +24,7 @@ EOF
     use mysql;
     update user set password=password('${MysqlRootPWD}') where user='root';
     delete from user where not (user='root') ;
-    delete from user where user='root' and password=''; 
+    delete from user where user='root' and password='';
     drop database test;
     DROP USER ''@'%';
     flush privileges;
@@ -35,7 +35,7 @@ EOF
     rm -f /tmp/mariadb_sec_script
 
     echo -e "\nexpire_logs_days = 10" >> /etc/my.cnf
-    sed -i '/skip-external-locking/a\max_connections = 1000' /etc/my.cnf
+    sed -i '/skip-external-locking/a\max_connections = 500' /etc/my.cnf
 
     /etc/init.d/mariadb restart
     /etc/init.d/mariadb stop
