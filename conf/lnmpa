@@ -608,6 +608,6 @@ case "${arg1}" in
         echo "Usage: lnmp {nginx|mysql|mariadb|pureftpd|httpd} {start|stop|reload|restart|kill|status}"
         echo "Usage: lnmp vhost {add|list|del}"
         echo "Usage: lnmp database {add|list|del}"
-        echo "Usage: lnmp ftp {add|list|del}"
+        echo "Usage: lnmp ftp {add|list|del|edit}"
 esac
 exit
