@@ -141,7 +141,9 @@ Upgrade_PHP_52()
     Check_Autoconf
     cd ${cur_dir}/src && rm -rf php-${php_version}
     tar zxf php-${php_version}.tar.gz
-    gzip -cd php-${php_version}-fpm-0.5.14.diff.gz | patch -d php-${php_version} -p1
+    if [ "${Stack}" = "lnmp" ]; then
+        gzip -cd php-${php_version}-fpm-0.5.14.diff.gz | patch -d php-${php_version} -p1
+    fi
     cd php-${php_version}/
     patch -p1 < ${cur_dir}/src/patch/php-5.2.17-max-input-vars.patch
     patch -p0 < ${cur_dir}/src/patch/php-5.2.17-xml.patch
