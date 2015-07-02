@@ -79,7 +79,7 @@ Check_PHP53_Curl()
         PHP53_With_Curl='y'
     elif echo "${Ubuntu_Version}" | grep -Eqi '^14.1';then
         PHP53_With_Curl='y'
-    elif echo "${Ubuntu_Version}" | grep -Eqi '^15.';then 
+    elif echo "${Ubuntu_Version}" | grep -Eqi '^15.';then
         PHP53_With_Curl='y'
     elif echo "${Debian_Version}" | grep -Eqi '^8.';then
         PHP53_With_Curl='y'
@@ -141,7 +141,9 @@ Upgrade_PHP_52()
     Check_Autoconf
     cd ${cur_dir}/src && rm -rf php-${php_version}
     tar zxf php-${php_version}.tar.gz
-    gzip -cd php-${php_version}-fpm-0.5.14.diff.gz | patch -d php-${php_version} -p1
+    if [ "${Stack}" = "lnmp" ]; then
+        gzip -cd php-${php_version}-fpm-0.5.14.diff.gz | patch -d php-${php_version} -p1
+    fi
     cd php-${php_version}/
     patch -p1 < ${cur_dir}/src/patch/php-5.2.17-max-input-vars.patch
     patch -p0 < ${cur_dir}/src/patch/php-5.2.17-xml.patch
@@ -193,8 +195,8 @@ Upgrade_PHP_52()
 
 ;ionCube
 
-[Zend Optimizer] 
-zend_optimizer.optimization_level=1 
+[Zend Optimizer]
+zend_optimizer.optimization_level=1
 zend_extension="/usr/local/zend/ZendOptimizer.so"
 
 ;xcache
@@ -274,7 +276,7 @@ cat >>/usr/local/php/etc/php.ini<<EOF
 
 ;ionCube
 
-[Zend Optimizer] 
+[Zend Optimizer]
 zend_extension=/usr/local/zend/ZendGuardLoader.so
 zend_loader.enable=1
 zend_loader.disable_licensing=0
@@ -428,7 +430,7 @@ Upgrade_PHP_556()
     if [ "${Stack}" = "lnmp" ]; then
         ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-opcache
     else
-       ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-apxs2=/usr/local/apache/bin/apxs --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-opcache 
+       ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-apxs2=/usr/local/apache/bin/apxs --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-opcache
     fi
 
     make ZEND_EXTRA_LIBS='-liconv'
