@@ -23,7 +23,7 @@ Install_Redis()
 
     echo "====== Installing Redis ======"
     Press_Install
-    
+
     sed -i '/redis.so/d' /usr/local/php/etc/php.ini
     Get_PHP_Ext_Dir
     zend_ext="${zend_ext_dir}redis.so"
@@ -52,7 +52,7 @@ Install_Redis()
     cd ../
 
     if [ -s /sbin/iptables ]; then
-        /sbin/iptables -I INPUT -p tcp -s 127.0.0.1 --dport 6379 -j ACCEPT
+        /sbin/iptables -I INPUT 11 -p tcp -s 127.0.0.1 --dport 6379 -j ACCEPT
         /sbin/iptables -A INPUT -p tcp --dport 6379 -j DROP
         if [ "$PM" = "yum" ]; then
             service iptables save

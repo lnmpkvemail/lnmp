@@ -51,9 +51,9 @@ Install_Pureftpd()
     StartUp pureftpd
 
     if [ -s /sbin/iptables ]; then
-        /sbin/iptables -I INPUT -p tcp --dport 21 -j ACCEPT
-        /sbin/iptables -I INPUT -p tcp --dport 20 -j ACCEPT
-        /sbin/iptables -I INPUT -p tcp --dport 20000:30000 -j ACCEPT
+        /sbin/iptables -I INPUT 6 -p tcp --dport 21 -j ACCEPT
+        /sbin/iptables -I INPUT 7 -p tcp --dport 20 -j ACCEPT
+        /sbin/iptables -I INPUT 8 -p tcp --dport 20000:30000 -j ACCEPT
         if [ "$PM" = "yum" ]; then
             service iptables save
         elif [ "$PM" = "apt" ]; then
