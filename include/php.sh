@@ -560,9 +560,11 @@ eof
 
     #add iptables firewall rules
     if [ -s /sbin/iptables ]; then
-        /sbin/iptables -I INPUT -s 127.0.0.1 -d 127.0.0.1 -j ACCEPT
-        /sbin/iptables -I INPUT -p tcp --dport 80 -j ACCEPT
-        /sbin/iptables -I INPUT -p tcp --dport 3306 -j DROP
+        /sbin/iptables -I INPUT 1 -i lo -j ACCEPT
+        /sbin/iptables -I INPUT 2 -m state --state ESTABLISHED,RELATED -j ACCEPT
+        /sbin/iptables -I INPUT 3 -p tcp --dport 80 -j ACCEPT
+        /sbin/iptables -I INPUT 4 -p tcp -s 127.0.0.1 --dport 3306 -j ACCEPT
+        /sbin/iptables -I INPUT 5 -p tcp --dport 3306 -j DROP
         if [ "$PM" = "yum" ]; then
             service iptables save
         elif [ "$PM" = "apt" ]; then
