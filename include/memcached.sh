@@ -74,7 +74,8 @@ Install_Memcached()
     fi
 
     if echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.';then
-        sed -i "s#extension_dir = "./"#extension_dir = "/usr/local/php/lib/php/extensions/no-debug-non-zts-20060613/"\nextension = \"${PHP_ZTS}\"\n#" /usr/local/php/etc/php.ini
+        sed -i "/extension_dir =/a\
+extension = \"${PHP_ZTS}\"" /usr/local/php/etc/php.ini
     elif echo "${Cur_PHP_Version}" | grep -Eqi '^5.[3456].';then
         sed -i "/the dl()/i\
 extension = \"${PHP_ZTS}\"" /usr/local/php/etc/php.ini
