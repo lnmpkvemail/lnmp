@@ -98,11 +98,11 @@ Ubuntu_Modify_Source()
     elif grep -Eqi "10.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^10.04'; then
         CodeName='lucid'
     elif grep -Eqi "14.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^14.10'; then
-        Ubuntu_Deadline
+        Ubuntu_Deadline utopic
     elif grep -Eqi "15.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^15.04'; then
-        Ubuntu_Deadline
+        Ubuntu_Deadline vivid
     elif grep -Eqi "12.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^12.04'; then
-        Ubuntu_Deadline
+        Ubuntu_Deadline precise
     fi
     if [ "${CodeName}" != "" ]; then
         \cp /etc/apt/sources.list /etc/apt/sources.list.$(date +"%Y%m%d")
@@ -123,20 +123,30 @@ EOF
 
 Ubuntu_Deadline()
 {
-    utopic_deadline=`date -d "2015-7-24 00:00:00" +%s`
-    vivid_deadline=`date -d "2016-1-24 00:00:00" +%s`
-    precise_deadline=`date -d "2017-4-27 00:00:00" +%s`
+    utopic_deadline=`date -d "2015-8-1 00:00:00" +%s`
+    vivid_deadline=`date -d "2016-2-1 00:00:00" +%s`
+    precise_deadline=`date -d "2017-5-1 00:00:00" +%s`
     cur_time=`date  +%s`
-    if [ ${cur_time} -gt ${utopic_deadline} ]; then
-        echo "${cur_time} > ${utopic_deadline}"
-        CodeName='utopic'
-    elif [ ${cur_time} -gt ${vivid_deadline} ]; then
-        echo "${cur_time} > ${vivid_deadline}"
-        CodeName='vivid'
-    elif [ ${cur_time} -gt ${precise_deadline} ]; then
-        echo "${cur_time} > ${precise_deadline}"
-        CodeName='precise'
-    fi
+    case "$1" in
+        utopic)
+            if [ ${cur_time} -gt ${utopic_deadline} ]; then
+                echo "${cur_time} > ${utopic_deadline}"
+                CodeName='utopic'
+            fi
+            ;;
+        vivid)
+            if [ ${cur_time} -gt ${vivid_deadline} ]; then
+                echo "${cur_time} > ${vivid_deadline}"
+                CodeName='vivid'
+            fi
+            ;;
+        precise)
+            if [ ${cur_time} -gt ${precise_deadline} ]; then
+                echo "${cur_time} > ${precise_deadline}"
+                CodeName='precise'
+            fi
+            ;;
+    esac
 }
 
 CentOS_Dependent()
