@@ -94,7 +94,7 @@ extension = \"${PHP_ZTS}\"" /usr/local/php/etc/php.ini
     make &&make install
     cd ../
 
-    ln /usr/local/memcached/bin/memcached /usr/bin/memcached
+    ln -sf /usr/local/memcached/bin/memcached /usr/bin/memcached
 
     \cp ${cur_dir}/init.d/init.d.memcached /etc/init.d/memcached
     chmod +x /etc/init.d/memcached
@@ -153,6 +153,7 @@ Uninstall_Memcached()
     rm -rf /usr/local/libmemcached
     rm -rf /usr/local/memcached
     rm -rf /etc/init.d/memcached
+    rm -rf /usr/bin/memcached
     if [ -s /sbin/iptables ]; then
         /sbin/iptables -D INPUT -p tcp -s 127.0.0.1 --dport 11211 -j ACCEPT
         /sbin/iptables -D INPUT -p udp -s 127.0.0.1 --dport 11211 -j ACCEPT
