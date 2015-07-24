@@ -47,11 +47,11 @@ Deb_RemoveAMP()
     for removepackages in apache2 apache2-doc apache2-utils apache2.2-common apache2.2-bin apache2-mpm-prefork apache2-doc apache2-mpm-worker mysql-client mysql-server mysql-common mysql-server-core-5.5 mysql-client-5.5 php5 php5-common php5-cgi php5-cli php5-mysql php5-curl php5-gd;
     do apt-get purge -y $removepackages; done
     killall apache2
-    dpkg -l |grep apache 
+    dpkg -l |grep apache
     dpkg -P apache2 apache2-doc apache2-mpm-prefork apache2-utils apache2.2-common
-    dpkg -l |grep mysql 
+    dpkg -l |grep mysql
     dpkg -P mysql-server mysql-common libmysqlclient15off libmysqlclient15-dev
-    dpkg -l |grep php 
+    dpkg -l |grep php
     dpkg -P php5 php5-common php5-cli php5-cgi php5-mysql php5-curl php5-gd
     apt-get autoremove -y && apt-get clean
 }
@@ -98,11 +98,11 @@ Ubuntu_Modify_Source()
     elif grep -Eqi "10.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^10.04'; then
         CodeName='lucid'
     elif grep -Eqi "14.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^14.10'; then
-        Ubuntu_Deadline
+        Ubuntu_Deadline utopic
     elif grep -Eqi "15.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^15.04'; then
-        Ubuntu_Deadline
+        Ubuntu_Deadline vivid
     elif grep -Eqi "12.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^12.04'; then
-        Ubuntu_Deadline
+        Ubuntu_Deadline precise
     fi
     if [ "${CodeName}" != "" ]; then
         \cp /etc/apt/sources.list /etc/apt/sources.list.$(date +"%Y%m%d")
@@ -127,16 +127,26 @@ Ubuntu_Deadline()
     vivid_deadline=`date -d "2016-1-24 00:00:00" +%s`
     precise_deadline=`date -d "2017-4-27 00:00:00" +%s`
     cur_time=`date  +%s`
-    if [ ${cur_time} -gt ${utopic_deadline} ]; then
-        echo "${cur_time} > ${utopic_deadline}"
-        CodeName='utopic'
-    elif [ ${cur_time} -gt ${vivid_deadline} ]; then
-        echo "${cur_time} > ${vivid_deadline}"
-        CodeName='vivid'
-    elif [ ${cur_time} -gt ${precise_deadline} ]; then
-        echo "${cur_time} > ${precise_deadline}"
-        CodeName='precise'
-    fi
+    case "$1" in
+        utopic)
+            if [ ${cur_time} -gt ${utopic_deadline} ]; then
+                echo "${cur_time} > ${utopic_deadline}"
+                CodeName='utopic'
+            fi
+            ;;
+        vivid)
+            if [ ${cur_time} -gt ${vivid_deadline} ]; then
+                echo "${cur_time} > ${vivid_deadline}"
+                CodeName='vivid'
+            fi
+            ;;
+        precise)
+            if [ ${cur_time} -gt ${precise_deadline} ]; then
+                echo "${cur_time} > ${precise_deadline}"
+                CodeName='precise'
+            fi
+            ;;
+    esac
 }
 
 CentOS_Dependent()
