@@ -27,7 +27,7 @@ MySQL_Sec_Setting()
     ln -sf /usr/local/mysql/bin/myisamchk /usr/bin/myisamchk
     ln -sf /usr/local/mysql/bin/mysqld_safe /usr/bin/mysqld_safe
 
-    /usr/local/mysql/bin/mysqladmin -u root password ${MysqlRootPWD}
+    /usr/local/mysql/bin/mysqladmin -u root password "${MysqlRootPWD}"
 
     cat > /tmp/mysql_sec_script<<EOF
     use mysql;
@@ -68,9 +68,9 @@ Install_MySQL_51()
     useradd -s /sbin/nologin -M -g mysql mysql
 
     \cp /usr/local/mysql/share/mysql/my-medium.cnf /etc/my.cnf
-    sed -i 's/skip-locking/skip-external-locking/g' /etc/my.cnf
+        sed -i 's/skip-locking/skip-external-locking/g' /etc/my.cnf
     if [ "${InstallInnodb}" = "y" ]; then
-    sed -i 's:#innodb:innodb:g' /etc/my.cnf
+        sed -i 's:#innodb:innodb:g' /etc/my.cnf
     fi
     /usr/local/mysql/bin/mysql_install_db --user=mysql
     chown -R mysql /usr/local/mysql/var
@@ -97,7 +97,7 @@ Install_MySQL_55()
     Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}
     patch -p1 < ${cur_dir}/src/patch/mysql-openssl.patch
     MySQL_ARM_Patch
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_READLINE=1 -DWITH_SSL=bundled -DWITH_ZLIB=system -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL55MAOpt}
+    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL55MAOpt}
     make && make install
 
     groupadd mysql
@@ -106,10 +106,10 @@ Install_MySQL_55()
     \cp support-files/my-medium.cnf /etc/my.cnf
     sed '/skip-external-locking/i\datadir = /usr/local/mysql/var' -i /etc/my.cnf
     if [ "${InstallInnodb}" = "y" ]; then
-    sed -i 's:#innodb:innodb:g' /etc/my.cnf
-    sed -i 's:/usr/local/mysql/data:/usr/local/mysql/var:g' /etc/my.cnf
+        sed -i 's:#innodb:innodb:g' /etc/my.cnf
+        sed -i 's:/usr/local/mysql/data:/usr/local/mysql/var:g' /etc/my.cnf
     else
-    sed '/skip-external-locking/i\default-storage-engine=MyISAM\nloose-skip-innodb' -i /etc/my.cnf
+        sed '/skip-external-locking/i\default-storage-engine=MyISAM\nloose-skip-innodb' -i /etc/my.cnf
     fi
 
     /usr/local/mysql/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=/usr/local/mysql/var --user=mysql
@@ -135,7 +135,7 @@ Install_MySQL_56()
     rm -f /etc/my.cnf
     Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}
     patch -p1 < ${cur_dir}/src/patch/mysql-openssl.patch
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_READLINE=1 -DWITH_SSL=bundled -DWITH_ZLIB=system -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL55MAOpt}
+    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL55MAOpt}
     make && make install
 
     groupadd mysql
