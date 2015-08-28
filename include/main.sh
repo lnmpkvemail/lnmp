@@ -312,7 +312,7 @@ Print_Sys_Info()
     cat /etc/issue
     cat /etc/*-release
     uname -a
-    MemTotal=`free -m | grep Mem | awk '{print  $2}'`  
+    MemTotal=`free -m | grep Mem | awk '{print  $2}'`
     echo "Memory is: ${MemTotal} MB "
     df -h
 }
@@ -412,18 +412,38 @@ Check_DB()
     fi
 }
 
+Do_Query()
+{
+    Check_DB
+    ${MySQL_Bin} --defaults-file=~/.my.cnf -e "$1"
+    return $?
+}
+
+Make_TempMycnf()
+{
+    echo "[mysql]" >~/.my.cnf
+    echo "user=root" >>~/.my.cnf
+    echo "password='$1'" >>~/.my.cnf
+}
+
 Verify_DB_Password()
 {
     Check_DB
-    read -p "verify your current database root password: " DB_Root_Password
-    ${MySQL_Bin} -uroot -p${DB_Root_Password} -e "quit"
-    if [ $? -eq 0 ]; then
-        echo "MySQL root password correct."
-    else
-        echo "MySQL root password incorrect!Please check!"
-        Verify_DB_Password
-    fi
-    if [ "${DB_Root_Password}" = "" ]; then
-        Verify_DB_Password
-    fi
+    status=1
+    while [ $status -eq 1 ]; do
+        stty -echo
+        echo "Enter current password for root (enter for none): "
+        read DB_Root_Password
+        echo
+        stty echo
+        Make_TempMycnf "${DB_Root_Password}"
+        Do_Query ""
+        status=$?
+    done
+    echo "OK, MySQL root password correct."
+}
+
+TempMycnf_Clean()
+{
+    rm -f ~/.my.cnf
 }

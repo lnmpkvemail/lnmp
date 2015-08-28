@@ -20,6 +20,8 @@ MySQL_Sec_Setting()
     if [ -d "/proc/vz" ];then
         ulimit -s unlimited
     fi
+    echo -e "\nexpire_logs_days = 10" >> /etc/my.cnf
+    sed -i '/skip-external-locking/a\max_connections = 500' /etc/my.cnf
     /etc/init.d/mysql start
 
     ln -sf /usr/local/mysql/bin/mysql /usr/bin/mysql
@@ -29,23 +31,41 @@ MySQL_Sec_Setting()
 
     /usr/local/mysql/bin/mysqladmin -u root password "${MysqlRootPWD}"
 
-    cat > /tmp/mysql_sec_script<<EOF
-    use mysql;
-    update user set password=password('${MysqlRootPWD}') where user='root';
-    delete from user where not (user='root') ;
-    delete from user where user='root' and password='';
-    drop database test;
-    DROP USER ''@'%';
-    flush privileges;
-EOF
+    Make_TempMycnf "${MysqlRootPWD}"
+    Do_Query ""
+    if [ $? -eq 0 ]; then
+        echo "OK, MySQL root password correct."
+    fi
+    echo "Remove anonymous users..."
+    Do_Query "DELETE FROM mysql.user WHERE User='';"
+    if [ $? -eq 0 ]; then
+        echo " ... Success!"
+    else
+        echo " ... Failed!"
+    fi
+    echo "Disallow root login remotely..."
+    Do_Query "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
+    if [ $? -eq 0 ]; then
+        echo " ... Success!"
+    else
+        echo " ... Failed!"
+    fi
+    echo "Remove test database..."
+    Do_Query "DROP DATABASE test;"
+    if [ $? -eq 0 ]; then
+        echo " ... Success!"
+    else
+        echo " ... Failed!"
+    fi
+    echo "Reload privilege tables..."
+    Do_Query "FLUSH PRIVILEGES;"
+    if [ $? -eq 0 ]; then
+        echo " ... Success!"
+    else
+        echo " ... Failed!"
+    fi
 
-    /usr/local/mysql/bin/mysql -u root -p${MysqlRootPWD} -h localhost < /tmp/mysql_sec_script
-
-    rm -f /tmp/mysql_sec_script
-
-    echo -e "\nexpire_logs_days = 10" >> /etc/my.cnf
-    sed -i '/skip-external-locking/a\max_connections = 500' /etc/my.cnf
-
+    TempMycnf_Clean
     /etc/init.d/mysql restart
     /etc/init.d/mysql stop
 }
