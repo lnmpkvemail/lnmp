@@ -121,29 +121,38 @@ EOF
     fi
 }
 
+Check_Old_Releases_URL()
+{
+    OR_Status=`wget --spider --server-response http://old-releases.ubuntu.com/ubuntu/dists/$1/Release 2>&1 | awk '/^  HTTP/{print $2}'`
+    if [ ${OR_Status} != "404" ]; then
+        echo "Ubuntu old-releases status: ${OR_Status}";
+        CodeName=$1
+    fi
+}
+
 Ubuntu_Deadline()
 {
-    utopic_deadline=`date -d "2015-7-24 00:00:00" +%s`
-    vivid_deadline=`date -d "2016-1-24 00:00:00" +%s`
-    precise_deadline=`date -d "2017-4-27 00:00:00" +%s`
+    utopic_deadline=`date -d "2015-9-1 00:00:00" +%s`
+    vivid_deadline=`date -d "2016-2-24 00:00:00" +%s`
+    precise_deadline=`date -d "2017-5-27 00:00:00" +%s`
     cur_time=`date  +%s`
     case "$1" in
         utopic)
             if [ ${cur_time} -gt ${utopic_deadline} ]; then
                 echo "${cur_time} > ${utopic_deadline}"
-                CodeName='utopic'
+                Check_Old_Releases_URL utopic
             fi
             ;;
         vivid)
             if [ ${cur_time} -gt ${vivid_deadline} ]; then
                 echo "${cur_time} > ${vivid_deadline}"
-                CodeName='vivid'
+                Check_Old_Releases_URL vivid
             fi
             ;;
         precise)
             if [ ${cur_time} -gt ${precise_deadline} ]; then
                 echo "${cur_time} > ${precise_deadline}"
-                CodeName='precise'
+                Check_Old_Releases_URL precise
             fi
             ;;
     esac
