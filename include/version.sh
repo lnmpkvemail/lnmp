@@ -16,52 +16,51 @@ Jemalloc_Ver='jemalloc-3.6.0'
 TCMalloc_Ver='gperftools-2.4'
 Libunwind_Ver='libunwind-1.1'
 Nginx_Ver='nginx-1.8.0'
-Mysql_Ver='mysql-5.5.42'
+Mysql_Ver='mysql-5.5.45'
 Mariadb_Ver='mariadb-5.5.42'
 if [ "${DBSelect}" = "1" ]; then
     Mysql_Ver='mysql-5.1.73'
 elif [ "${DBSelect}" = "2" ]; then
-    Mysql_Ver='mysql-5.5.42'
+    Mysql_Ver='mysql-5.5.45'
 elif [ "${DBSelect}" = "3" ]; then
-    Mysql_Ver='mysql-5.6.23'
+    Mysql_Ver='mysql-5.6.26'
 elif [ "${DBSelect}" = "4" ]; then
-    Mariadb_Ver='mariadb-5.5.42'
+    Mariadb_Ver='mariadb-5.5.45'
 elif [ "${DBSelect}" = "5" ]; then
-    Mariadb_Ver='mariadb-10.0.17'
+    Mariadb_Ver='mariadb-10.0.21'
 fi
-Php_Ver='php-5.4.41'
+Php_Ver='php-5.4.44'
 if [ "${PHPSelect}" = "1" ]; then
     Php_Ver='php-5.2.17'
 elif [ "${PHPSelect}" = "2" ]; then
     Php_Ver='php-5.3.29'
 elif [ "${PHPSelect}" = "3" ]; then
-    Php_Ver='php-5.4.41'
+    Php_Ver='php-5.4.44'
 elif [ "${PHPSelect}" = "4" ]; then
-    Php_Ver='php-5.5.25'
+    Php_Ver='php-5.5.28'
 elif [ "${PHPSelect}" = "5" ]; then
-    Php_Ver='php-5.6.9'
+    Php_Ver='php-5.6.12'
 fi
-PhpMyAdmin_Ver='phpMyAdmin-4.4.7-all-languages'
+PhpMyAdmin_Ver='phpMyAdmin-4.4.14-all-languages'
 if [ "${PHPSelect}" = "1" ]; then
     PhpMyAdmin_Ver='phpMyAdmin-4.0.10.10-all-languages'
 else
-    PhpMyAdmin_Ver='phpMyAdmin-4.4.7-all-languages'
+    PhpMyAdmin_Ver='phpMyAdmin-4.4.14-all-languages'
     if [ "${DBSelect}" = "1" ]; then
         PhpMyAdmin_Ver='phpMyAdmin-4.0.10.10-all-languages'
     fi
 fi
-APR_Ver='apr-1.5.1'
+APR_Ver='apr-1.5.2'
 APR_Util_Ver='apr-util-1.5.4'
 Mod_RPAF_Ver='mod_rpaf-0.8.4-rc3'
-Apache_Version='httpd-2.2.29'
+Apache_Version='httpd-2.2.31'
 if [ "${ApacheSelect}" = "1" ]; then
-    Apache_Version='httpd-2.2.29'
+    Apache_Version='httpd-2.2.31'
 elif [ "${ApacheSelect}" = "2" ]; then
-    Apache_Version='httpd-2.4.12'
+    Apache_Version='httpd-2.4.16'
 fi
 
-Pureftpd_Ver='pure-ftpd-1.0.37'
-Pureftpd_Manager_Ver='User_manager_for-PureFTPd_v2.1_CN'
+Pureftpd_Ver='pure-ftpd-1.0.42'
 
 XCache_Ver='xcache-3.2.0'
 ImageMagick_Ver='ImageMagick-6.9.1-2'
