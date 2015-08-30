@@ -583,6 +583,10 @@ EOF
             chmod +x /etc/network/if-pre-up.d/iptables
         fi
     fi
+    if [ -s /usr/sbin/firewalld ]; then
+        systemctl stop firewalld
+        systemctl disable firewalld
+    fi
 }
 
 Check_PHP53_Curl()
