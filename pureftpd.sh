@@ -42,6 +42,7 @@ Install_Pureftpd()
     echo "Copy configure files..."
     \cp configuration-file/pure-config.pl /usr/local/pureftpd/sbin/
     chmod 755 /usr/local/pureftpd/sbin/pure-config.pl
+    mkdir /usr/local/pureftpd/etc
     \cp $cur_dir/conf/pure-ftpd.conf /usr/local/pureftpd/etc/pure-ftpd.conf
     \cp $cur_dir/init.d/init.d.pureftpd /etc/init.d/pureftpd
     chmod +x /etc/init.d/pureftpd
@@ -61,7 +62,7 @@ Install_Pureftpd()
         fi
     fi
 
-    if [[ -s /usr/local/pureftpd/sbin/pure-config.pl && -s /usr/local/pureftpd/pure-ftpd.conf && -s /etc/init.d/pureftpd ]]; then
+    if [[ -s /usr/local/pureftpd/sbin/pure-config.pl && -s /usr/local/pureftpd/etc/pure-ftpd.conf && -s /etc/init.d/pureftpd ]]; then
         echo "Starting pureftpd..."
         /etc/init.d/pureftpd start
         echo "+----------------------------------------------------------------------+"

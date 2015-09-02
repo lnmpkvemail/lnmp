@@ -540,7 +540,6 @@ case "${arg1}" in
         ;;
     ftp)
         Check_Pureftpd
-        Verify_MySQL_Password
         Function_Ftp ${arg2}
         ;;
     *)

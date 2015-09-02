@@ -146,13 +146,13 @@ Add_VHost()
     if [ ! -f "/usr/local/nginx/conf/vhost/${domain}.conf" ]; then
         echo "======================================"
         echo " Your domain: ${domain}"
-        echo "======================================" 
+        echo "======================================"
     else
         echo "==============================="
         echo "${domain} is exist!"
         echo "==============================="
     fi
-    
+
     read -p "Do you want to add more domain name? (y/n) " add_more_domainame
 
     if [ "${add_more_domainame}" == "y" ]; then
@@ -369,7 +369,7 @@ Del_VHost()
         echo "Domain: ${domain} has been deleted."
         echo "Website files will not be deleted for security reasons."
         echo "You need to manually delete the website files."
-        echo "========================================================"    
+        echo "========================================================"
     fi
 }
 
@@ -595,7 +595,6 @@ case "${arg1}" in
         ;;
     ftp)
         Check_Pureftpd
-        Verify_MySQL_Password
         Function_Ftp ${arg2}
         ;;
     *)
