@@ -4,7 +4,7 @@ Set_Timezone()
 {
     Echo_Blue "Setting timezone..."
     rm -rf /etc/localtime
-    ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+    ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 }
 
 CentOS_InstallNTP()
@@ -244,10 +244,10 @@ Install_Libmcrypt()
     cd libltdl/
     ./configure --enable-ltdl-install
     make && make install
-    ln -s /usr/local/lib/libmcrypt.la /usr/lib/libmcrypt.la
-    ln -s /usr/local/lib/libmcrypt.so /usr/lib/libmcrypt.so
-    ln -s /usr/local/lib/libmcrypt.so.4 /usr/lib/libmcrypt.so.4
-    ln -s /usr/local/lib/libmcrypt.so.4.4.8 /usr/lib/libmcrypt.so.4.4.8
+    ln -sf /usr/local/lib/libmcrypt.la /usr/lib/libmcrypt.la
+    ln -sf /usr/local/lib/libmcrypt.so /usr/lib/libmcrypt.so
+    ln -sf /usr/local/lib/libmcrypt.so.4 /usr/lib/libmcrypt.so.4
+    ln -sf /usr/local/lib/libmcrypt.so.4.4.8 /usr/lib/libmcrypt.so.4.4.8
     ldconfig
 }
 
@@ -265,11 +265,11 @@ Install_Mhash()
     Tar_Cd ${Mash_Ver}.tar.gz ${Mash_Ver}
     ./configure
     make && make install
-    ln -s /usr/local/lib/libmhash.a /usr/lib/libmhash.a
-    ln -s /usr/local/lib/libmhash.la /usr/lib/libmhash.la
-    ln -s /usr/local/lib/libmhash.so /usr/lib/libmhash.so
-    ln -s /usr/local/lib/libmhash.so.2 /usr/lib/libmhash.so.2
-    ln -s /usr/local/lib/libmhash.so.2.0.1 /usr/lib/libmhash.so.2.0.1
+    ln -sf /usr/local/lib/libmhash.a /usr/lib/libmhash.a
+    ln -sf /usr/local/lib/libmhash.la /usr/lib/libmhash.la
+    ln -sf /usr/local/lib/libmhash.so /usr/lib/libmhash.so
+    ln -sf /usr/local/lib/libmhash.so.2 /usr/lib/libmhash.so.2
+    ln -sf /usr/local/lib/libmhash.so.2.0.1 /usr/lib/libmhash.so.2.0.1
     ldconfig
 }
 
@@ -340,8 +340,8 @@ Install_TCMalloc()
 CentOS_Lib_Opt()
 {
     if [ "${Is_64bit}" = "y" ] ; then
-    ln -s /usr/lib64/libpng.* /usr/lib/
-    ln -s /usr/lib64/libjpeg.* /usr/lib/
+    ln -sf /usr/lib64/libpng.* /usr/lib/
+    ln -sf /usr/lib64/libjpeg.* /usr/lib/
     fi
 
     ulimit -v unlimited
@@ -379,12 +379,12 @@ eof
 Deb_Lib_Opt()
 {
     if [ "${Is_64bit}" = "y" ] ; then
-        ln -s /usr/lib/x86_64-linux-gnu/libpng* /usr/lib/
-        ln -s /usr/lib/x86_64-linux-gnu/libjpeg* /usr/lib/
+        ln -sf /usr/lib/x86_64-linux-gnu/libpng* /usr/lib/
+        ln -sf /usr/lib/x86_64-linux-gnu/libjpeg* /usr/lib/
     else
-        ln -s /usr/lib/i386-linux-gnu/libpng* /usr/lib/
-        ln -s /usr/lib/i386-linux-gnu/libjpeg* /usr/lib/
-        ln -s /usr/include/i386-linux-gnu/asm /usr/include/asm
+        ln -sf /usr/lib/i386-linux-gnu/libpng* /usr/lib/
+        ln -sf /usr/lib/i386-linux-gnu/libjpeg* /usr/lib/
+        ln -sf /usr/include/i386-linux-gnu/asm /usr/include/asm
     fi
 
     ulimit -v unlimited
