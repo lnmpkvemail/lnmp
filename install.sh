@@ -47,6 +47,7 @@ Init_Install()
 {
     Press_Install
     Print_Sys_Info
+    Check_Hosts
     if [ "${DISTRO}" = "RHEL" ]; then
         RHEL_Modify_Source
     fi
@@ -154,7 +155,7 @@ LAMP_Stack()
         Install_Apache_22
     else
         Install_Apache_24
-    fi    
+    fi
     if [ "${PHPSelect}" = "1" ]; then
         Install_PHP_52
     elif [ "${PHPSelect}" = "2" ]; then

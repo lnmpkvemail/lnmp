@@ -70,6 +70,15 @@ Xen_Hwcap_Setting()
     fi
 }
 
+Check_Hosts()
+{
+    if grep '127.0.0.1[[:space:]]*localhost' /etc/hosts; then
+        echo "Hosts: ok."
+    else
+        echo "127.0.0.1 localhost.localdomain localhost" >> /etc/hosts
+    fi
+}
+
 RHEL_Modify_Source()
 {
     Get_RHEL_Version
