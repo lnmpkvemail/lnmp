@@ -97,4 +97,5 @@ if [ "${Stack}" != "" ]; then
     elif [ "${SelectMalloc}" = "3" ]; then
         echo "${TCMalloc_Ver}"
     fi
+    echo "Enable InnoDB: ${InstallInnodb}"
 fi

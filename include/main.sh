@@ -22,10 +22,12 @@ Dispaly_Selection()
     case "${InstallInnodb}" in
     [yY][eE][sS]|[yY])
         echo "You will enable the InnoDB Storage Engine"
-    ;;
+        InstallInnodb="y"
+        ;;
     [nN][oO]|[nN])
         echo "You will disable the InnoDB Storage Engine!"
-    ;;
+        InstallInnodb="n"
+        ;;
     *)
         echo "No input,The InnoDB Storage Engine will enable."
         InstallInnodb="y"
@@ -46,19 +48,19 @@ Dispaly_Selection()
     case "${DBSelect}" in
     1)
         echo "You will install MySQL 5.1.73"
-    ;;
+        ;;
     2)
         echo "You will install MySQL 5.5.42"
-    ;;
+        ;;
     3)
         echo "You will Install MySQL 5.6.23"
-    ;;
+        ;;
     4)
         echo "You will install MariaDB 5.5.42"
-    ;;
+        ;;
     5)
         echo "You will install MariaDB 10.0.17"
-    ;;
+        ;;
     *)
         echo "No input,You will install MySQL 5.5.42"
         DBSelect="2"
@@ -89,19 +91,19 @@ Dispaly_Selection()
     case "${PHPSelect}" in
     1)
         echo "You will install PHP 5.2.17"
-    ;;
+        ;;
     2)
         echo "You will install PHP 5.3.29"
-    ;;
+        ;;
     3)
         echo "You will Install PHP 5.4.41"
-    ;;
+        ;;
     4)
         echo "You will install PHP 5.5.25"
-    ;;
+        ;;
     5)
         echo "You will install PHP 5.6.9"
-    ;;
+        ;;
     *)
         echo "No input,You will install PHP 5.4.41"
         PHPSelect="3"
@@ -120,13 +122,13 @@ Dispaly_Selection()
     case "${SelectMalloc}" in
     1)
         echo "You will install not install Memory Allocator."
-    ;;
+        ;;
     2)
         echo "You will install JeMalloc"
-    ;;
+        ;;
     3)
         echo "You will Install TCMalloc"
-    ;;
+        ;;
     *)
         echo "No input,You will not install Memory Allocator."
         SelectMalloc="1"

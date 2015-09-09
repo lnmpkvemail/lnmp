@@ -132,7 +132,7 @@ Check_Old_Releases_URL()
 
 Ubuntu_Deadline()
 {
-    utopic_deadline=`date -d "2015-9-1 00:00:00" +%s`
+    utopic_deadline=`date -d "2015-10-1 00:00:00" +%s`
     vivid_deadline=`date -d "2016-2-24 00:00:00" +%s`
     precise_deadline=`date -d "2017-5-27 00:00:00" +%s`
     cur_time=`date  +%s`
