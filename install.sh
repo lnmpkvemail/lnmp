@@ -17,7 +17,7 @@ else
 fi
 
 LNMP_Ver='1.2'
-
+. lnmp.conf
 . include/main.sh
 . include/init.sh
 . include/mysql.sh
@@ -114,6 +114,8 @@ LNMP_Stack()
         Install_PHP_55
     elif [ "${PHPSelect}" = "5" ]; then
         Install_PHP_56
+    elif [ "${PHPSelect}" = "6" ]; then
+        Install_PHP_7
     fi
     Install_Nginx
     Creat_PHP_Tools
