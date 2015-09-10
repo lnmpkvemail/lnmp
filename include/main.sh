@@ -38,22 +38,31 @@ Dispaly_Selection()
 
     DBSelect="2"
     Echo_Yellow "You have 5 options for your DataBase install."
-    echo "1: Install MySQL ${Mysql_Ver#*-}"
-    echo "2: Install MySQL ${Mysql_Ver#*-} (Default)"
-    echo "3: Install MySQL ${Mysql_Ver#*-}"
-    echo "4: Install MariaDB ${Mariadb_Ver#*-}"
-    echo "5: Install MariaDB ${Mariadb_Ver#*-}"
+    echo "1: Install MySQL 5.1.73"
+    echo "2: Install MySQL 5.5.45 (Default)"
+    echo "3: Install MySQL 5.6.26"
+    echo "4: Install MariaDB 5.5.45"
+    echo "5: Install MariaDB 10.0.17"
     read -p "Enter your choice (1, 2, 3, 4 or 5): " DBSelect
 
     case "${DBSelect}" in
-    1|2|3)
-        echo "You will Install MySQL ${Mysql_Ver#*-}"
+    1)
+        echo "You will install MySQL 5.1.73"
         ;;
-    4|5)
-        echo "You will install MariaDB ${Mariadb_Ver#*-}"
+    2)
+        echo "You will install MySQL 5.5.45"
+        ;;
+    3)
+        echo "You will Install MySQL 5.6.25"
+        ;;
+    4)
+        echo "You will install MariaDB 5.5.45"
+        ;;
+    5)
+        echo "You will install MariaDB 10.0.21"
         ;;
     *)
-        echo "No input,You will install MySQL ${Mysql_Ver#*-}"
+        echo "No input,You will install MySQL 5.5.45"
         DBSelect="2"
     esac
 
@@ -71,20 +80,36 @@ Dispaly_Selection()
     echo "==========================="
 
     PHPSelect="3"
-    Echo_Yellow "You have 5 options for your PHP install."
-    echo "1: Install PHP ${Php_Ver#*-}"
-    echo "2: Install PHP ${Php_Ver#*-}"
-    echo "3: Install PHP ${Php_Ver#*-} (Default)"
-    echo "4: Install PHP ${Php_Ver#*-}"
-    echo "5: Install PHP ${Php_Ver#*-}"
-    read -p "Enter your choice (1, 2, 3, 4 or 5): " PHPSelect
+    Echo_Yellow "You have 6 options for your PHP install."
+    echo "1: Install PHP 5.2.17"
+    echo "2: Install PHP 5.3.29"
+    echo "3: Install PHP 5.4.45 (Default)"
+    echo "4: Install PHP 5.5.29"
+    echo "5: Install PHP 5.6.13"
+    echo "6: Install PHP 7.0.0RC2"
+    read -p "Enter your choice (1, 2, 3, 4, 5 or 6): " PHPSelect
 
     case "${PHPSelect}" in
-    1|2|3|4|5)
-        echo "You will install PHP ${Php_Ver#*-}"
+    1)
+        echo "You will install PHP 5.2.17"
+        ;;
+    2)
+        echo "You will install PHP 5.3.29"
+        ;;
+    3)
+        echo "You will Install PHP 5.4.45"
+        ;;
+    4)
+        echo "You will install PHP 5.5.29"
+        ;;
+    5)
+        echo "You will install PHP 5.6.13"
+        ;;
+    6)
+        echo "You will install PHP 7.0.0RC2"
         ;;
     *)
-        echo "No input,You will install PHP ${Php_Ver#*-}"
+        echo "No input,You will install PHP 5.4.45"
         PHPSelect="3"
     esac
 
@@ -150,14 +175,16 @@ Apache_Selection()
 
     ApacheSelect="1"
     Echo_Yellow "You have 2 options for your Apache install."
-    echo "1: Install Apache ${Apache_Version#*-} (Default)"
-    echo "2: Install Apache ${Apache_Version#*-}"
+    echo "1: Install Apache 2.2.31 (Default)"
+    echo "2: Install Apache httpd-2.4.16"
     read -p "Enter your choice (1 or 2): " ApacheSelect
 
-    if [[ "${ApacheSelect}" = "1" || "${ApacheSelect}" = "2" ]]; then
-        echo "You will install Apache ${Apache_Version#*-}"
+    if [ "${ApacheSelect}" = "1" ]; then
+        echo "You will install Apache 2.2.31"
+    elif [ "${ApacheSelect}" = "2" ]; then
+        echo "You will install Apache 2.4.16"
     else
-        echo "No input,You will install Apache ${Apache_Version#*-}"
+        echo "No input,You will install Apache 2.2.31"
         ApacheSelect="1"
     fi
 }
