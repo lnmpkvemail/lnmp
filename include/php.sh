@@ -566,19 +566,8 @@ Install_PHP_7()
     sed -i 's/disable_functions =.*/disable_functions = passthru,exec,system,chroot,scandir,chgrp,chown,shell_exec,proc_open,proc_get_status,popen,ini_alter,ini_restore,dl,openlog,syslog,readlink,symlink,popepassthru,stream_socket_server/g' /usr/local/php/etc/php.ini
     Pear_Pecl_Set
 
-    echo "Install ZendGuardLoader for PHP 5.7..."
-    cd ${cur_dir}/src
-    if [ "${Is_64bit}" = "y" ] ; then
-        Download_Files ${Download_Mirror}/web/zend/zend-loader-php5.6-linux-x86_64.tar.gz
-        tar zxf zend-loader-php5.6-linux-x86_64.tar.gz
-        mkdir -p /usr/local/zend/
-        \cp zend-loader-php5.6-linux-x86_64/ZendGuardLoader.so /usr/local/zend/
-    else
-        Download_Files ${Download_Mirror}/web/zend/zend-loader-php5.6-linux-i386.tar.gz
-        tar zxf zend-loader-php5.6-linux-i386.tar.gz
-        mkdir -p /usr/local/zend/
-        \cp zend-loader-php5.6-linux-i386/ZendGuardLoader.so /usr/local/zend/
-    fi
+    echo "Install ZendGuardLoader for PHP 7..."
+    echo "unavailable now."
 
     echo "Write ZendGuardLoader to php.ini..."
 cat >>/usr/local/php/etc/php.ini<<EOF

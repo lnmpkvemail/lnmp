@@ -92,8 +92,9 @@ Install_MySQL_51()
     if [ "${InstallInnodb}" = "y" ]; then
         sed -i 's:#innodb:innodb:g' /etc/my.cnf
     fi
+    mkdir -p ${MySQL_Data_Dir}
     /usr/local/mysql/bin/mysql_install_db --user=mysql
-    chown -R mysql /usr/local/mysql/var
+    chown -R mysql ${MySQL_Data_Dir}
     chgrp -R mysql /usr/local/mysql/.
     \cp /usr/local/mysql/share/mysql/mysql.server /etc/init.d/mysql
     chmod 755 /etc/init.d/mysql
@@ -124,16 +125,16 @@ Install_MySQL_55()
     useradd -s /sbin/nologin -M -g mysql mysql
 
     \cp support-files/my-medium.cnf /etc/my.cnf
-    sed '/skip-external-locking/i\datadir = /usr/local/mysql/var' -i /etc/my.cnf
+    sed "/skip-external-locking/i\datadir = ${MySQL_Data_Dir}" -i /etc/my.cnf
     if [ "${InstallInnodb}" = "y" ]; then
         sed -i 's:#innodb:innodb:g' /etc/my.cnf
-        sed -i 's:/usr/local/mysql/data:/usr/local/mysql/var:g' /etc/my.cnf
+        sed -i "s:/usr/local/mysql/data:${MySQL_Data_Dir}:g" /etc/my.cnf
     else
-        sed '/skip-external-locking/i\default-storage-engine=MyISAM\nloose-skip-innodb' -i /etc/my.cnf
+        sed -i '/skip-external-locking/i\default-storage-engine=MyISAM\nloose-skip-innodb' /etc/my.cnf
     fi
-
-    /usr/local/mysql/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=/usr/local/mysql/var --user=mysql
-    chown -R mysql /usr/local/mysql/var
+    mkdir -p ${MySQL_Data_Dir}
+    /usr/local/mysql/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
+    chown -R mysql ${MySQL_Data_Dir}
     chgrp -R mysql /usr/local/mysql/.
     \cp support-files/mysql.server /etc/init.d/mysql
     chmod 755 /etc/init.d/mysql
@@ -281,17 +282,17 @@ write_buffer = 2M
 interactive-timeout
 EOF
 
-    sed '/skip-external-locking/i\datadir = /usr/local/mysql/var' -i /etc/my.cnf
+    sed -i "/skip-external-locking/i\datadir = ${MySQL_Data_Dir}" /etc/my.cnf
     if [ "${InstallInnodb}" = "y" ]; then
         sed -i 's:#innodb:innodb:g' /etc/my.cnf
-        sed -i 's:/usr/local/mysql/data:/usr/local/mysql/var:g' /etc/my.cnf
+        sed -i "s:/usr/local/mysql/data:${MySQL_Data_Dir}:g" /etc/my.cnf
     else
         sed -i '/skip-external-locking/i\innodb=OFF\nignore-builtin-innodb\nskip-innodb\ndefault-storage-engine=MyISAM\ndefault-tmp-storage-engine=MyISAM' /etc/my.cnf
         sed -i 's/#loose-innodb/loose-innodb/g' /etc/my.cnf
     fi
-
-    /usr/local/mysql/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=/usr/local/mysql/var --user=mysql
-    chown -R mysql /usr/local/mysql/var
+    mkdir -p ${MySQL_Data_Dir}
+    /usr/local/mysql/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
+    chown -R mysql ${MySQL_Data_Dir}
     chgrp -R mysql /usr/local/mysql/.
     \cp support-files/mysql.server /etc/init.d/mysql
     chmod 755 /etc/init.d/mysql

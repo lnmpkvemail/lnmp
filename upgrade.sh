@@ -14,6 +14,7 @@ action=$1
 shopt -s extglob
 Upgrade_Date=$(date +"%Y%m%d%H%M%S")
 
+. lnmp.conf
 . include/main.sh
 . include/init.sh
 . include/upgrade_nginx.sh
@@ -31,7 +32,7 @@ Display_Upgrade_Menu()
     echo "2: Upgrade MySQL"
     echo "3: Upgrade MariaDB"
     echo "4: Upgrade PHP for LNMP"
-    echo "5: Upgrade PHP for LNMPA or LAMP" 
+    echo "5: Upgrade PHP for LNMPA or LAMP"
     echo "6: Upgrade MySQL to MariaDB"
     echo "exit: Exit current script"
     echo "###################################################"

@@ -73,20 +73,20 @@ Install_MariaDB_5()
     useradd -s /sbin/nologin -M -g mariadb mariadb
 
     \cp support-files/my-medium.cnf /etc/my.cnf
-    sed '/skip-external-locking/i\pid-file = /usr/local/mariadb/var/mariadb.pid' -i /etc/my.cnf
-    sed '/skip-external-locking/i\log_error = /usr/local/mariadb/var/mariadb.err' -i /etc/my.cnf
-    sed '/skip-external-locking/i\basedir = /usr/local/mariadb' -i /etc/my.cnf
-    sed '/skip-external-locking/i\datadir = /usr/local/mariadb/var' -i /etc/my.cnf
-    sed '/skip-external-locking/i\user = mariadb' -i /etc/my.cnf
+    sed -i "/skip-external-locking/i\pid-file = ${MariaDB_Data_Dir}/mariadb.pid" /etc/my.cnf
+    sed -i "/skip-external-locking/i\log_error = ${MariaDB_Data_Dir}/mariadb.err" /etc/my.cnf
+    sed -i '/skip-external-locking/i\basedir = /usr/local/mariadb' /etc/my.cnf
+    sed -i "/skip-external-locking/i\datadir = ${MariaDB_Data_Dir}" /etc/my.cnf
+    sed -i '/skip-external-locking/i\user = mariadb' /etc/my.cnf
     if [ "${InstallInnodb}" = "y" ]; then
         sed -i 's:#innodb:innodb:g' /etc/my.cnf
-        sed -i 's:/usr/local/mariadb/data:/usr/local/mariadb/var:g' /etc/my.cnf
+        sed -i "s:/usr/local/mariadb/data:${MariaDB_Data_Dir}:g" /etc/my.cnf
     else
-        sed '/skip-external-locking/i\default-storage-engine=MyISAM\nloose-skip-innodb' -i /etc/my.cnf
+        sed -i '/skip-external-locking/i\default-storage-engine=MyISAM\nloose-skip-innodb' /etc/my.cnf
     fi
-
-    /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=/usr/local/mariadb/var --user=mariadb
-    chown -R mariadb /usr/local/mariadb/var
+    mkdir -p ${MySQL_Data_Dir}
+    /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
+    chown -R mariadb ${MariaDB_Data_Dir}
     chgrp -R mariadb /usr/local/mariadb/.
     \cp support-files/mysql.server /etc/init.d/mariadb
     chmod 755 /etc/init.d/mariadb
@@ -106,20 +106,20 @@ Install_MariaDB_10()
     useradd -s /sbin/nologin -M -g mariadb mariadb
 
     \cp support-files/my-medium.cnf /etc/my.cnf
-    sed '/skip-external-locking/i\pid-file = /usr/local/mariadb/var/mariadb.pid' -i /etc/my.cnf
-    sed '/skip-external-locking/i\log_error = /usr/local/mariadb/var/mariadb.err' -i /etc/my.cnf
-    sed '/skip-external-locking/i\basedir = /usr/local/mariadb' -i /etc/my.cnf
-    sed '/skip-external-locking/i\datadir = /usr/local/mariadb/var' -i /etc/my.cnf
-    sed '/skip-external-locking/i\user = mariadb' -i /etc/my.cnf
+    sed -i "/skip-external-locking/i\pid-file = ${MariaDB_Data_Dir}/mariadb.pid" /etc/my.cnf
+    sed -i "/skip-external-locking/i\log_error = ${MariaDB_Data_Dir}/mariadb.err" /etc/my.cnf
+    sed -i '/skip-external-locking/i\basedir = /usr/local/mariadb' /etc/my.cnf
+    sed -i "/skip-external-locking/i\datadir = ${MariaDB_Data_Dir}" /etc/my.cnf
+    sed -i '/skip-external-locking/i\user = mariadb' /etc/my.cnf
     if [ "${InstallInnodb}" = "y" ]; then
         sed -i 's:#innodb:innodb:g' /etc/my.cnf
-        sed -i 's:/usr/local/mariadb/data:/usr/local/mariadb/var:g' /etc/my.cnf
+        sed -i "s:/usr/local/mariadb/data:${MariaDB_Data_Dir}:g" /etc/my.cnf
     else
-        sed '/skip-external-locking/i\default-storage-engine=MyISAM\nloose-skip-innodb' -i /etc/my.cnf
+        sed -i '/skip-external-locking/i\default-storage-engine=MyISAM\nloose-skip-innodb' /etc/my.cnf
     fi
-
-    /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=/usr/local/mariadb/var --user=mariadb
-    chown -R mariadb /usr/local/mariadb/var
+    mkdir -p ${MySQL_Data_Dir}
+    /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
+    chown -R mariadb ${MariaDB_Data_Dir}
     chgrp -R mariadb /usr/local/mariadb/.
     \cp support-files/mysql.server /etc/init.d/mariadb
     chmod 755 /etc/init.d/mariadb

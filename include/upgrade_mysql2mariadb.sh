@@ -61,16 +61,16 @@ Upgrade_MySQL2MariaDB()
 
     case "${installinnodb}" in
     y|Y|Yes|YES|yes|yES|yEs|YeS|yeS)
-    echo "You will install the InnoDB Storage Engine"
-    installinnodb="y"
-    ;;
+        echo "You will install the InnoDB Storage Engine"
+        installinnodb="y"
+        ;;
     n|N|No|NO|no|nO)
-    echo "You will NOT install the InnoDB Storage Engine!"
-    installinnodb="n"
-    ;;
+        echo "You will NOT install the InnoDB Storage Engine!"
+        installinnodb="n"
+        ;;
     *)
-    echo "No input,The InnoDB Storage Engine will enable."
-    installinnodb="y"
+        echo "No input,The InnoDB Storage Engine will enable."
+        installinnodb="y"
     esac
 
     echo "====================================================================="
@@ -113,16 +113,16 @@ Upgrade_MySQL2MariaDB()
     useradd -s /sbin/nologin -M -g mariadb mariadb
 
     \cp support-files/my-medium.cnf /etc/my.cnf
-    sed '/skip-external-locking/i\pid-file = /usr/local/mariadb/var/mariadb.pid' -i /etc/my.cnf
-    sed '/skip-external-locking/i\log_error = /usr/local/mariadb/var/mariadb.err' -i /etc/my.cnf
-    sed '/skip-external-locking/i\basedir = /usr/local/mariadb' -i /etc/my.cnf
-    sed '/skip-external-locking/i\datadir = /usr/local/mariadb/var' -i /etc/my.cnf
-    sed '/skip-external-locking/i\user = mariadb' -i /etc/my.cnf
+    sed -i '/skip-external-locking/i\pid-file = ${MariaDB_Data_Dir}/mariadb.pid' /etc/my.cnf
+    sed -i '/skip-external-locking/i\log_error = ${MariaDB_Data_Dir}/mariadb.err' /etc/my.cnf
+    sed -i '/skip-external-locking/i\basedir = /usr/local/mariadb' /etc/my.cnf
+    sed -i '/skip-external-locking/i\datadir = ${MariaDB_Data_Dir}' /etc/my.cnf
+    sed -i '/skip-external-locking/i\user = mariadb' /etc/my.cnf
     if [ $installinnodb = "y" ]; then
         sed -i 's:#innodb:innodb:g' /etc/my.cnf
-        sed -i 's:/usr/local/mariadb/data:/usr/local/mariadb/var:g' /etc/my.cnf
+        sed -i 's:/usr/local/mariadb/data:${MariaDB_Data_Dir}:g' /etc/my.cnf
     else
-        sed '/skip-external-locking/i\default-storage-engine=MyISAM\nloose-skip-innodb' -i /etc/my.cnf
+        sed -i '/skip-external-locking/i\default-storage-engine=MyISAM\nloose-skip-innodb' /etc/my.cnf
     fi
 
     echo -e "\nexpire_logs_days = 10" >> /etc/my.cnf
@@ -132,9 +132,9 @@ cat > /etc/ld.so.conf.d/mariadb.conf<<EOF
 /usr/local/mariadb/lib
 /usr/local/lib
 EOF
-
-    /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=/usr/local/mariadb/var --user=mariadb
-    chown -R mariadb /usr/local/mariadb/var
+    mkdir -p ${MySQL_Data_Dir}
+    /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
+    chown -R mariadb ${MariaDB_Data_Dir}
     chgrp -R mariadb /usr/local/mariadb/.
     cp support-files/mysql.server /etc/init.d/mariadb
     chmod 755 /etc/init.d/mariadb

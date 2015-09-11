@@ -47,9 +47,9 @@ Upgrade_MySQL51()
     sed -i 's/skip-locking/skip-external-locking/g' /etc/my.cnf
     if [ $installinnodb = "y" ]; then
         sed -i 's:#innodb:innodb:g' /etc/my.cnf
-        sed -i 's:/usr/local/mysql/data:/usr/local/mysql/var:g' /etc/my.cnf
+        sed -i "s:/usr/local/mysql/data:${MySQL_Data_Dir}:g" /etc/my.cnf
     else
-        sed '/skip-external-locking/i\nloose-skip-innodb' -i /etc/my.cnf
+        sed -i '/skip-external-locking/i\nloose-skip-innodb' /etc/my.cnf
     fi
 }
 
@@ -66,12 +66,12 @@ Upgrade_MySQL55() {
 
     \cp support-files/my-medium.cnf /etc/my.cnf
 
-    sed '/skip-external-locking/i\datadir = /usr/local/mysql/var' -i /etc/my.cnf
+    sed -i "/skip-external-locking/i\datadir = ${MySQL_Data_Dir}" /etc/my.cnf
     if [ $installinnodb = "y" ]; then
         sed -i 's:#innodb:innodb:g' /etc/my.cnf
-        sed -i 's:/usr/local/mysql/data:/usr/local/mysql/var:g' /etc/my.cnf
+        sed -i "s:/usr/local/mysql/data:${MySQL_Data_Dir}:g" /etc/my.cnf
     else
-        sed '/skip-external-locking/i\default-storage-engine=MyISAM\nloose-skip-innodb' -i /etc/my.cnf
+        sed -i '/skip-external-locking/i\default-storage-engine=MyISAM\nloose-skip-innodb' /etc/my.cnf
     fi
 
 cat > /etc/ld.so.conf.d/mysql.conf<<EOF
@@ -209,10 +209,10 @@ write_buffer = 2M
 interactive-timeout
 EOF
 
-    sed '/skip-external-locking/i\datadir = /usr/local/mysql/var' -i /etc/my.cnf
+    sed -i "/skip-external-locking/i\datadir = ${MySQL_Data_Dir}" /etc/my.cnf
     if [ "${InstallInnodb}" = "y" ]; then
         sed -i 's:#innodb:innodb:g' /etc/my.cnf
-        sed -i 's:/usr/local/mysql/data:/usr/local/mysql/var:g' /etc/my.cnf
+        sed -i "s:/usr/local/mysql/data:${MySQL_Data_Dir}:g" /etc/my.cnf
     else
         sed -i '/skip-external-locking/i\innodb=OFF\nignore-builtin-innodb\nskip-innodb\ndefault-storage-engine=MyISAM\ndefault-tmp-storage-engine=MyISAM' /etc/my.cnf
         sed -i 's/#loose-innodb/loose-innodb/g' /etc/my.cnf
@@ -293,16 +293,16 @@ Upgrade_MySQL()
 
     case "${installinnodb}" in
     y|Y|Yes|YES|yes|yES|yEs|YeS|yeS)
-    echo "You will install the InnoDB Storage Engine"
-    installinnodb="y"
-    ;;
+        echo "You will install the InnoDB Storage Engine"
+        installinnodb="y"
+        ;;
     n|N|No|NO|no|nO)
-    echo "You will NOT install the InnoDB Storage Engine!"
-    installinnodb="n"
-    ;;
+        echo "You will NOT install the InnoDB Storage Engine!"
+        installinnodb="n"
+        ;;
     *)
-    echo "No input,The InnoDB Storage Engine will enable."
-    installinnodb="y"
+        echo "No input,The InnoDB Storage Engine will enable."
+        installinnodb="y"
     esac
 
     mysql_short_version=`echo ${mysql_version} | cut -d. -f1-2`

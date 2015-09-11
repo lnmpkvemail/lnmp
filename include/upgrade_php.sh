@@ -553,6 +553,112 @@ fi
     Check_PHP_Upgrade_Files
 }
 
+Upgrade_PHP_7()
+{
+    Echo_Blue "[+] Installing ${php_version}"
+    if [ "$PM" = "yum" ]; then
+        yum -y install libicu-devel
+    elif [ "$PM" = "apt" ]; then
+        apt-get update
+        apt-get install -y libicu-dev
+    fi
+    Tar_Cd php-${php_version}.tar.gz php-${php_version}
+    if [ "${Stack}" = "lnmp" ]; then
+        ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --enable-fpm --with-fpm-user=www --with-fpm-group=www --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl --enable-mbregex --enable-mbstring --enable-intl --enable-pcntl --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-opcache
+    else
+        ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-apxs2=/usr/local/apache/bin/apxs --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl --enable-mbregex --enable-mbstring --enable-intl --enable-pcntl --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-opcache
+    fi
+
+    make ZEND_EXTRA_LIBS='-liconv'
+    make install
+
+    Ln_PHP_Bin
+
+    echo "Copy new php configure file..."
+    mkdir -p /usr/local/php/etc
+    \cp php.ini-production /usr/local/php/etc/php.ini
+
+    cd ${cur_dir}
+    # php extensions
+    echo "Modify php.ini......"
+    sed -i 's/post_max_size = 8M/post_max_size = 50M/g' /usr/local/php/etc/php.ini
+    sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 50M/g' /usr/local/php/etc/php.ini
+    sed -i 's/;date.timezone =/date.timezone = PRC/g' /usr/local/php/etc/php.ini
+    sed -i 's/short_open_tag = Off/short_open_tag = On/g' /usr/local/php/etc/php.ini
+    sed -i 's/; cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /usr/local/php/etc/php.ini
+    sed -i 's/; cgi.fix_pathinfo=0/cgi.fix_pathinfo=0/g' /usr/local/php/etc/php.ini
+    sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /usr/local/php/etc/php.ini
+    sed -i 's/max_execution_time = 30/max_execution_time = 300/g' /usr/local/php/etc/php.ini
+    sed -i 's/disable_functions =.*/disable_functions = passthru,exec,system,chroot,scandir,chgrp,chown,shell_exec,proc_open,proc_get_status,popen,ini_alter,ini_restore,dl,openlog,syslog,readlink,symlink,popepassthru,stream_socket_server/g' /usr/local/php/etc/php.ini
+    Pear_Pecl_Set
+
+    echo "Install ZendGuardLoader for PHP 7..."
+    echo "unavailable now."
+
+    echo "Write ZendGuardLoader to php.ini..."
+cat >>/usr/local/php/etc/php.ini<<EOF
+
+;eaccelerator
+
+;ionCube
+
+;opcache
+;[Zend Opcache]
+;zend_extension=opcache.so
+;opcache.memory_consumption=128
+;opcache.interned_strings_buffer=8
+;opcache.max_accelerated_files=4000
+;opcache.revalidate_freq=60
+;opcache.fast_shutdown=1
+;opcache.enable_cli=1
+
+[Zend ZendGuard Loader]
+;php7 do not support zendguardloader @Sep.2015,after support you can uncomment the following line.
+;zend_extension=/usr/local/zend/ZendGuardLoader.so
+;zend_loader.enable=1
+;zend_loader.disable_licensing=0
+;zend_loader.obfuscation_level_support=3
+;zend_loader.license_path=
+
+;xcache
+
+EOF
+
+if [ "${Stack}" = "lnmp" ]; then
+    echo "Creating new php-fpm configure file..."
+    cat >/usr/local/php/etc/php-fpm.conf<<EOF
+[global]
+pid = /usr/local/php/var/run/php-fpm.pid
+error_log = /usr/local/php/var/log/php-fpm.log
+log_level = notice
+
+[www]
+listen = /tmp/php-cgi.sock
+listen.backlog = -1
+listen.allowed_clients = 127.0.0.1
+listen.owner = www
+listen.group = www
+listen.mode = 0666
+user = www
+group = www
+pm = dynamic
+pm.max_children = 10
+pm.start_servers = 2
+pm.min_spare_servers = 1
+pm.max_spare_servers = 6
+request_terminate_timeout = 100
+request_slowlog_timeout = 0
+slowlog = var/log/slow.log
+EOF
+
+    echo "Copy php-fpm init.d file..."
+    \cp ${cur_dir}/src/${Php_Ver}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
+    chmod +x /etc/init.d/php-fpm
+fi
+    lnmp start
+    Check_PHP_Upgrade_Files
+}
+
 Upgrade_PHP()
 {
     Start_Upgrade_PHP
@@ -564,5 +670,7 @@ Upgrade_PHP()
         Upgrade_PHP_54
     elif echo "${php_version}" | grep -Eqi '^5.[56].';then
         Upgrade_PHP_556
+    elif echo "${php_version}" | grep -Eqi '^7.';then
+        Upgrade_PHP_7
     fi
 }
