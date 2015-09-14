@@ -670,6 +670,10 @@ eof
         /sbin/iptables -I INPUT 5 -p tcp --dport 3306 -j DROP
         if [ "$PM" = "yum" ]; then
             service iptables save
+            if [ -s /usr/sbin/firewalld ]; then
+                systemctl stop firewalld
+                systemctl disable firewalld
+            fi
         elif [ "$PM" = "apt" ]; then
             iptables-save > /etc/iptables.rules
             cat >/etc/network/if-post-down.d/iptables<<EOF
@@ -683,10 +687,6 @@ iptables-restore < /etc/iptables.rules
 EOF
             chmod +x /etc/network/if-pre-up.d/iptables
         fi
-    fi
-    if [ -s /usr/sbin/firewalld ]; then
-        systemctl stop firewalld
-        systemctl disable firewalld
     fi
 }
 
