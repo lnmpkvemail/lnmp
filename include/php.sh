@@ -634,6 +634,25 @@ EOF
 fi
 }
 
+LNMP_PHP_Opt()
+{
+    Get_PHP_Ext_Dir
+    PHPFPM_Max=$(($MemTotal/2/20))
+    PHPFPM_Min=$(($MemTotal/2/40))
+    PHPFPM_Start=$(($PHPFPM_Min+($PHPFPM_Max-$PHPFPM_Min)/2))
+    if echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.';then
+        sed -i "s#<value name=\"max_children\">.*#<value name=\"max_children\">${PHPFPM_Max}</value>#" /usr/local/php/etc/php-fpm.conf
+        sed -i "s#<value name=\"StartServers\">.*#<value name=\"StartServers\">${PHPFPM_Start}</value>#" /usr/local/php/etc/php-fpm.conf
+        sed -i "s#<value name=\"MinSpareServers\">.*#<value name=\"MinSpareServers\">${PHPFPM_Min}</value>#" /usr/local/php/etc/php-fpm.conf
+        sed -i "s#<value name=\"MaxSpareServers\">.*#<value name=\"MaxSpareServers\">${PHPFPM_Max}</value>#" /usr/local/php/etc/php-fpm.conf
+    else
+        sed -i "s#pm.max_children.*#pm.max_children = ${PHPFPM_Max}#" /usr/local/php/etc/php-fpm.conf
+        sed -i "s#pm.start_servers.*#pm.start_servers = ${PHPFPM_Start}#" /usr/local/php/etc/php-fpm.conf
+        sed -i "s#pm.min_spare_servers.*#pm.min_spare_servers = ${PHPFPM_Min}#" /usr/local/php/etc/php-fpm.conf
+        sed -i "s#pm.max_spare_servers.*#pm.max_spare_servers = ${PHPFPM_Max}#" /usr/local/php/etc/php-fpm.conf
+    fi
+}
+
 Creat_PHP_Tools()
 {
     echo "Create PHP Info Tool..."

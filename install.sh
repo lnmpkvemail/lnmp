@@ -117,6 +117,7 @@ LNMP_Stack()
     elif [ "${PHPSelect}" = "6" ]; then
         Install_PHP_7
     fi
+    LNMP_PHP_Opt
     Install_Nginx
     Creat_PHP_Tools
     Add_LNMP_Startup

@@ -420,8 +420,9 @@ Check_DB()
 
 Do_Query()
 {
+    echo "$1" >/tmp/.mysql.tmp
     Check_DB
-    ${MySQL_Bin} --defaults-file=~/.my.cnf -e "$1"
+    ${MySQL_Bin} --defaults-file=~/.my.cnf </tmp/.mysql.tmp
     return $?
 }
 
@@ -452,4 +453,5 @@ Verify_DB_Password()
 TempMycnf_Clean()
 {
     rm -f ~/.my.cnf
+    rm -f /tmp/.mysql.tmp
 }
