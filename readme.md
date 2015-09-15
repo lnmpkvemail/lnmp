@@ -34,9 +34,9 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora
 * 参数: php   仅适用于LNMP，可升级至大部分PHP版本。
 * 参数: phpa    可升级LNMPA/LAMP的PHP至大部分版本。
 
-
-##缓存加速：
-* 执行: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|imagemagick|ioncube}
+##扩展插件
+**执行: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|imagemagick|ioncube}**
+###缓存加速：
 * 参数: xcache 安装时需选择版本和设置密码，http://yourIP/xcache/ 进行管理，用户名 admin，密码为安装xcache时设置的。
 * 参数: redis
 * 参数: memcached 可选择php-memcache或php-memcached扩展。
@@ -44,19 +44,22 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora
 * 参数: eaccelerator 安装。  
 **请勿安装多个缓存类扩展模块，多个可能导致网站出现问题 ！**
 
-##图像处理：
-* 参数: imageMagick imageMagick路径：/usr/local/imagemagick/bin/。
+###图像处理：
+* 参数: ./addons.sh {install|uninstall} imageMagick imageMagick路径：/usr/local/imagemagick/bin/。
 
-##解密：
-* 可选1，执行：./ionCube.sh 安装。
+###解密：
+* IonCube，执行：./addons.sh {install|uninstall} ionCube 。
 
-##其他：
+###其他：
+**以下工具在lnmp安装包tools目录下**
 * 可选1，执行：./php5.2.17.sh 可安装一个不与LNMP冲突的PHP 5.2.17单独存在，目录在/usr/local/php52/，使用时需要将nginx虚拟主机配置文件里的 php-cgi.sock 修改为 php-cgi52.sock即可调用PHP5.2.17。
 * 可选2，执行：./reset_mysql_root_password.sh 可重置MySQL/MariaDB的root密码。
 * 可选3，执行：./check502.sh  可检测php-fpm是否挂掉,502报错时重启，配合crontab使用。
 * 可选4，执行：./cut_nginx_logs.sh 日志切割脚本。
 * 可选5，执行：./remove_disable_function.sh 运行此脚本可删掉禁用函数。
-* 可选6，如需卸载LNMP、LNMPA或LAMP可执行：./uninstall.sh 按提示选择即可卸载。
+
+###卸载
+卸载LNMP、LNMPA或LAMP可执行：./uninstall.sh 按提示选择即可卸载。
 
 ##状态管理
 * LNMP/LNMPA/LMAP状态管理：lnmp {start|stop|reload|restart|kill|status}
