@@ -138,18 +138,18 @@ Print_Sucess_Info()
     echo "+------------------------------------------------------------------------+"
     echo "|  Add VirtualHost: lnmp vhost add                                       |"
     echo "+------------------------------------------------------------------------+"
-    echo "|  Default directory: /home/wwwroot/default                              |"
+    echo "|  Default directory: ${Default_Website_Dir}                              |"
     echo "+------------------------------------------------------------------------+"
-    echo "|  MySQL/MariaDB root password: ${MysqlRootPWD}                          |"
+    echo "|  MySQL/MariaDB root password: ${DB_Root_Password}                          |"
     echo "+------------------------------------------------------------------------+"
     lnmp status
-    netstat -ntl  
+    netstat -ntl
     Echo_Green "Install lnmp V${LNMP_Ver} completed! enjoy it."
 }
 
 Print_Failed_Info()
 {
-    Echo_Red "Sorry,Failed to install LNMP!"
+    Echo_Red "Sorry, Failed to install LNMP!"
     Echo_Red "Please visit http://bbs.vpser.net/forum-25-1.html feedback errors and logs."
     Echo_Red "You can download /root/lnmp-install.log from your server,and upload lnmp-install.log to LNMP Forum."
 }

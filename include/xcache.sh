@@ -86,8 +86,8 @@ EOF
 
     touch /tmp/xcache && chown www:www /tmp/xcache
 
-    \cp -a ${cur_dir}/src/${XCache_Ver}/htdocs /home/wwwroot/default/xcache
-    chown www:www -R /home/wwwroot/default/xcache
+    \cp -a ${cur_dir}/src/${XCache_Ver}/htdocs ${Default_Website_Dir}/xcache
+    chown www:www -R ${Default_Website_Dir}/xcache
 
     if [ -s "${zend_ext}" ]; then
         Restart_PHP
@@ -105,7 +105,7 @@ Uninstall_XCache()
     Press_Start
     sed -i '/\[xcache-common\]/,/xcache.coveragedump_directory/d' /usr/local/php/etc/php.ini
     echo "Delete xcache files..."
-    rm -rf /home/wwwroot/default/xcache
+    rm -rf ${Default_Website_Dir}/xcache
     Restart_PHP
     echo "Uninstall XCache completed."
 }

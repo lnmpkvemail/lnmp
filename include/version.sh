@@ -1,9 +1,5 @@
 #!/bin/bash
 
-Download_Mirror='http://soft.vpser.net'
-
-Nginx_Modules_Arguments=""
-
 Autoconf_Ver='autoconf-2.13'
 Libiconv_Ver='libiconv-1.14'
 LibMcrypt_Ver='libmcrypt-2.5.8'
@@ -41,7 +37,7 @@ elif [ "${PHPSelect}" = "4" ]; then
 elif [ "${PHPSelect}" = "5" ]; then
     Php_Ver='php-5.6.13'
 elif [ "${PHPSelect}" = "6" ]; then
-    Php_Ver='php-7.0.0RC2'
+    Php_Ver='php-7.0.0RC3'
 fi
 PhpMyAdmin_Ver='phpMyAdmin-4.4.14-all-languages'
 if [ "${PHPSelect}" = "1" ]; then
@@ -55,23 +51,23 @@ fi
 APR_Ver='apr-1.5.2'
 APR_Util_Ver='apr-util-1.5.4'
 Mod_RPAF_Ver='mod_rpaf-0.8.4-rc3'
-Apache_Version='httpd-2.2.31'
+Apache_Ver='httpd-2.2.31'
 if [ "${ApacheSelect}" = "1" ]; then
-    Apache_Version='httpd-2.2.31'
+    Apache_Ver='httpd-2.2.31'
 elif [ "${ApacheSelect}" = "2" ]; then
-    Apache_Version='httpd-2.4.16'
+    Apache_Ver='httpd-2.4.16'
 fi
 
 Pureftpd_Ver='pure-ftpd-1.0.42'
 
 XCache_Ver='xcache-3.2.0'
-ImageMagick_Ver='ImageMagick-6.9.1-2'
+ImageMagick_Ver='ImageMagick-6.9.2-3'
 Imagick_Ver='imagick-3.1.2'
-ZendOpcache_Ver='zendopcache-7.0.4'
-Redis_Stable_Ver='redis-3.0.1'
-Redis_Old_Ver='redis-2.8.20'
+ZendOpcache_Ver='zendopcache-7.0.5'
+Redis_Stable_Ver='redis-3.0.4'
+Redis_Old_Ver='redis-2.8.22'
 PHPRedis_Ver='redis-2.2.7'
-Memcached_Ver='memcached-1.4.22'
+Memcached_Ver='memcached-1.4.24'
 Libmemcached_Ver='libmemcached-1.0.18'
 PHPMemcached_Ver='memcached-2.2.0'
 PHPMemcache_Ver='memcache-3.0.8'
@@ -91,7 +87,7 @@ if [ "${Stack}" != "" ]; then
     echo "${Php_Ver}"
 
     if [ "${Stack}" != "lnmp" ]; then
-        echo "${Apache_Version}"
+        echo "${Apache_Ver}"
     fi
 
     if [ "${SelectMalloc}" = "2" ]; then

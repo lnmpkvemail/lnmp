@@ -4,13 +4,13 @@ Dispaly_Selection()
 {
 #set mysql root password
 
-    MysqlRootPWD="root"
+    DB_Root_Password="root"
     Echo_Yellow "Please setup root password of MySQL.(Default password: root)"
-    read -p "Please enter: " MysqlRootPWD
-    if [ "${MysqlRootPWD}" = "" ]; then
-        MysqlRootPWD="root"
+    read -p "Please enter: " DB_Root_Password
+    if [ "${DB_Root_Password}" = "" ]; then
+        DB_Root_Password="root"
     fi
-    echo "MySQL root password: ${MysqlRootPWD}"
+    echo "MySQL root password: ${DB_Root_Password}"
 
 #do you want to enable or disable the InnoDB Storage Engine?
     echo "==========================="
@@ -176,7 +176,7 @@ Apache_Selection()
     ApacheSelect="1"
     Echo_Yellow "You have 2 options for your Apache install."
     echo "1: Install Apache 2.2.31 (Default)"
-    echo "2: Install Apache httpd-2.4.16"
+    echo "2: Install Apache 2.4.16"
     read -p "Enter your choice (1 or 2): " ApacheSelect
 
     if [ "${ApacheSelect}" = "1" ]; then
@@ -192,7 +192,7 @@ Apache_Selection()
 Press_Install()
 {
     echo ""
-    echo "Press any key to install...or Press Ctrl+c to cancel"
+    Echo_Green "Press any key to install...or Press Ctrl+c to cancel"
     OLDCONFIG=`stty -g`
     stty -icanon -echo min 1 time 0
     dd count=1 2>/dev/null
@@ -203,7 +203,7 @@ Press_Install()
 Press_Start()
 {
     echo ""
-    echo "Press any key to start...or Press Ctrl+c to cancel"
+    Echo_Green "Press any key to start...or Press Ctrl+c to cancel"
     OLDCONFIG=`stty -g`
     stty -icanon -echo min 1 time 0
     dd count=1 2>/dev/null
@@ -428,9 +428,11 @@ Do_Query()
 
 Make_TempMycnf()
 {
-    echo "[mysql]" >~/.my.cnf
-    echo "user=root" >>~/.my.cnf
-    echo "password='$1'" >>~/.my.cnf
+    cat >~/.my.cnf<<EOF
+[client]
+user=root
+password='$1'
+EOF
 }
 
 Verify_DB_Password()
@@ -439,7 +441,7 @@ Verify_DB_Password()
     status=1
     while [ $status -eq 1 ]; do
         stty -echo
-        echo "Enter current password for root (enter for none): "
+        echo "Enter current root password of Database (Password will not shown): "
         read DB_Root_Password
         echo
         stty echo

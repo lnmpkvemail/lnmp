@@ -64,7 +64,7 @@ EOF
     rm -rf opcache.ini
 
     echo "Copy Opcache Control Panel..."
-    \cp $cur_dir/conf/ocp.php /home/wwwroot/default/ocp.php
+    \cp $cur_dir/conf/ocp.php ${Default_Website_Dir}/ocp.php
 
     Restart_PHP
 

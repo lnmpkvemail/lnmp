@@ -16,7 +16,7 @@ else
     Stack=$1
 fi
 
-LNMP_Ver='1.2'
+LNMP_Ver='1.3'
 . lnmp.conf
 . include/main.sh
 . include/init.sh
@@ -98,6 +98,7 @@ Init_Install()
     elif [ "${DBSelect}" = "5" ]; then
         Install_MariaDB_10
     fi
+    TempMycnf_Clean
     Export_PHP_Autoconf
 }
 

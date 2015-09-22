@@ -113,7 +113,7 @@ extension = \"${PHP_ZTS}\"" /usr/local/php/etc/php.ini
     fi
 
     echo "Copy Memcached PHP Test file..."
-    \cp ${cur_dir}/conf/memcached${ver}.php /home/wwwroot/default/memcached.php
+    \cp ${cur_dir}/conf/memcached${ver}.php ${Default_Website_Dir}/memcached.php
 
     Restart_PHP
 

@@ -9,7 +9,6 @@ if [ $(id -u) != "0" ]; then
 fi
 
 cur_dir=$(pwd)
-Download_Mirror='http://soft.vpser.net'
 action=$1
 shopt -s extglob
 Upgrade_Date=$(date +"%Y%m%d%H%M%S")
@@ -17,6 +16,9 @@ Upgrade_Date=$(date +"%Y%m%d%H%M%S")
 . lnmp.conf
 . include/main.sh
 . include/init.sh
+. include/php.sh
+. include/mysql.sh
+. include/mariadb.sh
 . include/upgrade_nginx.sh
 . include/upgrade_php.sh
 . include/upgrade_mysql.sh
@@ -25,6 +27,7 @@ Upgrade_Date=$(date +"%Y%m%d%H%M%S")
 
 Get_Dist_Name
 Get_OS_Bit
+MemTotal=`free -m | grep Mem | awk '{print  $2}'`
 
 Display_Upgrade_Menu()
 {

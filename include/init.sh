@@ -72,7 +72,7 @@ Xen_Hwcap_Setting()
 
 Check_Hosts()
 {
-    if grep '^127.0.0.1[[:space:]]*localhost' /etc/hosts; then
+    if grep -Eqi '^127.0.0.1[[:space:]]*localhost' /etc/hosts; then
         echo "Hosts: ok."
     else
         echo "127.0.0.1 localhost.localdomain localhost" >> /etc/hosts
@@ -219,7 +219,7 @@ Check_Download()
     Download_Files ${Download_Mirror}/datebase/phpmyadmin/${PhpMyAdmin_Ver}.tar.gz ${PhpMyAdmin_Ver}.tar.gz
     Download_Files ${Download_Mirror}/prober/p.tar.gz p.tar.gz
     if [ "${Stack}" != "lnmp" ]; then
-        Download_Files ${Download_Mirror}/web/apache/${Apache_Version}.tar.gz ${Apache_Version}.tar.gz
+        Download_Files ${Download_Mirror}/web/apache/${Apache_Ver}.tar.gz ${Apache_Ver}.tar.gz
         Download_Files ${Download_Mirror}/web/apache/${APR_Ver}.tar.gz ${APR_Ver}.tar.gz
         Download_Files ${Download_Mirror}/web/apache/${APR_Util_Ver}.tar.gz ${APR_Util_Ver}.tar.gz
         Download_Files ${Download_Mirror}/web/apache/rpaf/${Mod_RPAF_Ver}.tar.gz ${Mod_RPAF_Ver}.tar.gz
