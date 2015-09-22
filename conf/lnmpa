@@ -79,26 +79,29 @@ Function_Vhost()
 esac
 }
 
-Function_Mysql()
+Function_Database()
 {
     case "$1" in
     [aA][dD][dD])
         Add_Database_Menu
         Add_Database
-    ;;
+        ;;
     [lL][iI][sS][tT])
         List_Database
-    ;;
+        ;;
     [dD][eE][lL])
         Del_Database
-    ;;
+        ;;
+    [eE][dD][iI][tT])
+        Edit_Database
+        ;;
     [eE][xX][iI][tT])
         exit 1
-    ;;
+        ;;
     *)
         echo "Usage: lnmp mysql {add|list|del}"
         exit 1
-    ;;
+        ;;
 esac
 }
 
@@ -390,18 +393,47 @@ Check_DB()
     fi
 }
 
-Verify_MySQL_Password()
+Make_TempMycnf()
 {
-    read -p "verify your current MySQL root password: " mysql_root_password
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "quit"
-    if [ $? -eq 0 ]; then
-        echo "MySQL root password correct."
-    else
-        echo "MySQL root password incorrect!Please check!"
-        Verify_MySQL_Password
+    cat >~/.my.cnf<<EOF
+[client]
+user=root
+password='$1'
+EOF
+}
+
+Verify_DB_Password()
+{
+    Check_DB
+    status=1
+    while [ $status -eq 1 ]; do
+        stty -echo
+        echo "Enter current root password of Database (Password will not shown): "
+        read DB_Root_Password
+        echo
+        stty echo
+        Make_TempMycnf "${DB_Root_Password}"
+        Do_Query ""
+        status=$?
+    done
+    echo "OK, MySQL root password correct."
+}
+
+Do_Query()
+{
+    echo "$1" >/tmp/.mysql.tmp
+    Check_DB
+    ${MySQL_Bin} --defaults-file=~/.my.cnf </tmp/.mysql.tmp
+    return $?
+}
+
+TempMycnf_Clean()
+{
+    if [ -s ~/.my.cnf ]; then
+        rm -f ~/.my.cnf
     fi
-    if [ "${mysql_root_password}" = "" ]; then
-        Verify_MySQL_Password
+    if [ -s /tmp/.mysql.tmp ]; then
+        rm -f /tmp/.mysql.tmp
     fi
 }
 
@@ -424,24 +456,42 @@ Add_Database_Menu()
 
 Add_Database()
 {
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "CREATE USER '${database_name}'@'127.0.0.1' IDENTIFIED BY '${mysql_password}'"
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "CREATE USER '${database_name}'@'localhost' IDENTIFIED BY '${mysql_password}'"
-    [ $? -eq 0 ] && echo "User ${database_name} create Sucessfully." || echo "User ${database_name} already exists!"
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "GRANT USAGE ON *.* TO '${database_name}'@'127.0.0.1' IDENTIFIED BY '${mysql_password}'"
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "GRANT USAGE ON *.* TO '${database_name}'@'localhost' IDENTIFIED BY '${mysql_password}'"
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "CREATE DATABASE ${database_name}"
-    [ $? -eq 0 ] && echo "Database: ${database_name} create Sucessfully." || echo "Database: ${database_name} already exists!"
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "GRANT ALL PRIVILEGES ON ${database_name}.* TO '${database_name}'@'127.0.0.1';"
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "GRANT ALL PRIVILEGES ON ${database_name}.* TO '${database_name}'@'localhost';"
-    [ $? -eq 0 ] && echo "GRANT ALL PRIVILEGES ON ${database_name} Sucessfully." || echo "GRANT ALL PRIVILEGES ON ${database_name} failed!"
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "FLUSH PRIVILEGES"
-    [ $? -eq 0 ] && echo "FLUSH PRIVILEGES Sucessfully." || echo "FLUSH PRIVILEGES failed!"
+    cat >/tmp/.add_mysql.sql<<EOF
+CREATE USER '${database_name}'@'localhost' IDENTIFIED BY '${mysql_password}';
+CREATE USER '${database_name}'@'127.0.0.1' IDENTIFIED BY '${mysql_password}';
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER ON *.* TO '${database_name}'@'localhost' IDENTIFIED BY '${mysql_password}';
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER ON *.* TO '${database_name}'@'127.0.0.1' IDENTIFIED BY '${mysql_password}';
+CREATE DATABASE IF NOT EXISTS \`${database_name}\`;
+GRANT ALL PRIVILEGES ON \`${database_name}\`.* TO '${database_name}'@'localhost';
+GRANT ALL PRIVILEGES ON \`${database_name}\`.* TO '${database_name}'@'127.0.0.1';
+FLUSH PRIVILEGES;
+EOF
+    ${MySQL_Bin} --defaults-file=~/.my.cnf < /tmp/.add_mysql.sql
+    [ $? -eq 0 ] && echo "Add database Sucessfully." || echo "Add database failed!"
+    rm -f /tmp/.add_mysql.sql
 }
 
 List_Database()
 {
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "SHOW DATABASES;"
+    ${MySQL_Bin} --defaults-file=~/.my.cnf -e "SHOW DATABASES;"
     [ $? -eq 0 ] && echo "List all databases Sucessfully." || echo "List all databases failed!"
+}
+
+Edit_Database()
+{
+    read -p "Enter database username: " database_username
+    if [ "${database_username}" = "" ]; then
+        echo "Database Username can't be empty!"
+        exit 1
+    fi
+    read -p "Enter NEW Password: " database_username_passwd
+    if [ "${database_username_passwd}" = "" ]; then
+        echo "Database Password can't be empty!"
+        exit 1
+    fi
+    Do_Query "UPDATE mysql.user SET Password=PASSWORD('${database_username_passwd}') WHERE User='${database_username}' AND Host IN ('localhost', '127.0.0.1', '::1');"
+    [ $? -eq 0 ] && echo "Edit user password Sucessfully." || echo "Edit user password databases failed!"
+    Do_Query "FLUSH PRIVILEGES;"
 }
 
 Del_Database()
@@ -453,14 +503,17 @@ Del_Database()
         exit 1
     fi
     echo "Your will delete database and MySQL user with same name: ${database_name}"
-    echo "Sleep 10s,Press ctrl+c to cancel..."
+    echo "Sleep 10s, Press ctrl+c to cancel..."
     sleep 10
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "DROP USER '${database_name}'@'127.0.0.1'"
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "DROP USER '${database_name}'@'localhost'"
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "DROP DATABASE ${database_name}"
-    [ $? -eq 0 ] && echo "Database: ${database_name} deleted Sucessfully." || echo "Database: ${database_name} not exist!"
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "FLUSH PRIVILEGES"
-    [ $? -eq 0 ] && echo "FLUSH PRIVILEGES Sucessfully." || echo "FLUSH PRIVILEGES failed!"
+    cat >/tmp/.del.mysql.sql<<EOF
+DROP USER '${database_name}'@'127.0.0.1';
+DROP USER '${database_name}'@'localhost';
+DROP DATABASE \`${database_name}\`;
+FLUSH PRIVILEGES;
+EOF
+    ${MySQL_Bin} --defaults-file=~/.my.cnf < /tmp/.del.mysql.sql
+    [ $? -eq 0 ] && echo "Delete database: ${database_name} Sucessfully." || echo "Delete database: ${database_name} failed!"
+    rm -f /tmp/.del.mysql.sql
 }
 
 Enter_Ftp_Name()
@@ -595,8 +648,9 @@ case "${arg1}" in
         Function_Vhost ${arg2}
         ;;
     database)
-        Verify_MySQL_Password
-        Function_Mysql ${arg2}
+        Verify_DB_Password
+        Function_Database ${arg2}
+        TempMycnf_Clean
         ;;
     ftp)
         Check_Pureftpd
@@ -606,7 +660,7 @@ case "${arg1}" in
         echo "Usage: lnmp {start|stop|reload|restart|kill|status}"
         echo "Usage: lnmp {nginx|mysql|mariadb|pureftpd|httpd} {start|stop|reload|restart|kill|status}"
         echo "Usage: lnmp vhost {add|list|del}"
-        echo "Usage: lnmp database {add|list|del}"
-        echo "Usage: lnmp ftp {add|list|del|edit}"
+        echo "Usage: lnmp database {add|list|edit|del}"
+        echo "Usage: lnmp ftp {add|list|edit|del}"
 esac
 exit

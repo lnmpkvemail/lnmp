@@ -160,7 +160,7 @@ Apache_Selection()
     echo "==========================="
 #set Server Administrator Email Address
     ServerAdmin=""
-    read -p "Please enter Administrator Email Address:" ServerAdmin
+    read -p "Please enter Administrator Email Address: " ServerAdmin
     if [ "${ServerAdmin}" == "" ]; then
         echo "Administrator Email Address will set to webmaster@example.com!"
         ServerAdmin="webmaster@example.com"
@@ -454,6 +454,10 @@ Verify_DB_Password()
 
 TempMycnf_Clean()
 {
-    rm -f ~/.my.cnf
-    rm -f /tmp/.mysql.tmp
+    if [ -s ~/.my.cnf ]; then
+        rm -f ~/.my.cnf
+    fi
+    if [ -s /tmp/.mysql.tmp ]; then
+        rm -f /tmp/.mysql.tmp
+    fi
 }
