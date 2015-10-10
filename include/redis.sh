@@ -52,7 +52,6 @@ Install_Redis()
     cd ../
 
     if [ -s /sbin/iptables ]; then
-        /sbin/iptables -I INPUT 11 -p tcp -s 127.0.0.1 --dport 6379 -j ACCEPT
         /sbin/iptables -A INPUT -p tcp --dport 6379 -j DROP
         if [ "$PM" = "yum" ]; then
             service iptables save
@@ -82,8 +81,13 @@ extension = "redis.so"' /usr/local/php/etc/php.ini
     Restart_PHP
     /etc/init.d/redis start
 
-    echo "====== Redis install completed ======"
-    echo "Redis installed successfully, enjoy it!"
+    if [ -s "${zend_ext}" ] && [ -s /usr/local/redis/bin/redis-server ]; then
+        echo "====== Redis install completed ======"
+        echo "Redis installed successfully, enjoy it!"
+    else
+        sed -i '/redis.so/d' /usr/local/php/etc/php.ini
+        echo "Redis install failed!"
+    fi
 }
 
 Uninstall_Redis()
@@ -97,7 +101,6 @@ Uninstall_Redis()
     rm -rf /usr/local/redis
     rm -rf /etc/init.d/redis
     if [ -s /sbin/iptables ]; then
-        /sbin/iptables -D INPUT -p tcp -s 127.0.0.1 --dport 6379 -j ACCEPT
         /sbin/iptables -D INPUT -p tcp --dport 6379 -j DROP
         if [ "$PM" = "yum" ]; then
             service iptables save

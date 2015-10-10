@@ -30,7 +30,7 @@ Install_ImageMagic()
     sed -i '/the dl()/i\
     extension = "imagick.so"' /usr/local/php/etc/php.ini
 
-    if [ -s "${zend_ext}" ]; then
+    if [ -s "${zend_ext}" ] && [ -s /usr/local/imagemagick/bin/convert ]; then
         Restart_PHP
         echo "====== ImageMagick install completed ======"
         echo "ImageMagick installed successfully, enjoy it!"

@@ -125,12 +125,22 @@ Check_PHP_Upgrade_Files()
             echo "You upload upgrade_lnmp_php.log to LNMP Forum for help."
         fi
     else
-        if [[ -s /usr/local/apache/modules/libphp5.so && -s /usr/local/php/etc/php.ini && -s /usr/local/php/bin/php ]]; then
-            Echo_Green "======== upgrade php completed ======"
+        if echo "${php_version}" | grep -Eqi '^7.';then
+            if [[ -s /usr/local/apache/bin/httpd && -s /usr/local/apache/modules/libphp7.so && -s /usr/local/apache/conf/httpd.conf ]]; then
+                Echo_Green "======== upgrade php completed ======"
+            else
+                Echo_Red "======== upgrade php failed ======"
+                Echo_Red "upgrade php log: /root/upgrade_a_php.log"
+                echo "You upload upgrade_a_php.log to LNMP Forum for help."
+            fi
         else
-            Echo_Red "======== upgrade php failed ======"
-            Echo_Red "upgrade php log: /root/upgrade_a_php.log"
-            echo "You upload upgrade_a_php.log to LNMP Forum for help."
+            if [[ -s /usr/local/apache/modules/libphp5.so && -s /usr/local/php/etc/php.ini && -s /usr/local/php/bin/php ]]; then
+                Echo_Green "======== upgrade php completed ======"
+            else
+                Echo_Red "======== upgrade php failed ======"
+                Echo_Red "upgrade php log: /root/upgrade_a_php.log"
+                echo "You upload upgrade_a_php.log to LNMP Forum for help."
+            fi
         fi
     fi
 }
@@ -200,7 +210,7 @@ zend_optimizer.optimization_level=1
 zend_extension="/usr/local/zend/ZendOptimizer.so"
 
 ;xcache
-;xcache end
+
 EOF
 
     if [ "${Stack}" = "lnmp" ]; then
@@ -285,7 +295,7 @@ zend_loader.obfuscation_level_support=3
 zend_loader.license_path=
 
 ;xcache
-;xcache end
+
 EOF
 
 if [ "${Stack}" = "lnmp" ]; then
@@ -386,7 +396,7 @@ zend_loader.obfuscation_level_support=3
 zend_loader.license_path=
 
 ;xcache
-;xcache end
+
 EOF
 
 if [ "${Stack}" = "lnmp" ]; then
@@ -503,18 +513,9 @@ zend_loader.obfuscation_level_support=3
 zend_loader.license_path=
 
 ;opcache
-[Zend Opcache]
-zend_extension=opcache.so
-opcache.memory_consumption=128
-opcache.interned_strings_buffer=8
-opcache.max_accelerated_files=4000
-opcache.revalidate_freq=60
-opcache.fast_shutdown=1
-opcache.enable_cli=1
-;opcache end
 
 ;xcache
-;xcache end
+
 EOF
 
     echo "Download Opcache Control Panel..."
@@ -607,14 +608,6 @@ Upgrade_PHP_7()
 ;ionCube
 
 ;opcache
-;[Zend Opcache]
-;zend_extension=opcache.so
-;opcache.memory_consumption=128
-;opcache.interned_strings_buffer=8
-;opcache.max_accelerated_files=4000
-;opcache.revalidate_freq=60
-;opcache.fast_shutdown=1
-;opcache.enable_cli=1
 
 [Zend ZendGuard Loader]
 ;php7 do not support zendguardloader @Sep.2015,after support you can uncomment the following line.

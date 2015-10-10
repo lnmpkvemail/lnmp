@@ -17,7 +17,7 @@ Upgrade_Nginx()
     Nginx_Version=""
     echo "Current Nginx Version:${Cur_Nginx_Version}"
     echo "You can get version number from http://nginx.org/en/download.html"
-    read -p "Please enter nginx version you want, (example: 1.7.8 ): " Nginx_Version
+    read -p "Please enter nginx version you want, (example: 1.7.8): " Nginx_Version
     if [ "${Nginx_Version}" = "" ]; then
         echo "Error: You must enter a nginx version!!"
         exit 1
@@ -47,7 +47,11 @@ Upgrade_Nginx()
     echo "============================check files=================================="
 
     Tar_Cd nginx-${Nginx_Version}.tar.gz nginx-${Nginx_Version}
-    ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_spdy_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${NginxMAOpt} ${Nginx_Modules_Arguments}
+    if echo ${Nginx_Version} | grep -Eqi '^[0-1].[5-8].[0-9]' || echo ${Nnginx_Version} | grep -Eqi '^1.9.[1-4]'; then
+        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_spdy_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${NginxMAOpt} ${Nginx_Modules_Arguments}
+    else
+        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_v2_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${NginxMAOpt} ${Nginx_Modules_Arguments}
+    fi
     make
 
     mv /usr/local/nginx/sbin/nginx /usr/local/nginx/sbin/nginx.${Upgrade_Date}

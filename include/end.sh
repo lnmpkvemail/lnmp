@@ -115,11 +115,20 @@ Check_PHP_Files()
 Check_Apache_Files()
 {
     isApache=""
-    if [[ -s /usr/local/apache/bin/httpd && -s /usr/local/apache/modules/libphp5.so && -s /usr/local/apache/conf/httpd.conf ]]; then
-        Echo_Green "Apache: OK"
-        isApache="ok"
+    if [ "${PHPSelect}" = "6" ]; then
+        if [[ -s /usr/local/apache/bin/httpd && -s /usr/local/apache/modules/libphp7.so && -s /usr/local/apache/conf/httpd.conf ]]; then
+            Echo_Green "Apache: OK"
+            isApache="ok"
+        else
+            Echo_Red "Error: Apache install failed."
+        fi
     else
-        Echo_Red "Error: Apache install failed."
+        if [[ -s /usr/local/apache/bin/httpd && -s /usr/local/apache/modules/libphp5.so && -s /usr/local/apache/conf/httpd.conf ]]; then
+            Echo_Green "Apache: OK"
+            isApache="ok"
+        else
+            Echo_Red "Error: Apache install failed."
+        fi
     fi
 }
 

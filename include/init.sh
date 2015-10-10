@@ -346,6 +346,18 @@ Install_TCMalloc()
     ldconfig
 }
 
+Install_Icu4c()
+{
+    if /usr/bin/icu-config --version | grep '^3.'; then
+        Echo_Blue "[+] Installing ${Libicu4c_Ver}"
+        cd ${cur_dir}/src
+        Download_Files ${Download_Mirror}/lib/icu4c/${Libicu4c_Ver}-src.tgz ${Libicu4c_Ver}-src.tgz
+        Tar_Cd ${Libicu4c_Ver}-src.tgz icu/source
+        ./configure --prefix=/usr
+        make && make install
+    fi
+}
+
 CentOS_Lib_Opt()
 {
     if [ "${Is_64bit}" = "y" ] ; then

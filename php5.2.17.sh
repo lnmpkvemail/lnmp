@@ -27,8 +27,8 @@ Get_Dist_Name
 Check_DB
 Get_PHP_Ext_Dir
 if echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.'; then
-        echo "Do NOT need to install PHP 5.2.17!"
-        exit 1
+    echo "Do NOT need to install PHP 5.2.17!"
+    exit 1
 fi
 
 echo "=================================================="
@@ -135,9 +135,9 @@ echo "Starting PHP 5.2.17 PHP-FPM..."
 rm -rf ${cur_dir}/src/php-5.2.17
 
 if [ -s /usr/local/php52/sbin/php-fpm ] && [ -s /usr/local/php52/etc/php.ini ] && [ -s /usr/local/php52/bin/php ]; then
-echo "==========================================="
-Echo_Green "You have successfully install PHP 5.2.17 "
-echo "==========================================="
+    echo "==========================================="
+    Echo_Green "You have successfully install PHP 5.2.17 "
+    echo "==========================================="
 else
-Echo_Red "Failed to install PHP 5.2.17!,you need try to run ./php5.2.17.sh 2>&1 | tee installphp5.2.17.log to record install logs."
+    Echo_Red "Failed to install PHP 5.2.17!,you need try to run ./php5.2.17.sh 2>&1 | tee installphp5.2.17.log to record install logs."
 fi

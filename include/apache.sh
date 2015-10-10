@@ -45,6 +45,10 @@ Install_Apache_22()
         sed -i "s#/home/wwwroot/default#${Default_Website_Dir}#g" /usr/local/apache/conf/extra/httpd-vhosts.conf
     fi
 
+    if [ "${PHPSelect}" = "6" ]; then
+        sed -i '/^LoadModule php5_module/d' /usr/local/apache/conf/httpd.conf
+    fi
+
     \cp ${cur_dir}/init.d/init.d.httpd /etc/init.d/httpd
     chmod +x /etc/init.d/httpd
 }
@@ -99,6 +103,10 @@ Install_Apache_24()
     if [ "${Default_Website_Dir}" != "/home/wwwroot/default" ]; then
         sed -i "s#/home/wwwroot/default#${Default_Website_Dir}#g" /usr/local/apache/conf/httpd.conf
         sed -i "s#/home/wwwroot/default#${Default_Website_Dir}#g" /usr/local/apache/conf/extra/httpd-vhosts.conf
+    fi
+
+    if [ "${PHPSelect}" = "6" ]; then
+        sed -i '/^LoadModule php5_module/d' /usr/local/apache/conf/httpd.conf
     fi
 
     \cp ${cur_dir}/init.d/init.d.httpd /etc/init.d/httpd

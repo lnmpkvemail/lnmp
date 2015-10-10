@@ -76,6 +76,7 @@ Init_Install()
     Install_Freetype
     Install_Curl
     Install_Pcre
+    Install_Icu4c
     if [ "${SelectMalloc}" = "2" ]; then
         Install_Jemalloc
     elif [ "${SelectMalloc}" = "3" ]; then
@@ -144,6 +145,8 @@ LNMPA_Stack()
         Install_PHP_55
     elif [ "${PHPSelect}" = "5" ]; then
         Install_PHP_56
+    elif [ "${PHPSelect}" = "6" ]; then
+        Install_PHP_7
     fi
     Install_Nginx
     Creat_PHP_Tools
@@ -170,6 +173,8 @@ LAMP_Stack()
         Install_PHP_55
     elif [ "${PHPSelect}" = "5" ]; then
         Install_PHP_56
+    elif [ "${PHPSelect}" = "6" ]; then
+        Install_PHP_7
     fi
     Creat_PHP_Tools
     Add_LAMP_Startup

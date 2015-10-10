@@ -84,9 +84,9 @@ Dispaly_Selection()
     echo "1: Install PHP 5.2.17"
     echo "2: Install PHP 5.3.29"
     echo "3: Install PHP 5.4.45 (Default)"
-    echo "4: Install PHP 5.5.29"
-    echo "5: Install PHP 5.6.13"
-    echo "6: Install PHP 7.0.0RC2"
+    echo "4: Install PHP 5.5.30"
+    echo "5: Install PHP 5.6.14"
+    echo "6: Install PHP 7.0.0RC4"
     read -p "Enter your choice (1, 2, 3, 4, 5 or 6): " PHPSelect
 
     case "${PHPSelect}" in
@@ -100,13 +100,13 @@ Dispaly_Selection()
         echo "You will Install PHP 5.4.45"
         ;;
     4)
-        echo "You will install PHP 5.5.29"
+        echo "You will install PHP 5.5.30"
         ;;
     5)
-        echo "You will install PHP 5.6.13"
+        echo "You will install PHP 5.6.14"
         ;;
     6)
-        echo "You will install PHP 7.0.0RC2"
+        echo "You will install PHP 7.0.0RC4"
         ;;
     *)
         echo "No input,You will install PHP 5.4.45"
@@ -189,6 +189,15 @@ Apache_Selection()
     fi
 }
 
+Kill_PM()
+{
+    if ps aux | grep "yum" | grep -qv "grep"; then
+	       killall yum
+    elif ps aux | grep "apt-get" | grep -qv "grep"; then
+	       killall apt-get
+    fi
+}
+
 Press_Install()
 {
     echo ""
@@ -198,6 +207,7 @@ Press_Install()
     dd count=1 2>/dev/null
     stty ${OLDCONFIG}
     . include/version.sh
+    Kill_PM
 }
 
 Press_Start()
@@ -385,6 +395,8 @@ Get_PHP_Ext_Dir()
        zend_ext_dir="/usr/local/php/lib/php/extensions/no-debug-non-zts-20121212/"
     elif echo "${Cur_PHP_Version}" | grep -Eqi '^5.6.'; then
        zend_ext_dir="/usr/local/php/lib/php/extensions/no-debug-non-zts-20131226/"
+   elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.0.'; then
+       zend_ext_dir="/usr/local/php/lib/php/extensions/no-debug-non-zts-20141001/"
     fi
 }
 

@@ -369,14 +369,6 @@ Install_PHP_55()
 ;ionCube
 
 ;opcache
-;[Zend Opcache]
-;zend_extension=opcache.so
-;opcache.memory_consumption=128
-;opcache.interned_strings_buffer=8
-;opcache.max_accelerated_files=4000
-;opcache.revalidate_freq=60
-;opcache.fast_shutdown=1
-;opcache.enable_cli=1
 
 [Zend ZendGuard Loader]
 zend_extension=/usr/local/zend/ZendGuardLoader.so
@@ -481,14 +473,6 @@ cat >>/usr/local/php/etc/php.ini<<EOF
 ;ionCube
 
 ;opcache
-;[Zend Opcache]
-;zend_extension=opcache.so
-;opcache.memory_consumption=128
-;opcache.interned_strings_buffer=8
-;opcache.max_accelerated_files=4000
-;opcache.revalidate_freq=60
-;opcache.fast_shutdown=1
-;opcache.enable_cli=1
 
 [Zend ZendGuard Loader]
 zend_extension=/usr/local/zend/ZendGuardLoader.so
@@ -582,14 +566,6 @@ cat >>/usr/local/php/etc/php.ini<<EOF
 ;ionCube
 
 ;opcache
-;[Zend Opcache]
-;zend_extension=opcache.so
-;opcache.memory_consumption=128
-;opcache.interned_strings_buffer=8
-;opcache.max_accelerated_files=4000
-;opcache.revalidate_freq=60
-;opcache.fast_shutdown=1
-;opcache.enable_cli=1
 
 [Zend ZendGuard Loader]
 ;php7 do not support zendguardloader @Sep.2015,after support you can uncomment the following line.
@@ -690,9 +666,10 @@ eof
     if [ -s /sbin/iptables ]; then
         /sbin/iptables -I INPUT 1 -i lo -j ACCEPT
         /sbin/iptables -I INPUT 2 -m state --state ESTABLISHED,RELATED -j ACCEPT
-        /sbin/iptables -I INPUT 3 -p tcp --dport 80 -j ACCEPT
-        /sbin/iptables -I INPUT 4 -p tcp -s 127.0.0.1 --dport 3306 -j ACCEPT
+        /sbin/iptables -I INPUT 3 -p tcp --dport 22 -j ACCEPT
+        /sbin/iptables -I INPUT 4 -p tcp --dport 80 -j ACCEPT
         /sbin/iptables -I INPUT 5 -p tcp --dport 3306 -j DROP
+        /sbin/iptables -I INPUT 6 -p icmp -m icmp --icmp-type 8 -j ACCEPT
         if [ "$PM" = "yum" ]; then
             service iptables save
             if [ -s /usr/sbin/firewalld ]; then

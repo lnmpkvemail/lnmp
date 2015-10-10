@@ -76,7 +76,7 @@ Install_Memcached()
     if echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.';then
         sed -i "/extension_dir =/a\
 extension = \"${PHP_ZTS}\"" /usr/local/php/etc/php.ini
-    elif echo "${Cur_PHP_Version}" | grep -Eqi '^5.[3456].';then
+    elif echo "${Cur_PHP_Version}" | grep -Eqi '^5.[3456].' || echo "${Cur_PHP_Version}" | grep -Eqi '^7.';then
         sed -i "/the dl()/i\
 extension = \"${PHP_ZTS}\"" /usr/local/php/etc/php.ini
     else
@@ -118,8 +118,6 @@ extension = \"${PHP_ZTS}\"" /usr/local/php/etc/php.ini
     Restart_PHP
 
     if [ -s /sbin/iptables ]; then
-        /sbin/iptables -I INPUT 9 -p tcp -s 127.0.0.1 --dport 11211 -j ACCEPT
-        /sbin/iptables -I INPUT 10 -p udp -s 127.0.0.1 --dport 11211 -j ACCEPT
         /sbin/iptables -A INPUT -p tcp --dport 11211 -j DROP
         /sbin/iptables -A INPUT -p udp --dport 11211 -j DROP
         if [ "$PM" = "yum" ]; then
@@ -132,11 +130,11 @@ extension = \"${PHP_ZTS}\"" /usr/local/php/etc/php.ini
     echo "Starting Memcached..."
     /etc/init.d/memcached start
 
-    if [ -s ${zend_ext} ]; then
+    if [ -s "${zend_ext}" ] && [ -s /usr/local/memcached/bin/memcached ]; then
         echo "====== Memcached install completed ======"
         echo "Memcached installed successfully, enjoy it!"
     else
-        sed -i '/${PHP_ZTS}/d' /usr/local/php/etc/php.ini
+        sed -i "/${PHP_ZTS}/d" /usr/local/php/etc/php.ini
         echo "Memcached install failed!"
     fi
 }
@@ -155,8 +153,6 @@ Uninstall_Memcached()
     rm -rf /etc/init.d/memcached
     rm -rf /usr/bin/memcached
     if [ -s /sbin/iptables ]; then
-        /sbin/iptables -D INPUT -p tcp -s 127.0.0.1 --dport 11211 -j ACCEPT
-        /sbin/iptables -D INPUT -p udp -s 127.0.0.1 --dport 11211 -j ACCEPT
         /sbin/iptables -D INPUT -p tcp --dport 11211 -j DROP
         /sbin/iptables -D INPUT -p udp --dport 11211 -j DROP
         if [ "$PM" = "yum" ]; then

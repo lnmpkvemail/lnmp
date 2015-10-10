@@ -377,7 +377,7 @@ Upgrade_MySQL()
     echo "Current MYSQL Version:${cur_mysql_version}"
     echo "You can get version number from http://dev.mysql.com/downloads/mysql/"
     Echo_Yellow "Please input MySQL Version you want."
-    read -p "(example: 5.5.36 ): " mysql_version
+    read -p "(example: 5.5.45 ): " mysql_version
     if [ "${mysql_version}" = "" ]; then
         echo "Error: You must input MySQL Version!!"
         exit 1
@@ -393,7 +393,7 @@ Upgrade_MySQL()
 
     InstallInnodb="y"
     Echo_Yellow "Do you want to install the InnoDB Storage Engine?"
-    read -p "(Default yes,if you want please input: y ,if not please enter: n): " InstallInnodb
+    read -p "(Default yes,if you want please enter: y , if not please enter: n): " InstallInnodb
 
     case "${InstallInnodb}" in
     y|Y|Yes|YES|yes|yES|yEs|YeS|yeS)
@@ -405,7 +405,7 @@ Upgrade_MySQL()
         InstallInnodb="n"
         ;;
     *)
-        echo "No input,The InnoDB Storage Engine will enable."
+        echo "No input, The InnoDB Storage Engine will enable."
         InstallInnodb="y"
     esac
 

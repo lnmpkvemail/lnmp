@@ -33,7 +33,7 @@ EOF
     [ $? -eq 0 ] && echo "FLUSH PRIVILEGES Sucessfully." || echo "FLUSH PRIVILEGES failed!"
     rm -f ~/.emptymy.cnf
     fi
-    /etc/init.d/mysql restart
+    /etc/init.d/mariadb restart
 
     Make_TempMycnf "${DB_Root_Password}"
     Do_Query ""

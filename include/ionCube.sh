@@ -55,7 +55,7 @@ zend_extension="${zend_ext}"
 ;ioncubeend
 EOF
 
-    sed -i '/;ionCube/r ionCube.ini' /usr/local/php/etc/php.ini
+    sed -i '/^;ionCube$/r ionCube.ini' /usr/local/php/etc/php.ini
     rm -f ionCube.ini
 
     if [ -s "${zend_ext}" ]; then

@@ -141,7 +141,7 @@ eaccelerator.sessions = "disk_only"
 eaccelerator.content = "disk_only"
 EOF
 
-    sed -i '/;eaccelerator/r ea.ini' /usr/local/php/etc/php.ini
+    sed -i '/^;eaccelerator$/r ea.ini' /usr/local/php/etc/php.ini
     rm -f ea.ini
 
     if [ -s "${zend_ext}" ]; then

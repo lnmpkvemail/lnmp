@@ -39,7 +39,7 @@ Upgrade_MariaDB()
     echo "Current MariaDB Version:${cur_mariadb_version}"
     echo "You can get version number from https://downloads.mariadb.org/"
     Echo_Yellow "Please enter MariaDB Version you want."
-    read -p "(example: 10.0.15 ): " mariadb_version
+    read -p "(example: 10.0.21 ): " mariadb_version
     if [ "${mariadb_version}" = "" ]; then
         echo "Error: You must input MariaDB Version!!"
         exit 1
@@ -50,7 +50,7 @@ Upgrade_MariaDB()
 
     InstallInnodb="y"
     Echo_Yellow "Do you want to install the InnoDB Storage Engine?"
-    read -p "(Default yes,if you want please input: y ,if not please enter: n):" InstallInnodb
+    read -p "(Default yes, if you want please enter: y , if not please enter: n): " InstallInnodb
 
     case "${InstallInnodb}" in
     y|Y|Yes|YES|yes|yES|yEs|YeS|yeS)
@@ -62,7 +62,7 @@ Upgrade_MariaDB()
         InstallInnodb="n"
         ;;
     *)
-        echo "No input,The InnoDB Storage Engine will enable."
+        echo "No input, The InnoDB Storage Engine will enable."
         InstallInnodb="y"
     esac
 
@@ -195,7 +195,7 @@ EOF
     /etc/init.d/mariadb start
 
     echo "Restore backup databases..."
-    /usr/local/mariadb/bin/mysql --defaults-file=~/.my.cnf < /root/mysql_all_backup${Upgrade_Date}.sql
+    /usr/local/mariadb/bin/mysql --defaults-file=~/.my.cnf < /root/mariadb_all_backup${Upgrade_Date}.sql
     echo "Repair databases..."
     /usr/local/mariadb/bin/mysql_upgrade -u root -p${DB_Root_Password}
 

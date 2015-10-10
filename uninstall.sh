@@ -13,6 +13,7 @@ Stack=$1
 
 LNMP_Ver='1.2'
 
+. lnmp.conf
 . include/main.sh
 
 shopt -s extglob
@@ -38,9 +39,14 @@ Uninstall_LNMP()
     Remove_StartUp nginx
     Remove_StartUp ${DB_Name}
     Remove_StartUp php-fpm
+    if [ =d "${MariaDB_Data_Dir}" ]; then
+        mv ${MariaDB_Data_Dir} /root/databases_backup_$(date +"%Y%m%d%H%M%S")
+    else
+        mv ${MySQL_Data_Dir} /root/databases_backup_$(date +"%Y%m%d%H%M%S")
+    fi
     echo "Deleting LNMP files..."
     rm -rf /usr/local/nginx
-    rm -rf /usr/local/${DB_Name}/!(var|data)
+    rm -rf /usr/local/${DB_Name}
     rm -rf /usr/local/php
     rm -rf /usr/local/zend
 

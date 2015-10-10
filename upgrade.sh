@@ -24,6 +24,7 @@ Upgrade_Date=$(date +"%Y%m%d%H%M%S")
 . include/upgrade_mysql.sh
 . include/upgrade_mariadb.sh
 . include/upgrade_mysql2mariadb.sh
+. include/upgrade_phpmyadmin.sh
 
 Get_Dist_Name
 Get_OS_Bit
