@@ -21,20 +21,22 @@ Install_Nginx()
     else
         \cp conf/nginx.conf /usr/local/nginx/conf/nginx.conf
     fi
-    \cp conf/rewrite/dabr.conf /usr/local/nginx/conf/dabr.conf
-    \cp conf/rewrite/discuz.conf /usr/local/nginx/conf/discuz.conf
-    \cp conf/rewrite/sablog.conf /usr/local/nginx/conf/sablog.conf
-    \cp conf/rewrite/typecho.conf /usr/local/nginx/conf/typecho.conf
-    \cp conf/rewrite/typecho2.conf /usr/local/nginx/conf/typecho2.conf
-    \cp conf/rewrite/wordpress.conf /usr/local/nginx/conf/wordpress.conf
-    \cp conf/rewrite/discuzx.conf /usr/local/nginx/conf/discuzx.conf
-    \cp conf/rewrite/none.conf /usr/local/nginx/conf/none.conf
-    \cp conf/rewrite/wp2.conf /usr/local/nginx/conf/wp2.conf
-    \cp conf/rewrite/phpwind.conf /usr/local/nginx/conf/phpwind.conf
-    \cp conf/rewrite/shopex.conf /usr/local/nginx/conf/shopex.conf
-    \cp conf/rewrite/dedecms.conf /usr/local/nginx/conf/dedecms.conf
-    \cp conf/rewrite/drupal.conf /usr/local/nginx/conf/drupal.conf
-    \cp conf/rewrite/ecshop.conf /usr/local/nginx/conf/ecshop.conf
+
+    mkdir -p /usr/local/nginx/conf/rewrite
+    \cp conf/rewrite/dabr.conf /usr/local/nginx/conf/rewrite/dabr.conf
+    \cp conf/rewrite/discuz.conf /usr/local/nginx/conf/rewrite/discuz.conf
+    \cp conf/rewrite/sablog.conf /usr/local/nginx/conf/rewrite/sablog.conf
+    \cp conf/rewrite/typecho.conf /usr/local/nginx/conf/rewrite/typecho.conf
+    \cp conf/rewrite/typecho2.conf /usr/local/nginx/conf/rewrite/typecho2.conf
+    \cp conf/rewrite/wordpress.conf /usr/local/nginx/conf/rewrite/wordpress.conf
+    \cp conf/rewrite/discuzx.conf /usr/local/nginx/conf/rewrite/discuzx.conf
+    \cp conf/rewrite/none.conf /usr/local/nginx/conf/rewrite/none.conf
+    \cp conf/rewrite/wp2.conf /usr/local/nginx/conf/rewrite/wp2.conf
+    \cp conf/rewrite/phpwind.conf /usr/local/nginx/conf/rewrite/phpwind.conf
+    \cp conf/rewrite/shopex.conf /usr/local/nginx/conf/rewrite/shopex.conf
+    \cp conf/rewrite/dedecms.conf /usr/local/nginx/conf/rewrite/dedecms.conf
+    \cp conf/rewrite/drupal.conf /usr/local/nginx/conf/rewrite/drupal.conf
+    \cp conf/rewrite/ecshop.conf /usr/local/nginx/conf/rewrite/ecshop.conf
     \cp conf/pathinfo.conf /usr/local/nginx/conf/pathinfo.conf
     \cp conf/enable-php.conf /usr/local/nginx/conf/enable-php.conf
     \cp conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php-pathinfo.conf
