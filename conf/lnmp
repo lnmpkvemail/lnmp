@@ -248,12 +248,12 @@ Add_VHost()
     chmod -R 755 ${vhostdir}
     chown -R www:www ${vhostdir}
 
-    if [ ! -f /usr/local/nginx/conf/${rewrite}.conf ]; then
+    if [ ! -f /usr/local/nginx/conf/rewrite/${rewrite}.conf ]; then
         echo "Create Virtul Host ReWrite file......"
-        touch /usr/local/nginx/conf/${rewrite}.conf
-        echo "Create rewirte file successful,You can add rewrite rule into /usr/local/nginx/conf/${rewrite}.conf."
+        touch /usr/local/nginx/conf/rewrite/${rewrite}.conf
+        echo "Create rewrite file successful,You can add rewrite rule into /usr/local/nginx/conf/rewrite/${rewrite}.conf."
     else
-        echo "You select the exist rewrite rule:/usr/local/nginx/conf/${rewrite}.conf"
+        echo "You select the exist rewrite rule:/usr/local/nginx/conf/rewrite/${rewrite}.conf"
     fi
 
     cat >/usr/local/nginx/conf/vhost/${domain}.conf<<EOF
