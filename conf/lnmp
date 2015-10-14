@@ -216,7 +216,7 @@ Add_VHost()
     read create_database
 
     if [ "${create_database}" == "y" ]; then
-        Verify_MySQL_Password
+        Verify_DB_Password
         Add_Database_Menu
     fi
 
@@ -228,9 +228,6 @@ Add_VHost()
         read create_ftp
 
         if [ "${create_ftp}" == "y" ]; then
-            if [ "${create_database}" != "y" ]; then
-                Verify_MySQL_Password
-            fi
             Add_Ftp_Menu
         fi
     fi

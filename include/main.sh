@@ -187,6 +187,11 @@ Apache_Selection()
         echo "No input,You will install Apache 2.2.31"
         ApacheSelect="1"
     fi
+    if [[ "${PHPSelect}" = "1" && "${ApacheSelect}" = "2" ]]; then
+        Echo_Red "PHP 5.2.17 is not compatible with Apache 2.4.16."
+        Echo_Red "Force use Apache 2.2.31"
+        ApacheSelect="1"
+    fi
 }
 
 Kill_PM()
