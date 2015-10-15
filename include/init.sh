@@ -59,7 +59,7 @@ Deb_RemoveAMP()
 Disable_Selinux()
 {
     if [ -s /etc/selinux/config ]; then
-        sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+        sed -i 's/^SELINUX=.*/SELINUX=disabled/g' /etc/selinux/config
     fi
 }
 
