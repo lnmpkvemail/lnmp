@@ -48,8 +48,8 @@ Install_Pureftpd()
     \cp $cur_dir/conf/pure-ftpd.conf /usr/local/pureftpd/etc/pure-ftpd.conf
     \cp $cur_dir/init.d/init.d.pureftpd /etc/init.d/pureftpd
     chmod +x /etc/init.d/pureftpd
-	touch /usr/local/pureftpd/etc/pureftpd.passwd
-	touch /usr/local/pureftpd/etc/pureftpd.pdb
+    touch /usr/local/pureftpd/etc/pureftpd.passwd
+    touch /usr/local/pureftpd/etc/pureftpd.pdb
 
     StartUp pureftpd
 

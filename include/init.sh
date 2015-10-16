@@ -77,6 +77,13 @@ Check_Hosts()
     else
         echo "127.0.0.1 localhost.localdomain localhost" >> /etc/hosts
     fi
+    ping -c1 lnmp.org
+    if [ $? -eq 0 ] ; then
+        echo "DNS...ok"
+    else
+        echo "DNS...fail"
+        echo -e "nameserver 208.67.220.220\nnameserver 114.114.114.114" > /etc/resolv.conf
+    fi
 }
 
 RHEL_Modify_Source()
@@ -361,8 +368,8 @@ Install_Icu4c()
 CentOS_Lib_Opt()
 {
     if [ "${Is_64bit}" = "y" ] ; then
-    ln -sf /usr/lib64/libpng.* /usr/lib/
-    ln -sf /usr/lib64/libjpeg.* /usr/lib/
+        ln -sf /usr/lib64/libpng.* /usr/lib/
+        ln -sf /usr/lib64/libjpeg.* /usr/lib/
     fi
 
     ulimit -v unlimited
