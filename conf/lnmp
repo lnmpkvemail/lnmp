@@ -267,15 +267,7 @@ server
 
         include ${rewrite}.conf;
         #error_page   404   /404.html;
-        location ~ [^/]\.php(/|$)
-        {
-            # comment try_files \$uri =404; to enable pathinfo
-            try_files \$uri =404;
-            fastcgi_pass  unix:/tmp/php-cgi.sock;
-            fastcgi_index index.php;
-            include fastcgi.conf;
-            #include pathinfo.conf;
-        }
+        include enable-php.conf;
 
         location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
         {

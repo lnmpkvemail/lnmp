@@ -241,23 +241,8 @@ server
         index index.html index.htm index.php default.html default.htm default.php;
         root  ${vhostdir};
 
-        location /
-        {
-            try_files \$uri @apache;
-        }
-
-        location @apache
-        {
-            internal;
-            proxy_pass http://127.0.0.1:88;
-            include proxy.conf;
-        }
-
-        location ~ [^/]\.php(/|$)
-        {
-            proxy_pass http://127.0.0.1:88;
-            include proxy.conf;
-        }
+        #error_page   404   /404.html;
+        include proxy-pass-php.conf;
 
         location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
         {
