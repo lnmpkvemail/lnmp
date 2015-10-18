@@ -66,6 +66,11 @@ Dispaly_Selection()
         DBSelect="2"
     esac
 
+    if [[ "${DBSelect}" = "3" || "${DBSelect}" = "5" ]] && [ `free -m | grep Mem | awk '{print  $2}'` -le 1024 ]; then
+        echo "Memory less than 1GB, can't install MySQL 5.6 or MairaDB 10!"
+        exit 1
+    fi
+
     if [ "${DBSelect}" = "4" ] || [ "${DBSelect}" = "5" ]; then
         MySQL_Bin="/usr/local/mariadb/bin/mysql"
         MySQL_Config="/usr/local/mariadb/bin/mysql_config"
