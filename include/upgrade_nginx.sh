@@ -2,8 +2,6 @@
 
 Upgrade_Nginx()
 {
-    # You can add other modules arguments to nginx_modules_arguments variable#
-    Nginx_Modules_Arguments=""
     Cur_Nginx_Version=`/usr/local/nginx/sbin/nginx -v 2>&1 | cut -c22-`
 
     if [ -s /usr/local/include/jemalloc/jemalloc.h ] && /usr/local/nginx/sbin/nginx -V 2>&1|grep -Eqi 'ljemalloc'; then
