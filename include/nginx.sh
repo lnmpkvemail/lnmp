@@ -7,7 +7,7 @@ Install_Nginx()
     useradd -s /sbin/nologin -g www www
 
     Tar_Cd ${Nginx_Ver}.tar.gz ${Nginx_Ver}
-    ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_spdy_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${NginxMAOpt}
+    ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_spdy_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${NginxMAOpt} ${Nginx_Modules_Options}
     make && make install
     cd ../
 
