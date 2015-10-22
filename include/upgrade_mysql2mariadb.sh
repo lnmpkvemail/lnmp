@@ -182,7 +182,7 @@ EOF
         sed -i 's:^#innodb:innodb:g' /etc/my.cnf
     else
         sed -i '/^default_storage_engine/d' /etc/my.cnf
-        sed -i '/skip-external-locking/i\default-storage-engine = MyISAM\nloose-skip-innodb' /etc/my.cnf
+        sed -i '/skip-external-locking/i\default_storage_engine = MyISAM\nloose-skip-innodb' /etc/my.cnf
     fi
     MySQL_Opt
     mkdir -p ${MariaDB_Data_Dir}

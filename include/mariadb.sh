@@ -141,9 +141,9 @@ EOF
     if [ "${InstallInnodb}" = "y" ]; then
         sed -i 's:#innodb:innodb:g' /etc/my.cnf
     else
-        sed -i '/default-storage-engine/d' /etc/my.cnf
+        sed -i '/^default_storage_engine/d' /etc/my.cnf
         sed -i 's/^#loose-innodb/loose-innodb/g' /etc/my.cnf
-        sed -i '/skip-external-locking/i\default-storage-engine = MyISAM\nloose-skip-innodb' /etc/my.cnf
+        sed -i '/skip-external-locking/i\default_storage_engine = MyISAM\nloose-skip-innodb' /etc/my.cnf
     fi
     MySQL_Opt
     mkdir -p ${MariaDB_Data_Dir}
@@ -235,9 +235,9 @@ EOF
     if [ "${InstallInnodb}" = "y" ]; then
         sed -i 's:^#innodb:innodb:g' /etc/my.cnf
     else
-        sed -i '/default-storage-engine/d' /etc/my.cnf
+        sed -i '/^default_storage_engine/d' /etc/my.cnf
         sed -i 's/^#loose-innodb/loose-innodb/g' /etc/my.cnf
-        sed -i '/skip-external-locking/i\default-storage-engine = MyISAM\nloose-skip-innodb' /etc/my.cnf
+        sed -i '/skip-external-locking/i\default_storage_engine = MyISAM\nloose-skip-innodb' /etc/my.cnf
     fi
     MySQL_Opt
     mkdir -p ${MariaDB_Data_Dir}

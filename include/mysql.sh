@@ -302,7 +302,7 @@ EOF
         sed -i 's:^#innodb:innodb:g' /etc/my.cnf
     else
         sed -i '/^default_storage_engine/d' /etc/my.cnf
-        sed -i '/skip-external-locking/i\default-storage-engine = MyISAM\nloose-skip-innodb' /etc/my.cnf
+        sed -i '/skip-external-locking/i\default_storage_engine = MyISAM\nloose-skip-innodb' /etc/my.cnf
     fi
     MySQL_Opt
     mkdir -p ${MySQL_Data_Dir}
@@ -429,7 +429,7 @@ EOF
         sed -i 's:^#innodb:innodb:g' /etc/my.cnf
     else
         sed -i '/^default_storage_engine/d' /etc/my.cnf
-        sed -i '/skip-external-locking/i\innodb=OFF\nignore-builtin-innodb\nskip-innodb\ndefault-storage-engine = MyISAM\ndefault-tmp-storage-engine = MyISAM' /etc/my.cnf
+        sed -i '/skip-external-locking/i\innodb=OFF\nignore-builtin-innodb\nskip-innodb\ndefault_storage_engine = MyISAM\ndefault_tmp_storage_engine = MyISAM' /etc/my.cnf
         sed -i 's/^#loose-innodb/loose-innodb/g' /etc/my.cnf
     fi
     MySQL_Opt
