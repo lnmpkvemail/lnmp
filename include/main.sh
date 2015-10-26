@@ -43,7 +43,8 @@ Dispaly_Selection()
     echo "3: Install MySQL 5.6.26"
     echo "4: Install MariaDB 5.5.45"
     echo "5: Install MariaDB 10.0.17"
-    read -p "Enter your choice (1, 2, 3, 4 or 5): " DBSelect
+    echo "6: Install MySQL 5.7.9"
+    read -p "Enter your choice (1, 2, 3, 4, 5 or 6): " DBSelect
 
     case "${DBSelect}" in
     1)
@@ -61,17 +62,20 @@ Dispaly_Selection()
     5)
         echo "You will install MariaDB 10.0.21"
         ;;
+    6)
+        echo "You will install MySQL 5.7.9"
+        ;;
     *)
         echo "No input,You will install MySQL 5.5.45"
         DBSelect="2"
     esac
 
-    if [[ "${DBSelect}" = "3" || "${DBSelect}" = "5" ]] && [ `free -m | grep Mem | awk '{print  $2}'` -le 1024 ]; then
-        echo "Memory less than 1GB, can't install MySQL 5.6 or MairaDB 10!"
+    if [[ "${DBSelect}" = "3" || "${DBSelect}" = "5" || "${DBSelect}" = "6" ]] && [ `free -m | grep Mem | awk '{print  $2}'` -le 1024 ]; then
+        echo "Memory less than 1GB, can't install MySQL 5.6, 5.7 or MairaDB 10!"
         exit 1
     fi
 
-    if [ "${DBSelect}" = "4" ] || [ "${DBSelect}" = "5" ]; then
+    if [[ "${DBSelect}" = "4" || "${DBSelect}" = "5" ]]; then
         MySQL_Bin="/usr/local/mariadb/bin/mysql"
         MySQL_Config="/usr/local/mariadb/bin/mysql_config"
         MySQL_Dir="/usr/local/mariadb"
@@ -331,6 +335,33 @@ Tar_Cd()
     tar zxf ${FileName}
     echo "cd ${DirName}..."
     cd ${DirName}
+}
+
+Print_APP_Ver()
+{
+    echo "You will install ${Stack} stack."
+    if [ "${Stack}" != "lamp" ]; then
+        echo ${Nginx_Ver}
+    fi
+
+    if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "6" ]]; then
+        echo "${Mysql_Ver}"
+    elif [[ "${DBSelect}" = "4" || "${DBSelect}" = "5" ]]; then
+        echo "${Mariadb_Ver}"
+    fi
+
+    echo "${Php_Ver}"
+
+    if [ "${Stack}" != "lnmp" ]; then
+        echo "${Apache_Ver}"
+    fi
+
+    if [ "${SelectMalloc}" = "2" ]; then
+        echo "${Jemalloc_Ver}"
+    elif [ "${SelectMalloc}" = "3" ]; then
+        echo "${TCMalloc_Ver}"
+    fi
+    echo "Enable InnoDB: ${InstallInnodb}"
 }
 
 Print_Sys_Info()

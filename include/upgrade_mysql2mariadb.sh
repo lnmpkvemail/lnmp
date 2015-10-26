@@ -53,11 +53,11 @@ Upgrade_MySQL2MariaDB()
     read -p "(Default yes, if you want please enter: y , if not please enter: n): " InstallInnodb
 
     case "${InstallInnodb}" in
-    y|Y|Yes|YES|yes|yES|yEs|YeS|yeS)
+    [yY][eE][sS]|[yY])
         echo "You will install the InnoDB Storage Engine"
         InstallInnodb="y"
         ;;
-    n|N|No|NO|no|nO)
+    [nN][oO]|[nN])
         echo "You will NOT install the InnoDB Storage Engine!"
         InstallInnodb="n"
         ;;
@@ -185,7 +185,11 @@ EOF
         sed -i '/skip-external-locking/i\default_storage_engine = MyISAM\nloose-skip-innodb' /etc/my.cnf
     fi
     MySQL_Opt
-    mkdir -p ${MariaDB_Data_Dir}
+    if [ -d "${MariaDB_Data_Dir}" ]; then
+        rm -rf ${MariaDB_Data_Dir}/*
+    else
+        mkdir -p ${MariaDB_Data_Dir}
+    fi
     chown -R mariadb:mariadb ${MariaDB_Data_Dir}
     /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
     chgrp -R mariadb /usr/local/mariadb/.

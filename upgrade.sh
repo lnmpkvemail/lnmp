@@ -14,6 +14,7 @@ shopt -s extglob
 Upgrade_Date=$(date +"%Y%m%d%H%M%S")
 
 . lnmp.conf
+. include/version.sh
 . include/main.sh
 . include/init.sh
 . include/php.sh

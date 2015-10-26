@@ -12,6 +12,7 @@ Jemalloc_Ver='jemalloc-4.0.3'
 TCMalloc_Ver='gperftools-2.4'
 Libunwind_Ver='libunwind-1.1'
 Libicu4c_Ver='icu4c-55_1'
+Boost_Ver='boost_1_59_0'
 Nginx_Ver='nginx-1.8.0'
 Mysql_Ver='mysql-5.5.45'
 Mariadb_Ver='mariadb-5.5.45'
@@ -25,6 +26,8 @@ elif [ "${DBSelect}" = "4" ]; then
     Mariadb_Ver='mariadb-5.5.45'
 elif [ "${DBSelect}" = "5" ]; then
     Mariadb_Ver='mariadb-10.0.21'
+elif [ "${DBSelect}" = "6" ]; then
+    Mysql_Ver='mysql-5.7.9'
 fi
 Php_Ver='php-5.4.45'
 if [ "${PHPSelect}" = "1" ]; then
@@ -72,29 +75,3 @@ Memcached_Ver='memcached-1.4.24'
 Libmemcached_Ver='libmemcached-1.0.18'
 PHPMemcached_Ver='memcached-2.2.0'
 PHPMemcache_Ver='memcache-3.0.8'
-
-if [ "${Stack}" != "" ]; then
-    echo "You will install ${Stack} stack."
-    if [ "${Stack}" != "lamp" ]; then
-        echo ${Nginx_Ver}
-    fi
-
-    if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" ]]; then
-        echo "${Mysql_Ver}"
-    elif [[ "${DBSelect}" = "4" || "${DBSelect}" = "5" ]]; then
-        echo "${Mariadb_Ver}"
-    fi
-
-    echo "${Php_Ver}"
-
-    if [ "${Stack}" != "lnmp" ]; then
-        echo "${Apache_Ver}"
-    fi
-
-    if [ "${SelectMalloc}" = "2" ]; then
-        echo "${Jemalloc_Ver}"
-    elif [ "${SelectMalloc}" = "3" ]; then
-        echo "${TCMalloc_Ver}"
-    fi
-    echo "Enable InnoDB: ${InstallInnodb}"
-fi

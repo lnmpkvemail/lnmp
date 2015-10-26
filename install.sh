@@ -46,6 +46,7 @@ echo "+------------------------------------------------------------------------+
 Init_Install()
 {
     Press_Install
+    Print_APP_Ver
     Print_Sys_Info
     Check_Hosts
     if [ "${DISTRO}" = "RHEL" ]; then
@@ -98,6 +99,8 @@ Init_Install()
         Install_MariaDB_5
     elif [ "${DBSelect}" = "5" ]; then
         Install_MariaDB_10
+    elif [ "${DBSelect}" = "6" ]; then
+        Install_MySQL_57
     fi
     TempMycnf_Clean
     Export_PHP_Autoconf

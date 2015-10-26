@@ -365,6 +365,17 @@ Install_Icu4c()
     fi
 }
 
+Install_Boost()
+{
+    Echo_Blue "[+] Installing ${Boost_Ver}"
+    cd ${cur_dir}/src
+    Download_Files ${Download_Mirror}/lib/boost/${Boost_Ver}.tar.gz ${Boost_Ver}.tar.gz
+    Tar_Cd ${Boost_Ver}.tar.gz ${Boost_Ver}
+    ./bootstrap.sh
+    ./b2
+    ./b2 install
+}
+
 CentOS_Lib_Opt()
 {
     if [ "${Is_64bit}" = "y" ] ; then

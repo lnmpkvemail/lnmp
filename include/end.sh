@@ -168,7 +168,7 @@ Check_LNMP_Install()
     Check_Nginx_Files
     Check_DB_Files
     Check_PHP_Files
-    if [[ "$isNginx" = "ok" && "$isDB" = "ok" && "$isPHP" = "ok" ]]; then
+    if [[ "${isNginx}" = "ok" && "${isDB}" = "ok" && "${isPHP}" = "ok" ]]; then
         Print_Sucess_Info
     else
         Print_Failed_Info
@@ -181,7 +181,7 @@ Check_LNMPA_Install()
     Check_DB_Files
     Check_PHP_Files
     Check_Apache_Files
-    if [[ "$isNginx" = "ok" && "$isDB" = "ok" && "$isPHP" = "ok"  &&"$isApache" = "ok" ]]; then
+    if [[ "${isNginx}" = "ok" && "${isDB}" = "ok" && "${isPHP}" = "ok"  &&"${isApache}" = "ok" ]]; then
         Print_Sucess_Info
     else
         Print_Failed_Info
@@ -193,7 +193,7 @@ Check_LAMP_Install()
     Check_Apache_Files
     Check_DB_Files
     Check_PHP_Files
-    if [[ "$isApache" = "ok" && "$isDB" = "ok" && "$isPHP" = "ok" ]]; then
+    if [[ "${isApache}" = "ok" && "${isDB}" = "ok" && "${isPHP}" = "ok" ]]; then
         Print_Sucess_Info
     else
         Print_Failed_Info
