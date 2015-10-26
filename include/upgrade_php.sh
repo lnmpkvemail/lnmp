@@ -33,11 +33,11 @@ Start_Upgrade_PHP()
     else
         echo "Error: php-$php_version.tar.gz not found!!!download now..."
         cd ${cur_dir}/src
-        wget -c http://www.php.net/distributions/php-${php_version}.tar.gz
+        wget -c --progress=bar http://www.php.net/distributions/php-${php_version}.tar.gz
         if [ $? -eq 0 ]; then
             echo "Download php-${php_version}.tar.gz successfully!"
         else
-            wget -c http://museum.php.net/php5/php-${php_version}.tar.gz
+            wget -c --progress=bar http://museum.php.net/php5/php-${php_version}.tar.gz
             if [ $? -eq 0 ]; then
                 echo "Download php-${php_version}.tar.gz successfully!"
             else
@@ -188,12 +188,12 @@ Upgrade_PHP_52()
 
     cd ${cur_dir}/src
     if [ "${Is_64bit}" = "y" ] ; then
-        wget -c ${Download_Mirror}/web/zend/ZendOptimizer-3.3.9-linux-glibc23-x86_64.tar.gz
+        Download_Files ${Download_Mirror}/web/zend/ZendOptimizer-3.3.9-linux-glibc23-x86_64.tar.gz ZendOptimizer-3.3.9-linux-glibc23-x86_64.tar.gz
         tar zxf ZendOptimizer-3.3.9-linux-glibc23-x86_64.tar.gz
         mkdir -p /usr/local/zend/
         \cp ZendOptimizer-3.3.9-linux-glibc23-x86_64/data/5_2_x_comp/ZendOptimizer.so /usr/local/zend/
     else
-        wget -c ${Download_Mirror}/web/zend/ZendOptimizer-3.3.9-linux-glibc23-i386.tar.gz
+        Download_Files ${Download_Mirror}/web/zend/ZendOptimizer-3.3.9-linux-glibc23-i386.tar.gz ZendOptimizer-3.3.9-linux-glibc23-i386.tar.gz
         tar zxf ZendOptimizer-3.3.9-linux-glibc23-i386.tar.gz
         mkdir -p /usr/local/zend/
         \cp ZendOptimizer-3.3.9-linux-glibc23-i386/data/5_2_x_comp/ZendOptimizer.so /usr/local/zend/
@@ -268,12 +268,12 @@ Upgrade_PHP_53()
     echo "Install ZendGuardLoader..."
     cd ${cur_dir}/src
     if [ "${Is_64bit}" = "y" ] ; then
-        wget -c ${Download_Mirror}/web/zend/ZendGuardLoader-php-5.3-linux-glibc23-x86_64.tar.gz
+        Download_Files ${Download_Mirror}/web/zend/ZendGuardLoader-php-5.3-linux-glibc23-x86_64.tar.gz ZendGuardLoader-php-5.3-linux-glibc23-x86_64.tar.gz
         tar zxf ZendGuardLoader-php-5.3-linux-glibc23-x86_64.tar.gz
         mkdir -p /usr/local/zend/
         \cp ZendGuardLoader-php-5.3-linux-glibc23-x86_64/php-5.3.x/ZendGuardLoader.so /usr/local/zend/
     else
-        wget -c ${Download_Mirror}/web/zend/ZendGuardLoader-php-5.3-linux-glibc23-i386.tar.gz
+        Download_Files ${Download_Mirror}/web/zend/ZendGuardLoader-php-5.3-linux-glibc23-i386.tar.gz ZendGuardLoader-php-5.3-linux-glibc23-i386.tar.gz
         tar zxf ZendGuardLoader-php-5.3-linux-glibc23-i386.tar.gz
         mkdir -p /usr/local/zend/
         \cp ZendGuardLoader-php-5.3-linux-glibc23-i386/php-5.3.x/ZendGuardLoader.so /usr/local/zend/
@@ -368,12 +368,12 @@ Upgrade_PHP_54()
     echo "Install ZendGuardLoader..."
     cd ${cur_dir}/src
     if [ "${Is_64bit}" = "y" ] ; then
-        wget -c ${Download_Mirror}/web/zend/ZendGuardLoader-70429-PHP-5.4-linux-glibc23-x86_64.tar.gz
+        Download_Files ${Download_Mirror}/web/zend/ZendGuardLoader-70429-PHP-5.4-linux-glibc23-x86_64.tar.gz ZendGuardLoader-70429-PHP-5.4-linux-glibc23-x86_64.tar.gz
         tar zxf ZendGuardLoader-70429-PHP-5.4-linux-glibc23-x86_64.tar.gz
         mkdir -p /usr/local/zend/
         \cp ZendGuardLoader-70429-PHP-5.4-linux-glibc23-x86_64/php-5.4.x/ZendGuardLoader.so /usr/local/zend/
     else
-        wget -c ${Download_Mirror}/web/zend/ZendGuardLoader-70429-PHP-5.4-linux-glibc23-i386.tar.gz
+        Download_Files ${Download_Mirror}/web/zend/ZendGuardLoader-70429-PHP-5.4-linux-glibc23-i386.tar.gz ZendGuardLoader-70429-PHP-5.4-linux-glibc23-i386.tar.gz
         tar zxf ZendGuardLoader-70429-PHP-5.4-linux-glibc23-i386.tar.gz
         mkdir -p /usr/local/zend/
         \cp ZendGuardLoader-70429-PHP-5.4-linux-glibc23-i386/php-5.4.x/ZendGuardLoader.so /usr/local/zend/
@@ -469,12 +469,12 @@ Upgrade_PHP_556()
         echo "Install ZendGuardLoader for PHP 5.5..."
         cd ${cur_dir}/src
         if [ "${Is_64bit}" = "y" ] ; then
-            Download_Files ${Download_Mirror}/web/zend/zend-loader-php5.5-linux-x86_64.tar.gz
+            Download_Files ${Download_Mirror}/web/zend/zend-loader-php5.5-linux-x86_64.tar.gz zend-loader-php5.5-linux-x86_64.tar.gz
             tar zxf zend-loader-php5.5-linux-x86_64.tar.gz
             mkdir -p /usr/local/zend/
             \cp zend-loader-php5.5-linux-x86_64/ZendGuardLoader.so /usr/local/zend/
         else
-            Download_Files ${Download_Mirror}/web/zend/zend-loader-php5.5-linux-i386.tar.gz
+            Download_Files ${Download_Mirror}/web/zend/zend-loader-php5.5-linux-i386.tar.gz zend-loader-php5.5-linux-i386.tar.gz
             tar zxf zend-loader-php5.5-linux-i386.tar.gz
             mkdir -p /usr/local/zend/
             \cp zend-loader-php5.5-linux-i386/ZendGuardLoader.so /usr/local/zend/
@@ -483,12 +483,12 @@ Upgrade_PHP_556()
         echo "Install ZendGuardLoader for PHP 5.6..."
         cd ${cur_dir}/src
         if [ "${Is_64bit}" = "y" ] ; then
-            Download_Files ${Download_Mirror}/web/zend/zend-loader-php5.6-linux-x86_64.tar.gz
+            Download_Files ${Download_Mirror}/web/zend/zend-loader-php5.6-linux-x86_64.tar.gz zend-loader-php5.6-linux-x86_64.tar.gz
             tar zxf zend-loader-php5.6-linux-x86_64.tar.gz
             mkdir -p /usr/local/zend/
             \cp zend-loader-php5.6-linux-x86_64/ZendGuardLoader.so /usr/local/zend/
         else
-            Download_Files ${Download_Mirror}/web/zend/zend-loader-php5.6-linux-i386.tar.gz
+            Download_Files ${Download_Mirror}/web/zend/zend-loader-php5.6-linux-i386.tar.gz zend-loader-php5.6-linux-i386.tar.gz
             tar zxf zend-loader-php5.6-linux-i386.tar.gz
             mkdir -p /usr/local/zend/
             \cp zend-loader-php5.6-linux-i386/ZendGuardLoader.so /usr/local/zend/

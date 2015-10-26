@@ -321,7 +321,7 @@ Download_Files()
         echo "${FileName} [found]"
     else
         echo "Error: ${FileName} not found!!!download now..."
-        wget -c ${URL}
+        wget -c --progress=bar ${URL}
     fi
 }
 
