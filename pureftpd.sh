@@ -45,8 +45,8 @@ Install_Pureftpd()
     \cp configuration-file/pure-config.pl /usr/local/pureftpd/sbin/
     chmod 755 /usr/local/pureftpd/sbin/pure-config.pl
     mkdir /usr/local/pureftpd/etc
-    \cp $cur_dir/conf/pure-ftpd.conf /usr/local/pureftpd/etc/pure-ftpd.conf
-    \cp $cur_dir/init.d/init.d.pureftpd /etc/init.d/pureftpd
+    \cp ${cur_dir}/conf/pure-ftpd.conf /usr/local/pureftpd/etc/pure-ftpd.conf
+    \cp ${cur_dir}/init.d/init.d.pureftpd /etc/init.d/pureftpd
     chmod +x /etc/init.d/pureftpd
     touch /usr/local/pureftpd/etc/pureftpd.passwd
     touch /usr/local/pureftpd/etc/pureftpd.pdb
@@ -57,9 +57,9 @@ Install_Pureftpd()
         /sbin/iptables -I INPUT 7 -p tcp --dport 20 -j ACCEPT
         /sbin/iptables -I INPUT 8 -p tcp --dport 21 -j ACCEPT
         /sbin/iptables -I INPUT 9 -p tcp --dport 20000:30000 -j ACCEPT
-        if [ "$PM" = "yum" ]; then
+        if [ "${PM}" = "yum" ]; then
             service iptables save
-        elif [ "$PM" = "apt" ]; then
+        elif [ "${PM}" = "apt" ]; then
             /sbin/iptables-save > /etc/iptables.rules
         fi
     fi
@@ -97,7 +97,7 @@ Uninstall_Pureftpd()
     echo "Pureftpd uninstall completed."
 }
 
-if [ "${action}" == "uninstall" ]; then
+if [ "${action}" = "uninstall" ]; then
     Uninstall_Pureftpd
 else
     Install_Pureftpd 2>&1 | tee /root/pureftpd-install.log
