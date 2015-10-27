@@ -37,7 +37,7 @@ MySQL_Sec_Setting()
 user=root
 password=''
 EOF
-        if [[ "${DBSelect}" = "6" || echo "${mysql_version}" | grep -Eqi '^5.7.' ]]; then
+        if [ "${DBSelect}" = "6" ] || echo "${mysql_version}" | grep -Eqi '^5.7.'; then
             /usr/local/mysql/bin/mysql --defaults-file=~/.emptymy.cnf -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('${DB_Root_Password}');"
             [ $? -eq 0 ] && echo "Set password Sucessfully." || echo "Set password failed!"
         else

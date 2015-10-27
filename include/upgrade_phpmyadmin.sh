@@ -21,7 +21,7 @@ Upgrade_phpMyAdmin()
         echo "phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.gz [found]"
     else
         echo "Error: phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.gz not found!!!download now......"
-        wget -c --progress=bar https://files.phpmyadmin.net/phpMyAdmin/${phpMyAdmin_Version}/phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.gz
+        wget -c --progress=bar:force https://files.phpmyadmin.net/phpMyAdmin/${phpMyAdmin_Version}/phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.gz
         if [ $? -eq 0 ]; then
             echo "Download phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.gz successfully!"
         else
