@@ -39,10 +39,10 @@ Dispaly_Selection()
     DBSelect="2"
     Echo_Yellow "You have 5 options for your DataBase install."
     echo "1: Install MySQL 5.1.73"
-    echo "2: Install MySQL 5.5.45 (Default)"
-    echo "3: Install MySQL 5.6.26"
-    echo "4: Install MariaDB 5.5.45"
-    echo "5: Install MariaDB 10.0.17"
+    echo "2: Install MySQL 5.5.46 (Default)"
+    echo "3: Install MySQL 5.6.27"
+    echo "4: Install MariaDB 5.5.46"
+    echo "5: Install MariaDB 10.0.21"
     echo "6: Install MySQL 5.7.9"
     read -p "Enter your choice (1, 2, 3, 4, 5 or 6): " DBSelect
 
@@ -51,13 +51,13 @@ Dispaly_Selection()
         echo "You will install MySQL 5.1.73"
         ;;
     2)
-        echo "You will install MySQL 5.5.45"
+        echo "You will install MySQL 5.5.46"
         ;;
     3)
-        echo "You will Install MySQL 5.6.25"
+        echo "You will Install MySQL 5.6.27"
         ;;
     4)
-        echo "You will install MariaDB 5.5.45"
+        echo "You will install MariaDB 5.5.46"
         ;;
     5)
         echo "You will install MariaDB 10.0.21"
@@ -66,7 +66,7 @@ Dispaly_Selection()
         echo "You will install MySQL 5.7.9"
         ;;
     *)
-        echo "No input,You will install MySQL 5.5.45"
+        echo "No input,You will install MySQL 5.5.46"
         DBSelect="2"
     esac
 
@@ -115,7 +115,7 @@ Dispaly_Selection()
         echo "You will install PHP 5.6.14"
         ;;
     6)
-        echo "You will install PHP 7.0.0RC4"
+        echo "You will install PHP 7.0.0RC5"
         ;;
     *)
         echo "No input,You will install PHP 5.4.45"

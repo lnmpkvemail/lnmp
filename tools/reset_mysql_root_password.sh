@@ -40,7 +40,7 @@ echo "Starting MySQL with skip grant tables"
 echo "using mysql to flush privileges and reset password"
 sleep 5
 echo "update user set password = Password('${mysql_root_password}') where User = 'root'"
-if [ echo "${cur_mysql_version}" | grep -Eqi '^5.7.' ]; then
+if echo "${cur_mysql_version}" | grep -Eqi '^5.7.'; then
     /usr/local/${M_Name}/bin/mysql -u root mysql << EOF
 update user set authentication_string = Password('${mysql_root_password}') where User = 'root';
 EOF
