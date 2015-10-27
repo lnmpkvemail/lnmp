@@ -56,7 +56,11 @@ EOF
         echo "OK, MySQL root password correct."
     fi
     echo "Update root password..."
-    Do_Query "UPDATE mysql.user SET Password=PASSWORD('${DB_Root_Password}') WHERE User='root';"
+    if [ "${DBSelect}" = "6" ] || echo "${mysql_version}" | grep -Eqi '^5.7.'; then
+        Do_Query "UPDATE mysql.user SET authentication_string=PASSWORD('${DB_Root_Password}') WHERE User='root';"
+    else
+        Do_Query "UPDATE mysql.user SET Password=PASSWORD('${DB_Root_Password}') WHERE User='root';"
+    fi
     [ $? -eq 0 ] && echo " ... Success." || echo " ... Failed!"
     echo "Remove anonymous users..."
     Do_Query "DELETE FROM mysql.user WHERE User='';"
