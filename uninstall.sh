@@ -39,7 +39,7 @@ Uninstall_LNMP()
     Remove_StartUp nginx
     Remove_StartUp ${DB_Name}
     Remove_StartUp php-fpm
-    if [ =d "${MariaDB_Data_Dir}" ]; then
+    if [ -d "${MariaDB_Data_Dir}" ]; then
         mv ${MariaDB_Data_Dir} /root/databases_backup_$(date +"%Y%m%d%H%M%S")
     else
         mv ${MySQL_Data_Dir} /root/databases_backup_$(date +"%Y%m%d%H%M%S")
