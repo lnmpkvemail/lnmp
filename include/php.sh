@@ -23,6 +23,11 @@ Pear_Pecl_Set()
     pecl config-set php_ini /usr/local/php/etc/php.ini
 }
 
+Install_Composer()
+{
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+}
+
 Install_PHP_52()
 {
     Echo_Blue "[+] Installing ${Php_Ver}..."
@@ -95,7 +100,6 @@ EOF
         \cp ${cur_dir}/conf/php-fpm5.2.conf /usr/local/php/etc/php-fpm.conf
         \cp ${cur_dir}/init.d/init.d.php-fpm5.2 /etc/init.d/php-fpm
         chmod +x /etc/init.d/php-fpm
-        LNMP_PHP_Opt
     fi
 }
 
@@ -206,7 +210,6 @@ EOF
     echo "Copy php-fpm init.d file..."
     \cp ${cur_dir}/src/${Php_Ver}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
     chmod +x /etc/init.d/php-fpm
-    LNMP_PHP_Opt
 fi
 }
 
@@ -305,7 +308,6 @@ EOF
     echo "Copy php-fpm init.d file..."
     \cp ${cur_dir}/src/${Php_Ver}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
     chmod +x /etc/init.d/php-fpm
-    LNMP_PHP_Opt
 fi
 }
 
@@ -407,7 +409,6 @@ EOF
     echo "Copy php-fpm init.d file..."
     \cp ${cur_dir}/src/${Php_Ver}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
     chmod +x /etc/init.d/php-fpm
-    LNMP_PHP_Opt
 fi
 }
 
@@ -509,7 +510,6 @@ EOF
     echo "Copy php-fpm init.d file..."
     \cp ${cur_dir}/src/${Php_Ver}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
     chmod +x /etc/init.d/php-fpm
-    LNMP_PHP_Opt
 fi
 }
 
@@ -601,7 +601,6 @@ EOF
     echo "Copy php-fpm init.d file..."
     \cp ${cur_dir}/src/${Php_Ver}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
     chmod +x /etc/init.d/php-fpm
-    LNMP_PHP_Opt
 fi
 }
 
