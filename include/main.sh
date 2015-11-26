@@ -362,6 +362,15 @@ Print_APP_Ver()
         echo "${TCMalloc_Ver}"
     fi
     echo "Enable InnoDB: ${InstallInnodb}"
+    echo "Print lnmp.conf infomation..."
+    echo "Download Mirror: ${Download_Mirror}"
+    echo "Download Mirror: ${Nginx_Modules_Options}"
+    if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "6" ]]; then
+        echo "Database Directory: ${MySQL_Data_Dir}"
+    elif [[ "${DBSelect}" = "4" || "${DBSelect}" = "5" ]]; then
+        echo "Database Directory: ${MariaDB_Data_Dir}"
+    fi
+    echo "Default Website Directory: ${Default_Website_Dir}"
 }
 
 Print_Sys_Info()
