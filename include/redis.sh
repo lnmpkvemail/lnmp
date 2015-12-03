@@ -41,8 +41,16 @@ Install_Redis()
         rm -rf ${PHPRedis_Ver}
     fi
 
-    Download_Files http://pecl.php.net/get/${PHPRedis_Ver}.tgz ${PHPRedis_Ver}.tgz
-    Tar_Cd ${PHPRedis_Ver}.tgz ${PHPRedis_Ver}
+    if echo "${Cur_PHP_Version}" | grep -Eqi '^7.';then
+        cd ${cur_dir}/src
+        rm -rf phpredis
+        https://github.com/phpredis/phpredis.git
+        cd phpredis
+        git checkout php7
+    else
+        Download_Files http://pecl.php.net/get/${PHPRedis_Ver}.tgz ${PHPRedis_Ver}.tgz
+        Tar_Cd ${PHPRedis_Ver}.tgz ${PHPRedis_Ver}
+    fi
     /usr/local/php/bin/phpize
     ./configure --with-php-config=/usr/local/php/bin/php-config
     make && make install
