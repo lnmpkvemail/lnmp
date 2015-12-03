@@ -447,7 +447,7 @@ Get_PHP_Ext_Dir()
     elif echo "${Cur_PHP_Version}" | grep -Eqi '^5.6.'; then
        zend_ext_dir="/usr/local/php/lib/php/extensions/no-debug-non-zts-20131226/"
    elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.0.'; then
-       zend_ext_dir="/usr/local/php/lib/php/extensions/no-debug-non-zts-20141001/"
+       zend_ext_dir="/usr/local/php/lib/php/extensions/no-debug-non-zts-20151012/"
     fi
 }
 
