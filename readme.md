@@ -52,15 +52,15 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora
 * IonCube，执行：./addons.sh {install|uninstall} ionCube 。
 
 ###其他：
-**以下工具在lnmp安装包tools目录下**
 * 可选1，执行：./php5.2.17.sh 可安装一个不与LNMP冲突的PHP 5.2.17单独存在，目录在/usr/local/php52/，使用时需要将nginx虚拟主机配置文件里的 php-cgi.sock 修改为 php-cgi52.sock即可调用PHP5.2.17。
+**以下工具在lnmp安装包tools目录下**
 * 可选2，执行：./reset_mysql_root_password.sh 可重置MySQL/MariaDB的root密码。
 * 可选3，执行：./check502.sh  可检测php-fpm是否挂掉,502报错时重启，配合crontab使用。
 * 可选4，执行：./cut_nginx_logs.sh 日志切割脚本。
 * 可选5，执行：./remove_disable_function.sh 运行此脚本可删掉禁用函数。
 
 ###卸载
-卸载LNMP、LNMPA或LAMP可执行：./uninstall.sh 按提示选择即可卸载。
+* 卸载LNMP、LNMPA或LAMP可执行：./uninstall.sh 按提示选择即可卸载。
 
 ##状态管理
 * LNMP/LNMPA/LMAP状态管理：lnmp {start|stop|reload|restart|kill|status}
@@ -98,8 +98,8 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora
 * Nginx主配置文件：/usr/local/nginx/conf/nginx.conf
 * MySQL/MariaDB配置文件：/etc/my.cnf
 * PHP配置文件：/usr/local/php/etc/php.ini
-* PureFtpd配置文件：/usr/local/pureftpd/pure-ftpd.conf
-* PureFtpd MySQL配置文件：/usr/local/pureftpd/pureftpd-mysql.conf
+* PHP-FPM配置文件：/usr/local/php/etc/php-fpm.conf
+* PureFtpd配置文件：/usr/local/pureftpd/etc/pure-ftpd.conf
 * Apache配置文件：/usr/local/apache/conf/httpd.conf
 
 
