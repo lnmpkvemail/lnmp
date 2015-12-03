@@ -1,11 +1,11 @@
-**当前版本为测试版本，如有问题请发邮件到 admin@lnmp.org 进行反馈，谢谢。**
+**当前1.3版本为测试版本，如有问题请到 <http://bbs.vpser.net/forum-25-1.html> 进行反馈，谢谢。**
 #LNMP一键安装包 - Readme
 
 **LNMP一键安装包是什么?**
 
 LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora、Debian/Ubuntu/Raspbian VPS(VDS)或独立主机安装LNMP(Nginx/MySQL/PHP)、LNMPA(Nginx/MySQL/PHP/Apache)、LAMP(Apache/MySQL/PHP)生产环境的Shell程序。同时提供一些实用的辅助工具如：虚拟主机管理、FTP用户管理、Nginx、MySQL/MariaDB、PHP的升级、常用缓存组件的安装、重置MySQL root密码、502自动重启、日志切割、SSH防护DenyHosts/Fail2Ban、备份等许多实用脚本。
 
-* LNMP官网：http://lnmp.org
+* LNMP官网：<http://lnmp.org>
 * 作者: licess <admin@lnmp.org>
 
 
@@ -13,26 +13,27 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora
 
 安装前建议使用screen，执行：screen -S lnmp 后
 执行
-> wget -c http://soft.vpser.net/lnmp/lnmp1.2-full.tar.gz && tar zxf lnmp1.2-full.tar.gz && cd lnmp1.2-full && ./install.sh {lnmp|lnmpa|lamp}
+> wget -c http://soft.vpser.net/lnmp/lnmp1.3beta-full.tar.gz && tar zxf lnmp1.3beta-full.tar.gz && cd lnmp1.3-full && ./install.sh {lnmp|lnmpa|lamp}
 
-如断线可使用screen -r lnmp 恢复。**详细安装教程参考：[http://lnmp.org/install.html](http://lnmp.org/install.html)**
+如断线可使用screen -r lnmp 恢复。**详细安装教程参考：<http://lnmp.org/install.html>**
 
 ##常用功能
 
-**以下操作需lnmp目录下执行，如lnmp1.2-full、lnmp1.2**
+**以下操作需lnmp目录下执行，如lnmp1.3-full、lnmp1.3**
 
 ##FTP服务器
 * 执行：./pureftpd.sh 安装，可使用lnmp ftp {add|list|del}进行管理。
 
 ##升级脚本：
 * 执行：./upgrade.sh 按提示进行选择
-也可以直接使用参数：./upgrade.sh {nginx|mysql|mariadb|php|phpa|m2m}
+也可以直接使用参数：./upgrade.sh {nginx|mysql|mariadb|php|phpa|m2m|phpmyadmin}
 * 参数: nginx 可升级至任意Nginx版本。
 * 参数: mysql 可升级至任意MySQL版本，MySQL升级风险较大，虽然会自动备份数据，依然建议自行再备份一下。
 * 参数: mariadb 可升级已安装的Mariadb，虽然会自动备份数据，依然建议自行再备份一下。
 * 参数: m2m    可从MySQL升级至Mariadb，虽然会自动备份数据，依然建议自行再备份一下。
 * 参数: php   仅适用于LNMP，可升级至大部分PHP版本。
 * 参数: phpa    可升级LNMPA/LAMP的PHP至大部分版本。
+* 参数: phpmyadmin    可升级phpMyadmin。
 
 ##扩展插件
 **执行: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|imagemagick|ioncube}**
@@ -104,4 +105,4 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora
 
 ##技术支持
 
-**技术支持论坛：[http://bbs.vpser.net/forum-25-1.html](http://bbs.vpser.net/forum-25-1.html)**
+**技术支持论坛：<http://bbs.vpser.net/forum-25-1.html>**
