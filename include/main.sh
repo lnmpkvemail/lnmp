@@ -364,7 +364,8 @@ Print_APP_Ver()
     echo "Enable InnoDB: ${InstallInnodb}"
     echo "Print lnmp.conf infomation..."
     echo "Download Mirror: ${Download_Mirror}"
-    echo "Download Mirror: ${Nginx_Modules_Options}"
+    echo "Nginx Additional Modules: ${Nginx_Modules_Options}"
+    echo "PHP Additional Modules: ${PHP_Modules_Options}"
     if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "6" ]]; then
         echo "Database Directory: ${MySQL_Data_Dir}"
     elif [[ "${DBSelect}" = "4" || "${DBSelect}" = "5" ]]; then
