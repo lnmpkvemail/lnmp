@@ -645,7 +645,7 @@ slowlog = var/log/slow.log
 EOF
 
     echo "Copy php-fpm init.d file..."
-    \cp ${cur_dir}/src/${Php_Ver}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
+    \cp ${cur_dir}/src/${php_version}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
     chmod +x /etc/init.d/php-fpm
     LNMP_PHP_Opt
 fi
