@@ -649,6 +649,9 @@ EOF
     chmod +x /etc/init.d/php-fpm
     LNMP_PHP_Opt
 fi
+    if [ "${Stack}" != "lnmp" ]; then
+        sed -i '/^LoadModule php5_module/d' /usr/local/apache/conf/httpd.conf
+    fi
     lnmp start
     Check_PHP_Upgrade_Files
 }
