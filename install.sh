@@ -187,15 +187,15 @@ LAMP_Stack()
 case "${Stack}" in
     lnmp)
         Dispaly_Selection
-        LNMP_Stack 2>&1 | tee -a /root/lnmp-install.log
+        LNMP_Stack 2>&1 | tee /root/lnmp-install.log
         ;;
     lnmpa)
         Dispaly_Selection
-        LNMPA_Stack 2>&1 | tee -a /root/lnmp-install.log
+        LNMPA_Stack 2>&1 | tee /root/lnmp-install.log
         ;;
     lamp)
         Dispaly_Selection
-        LAMP_Stack 2>&1 | tee -a /root/lnmp-install.log
+        LAMP_Stack 2>&1 | tee /root/lnmp-install.log
         ;;
     *)
         Echo_Red "Usage: $0 {lnmp|lnmpa|lamp}"
