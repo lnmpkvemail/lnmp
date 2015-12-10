@@ -44,7 +44,7 @@ Install_Redis()
     if echo "${Cur_PHP_Version}" | grep -Eqi '^7.';then
         cd ${cur_dir}/src
         rm -rf phpredis
-        https://github.com/phpredis/phpredis.git
+        git clone https://github.com/phpredis/phpredis.git
         cd phpredis
         git checkout php7
     else
