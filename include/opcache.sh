@@ -13,8 +13,10 @@ Install_Opcache()
 
     Get_PHP_Ext_Dir
     zend_ext="${zend_ext_dir}opcache.so"
-    if [ -s "${zend_ext}" ]; then
-        rm -f "${zend_ext}"
+    if echo "${Cur_PHP_Version}" | grep -Eqi '^5.[234].'; then
+        if [ -s "${zend_ext}" ]; then
+            rm -f "${zend_ext}"
+        fi
     fi
 
     if echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.'; then
@@ -44,7 +46,7 @@ EOF
         rm -rf opcache.ini
 
         echo "Copy Opcache Control Panel..."
-        \cp $cur_dir/conf/ocp.php ${Default_Website_Dir}/ocp.php
+        \cp ${cur_dir}/conf/ocp.php ${Default_Website_Dir}/ocp.php
         echo "====== Opcache install completed ======"
         echo "Opcache installed successfully, enjoy it!"
         exit 0
