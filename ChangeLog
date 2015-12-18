@@ -11,7 +11,7 @@ LNMP 1.3
 php增加Composer工具；
 php 5.4以上版本增加intl、xsl扩展；
 增加nginx升级到1.9.5以上版本支持http2；
-增加php-redis和php-memcached PHP7下模块的支持；
+增加php-redis、php-memcached、php-memcache、imagick PHP7下模块的支持；
 增加升级PHP/MySQL/MariaDB时对源目录进行完整备份，防范升级失败风险；
 增加卸载LNMP/LNMPA/LAMP时对数据库目录进行备份功能；
 增加lnmp脚本创建虚拟主机时可选创建MySQL数据库和FTP账号选项(需先安装好pureftpd)；
