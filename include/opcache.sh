@@ -47,9 +47,16 @@ EOF
 
         echo "Copy Opcache Control Panel..."
         \cp ${cur_dir}/conf/ocp.php ${Default_Website_Dir}/ocp.php
-        echo "====== Opcache install completed ======"
-        echo "Opcache installed successfully, enjoy it!"
-        exit 0
+        Restart_PHP
+        if [ -s "${zend_ext}" ]; then
+            echo "====== Opcache install completed ======"
+            echo "Opcache installed successfully, enjoy it!"
+            exit 0
+        else
+            sed -i '/\[Zend Opcache\]/,/opcache.enable_cli/d' /usr/local/php/etc/php.ini
+            echo "OPcache install failed!"
+            exit 1
+        fi
     else
         echo "Error: can't get php version!"
         echo "Maybe php was didn't install or php configuration file has errors.Please check."
