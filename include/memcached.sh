@@ -4,8 +4,14 @@ Install_PHPMemcache()
 {
     echo "Install memcache php extension..."
     cd ${cur_dir}/src
-    Download_Files ${Download_Mirror}/web/memcache/${PHPMemcache_Ver}.tgz ${PHPMemcache_Ver}.tgz
-    Tar_Cd ${PHPMemcache_Ver}.tgz ${PHPMemcache_Ver}
+    if echo "${Cur_PHP_Version}" | grep -Eqi '^7.';then
+        rm -rf pecl-memcache
+        git clone https://github.com/websupport-sk/pecl-memcache.git
+        cd pecl-memcache
+    else
+        Download_Files ${Download_Mirror}/web/memcache/${PHPMemcache_Ver}.tgz ${PHPMemcache_Ver}.tgz
+        Tar_Cd ${PHPMemcache_Ver}.tgz ${PHPMemcache_Ver}
+    fi
     /usr/local/php/bin/phpize
     ./configure --with-php-config=/usr/local/php/bin/php-config
     make && make install
