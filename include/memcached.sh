@@ -37,9 +37,8 @@ Install_PHPMemcached()
     if echo "${Cur_PHP_Version}" | grep -Eqi '^7.';then
         cd ${cur_dir}/src
         rm -rf php-memcached
-        git clone https://github.com/php-memcached-dev/php-memcached.git
+        git clone -b php7 https://github.com/php-memcached-dev/php-memcached.git
         cd php-memcached
-        git checkout php7
     else
         Download_Files ${Download_Mirror}/web/php-memcached/${PHPMemcached_Ver}.tgz ${PHPMemcached_Ver}.tgz
         Tar_Cd ${PHPMemcached_Ver}.tgz ${PHPMemcached_Ver}
