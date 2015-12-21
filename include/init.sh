@@ -317,7 +317,7 @@ Install_Curl()
 {
     Echo_Blue "[+] Installing ${Curl_Ver}"
     Tar_Cd ${Curl_Ver}.tar.gz ${Curl_Ver}
-    ./configure --prefix=/usr/local/curl --enable-ares
+    ./configure --prefix=/usr/local/curl --enable-ares --without-nss --with-ssl
     make && make install
     rm -rf ${cur_dir}/src/${Curl_Ver}
 }
