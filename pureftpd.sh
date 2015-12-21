@@ -53,6 +53,8 @@ Install_Pureftpd()
 
     StartUp pureftpd
 
+    rm -rf ${cur_dir}/src/${Pureftpd_Ver}
+
     if [ -s /sbin/iptables ]; then
         /sbin/iptables -I INPUT 7 -p tcp --dport 20 -j ACCEPT
         /sbin/iptables -I INPUT 8 -p tcp --dport 21 -j ACCEPT

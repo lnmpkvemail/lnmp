@@ -27,6 +27,7 @@ Install_Redis()
     sed -i 's/daemonize no/daemonize yes/g' /usr/local/redis/etc/redis.conf
     sed -i 's/^# bind 127.0.0.1/bind 127.0.0.1/g' /usr/local/redis/etc/redis.conf
     cd ../
+    rm -rf ${cur_dir}/src/${Redis_Stable_Ver}
 
     if [ -s /sbin/iptables ]; then
         /sbin/iptables -A INPUT -p tcp --dport 6379 -j DROP

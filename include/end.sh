@@ -132,8 +132,28 @@ Check_Apache_Files()
     fi
 }
 
+Clean_Src_Dir()
+{
+    echo "Clean scr directory..."
+    if [[ "${DBSelect}" = "4" || "${DBSelect}" = "5" ]]; then
+        rm -rf ${cur_dir}/src/${Mariadb_Ver}
+    else
+        rm -rf ${cur_dir}/src/${Mysql_Ver}
+    fi
+    rm -rf ${cur_dir}/src/${Php_Ver}
+    if [ "${Stack}" = "lnmp" ]; then
+        rm -rf ${cur_dir}/src/${Nginx_Ver}
+    elif [ "${Stack}" = "lnmpa" ]; then
+        rm -rf ${cur_dir}/src/${Nginx_Ver}
+        rm -rf ${cur_dir}/src/${Apache_Ver}
+    elif [ "${Stack}" = "lamp" ]; then
+        rm -rf ${cur_dir}/src/${Apache_Ver}
+    fi
+}
+
 Print_Sucess_Info()
 {
+    Clean_Src_Dir
     echo "+------------------------------------------------------------------------+"
     echo "|          LNMP V${LNMP_Ver} for ${DISTRO} Linux Server, Written by Licess          |"
     echo "+------------------------------------------------------------------------+"

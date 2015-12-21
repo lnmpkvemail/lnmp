@@ -116,6 +116,7 @@ Pear_Pecl_Set()
 
 Check_PHP_Upgrade_Files()
 {
+    rm -rf ${cur_dir}/src/php-${php_version}
     if [ "${Stack}" = "lnmp" ]; then
         if [[ -s /usr/local/php/sbin/php-fpm && -s /etc/init.d/php-fpm && -s /usr/local/php/etc/php.ini && -s /usr/local/php/bin/php ]]; then
             Echo_Green "======== upgrade php completed ======"

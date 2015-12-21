@@ -106,6 +106,7 @@ extension = \"${PHP_ZTS}\"" /usr/local/php/etc/php.ini
     ./configure --prefix=/usr/local/memcached
     make &&make install
     cd ../
+    rm -rf ${cur_dir}/src/${Memcached_Ver}
 
     ln -sf /usr/local/memcached/bin/memcached /usr/bin/memcached
 

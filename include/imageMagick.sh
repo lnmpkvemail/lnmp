@@ -19,6 +19,7 @@ Install_ImageMagic()
     ./configure --prefix=/usr/local/imagemagick
     make && make install
     cd ../
+    rm -rf ${cur_dir}/src/${ImageMagick_Ver}
 
     if echo "${Cur_PHP_Version}" | grep -Eqi '^7.';then
         Download_Files ${Download_Mirror}/web/imagick/imagick-3.4.0RC3.tgz imagick-3.4.0RC3.tgz

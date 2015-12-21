@@ -242,6 +242,7 @@ Install_Autoconf()
     Tar_Cd ${Autoconf_Ver}.tar.gz ${Autoconf_Ver}
     ./configure --prefix=/usr/local/autoconf-2.13
     make && make install
+    rm -rf ${cur_dir}/src/${Autoconf_Ver}
 }
 
 Install_Libiconv()
@@ -251,6 +252,7 @@ Install_Libiconv()
     patch -p0 < ${cur_dir}/src/patch/libiconv-glibc-2.16.patch
     ./configure --enable-static
     make && make install
+    rm -rf ${cur_dir}/src/${Libiconv_Ver}
 }
 
 Install_Libmcrypt()
@@ -268,6 +270,7 @@ Install_Libmcrypt()
     ln -sf /usr/local/lib/libmcrypt.so.4 /usr/lib/libmcrypt.so.4
     ln -sf /usr/local/lib/libmcrypt.so.4.4.8 /usr/lib/libmcrypt.so.4.4.8
     ldconfig
+    rm -rf ${cur_dir}/src/${LibMcrypt_Ver}
 }
 
 Install_Mcrypt()
@@ -276,6 +279,7 @@ Install_Mcrypt()
     Tar_Cd ${Mcypt_Ver}.tar.gz ${Mcypt_Ver}
     ./configure
     make && make install
+    rm -rf ${cur_dir}/src/${Mcypt_Ver}
 }
 
 Install_Mhash()
@@ -290,6 +294,7 @@ Install_Mhash()
     ln -sf /usr/local/lib/libmhash.so.2 /usr/lib/libmhash.so.2
     ln -sf /usr/local/lib/libmhash.so.2.0.1 /usr/lib/libmhash.so.2.0.1
     ldconfig
+    rm -rf ${cur_dir}/src/${Mash_Ver}
 }
 
 Install_Freetype()
@@ -305,6 +310,7 @@ EOF
     ldconfig
     ln -sf /usr/local/freetype/include/freetype2 /usr/local/include
     ln -sf /usr/local/freetype/include/ft2build.h /usr/local/include
+    rm -rf ${cur_dir}/src/${Freetype_Ver}
 }
 
 Install_Curl()
@@ -313,6 +319,7 @@ Install_Curl()
     Tar_Cd ${Curl_Ver}.tar.gz ${Curl_Ver}
     ./configure --prefix=/usr/local/curl --enable-ares
     make && make install
+    rm -rf ${cur_dir}/src/${Curl_Ver}
 }
 
 Install_Pcre()
@@ -323,6 +330,7 @@ Install_Pcre()
         Tar_Cd ${Pcre_Ver}.tar.gz ${Pcre_Ver}
         ./configure
         make && make install
+        rm -rf ${cur_dir}/src/${Pcre_Ver}
     fi
 }
 
@@ -335,6 +343,7 @@ Install_Jemalloc()
     ./configure
     make && make install
     ldconfig
+    rm -rf ${cur_dir}/src/${Jemalloc_Ver}
 }
 
 Install_TCMalloc()
@@ -345,6 +354,7 @@ Install_TCMalloc()
         CFLAGS=-fPIC ./configure
         make CFLAGS=-fPIC
         make CFLAGS=-fPIC install
+        rm -rf ${cur_dir}/src/${Libunwind_Ver}
     fi
     Tar_Cd ${TCMalloc_Ver}.tar.gz ${TCMalloc_Ver}
     if [ "${Is_64bit}" = "y" ] ; then
@@ -354,6 +364,7 @@ Install_TCMalloc()
     fi
     make && make install
     ldconfig
+    rm -rf ${cur_dir}/src/${TCMalloc_Ver}
 }
 
 Install_Icu4c()
@@ -365,6 +376,7 @@ Install_Icu4c()
         Tar_Cd ${Libicu4c_Ver}-src.tgz icu/source
         ./configure --prefix=/usr
         make && make install
+        rm -rf ${cur_dir}/src/icu
     fi
 }
 
@@ -377,6 +389,7 @@ Install_Boost()
     ./bootstrap.sh
     ./b2
     ./b2 install
+    rm -rf ${cur_dir}/src/${Boost_Ver}
 }
 
 CentOS_Lib_Opt()

@@ -205,6 +205,7 @@ EOF
 
     /etc/init.d/mariadb stop
     TempMycnf_Clean
+    rm -rf ${cur_dir}/src/mariadb-${mariadb_version}
 
     lnmp start
     if [[ -s /usr/local/mariadb/bin/mysql && -s /usr/local/mariadb/bin/mysqld_safe && -s /etc/my.cnf ]]; then
