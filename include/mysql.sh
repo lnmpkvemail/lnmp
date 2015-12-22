@@ -21,6 +21,7 @@ MySQL_Sec_Setting()
         ulimit -s unlimited
     fi
 
+    StartUp mysql
     /etc/init.d/mysql start
 
     ln -sf /usr/local/mysql/bin/mysql /usr/bin/mysql

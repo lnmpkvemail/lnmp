@@ -11,6 +11,8 @@ EOF
     if [ -d "/proc/vz" ];then
         ulimit -s unlimited
     fi
+    
+    StartUp mariadb
     /etc/init.d/mariadb start
 
     ln -sf /usr/local/mariadb/bin/mysql /usr/bin/mysql
