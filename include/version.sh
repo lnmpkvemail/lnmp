@@ -37,11 +37,11 @@ elif [ "${PHPSelect}" = "2" ]; then
 elif [ "${PHPSelect}" = "3" ]; then
     Php_Ver='php-5.4.45'
 elif [ "${PHPSelect}" = "4" ]; then
-    Php_Ver='php-5.5.30'
+    Php_Ver='php-5.5.31'
 elif [ "${PHPSelect}" = "5" ]; then
-    Php_Ver='php-5.6.16'
+    Php_Ver='php-5.6.17'
 elif [ "${PHPSelect}" = "6" ]; then
-    Php_Ver='php-7.0.1'
+    Php_Ver='php-7.0.2'
 fi
 PhpMyAdmin_Ver='phpMyAdmin-4.4.15.1-all-languages'
 if [ "${PHPSelect}" = "1" ]; then
