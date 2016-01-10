@@ -242,6 +242,7 @@ Install_Autoconf()
     Tar_Cd ${Autoconf_Ver}.tar.gz ${Autoconf_Ver}
     ./configure --prefix=/usr/local/autoconf-2.13
     make && make install
+    cd ${cur_dir}/src/
     rm -rf ${cur_dir}/src/${Autoconf_Ver}
 }
 
@@ -252,6 +253,7 @@ Install_Libiconv()
     patch -p0 < ${cur_dir}/src/patch/libiconv-glibc-2.16.patch
     ./configure --enable-static
     make && make install
+    cd ${cur_dir}/src/
     rm -rf ${cur_dir}/src/${Libiconv_Ver}
 }
 
@@ -270,6 +272,7 @@ Install_Libmcrypt()
     ln -sf /usr/local/lib/libmcrypt.so.4 /usr/lib/libmcrypt.so.4
     ln -sf /usr/local/lib/libmcrypt.so.4.4.8 /usr/lib/libmcrypt.so.4.4.8
     ldconfig
+    cd ${cur_dir}/src/
     rm -rf ${cur_dir}/src/${LibMcrypt_Ver}
 }
 
@@ -279,6 +282,7 @@ Install_Mcrypt()
     Tar_Cd ${Mcypt_Ver}.tar.gz ${Mcypt_Ver}
     ./configure
     make && make install
+    cd ${cur_dir}/src/
     rm -rf ${cur_dir}/src/${Mcypt_Ver}
 }
 
@@ -294,6 +298,7 @@ Install_Mhash()
     ln -sf /usr/local/lib/libmhash.so.2 /usr/lib/libmhash.so.2
     ln -sf /usr/local/lib/libmhash.so.2.0.1 /usr/lib/libmhash.so.2.0.1
     ldconfig
+    cd ${cur_dir}/src/
     rm -rf ${cur_dir}/src/${Mash_Ver}
 }
 
@@ -310,6 +315,7 @@ EOF
     ldconfig
     ln -sf /usr/local/freetype/include/freetype2 /usr/local/include
     ln -sf /usr/local/freetype/include/ft2build.h /usr/local/include
+    cd ${cur_dir}/src/
     rm -rf ${cur_dir}/src/${Freetype_Ver}
 }
 
@@ -319,6 +325,7 @@ Install_Curl()
     Tar_Cd ${Curl_Ver}.tar.gz ${Curl_Ver}
     ./configure --prefix=/usr/local/curl --enable-ares --without-nss --with-ssl
     make && make install
+    cd ${cur_dir}/src/
     rm -rf ${cur_dir}/src/${Curl_Ver}
 }
 
@@ -330,6 +337,7 @@ Install_Pcre()
         Tar_Cd ${Pcre_Ver}.tar.gz ${Pcre_Ver}
         ./configure
         make && make install
+        cd ${cur_dir}/src/
         rm -rf ${cur_dir}/src/${Pcre_Ver}
     fi
 }
@@ -343,6 +351,7 @@ Install_Jemalloc()
     ./configure
     make && make install
     ldconfig
+    cd ${cur_dir}/src/
     rm -rf ${cur_dir}/src/${Jemalloc_Ver}
 }
 
@@ -364,6 +373,7 @@ Install_TCMalloc()
     fi
     make && make install
     ldconfig
+    cd ${cur_dir}/src/
     rm -rf ${cur_dir}/src/${TCMalloc_Ver}
 }
 
@@ -376,6 +386,7 @@ Install_Icu4c()
         Tar_Cd ${Libicu4c_Ver}-src.tgz icu/source
         ./configure --prefix=/usr
         make && make install
+        cd ${cur_dir}/src/
         rm -rf ${cur_dir}/src/icu
     fi
 }
@@ -389,6 +400,7 @@ Install_Boost()
     ./bootstrap.sh
     ./b2
     ./b2 install
+    cd ${cur_dir}/src/
     rm -rf ${cur_dir}/src/${Boost_Ver}
 }
 
