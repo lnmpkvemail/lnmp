@@ -85,7 +85,7 @@ Upgrade_MariaDB()
     if [ -s mariadb-${mariadb_version}.tar.gz ]; then
         echo "mariadb-${mariadb_version}.tar.gz [found]"
     else
-        echo "Error: mariadb-${mariadb_version}.tar.gz not found!!!download now......"
+        echo "Notice: mariadb-${mariadb_version}.tar.gz not found!!!download now......"
         wget -c --progress=bar:force https://downloads.mariadb.org/interstitial/mariadb-${mariadb_version}/source/mariadb-${mariadb_version}.tar.gz
         if [ $? -eq 0 ]; then
             echo "Download mariadb-${mariadb_version}.tar.gz successfully!"

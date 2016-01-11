@@ -31,7 +31,7 @@ Upgrade_Nginx()
     if [ -s nginx-${Nginx_Version}.tar.gz ]; then
         echo "nginx-${Nginx_Version}.tar.gz [found]"
     else
-        echo "Error: nginx-${Nginx_Version}.tar.gz not found!!!download now......"
+        echo "Notice: nginx-${Nginx_Version}.tar.gz not found!!!download now......"
         wget -c --progress=bar:force http://nginx.org/download/nginx-${Nginx_Version}.tar.gz
         if [ $? -eq 0 ]; then
             echo "Download nginx-${Nginx_Version}.tar.gz successfully!"

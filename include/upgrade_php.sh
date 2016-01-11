@@ -31,7 +31,7 @@ Start_Upgrade_PHP()
     if [ -s php-${php_version}.tar.gz ]; then
         echo "php-${php_version}.tar.gz [found]"
     else
-        echo "Error: php-$php_version.tar.gz not found!!!download now..."
+        echo "Notice: php-$php_version.tar.gz not found!!!download now..."
         cd ${cur_dir}/src
         wget -c --progress=bar:force http://www.php.net/distributions/php-${php_version}.tar.gz
         if [ $? -eq 0 ]; then

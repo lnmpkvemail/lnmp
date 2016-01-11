@@ -320,7 +320,7 @@ Download_Files()
     if [ -s "${FileName}" ]; then
         echo "${FileName} [found]"
     else
-        echo "Error: ${FileName} not found!!!download now..."
+        echo "Notice: ${FileName} not found!!!download now..."
         wget -c --progress=bar:force ${URL}
     fi
 }
