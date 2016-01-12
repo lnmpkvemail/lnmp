@@ -43,13 +43,13 @@ elif [ "${PHPSelect}" = "5" ]; then
 elif [ "${PHPSelect}" = "6" ]; then
     Php_Ver='php-7.0.2'
 fi
-PhpMyAdmin_Ver='phpMyAdmin-4.4.15.1-all-languages'
+PhpMyAdmin_Ver='phpMyAdmin-4.4.15.2-all-languages'
 if [ "${PHPSelect}" = "1" ]; then
-    PhpMyAdmin_Ver='phpMyAdmin-4.0.10.11-all-languages'
+    PhpMyAdmin_Ver='phpMyAdmin-4.0.10.12-all-languages'
 else
-    PhpMyAdmin_Ver='phpMyAdmin-4.4.15.1-all-languages'
+    PhpMyAdmin_Ver='phpMyAdmin-4.4.15.2-all-languages'
     if [ "${DBSelect}" = "1" ]; then
-        PhpMyAdmin_Ver='phpMyAdmin-4.0.10.11-all-languages'
+        PhpMyAdmin_Ver='phpMyAdmin-4.0.10.12-all-languages'
     fi
 fi
 APR_Ver='apr-1.5.2'
