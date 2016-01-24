@@ -53,6 +53,7 @@ Install_Pureftpd()
 
     StartUp pureftpd
 
+    cd ..
     rm -rf ${cur_dir}/src/${Pureftpd_Ver}
 
     if [ -s /sbin/iptables ]; then
