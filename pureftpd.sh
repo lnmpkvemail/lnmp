@@ -71,8 +71,7 @@ Install_Pureftpd()
         /etc/init.d/pureftpd start
         echo "+----------------------------------------------------------------------+"
         echo "| Install Pure-FTPd completed,enjoy it!"
-        echo "| =>Now you enter http://IP/ftp/ in you Web Browser to manage FTP users."
-        echo "| =>Or use command: lnmp ftp {add|list|del} to manage FTP users."
+        echo "| =>use command: lnmp ftp {add|list|del} to manage FTP users."
         echo "| =>password of User manager was:${Ftp_Manager_Pwd}"
         echo "| =>password of mysql ftp user was:${Ftp_DB_Pwd}"
         echo "+----------------------------------------------------------------------+"
