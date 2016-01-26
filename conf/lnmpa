@@ -254,6 +254,11 @@ server
             expires      12h;
         }
 
+        location ~ /\.
+        {
+            deny all;
+        }
+
         ${al}
     }
 EOF
