@@ -22,8 +22,8 @@ Install_ImageMagic()
     rm -rf ${cur_dir}/src/${ImageMagick_Ver}
 
     if echo "${Cur_PHP_Version}" | grep -Eqi '^7.';then
-        Download_Files ${Download_Mirror}/web/imagick/imagick-3.4.0RC5.tgz imagick-3.4.0RC5.tgz
-        Tar_Cd imagick-3.4.0RC5.tgz imagick-3.4.0RC5
+        Download_Files ${Download_Mirror}/web/imagick/imagick-3.4.0RC6.tgz imagick-3.4.0RC6.tgz
+        Tar_Cd imagick-3.4.0RC6.tgz imagick-3.4.0RC6
     elif  echo "${Cur_PHP_Version}" | grep -Eqi '^5.[3456].';then
         Download_Files ${Download_Mirror}/web/imagick/${Imagick_Ver}.tgz ${Imagick_Ver}.tgz
         Tar_Cd ${Imagick_Ver}.tgz ${Imagick_Ver}
