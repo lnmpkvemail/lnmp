@@ -14,20 +14,20 @@ Libunwind_Ver='libunwind-1.1'
 Libicu4c_Ver='icu4c-55_1'
 Boost_Ver='boost_1_59_0'
 Nginx_Ver='nginx-1.8.1'
-Mysql_Ver='mysql-5.5.46'
-Mariadb_Ver='mariadb-5.5.45'
+Mysql_Ver='mysql-5.5.48'
+Mariadb_Ver='mariadb-5.5.48'
 if [ "${DBSelect}" = "1" ]; then
     Mysql_Ver='mysql-5.1.73'
 elif [ "${DBSelect}" = "2" ]; then
-    Mysql_Ver='mysql-5.5.46'
+    Mysql_Ver='mysql-5.5.48'
 elif [ "${DBSelect}" = "3" ]; then
-    Mysql_Ver='mysql-5.6.27'
+    Mysql_Ver='mysql-5.6.29'
 elif [ "${DBSelect}" = "4" ]; then
-    Mariadb_Ver='mariadb-5.5.46'
+    Mariadb_Ver='mariadb-5.5.48'
 elif [ "${DBSelect}" = "5" ]; then
-    Mariadb_Ver='mariadb-10.0.21'
+    Mariadb_Ver='mariadb-10.0.23'
 elif [ "${DBSelect}" = "6" ]; then
-    Mysql_Ver='mysql-5.7.9'
+    Mysql_Ver='mysql-5.7.11'
 fi
 Php_Ver='php-5.4.45'
 if [ "${PHPSelect}" = "1" ]; then
@@ -37,29 +37,28 @@ elif [ "${PHPSelect}" = "2" ]; then
 elif [ "${PHPSelect}" = "3" ]; then
     Php_Ver='php-5.4.45'
 elif [ "${PHPSelect}" = "4" ]; then
-    Php_Ver='php-5.5.31'
+    Php_Ver='php-5.5.32'
 elif [ "${PHPSelect}" = "5" ]; then
-    Php_Ver='php-5.6.17'
+    Php_Ver='php-5.6.18'
 elif [ "${PHPSelect}" = "6" ]; then
-    Php_Ver='php-7.0.2'
+    Php_Ver='php-7.0.3'
 fi
-PhpMyAdmin_Ver='phpMyAdmin-4.4.15.2-all-languages'
+PhpMyAdmin_Ver='phpMyAdmin-4.4.15.4-all-languages'
 if [ "${PHPSelect}" = "1" ]; then
-    PhpMyAdmin_Ver='phpMyAdmin-4.0.10.12-all-languages'
+    PhpMyAdmin_Ver='phpMyAdmin-4.0.10.14-all-languages'
 else
-    PhpMyAdmin_Ver='phpMyAdmin-4.4.15.2-all-languages'
+    PhpMyAdmin_Ver='phpMyAdmin-4.4.15.4-all-languages'
     if [ "${DBSelect}" = "1" ]; then
-        PhpMyAdmin_Ver='phpMyAdmin-4.0.10.12-all-languages'
+        PhpMyAdmin_Ver='phpMyAdmin-4.0.10.14-all-languages'
     fi
 fi
 APR_Ver='apr-1.5.2'
 APR_Util_Ver='apr-util-1.5.4'
-Mod_RPAF_Ver='mod_rpaf-0.8.4-rc3'
 Apache_Ver='httpd-2.2.31'
 if [ "${ApacheSelect}" = "1" ]; then
     Apache_Ver='httpd-2.2.31'
 elif [ "${ApacheSelect}" = "2" ]; then
-    Apache_Ver='httpd-2.4.16'
+    Apache_Ver='httpd-2.4.18'
 fi
 
 Pureftpd_Ver='pure-ftpd-1.0.42'

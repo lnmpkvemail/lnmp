@@ -232,7 +232,6 @@ Check_Download()
         Download_Files ${Download_Mirror}/web/apache/${Apache_Ver}.tar.gz ${Apache_Ver}.tar.gz
         Download_Files ${Download_Mirror}/web/apache/${APR_Ver}.tar.gz ${APR_Ver}.tar.gz
         Download_Files ${Download_Mirror}/web/apache/${APR_Util_Ver}.tar.gz ${APR_Util_Ver}.tar.gz
-        Download_Files ${Download_Mirror}/web/apache/rpaf/${Mod_RPAF_Ver}.tar.gz ${Mod_RPAF_Ver}.tar.gz
     fi
 }
 

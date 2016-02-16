@@ -39,11 +39,11 @@ Dispaly_Selection()
     DBSelect="2"
     Echo_Yellow "You have 5 options for your DataBase install."
     echo "1: Install MySQL 5.1.73"
-    echo "2: Install MySQL 5.5.46 (Default)"
-    echo "3: Install MySQL 5.6.27"
-    echo "4: Install MariaDB 5.5.46"
-    echo "5: Install MariaDB 10.0.21"
-    echo "6: Install MySQL 5.7.9"
+    echo "2: Install MySQL 5.5.48 (Default)"
+    echo "3: Install MySQL 5.6.29"
+    echo "4: Install MariaDB 5.5.48"
+    echo "5: Install MariaDB 10.0.23"
+    echo "6: Install MySQL 5.7.11"
     read -p "Enter your choice (1, 2, 3, 4, 5 or 6): " DBSelect
 
     case "${DBSelect}" in
@@ -51,22 +51,22 @@ Dispaly_Selection()
         echo "You will install MySQL 5.1.73"
         ;;
     2)
-        echo "You will install MySQL 5.5.46"
+        echo "You will install MySQL 5.5.48"
         ;;
     3)
-        echo "You will Install MySQL 5.6.27"
+        echo "You will Install MySQL 5.6.29"
         ;;
     4)
-        echo "You will install MariaDB 5.5.46"
+        echo "You will install MariaDB 5.5.48"
         ;;
     5)
-        echo "You will install MariaDB 10.0.21"
+        echo "You will install MariaDB 10.0.23"
         ;;
     6)
-        echo "You will install MySQL 5.7.9"
+        echo "You will install MySQL 5.7.11"
         ;;
     *)
-        echo "No input,You will install MySQL 5.5.46"
+        echo "No input,You will install MySQL 5.5.48"
         DBSelect="2"
     esac
 
@@ -93,9 +93,9 @@ Dispaly_Selection()
     echo "1: Install PHP 5.2.17"
     echo "2: Install PHP 5.3.29"
     echo "3: Install PHP 5.4.45 (Default)"
-    echo "4: Install PHP 5.5.31"
-    echo "5: Install PHP 5.6.17"
-    echo "6: Install PHP 7.0.2"
+    echo "4: Install PHP 5.5.32"
+    echo "5: Install PHP 5.6.18"
+    echo "6: Install PHP 7.0.3"
     read -p "Enter your choice (1, 2, 3, 4, 5 or 6): " PHPSelect
 
     case "${PHPSelect}" in
@@ -109,13 +109,13 @@ Dispaly_Selection()
         echo "You will Install PHP 5.4.45"
         ;;
     4)
-        echo "You will install PHP 5.5.31"
+        echo "You will install PHP 5.5.32"
         ;;
     5)
-        echo "You will install PHP 5.6.17"
+        echo "You will install PHP 5.6.18"
         ;;
     6)
-        echo "You will install PHP 7.0.2"
+        echo "You will install PHP 7.0.3"
         ;;
     *)
         echo "No input,You will install PHP 5.4.45"
@@ -185,19 +185,19 @@ Apache_Selection()
     ApacheSelect="1"
     Echo_Yellow "You have 2 options for your Apache install."
     echo "1: Install Apache 2.2.31 (Default)"
-    echo "2: Install Apache 2.4.16"
+    echo "2: Install Apache 2.4.18"
     read -p "Enter your choice (1 or 2): " ApacheSelect
 
     if [ "${ApacheSelect}" = "1" ]; then
         echo "You will install Apache 2.2.31"
     elif [ "${ApacheSelect}" = "2" ]; then
-        echo "You will install Apache 2.4.16"
+        echo "You will install Apache 2.4.18"
     else
         echo "No input,You will install Apache 2.2.31"
         ApacheSelect="1"
     fi
     if [[ "${PHPSelect}" = "1" && "${ApacheSelect}" = "2" ]]; then
-        Echo_Red "PHP 5.2.17 is not compatible with Apache 2.4.16."
+        Echo_Red "PHP 5.2.17 is not compatible with Apache 2.4.*."
         Echo_Red "Force use Apache 2.2.31"
         ApacheSelect="1"
     fi
@@ -273,6 +273,9 @@ Get_Dist_Name()
         PM='apt'
     elif grep -Eqi "Raspbian" /etc/issue || grep -Eq "Raspbian" /etc/*-release; then
         DISTRO='Raspbian'
+        PM='apt'
+    elif grep -Eqi "Deepin" /etc/issue || grep -Eq "Deepin" /etc/*-release; then
+        DISTRO='Deepin'
         PM='apt'
     else
         DISTRO='unknow'
