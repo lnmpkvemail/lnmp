@@ -11,7 +11,7 @@ fi
 cur_dir=$(pwd)
 Stack=$1
 
-LNMP_Ver='1.2'
+LNMP_Ver='1.3'
 
 . lnmp.conf
 . include/main.sh
@@ -34,6 +34,7 @@ echo "+------------------------------------------------------------------------+
 Uninstall_LNMP()
 {
     echo "Stoping LNMP..."
+    lnmp kill
     lnmp stop
 
     Remove_StartUp nginx
@@ -61,14 +62,20 @@ Uninstall_LNMP()
 Uninstall_LNMPA()
 {
     echo "Stoping LNMPA..."
+    lnmp kill
     lnmp stop
 
     Remove_StartUp nginx
     Remove_StartUp ${DB_Name}
     Remove_StartUp httpd
+    if [ -d "${MariaDB_Data_Dir}" ]; then
+        mv ${MariaDB_Data_Dir} /root/databases_backup_$(date +"%Y%m%d%H%M%S")
+    else
+        mv ${MySQL_Data_Dir} /root/databases_backup_$(date +"%Y%m%d%H%M%S")
+    fi
     echo "Deleting LNMPA files..."
     rm -rf /usr/local/nginx
-    rm -rf /usr/local/${DB_Name}/!(var|data)
+    rm -rf /usr/local/${DB_Name}
     rm -rf /usr/local/php
     rm -rf /usr/local/apache
     rm -rf /usr/local/zend
@@ -84,14 +91,20 @@ Uninstall_LNMPA()
 Uninstall_LAMP()
 {
     echo "Stoping LAMP..."
+    lnmp kill
     lnmp stop
 
     Remove_StartUp httpd
     Remove_StartUp ${DB_Name}
+    if [ -d "${MariaDB_Data_Dir}" ]; then
+        mv ${MariaDB_Data_Dir} /root/databases_backup_$(date +"%Y%m%d%H%M%S")
+    else
+        mv ${MySQL_Data_Dir} /root/databases_backup_$(date +"%Y%m%d%H%M%S")
+    fi
     echo "Deleting LAMP files..."
     rm -rf /usr/local/apache
     rm -rf /usr/local/php
-    rm -rf /usr/local/${DB_Name}/!(var|data)
+    rm -rf /usr/local/${DB_Name}
     rm -rf /usr/local/zend
 
     rm -f /etc/my.cnf
