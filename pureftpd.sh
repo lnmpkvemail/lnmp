@@ -73,8 +73,6 @@ Install_Pureftpd()
         echo "+----------------------------------------------------------------------+"
         echo "| Install Pure-FTPd completed,enjoy it!"
         echo "| =>use command: lnmp ftp {add|list|del} to manage FTP users."
-        echo "| =>password of User manager was:${Ftp_Manager_Pwd}"
-        echo "| =>password of mysql ftp user was:${Ftp_DB_Pwd}"
         echo "+----------------------------------------------------------------------+"
         echo "| For more information please visit http://www.lnmp.org"
         echo "+----------------------------------------------------------------------+"
