@@ -21,15 +21,12 @@ Install_ImageMagic()
     cd ../
     rm -rf ${cur_dir}/src/${ImageMagick_Ver}
 
-    if echo "${Cur_PHP_Version}" | grep -Eqi '^7.';then
-        Download_Files ${Download_Mirror}/web/imagick/imagick-3.4.0RC6.tgz imagick-3.4.0RC6.tgz
-        Tar_Cd imagick-3.4.0RC6.tgz imagick-3.4.0RC6
-    elif  echo "${Cur_PHP_Version}" | grep -Eqi '^5.[3456].';then
-        Download_Files ${Download_Mirror}/web/imagick/${Imagick_Ver}.tgz ${Imagick_Ver}.tgz
-        Tar_Cd ${Imagick_Ver}.tgz ${Imagick_Ver}
-    elif  echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.';then
+    if  echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.';then
         Download_Files ${Download_Mirror}/web/imagick/imagick-3.1.2.tgz imagick-3.1.2.tgz
         Tar_Cd imagick-3.1.2.tgz imagick-3.1.2
+    else
+        Download_Files ${Download_Mirror}/web/imagick/${Imagick_Ver}.tgz ${Imagick_Ver}.tgz
+        Tar_Cd ${Imagick_Ver}.tgz ${Imagick_Ver}
     fi
     /usr/local/php/bin/phpize
     ./configure --with-php-config=/usr/local/php/bin/php-config --with-imagick=/usr/local/imagemagick
