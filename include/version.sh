@@ -37,19 +37,19 @@ elif [ "${PHPSelect}" = "2" ]; then
 elif [ "${PHPSelect}" = "3" ]; then
     Php_Ver='php-5.4.45'
 elif [ "${PHPSelect}" = "4" ]; then
-    Php_Ver='php-5.5.32'
+    Php_Ver='php-5.5.33'
 elif [ "${PHPSelect}" = "5" ]; then
-    Php_Ver='php-5.6.18'
+    Php_Ver='php-5.6.19'
 elif [ "${PHPSelect}" = "6" ]; then
-    Php_Ver='php-7.0.3'
+    Php_Ver='php-7.0.4'
 fi
-PhpMyAdmin_Ver='phpMyAdmin-4.4.15.4-all-languages'
+PhpMyAdmin_Ver='phpMyAdmin-4.4.15.5-all-languages'
 if [ "${PHPSelect}" = "1" ]; then
-    PhpMyAdmin_Ver='phpMyAdmin-4.0.10.14-all-languages'
+    PhpMyAdmin_Ver='phpMyAdmin-4.0.10.15-all-languages'
 else
-    PhpMyAdmin_Ver='phpMyAdmin-4.4.15.4-all-languages'
+    PhpMyAdmin_Ver='phpMyAdmin-4.4.15.5-all-languages'
     if [ "${DBSelect}" = "1" ]; then
-        PhpMyAdmin_Ver='phpMyAdmin-4.0.10.14-all-languages'
+        PhpMyAdmin_Ver='phpMyAdmin-4.0.10.15-all-languages'
     fi
 fi
 APR_Ver='apr-1.5.2'
