@@ -134,7 +134,7 @@ Check_Apache_Files()
 
 Clean_Src_Dir()
 {
-    echo "Clean scr directory..."
+    echo "Clean src directory..."
     if [[ "${DBSelect}" = "4" || "${DBSelect}" = "5" ]]; then
         rm -rf ${cur_dir}/src/${Mariadb_Ver}
     else

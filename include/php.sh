@@ -31,6 +31,7 @@ Install_Composer()
 Install_PHP_52()
 {
     Echo_Blue "[+] Installing ${Php_Ver}..."
+    Export_PHP_Autoconf
     cd ${cur_dir}/src && rm -rf ${Php_Ver}
     tar zxf ${Php_Ver}.tar.gz
     if [ "${Stack}" = "lnmp" ]; then
@@ -376,9 +377,6 @@ zend_loader.license_path=
 
 EOF
 
-    echo "Download Opcache Control Panel..."
-    \cp ${cur_dir}/conf/ocp.php ${Default_Website_Dir}/ocp.php
-
 if [ "${Stack}" = "lnmp" ]; then
     echo "Creating new php-fpm configure file..."
     cat >/usr/local/php/etc/php-fpm.conf<<EOF
@@ -477,9 +475,6 @@ zend_loader.license_path=
 
 EOF
 
-echo "Copy Opcache Control Panel..."
-\cp ${cur_dir}/conf/ocp.php ${Default_Website_Dir}/ocp.php
-
 if [ "${Stack}" = "lnmp" ]; then
     echo "Creating new php-fpm configure file..."
     cat >/usr/local/php/etc/php-fpm.conf<<EOF
@@ -568,9 +563,6 @@ cat >>/usr/local/php/etc/php.ini<<EOF
 
 EOF
 
-echo "Copy Opcache Control Panel..."
-\cp ${cur_dir}/conf/ocp.php ${Default_Website_Dir}/ocp.php
-
 if [ "${Stack}" = "lnmp" ]; then
     echo "Creating new php-fpm configure file..."
     cat >/usr/local/php/etc/php-fpm.conf<<EOF
@@ -639,6 +631,11 @@ eof
 
     \cp ${cur_dir}/conf/index.html ${Default_Website_Dir}/index.html
     \cp ${cur_dir}/conf/lnmp.gif ${Default_Website_Dir}/lnmp.gif
+
+    if [ ${PHPSelect} -ge 4 ]; then
+        echo "Copy Opcache Control Panel..."
+        \cp ${cur_dir}/conf/ocp.php ${Default_Website_Dir}/ocp.php
+    fi
     echo "============================Install PHPMyAdmin================================="
     [[ -d ${Default_Website_Dir}/phpmyadmin ]] && rm -rf ${Default_Website_Dir}/phpmyadmin
     tar zxf ${PhpMyAdmin_Ver}.tar.gz

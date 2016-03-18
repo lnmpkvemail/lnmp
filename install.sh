@@ -103,7 +103,6 @@ Init_Install()
         Install_MySQL_57
     fi
     TempMycnf_Clean
-    Export_PHP_Autoconf
 }
 
 LNMP_Stack()
