@@ -178,7 +178,7 @@ Add_VHost()
         if [ "${al_name}" = "" ]; then
             al_name="${domain}"
         fi
-        al="access_log  /home/wwwlogs/${al_name}.log  access;"
+        al="access_log  /home/wwwlogs/${al_name}.log;"
 
     echo "You access log filename: ${al_name}.log"
     fi
@@ -270,7 +270,7 @@ php_admin_value open_basedir "${vhostdir}:/tmp/:/var/tmp/:/proc/"
 DocumentRoot "${vhostdir}"
 ServerName ${domain}
 ErrorLog "/home/wwwlogs/${al_name}-error_log"
-CustomLog "/home/wwwlogs/${al_name}-access_log" common
+CustomLog "/home/wwwlogs/${al_name}-access_log" combined
 <Directory "${vhostdir}">
     SetOutputFilter DEFLATE
     Options FollowSymLinks

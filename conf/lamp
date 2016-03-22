@@ -173,9 +173,8 @@ Add_VHost()
         if [ "${al_name}" = "" ]; then
             al_name="${domain}"
         fi
-        al="access_log  /home/wwwlogs/${al_name}.log  access;"
 
-    echo "You access log filename: ${al_name}.log"
+    echo "You access log filename: /home/wwwlogs/${al_name}-access_log"
     fi
 
     ServerAdmin=""
@@ -231,7 +230,7 @@ php_admin_value open_basedir "${vhostdir}:/tmp/:/var/tmp/:/proc/"
 DocumentRoot "${vhostdir}"
 ServerName ${domain}
 ErrorLog "/home/wwwlogs/${al_name}-error_log"
-CustomLog "/home/wwwlogs/${al_name}-access_log" common
+CustomLog "/home/wwwlogs/${al_name}-access_log" combined
 <Directory "${vhostdir}">
     SetOutputFilter DEFLATE
     Options FollowSymLinks
@@ -244,8 +243,8 @@ CustomLog "/home/wwwlogs/${al_name}-access_log" common
 eof
 
     if [ "${access_log}" == 'n' ]; then
-        sed -i 's/ErrorLog/#ErrorLog/g' /usr/local/apache/conf/vhost/${domain}.conf
-        sed -i 's/CustomLog/#CustomLog/g' /usr/local/apache/conf/vhost/${domain}.conf
+        sed -i 's/^ErrorLog/#ErrorLog/g' /usr/local/apache/conf/vhost/${domain}.conf
+        sed -i 's/^CustomLog/#CustomLog/g' /usr/local/apache/conf/vhost/${domain}.conf
     fi
 
     if [ "${add_more_domainame}" == 'y' ]; then
