@@ -139,7 +139,6 @@ myisam_sort_buffer_size = 8M
 thread_cache_size = 8
 query_cache_size = 8M
 tmp_table_size = 16M
-table_open_cache = 64
 
 #skip-networking
 max_connections = 500
