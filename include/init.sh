@@ -119,6 +119,8 @@ Ubuntu_Modify_Source()
         Ubuntu_Deadline vivid
     elif grep -Eqi "12.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^12.04'; then
         Ubuntu_Deadline precise
+    elif grep -Eqi "15.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^15.10'; then
+        Ubuntu_Deadline wily
     fi
     if [ "${CodeName}" != "" ]; then
         \cp /etc/apt/sources.list /etc/apt/sources.list.$(date +"%Y%m%d")
@@ -151,6 +153,7 @@ Ubuntu_Deadline()
     utopic_deadline=`date -d "2015-10-1 00:00:00" +%s`
     vivid_deadline=`date -d "2016-2-24 00:00:00" +%s`
     precise_deadline=`date -d "2017-5-27 00:00:00" +%s`
+    wily_deadline=`date -d "2016-7-22 00:00:00" +%s`
     cur_time=`date  +%s`
     case "$1" in
         utopic)
@@ -169,6 +172,12 @@ Ubuntu_Deadline()
             if [ ${cur_time} -gt ${precise_deadline} ]; then
                 echo "${cur_time} > ${precise_deadline}"
                 Check_Old_Releases_URL precise
+            fi
+            ;;
+        wily)
+            if [ ${cur_time} -gt ${wily_deadline} ]; then
+                echo "${cur_time} > ${wily_deadline}"
+                Check_Old_Releases_URL wily
             fi
             ;;
     esac
