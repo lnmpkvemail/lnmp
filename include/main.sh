@@ -109,13 +109,13 @@ Dispaly_Selection()
         echo "You will Install PHP 5.4.45"
         ;;
     4)
-        echo "You will install PHP 5.5.33"
+        echo "You will install PHP 5.5.34"
         ;;
     5)
-        echo "You will install PHP 5.6.19"
+        echo "You will install PHP 5.6.20"
         ;;
     6)
-        echo "You will install PHP 7.0.4"
+        echo "You will install PHP 7.0.5"
         ;;
     *)
         echo "No input,You will install PHP 5.4.45"
