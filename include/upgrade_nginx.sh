@@ -59,7 +59,7 @@ Upgrade_Nginx()
     echo "upgrade..."
     make upgrade
 
-    rm -rf ${cur_dir}/src/nginx-${Nginx_Version}
+    cd ${cur_dir} && rm -rf ${cur_dir}/src/nginx-${Nginx_Version}
     Echo_Green "======== upgrade nginx completed ======"
     echo "Program will display Nginx Version......"
     /usr/local/nginx/sbin/nginx -v

@@ -209,7 +209,7 @@ EOF
     echo "Stopping MariaDB..."
     /etc/init.d/mariadb stop
     TempMycnf_Clean
-    rm -rf ${cur_dir}/src/mariadb-${mariadb_version}
+    cd ${cur_dir} && rm -rf ${cur_dir}/src/mariadb-${mariadb_version}
 
     sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#g' /bin/lnmp
 

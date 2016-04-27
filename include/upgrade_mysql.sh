@@ -488,7 +488,7 @@ Restore_Start_MySQL()
 
     /etc/init.d/mysql stop
     TempMycnf_Clean
-    rm -rf ${cur_dir}/src/mysql-${mysql_version}
+    cd ${cur_dir} && rm -rf ${cur_dir}/src/mysql-${mysql_version}
 
     lnmp start
     if [[ -s /usr/local/mysql/bin/mysql && -s /usr/local/mysql/bin/mysqld_safe && -s /etc/my.cnf ]]; then
