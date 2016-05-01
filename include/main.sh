@@ -93,9 +93,9 @@ Dispaly_Selection()
     echo "1: Install PHP 5.2.17"
     echo "2: Install PHP 5.3.29"
     echo "3: Install PHP 5.4.45 (Default)"
-    echo "4: Install PHP 5.5.34"
-    echo "5: Install PHP 5.6.20"
-    echo "6: Install PHP 7.0.5"
+    echo "4: Install PHP 5.5.35"
+    echo "5: Install PHP 5.6.21"
+    echo "6: Install PHP 7.0.6"
     read -p "Enter your choice (1, 2, 3, 4, 5 or 6): " PHPSelect
 
     case "${PHPSelect}" in
@@ -109,13 +109,13 @@ Dispaly_Selection()
         echo "You will Install PHP 5.4.45"
         ;;
     4)
-        echo "You will install PHP 5.5.34"
+        echo "You will install PHP 5.5.35"
         ;;
     5)
-        echo "You will install PHP 5.6.20"
+        echo "You will install PHP 5.6.21"
         ;;
     6)
-        echo "You will install PHP 7.0.5"
+        echo "You will install PHP 7.0.6"
         ;;
     *)
         echo "No input,You will install PHP 5.4.45"
