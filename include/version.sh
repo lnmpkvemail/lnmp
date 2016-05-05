@@ -64,8 +64,8 @@ fi
 Pureftpd_Ver='pure-ftpd-1.0.42'
 
 XCache_Ver='xcache-3.2.0'
-ImageMagick_Ver='ImageMagick-6.9.3-7'
-Imagick_Ver='imagick-3.4.1'
+ImageMagick_Ver='ImageMagick-7.0.1-1'
+Imagick_Ver='imagick-3.4.2'
 ZendOpcache_Ver='zendopcache-7.0.5'
 Redis_Stable_Ver='redis-3.0.7'
 PHPRedis_Ver='redis-2.2.7'
