@@ -67,7 +67,7 @@ Upgrade_MariaDB()
     esac
 
     echo "====================================================================="
-    echo "You will upgrade MariaDB V${cur_mysql_version} to V${mariadb_version}"
+    echo "You will upgrade MariaDB V${cur_mariadb_version} to V${mariadb_version}"
     echo "====================================================================="
 
     if [ -s /usr/local/include/jemalloc/jemalloc.h ] && lsof -n|grep "libjemalloc.so"|grep -q "mysqld"; then

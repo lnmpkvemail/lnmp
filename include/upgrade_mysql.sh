@@ -551,7 +551,7 @@ Upgrade_MySQL()
     mysql_short_version=`echo ${mysql_version} | cut -d. -f1-2`
 
     echo "=================================================="
-    echo "You want to upgrade MySQL Version to ${mysql_version}"
+    echo "You will upgrade MySQL Version to ${mysql_version}"
     echo "=================================================="
 
     if [ -s /usr/local/include/jemalloc/jemalloc.h ] && lsof -n|grep "libjemalloc.so"|grep -q "mysqld"; then
