@@ -43,11 +43,11 @@ elif [ "${PHPSelect}" = "5" ]; then
 elif [ "${PHPSelect}" = "6" ]; then
     Php_Ver='php-7.0.7'
 fi
-PhpMyAdmin_Ver='phpMyAdmin-4.4.15.5-all-languages'
+PhpMyAdmin_Ver='phpMyAdmin-4.4.15.6-all-languages'
 if [ "${PHPSelect}" = "1" ]; then
     PhpMyAdmin_Ver='phpMyAdmin-4.0.10.15-all-languages'
 else
-    PhpMyAdmin_Ver='phpMyAdmin-4.4.15.5-all-languages'
+    PhpMyAdmin_Ver='phpMyAdmin-4.4.15.6-all-languages'
     if [ "${DBSelect}" = "1" ]; then
         PhpMyAdmin_Ver='phpMyAdmin-4.0.10.15-all-languages'
     fi
@@ -58,7 +58,7 @@ Apache_Ver='httpd-2.2.31'
 if [ "${ApacheSelect}" = "1" ]; then
     Apache_Ver='httpd-2.2.31'
 elif [ "${ApacheSelect}" = "2" ]; then
-    Apache_Ver='httpd-2.4.18'
+    Apache_Ver='httpd-2.4.20'
 fi
 
 Pureftpd_Ver='pure-ftpd-1.0.42'

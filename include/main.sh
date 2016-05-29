@@ -185,13 +185,13 @@ Apache_Selection()
     ApacheSelect="1"
     Echo_Yellow "You have 2 options for your Apache install."
     echo "1: Install Apache 2.2.31 (Default)"
-    echo "2: Install Apache 2.4.18"
+    echo "2: Install Apache 2.4.20"
     read -p "Enter your choice (1 or 2): " ApacheSelect
 
     if [ "${ApacheSelect}" = "1" ]; then
         echo "You will install Apache 2.2.31"
     elif [ "${ApacheSelect}" = "2" ]; then
-        echo "You will install Apache 2.4.18"
+        echo "You will install Apache 2.4.20"
     else
         echo "No input,You will install Apache 2.2.31"
         ApacheSelect="1"
