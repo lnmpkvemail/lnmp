@@ -387,6 +387,8 @@ Upgrade_PHP_54()
 
 ;ionCube
 
+;opcache
+
 [Zend ZendGuard Loader]
 zend_extension=/usr/local/zend/ZendGuardLoader.so
 zend_loader.enable=1
@@ -503,14 +505,14 @@ Upgrade_PHP_556()
 
 ;ionCube
 
+;opcache
+
 [Zend ZendGuard Loader]
 zend_extension=/usr/local/zend/ZendGuardLoader.so
 zend_loader.enable=1
 zend_loader.disable_licensing=0
 zend_loader.obfuscation_level_support=3
 zend_loader.license_path=
-
-;opcache
 
 ;xcache
 
