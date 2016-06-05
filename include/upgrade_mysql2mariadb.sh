@@ -196,6 +196,7 @@ EOF
     chmod 755 /etc/init.d/mariadb
 
     Mariadb_Sec_Setting
+    /etc/init.d/mariadb start
 
     echo "Restore backup databases..."
     /usr/local/mariadb/bin/mysql --defaults-file=~/.my.cnf < /root/mysql_all_backup${Upgrade_Date}.sql
