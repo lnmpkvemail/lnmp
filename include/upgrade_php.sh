@@ -265,6 +265,7 @@ Upgrade_PHP_53()
     sed -i 's/max_execution_time =.*/max_execution_time = 300/g' /usr/local/php/etc/php.ini
     sed -i 's/disable_functions =.*/disable_functions = passthru,exec,system,chroot,scandir,chgrp,chown,shell_exec,proc_open,proc_get_status,popen,ini_alter,ini_restore,dl,openlog,syslog,readlink,symlink,popepassthru,stream_socket_server/g' /usr/local/php/etc/php.ini
     Pear_Pecl_Set
+    Install_Composer
 
     echo "Install ZendGuardLoader..."
     cd ${cur_dir}/src
@@ -365,6 +366,7 @@ Upgrade_PHP_54()
     sed -i 's/max_execution_time =.*/max_execution_time = 300/g' /usr/local/php/etc/php.ini
     sed -i 's/disable_functions =.*/disable_functions = passthru,exec,system,chroot,scandir,chgrp,chown,shell_exec,proc_open,proc_get_status,popen,ini_alter,ini_restore,dl,openlog,syslog,readlink,symlink,popepassthru,stream_socket_server/g' /usr/local/php/etc/php.ini
     Pear_Pecl_Set
+    Install_Composer
 
     echo "Install ZendGuardLoader..."
     cd ${cur_dir}/src
@@ -467,6 +469,7 @@ Upgrade_PHP_556()
     sed -i 's/max_execution_time =.*/max_execution_time = 300/g' /usr/local/php/etc/php.ini
     sed -i 's/disable_functions =.*/disable_functions = passthru,exec,system,chroot,scandir,chgrp,chown,shell_exec,proc_open,proc_get_status,popen,ini_alter,ini_restore,dl,openlog,syslog,readlink,symlink,popepassthru,stream_socket_server/g' /usr/local/php/etc/php.ini
     Pear_Pecl_Set
+    Install_Composer
 
     if echo "${php_version}" | grep -Eqi '^5.5.';then
         echo "Install ZendGuardLoader for PHP 5.5..."
@@ -595,6 +598,7 @@ Upgrade_PHP_7()
     sed -i 's/max_execution_time =.*/max_execution_time = 300/g' /usr/local/php/etc/php.ini
     sed -i 's/disable_functions =.*/disable_functions = passthru,exec,system,chroot,scandir,chgrp,chown,shell_exec,proc_open,proc_get_status,popen,ini_alter,ini_restore,dl,openlog,syslog,readlink,symlink,popepassthru,stream_socket_server/g' /usr/local/php/etc/php.ini
     Pear_Pecl_Set
+    Install_Composer
 
     echo "Install ZendGuardLoader for PHP 7..."
     echo "unavailable now."
