@@ -1,0 +1,153 @@
+更新记录
+
+2015年6月1日发布LNMP 1.2
+
+完全重写优化安装脚本、升级脚本及组件安装等大部分脚本；
+状态管理、虚拟主机管理、FTP管理及数据库管理全部采用lnmp命令替换，去掉/root/vhost.sh和/root/lnmp脚本；
+Nginx、MySQL/MariaDB、PHP的升级脚本整合为upgrade.sh;
+缓存、加速、imageMagick、ionCube等的安装卸载采用addons.sh进行；
+增加SSH防护工具DenyHosts、Failban安装脚本及DenyHosts被封IP删除脚本；
+增加新的备份脚本backup.sh；
+支持的Linux发行版：CentOS 5-7、RHEL 6-7、Fedora 20-21、Aliyun、Debian 6-8、Raspbian、Ubuntu 10.10-15.04；
+支持ARM平台，Raspberry Pi已测试；
+MySQL安装时可选5.1.73、5.5.42、5.6.23，MariaDB可选5.5.42、10.0.17；
+PHP安装时可选5.2.17、5.3.29、5.4.41、5.5.25、5.6.9；
+安装时增加内存优化jemalloc或gperftools；
+Apache安装时可选2.2.29或2.4.12；
+Apache日志统一到/home/wwwlogs/下；
+更新Nginx至1.8.0；
+更新Zend Guard Loader至支持PHP 5.6；
+Nginx配置文件进行了调整，启用php和pathinfo采用include方式，增加ssl范例配置；
+
+
+
+2014年6月1日发布LNMP 1.1
+
+调整优化脚本安装脚本；
+安装时增加MariaDB选项；
+增加MySQL升级脚本 upgrade_mysql.sh；
+增加MySQL升级到MariaDB脚本 upgrade_mysql2mariadb.sh；
+增加MariaDB升级脚本 upgrade_mariadb.sh；
+增加Redis安装脚本 redis.sh；
+增加OPcache安装脚本 opcache.sh；
+增加MySQL/MariaDB root密码重置脚本；
+添加pathinfo支持，去掉include pathinfo的#，在try_files前加#重启nginx即可使用；
+重写nginx init.d脚本；
+优化PHP升级脚本；
+优化LNMP升级到LNMPA脚本，PHP可选PHP5.2或5.3,调整编译参数和配置文件；
+优化LNMPA PHP升级脚本，支持5.4,5.5；
+优化Xcache安装脚本，增加xcache管理界面；
+优化Memcached安装脚本；
+优化其他相关脚本使其支持MySQL的同时可支持MariaDB；
+优化Nginx部分配置；
+优化Pureftpd安装脚本；
+优化Nginx配置文件，增加部分参数，去掉注释即可使用；
+优化PHP-FPM参数，增加slowlog慢日志选项，可修改request_slowlog_timeout参数启用；
+更新wordpress伪静态；
+更新Nginx状态页为http://IP/nginx_status；
+更新Nginx至1.6.0；
+更新MySQL至5.1.73,5.5.37；
+更新PHP至5.3.28；
+更新Xcache至3.1.0；
+更新ImageMagick至6.8.8-9；
+更新phpMyAdmin至4.2.2；
+去除fcgi.conf，使用nginx自带的fastcgi.conf；
+去除Nginx日志多余配置，采用统一日志名称；
+去除PHP编译参数--with-curlwrappers；
+
+
+2013年6月1日发布LNMP 1.0
+
+调整优化安装脚本，自动记录安装日志至/root/lnmp-install.log安装失败时可以提供此文件；
+安装时增加PHP 5.3和MySQL 5.5版本选择，可以自由选择；
+删除安装时需要输入域名的选择，以免对新生造成误导；
+默认站点目录更换到/home/wwwroot/default/ ；
+增加proftpd安装脚本 proftpd.sh和proftpd用户创建脚本proftpd_vhost.sh；
+增加xcache安装脚本；
+增加502重启脚本；
+增加php 5.2.17安装脚本，适合已升级5.3，而有程序需要php 5.2的用户；
+添加nginx日志切割脚本 cut_nginx_logs.sh;
+添加php禁用函数删除脚本remove_disable_function.sh;
+将memecache扩展安装脚本移至memcached.sh；
+优化eaccelerator，增加测试版本选择，可以使其支持php 5.4；
+优化ionCube Loader安装脚本，增加对php 5.4的支持；
+PHP禁用函数里去掉fsockopen和pfsockopen；
+增加shopex、dedecms、drupal、ecshop伪静态文件；
+PHP 5.3版本增加request_terminate_timeout php脚本运行时间限制参数，如果有采集程序将该值修改为0；
+nginx配置增加IE6禁用gzip；
+nginx版本升级为1.2.7；
+增加支持PHP 5.4的最新版ZendGuardLoader；
+
+
+2012年4月23日发布LNMP 0.9
+
+优化安装过程及错误处理；
+修正eaccelerator和ionCube的PHP版本判断错误的问题；
+修正memcached pid创建失败的问题
+修正pdo_mysql安装方法；
+PHP增加部分禁用函数；
+优化Nginx升级脚本；
+去除vsftpd安装脚本；
+修正访问不存在的PHP时返回404；
+更新Nginx版本；
+更新PHP探针；
+增加phpwin伪静态
+升级过程增加停止LNMP相关服务；
+修正Nginx log_format问题；
+
+2011年4月27日发布LNMP 0.7
+优化安装过程，修复多处安装错误处理；
+添加LNMP至LNMPA升级包；
+重写PureFTP安装包，实现只需要输入密码即可安装成功；
+Nginx升级至0.8.54、MySQL升级至5.1.54、PHP升级至5.2.17；
+优化PHP升级脚本；
+优化Nginx升级脚本；
+添加LNMPA PHP版本升级工具；
+优化eAccelerator自动安装脚本，支持LNMPA同时多次安装都不会出现多次加载；
+优化ionCube自动安装脚本，支持LNMPA同时多次安装都不会出现多次加载；；
+去除了Suhosin；
+
+2011年2月8日发布LNMP 0.6
+
+优化安装过程，修复多处安装错误处理；
+添加ubuntu专用安装脚本ubuntu.sh；
+修善pureftpd安装脚本，增加自动开机启动；
+
+2011年2月15日发布Nginx版本升级工具
+
+2011年3月7日发布Nginx日志切割工具
+
+2011年3月15日发布PHP自动升级工具
+
+使用新探针，修复邮件测试功能
+
+2010年10月9日发布LNMP 0.5
+升级Nginx到0.7.67、MySQL到5.1.48、PHP升级到5.2.14、PHPMyAdmin升级到3.3.7
+为安全将Nginx日志移动到/home/wwwlogs/下面；
+更改32位64位判别方式；
+增加系统时间调整，防止时间错误造成编译出错；
+优化eAccelerator安装程序；
+增加ionCube安装程序；
+虚拟主机添加可以直接运行：/root/vhost.sh；
+修正/root/lnmp状态判断错误。
+
+2010年11月27日 更新lnmp文件上传大小限制为50MB
+2010年12月7日 修正/root/pureftpd状态判断错误。
+2010年12月10日 更新Nginx支持IPv6
+2011年1月17日 将PHP执行时间有30秒调整为300秒。
+2011年1月17日 安装脚本添加自动关闭SELINUX
+
+2010年3月28日发布LNMP 0.4
+添加LNMP状态管理
+添加PureFTPd状态管理
+PHP增加suhosin
+增加VsFTPd、PureFTPd安装及管理
+增强Nginx虚拟主机添加功能，添加多域名、伪静态支持、日志是否启用的功能
+升级Nginx到0.7.65、MySQL到5.1.44
+
+2009年11月15日发布LNMP 0.3
+添加虚拟主机添加程序
+
+2009年3月2日发布LNMP 0.2
+
+2009年1月19日发布LNMP0.1
