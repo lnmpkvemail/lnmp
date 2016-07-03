@@ -4,13 +4,13 @@ Dispaly_Selection()
 {
 #set mysql root password
 
-    MysqlRootPWD="root"
+    DB_Root_Password="root"
     Echo_Yellow "Please setup root password of MySQL.(Default password: root)"
-    read -p "Please enter: " MysqlRootPWD
-    if [ "${MysqlRootPWD}" = "" ]; then
-        MysqlRootPWD="root"
+    read -p "Please enter: " DB_Root_Password
+    if [ "${DB_Root_Password}" = "" ]; then
+        DB_Root_Password="root"
     fi
-    echo "MySQL root password: ${MysqlRootPWD}"
+    echo "MySQL root password: ${DB_Root_Password}"
 
 #do you want to enable or disable the InnoDB Storage Engine?
     echo "==========================="
@@ -22,10 +22,12 @@ Dispaly_Selection()
     case "${InstallInnodb}" in
     [yY][eE][sS]|[yY])
         echo "You will enable the InnoDB Storage Engine"
-    ;;
+        InstallInnodb="y"
+        ;;
     [nN][oO]|[nN])
         echo "You will disable the InnoDB Storage Engine!"
-    ;;
+        InstallInnodb="n"
+        ;;
     *)
         echo "No input,The InnoDB Storage Engine will enable."
         InstallInnodb="y"
@@ -37,34 +39,43 @@ Dispaly_Selection()
     DBSelect="2"
     Echo_Yellow "You have 5 options for your DataBase install."
     echo "1: Install MySQL 5.1.73"
-    echo "2: Install MySQL 5.5.42 (Default)"
-    echo "3: Install MySQL 5.6.23"
-    echo "4: Install MariaDB 5.5.42"
-    echo "5: Install MariaDB 10.0.17"
-    read -p "Enter your choice (1, 2, 3, 4 or 5): " DBSelect
+    echo "2: Install MySQL 5.5.48 (Default)"
+    echo "3: Install MySQL 5.6.29"
+    echo "4: Install MariaDB 5.5.48"
+    echo "5: Install MariaDB 10.0.23"
+    echo "6: Install MySQL 5.7.11"
+    read -p "Enter your choice (1, 2, 3, 4, 5 or 6): " DBSelect
 
     case "${DBSelect}" in
     1)
         echo "You will install MySQL 5.1.73"
-    ;;
+        ;;
     2)
-        echo "You will install MySQL 5.5.42"
-    ;;
+        echo "You will install MySQL 5.5.48"
+        ;;
     3)
-        echo "You will Install MySQL 5.6.23"
-    ;;
+        echo "You will Install MySQL 5.6.29"
+        ;;
     4)
-        echo "You will install MariaDB 5.5.42"
-    ;;
+        echo "You will install MariaDB 5.5.48"
+        ;;
     5)
-        echo "You will install MariaDB 10.0.17"
-    ;;
+        echo "You will install MariaDB 10.0.23"
+        ;;
+    6)
+        echo "You will install MySQL 5.7.11"
+        ;;
     *)
-        echo "No input,You will install MySQL 5.5.42"
+        echo "No input,You will install MySQL 5.5.48"
         DBSelect="2"
     esac
 
-    if [ "${DBSelect}" = "4" ] || [ "${DBSelect}" = "5" ]; then
+    if [[ "${DBSelect}" = "3" || "${DBSelect}" = "5" || "${DBSelect}" = "6" ]] && [ `free -m | grep Mem | awk '{print  $2}'` -le 1024 ]; then
+        echo "Memory less than 1GB, can't install MySQL 5.6, 5.7 or MairaDB 10!"
+        exit 1
+    fi
+
+    if [[ "${DBSelect}" = "4" || "${DBSelect}" = "5" ]]; then
         MySQL_Bin="/usr/local/mariadb/bin/mysql"
         MySQL_Config="/usr/local/mariadb/bin/mysql_config"
         MySQL_Dir="/usr/local/mariadb"
@@ -78,32 +89,36 @@ Dispaly_Selection()
     echo "==========================="
 
     PHPSelect="3"
-    Echo_Yellow "You have 5 options for your PHP install."
+    Echo_Yellow "You have 6 options for your PHP install."
     echo "1: Install PHP 5.2.17"
     echo "2: Install PHP 5.3.29"
-    echo "3: Install PHP 5.4.41 (Default)"
-    echo "4: Install PHP 5.5.25"
-    echo "5: Install PHP 5.6.9"
-    read -p "Enter your choice (1, 2, 3, 4 or 5): " PHPSelect
+    echo "3: Install PHP 5.4.45 (Default)"
+    echo "4: Install PHP 5.5.36"
+    echo "5: Install PHP 5.6.22"
+    echo "6: Install PHP 7.0.7"
+    read -p "Enter your choice (1, 2, 3, 4, 5 or 6): " PHPSelect
 
     case "${PHPSelect}" in
     1)
         echo "You will install PHP 5.2.17"
-    ;;
+        ;;
     2)
         echo "You will install PHP 5.3.29"
-    ;;
+        ;;
     3)
-        echo "You will Install PHP 5.4.41"
-    ;;
+        echo "You will Install PHP 5.4.45"
+        ;;
     4)
-        echo "You will install PHP 5.5.25"
-    ;;
+        echo "You will install PHP 5.5.36"
+        ;;
     5)
-        echo "You will install PHP 5.6.9"
-    ;;
+        echo "You will install PHP 5.6.22"
+        ;;
+    6)
+        echo "You will install PHP 7.0.7"
+        ;;
     *)
-        echo "No input,You will install PHP 5.4.41"
+        echo "No input,You will install PHP 5.4.45"
         PHPSelect="3"
     esac
 
@@ -120,13 +135,13 @@ Dispaly_Selection()
     case "${SelectMalloc}" in
     1)
         echo "You will install not install Memory Allocator."
-    ;;
+        ;;
     2)
         echo "You will install JeMalloc"
-    ;;
+        ;;
     3)
         echo "You will Install TCMalloc"
-    ;;
+        ;;
     *)
         echo "No input,You will not install Memory Allocator."
         SelectMalloc="1"
@@ -154,7 +169,7 @@ Apache_Selection()
     echo "==========================="
 #set Server Administrator Email Address
     ServerAdmin=""
-    read -p "Please enter Administrator Email Address:" ServerAdmin
+    read -p "Please enter Administrator Email Address: " ServerAdmin
     if [ "${ServerAdmin}" == "" ]; then
         echo "Administrator Email Address will set to webmaster@example.com!"
         ServerAdmin="webmaster@example.com"
@@ -169,35 +184,50 @@ Apache_Selection()
 
     ApacheSelect="1"
     Echo_Yellow "You have 2 options for your Apache install."
-    echo "1: Install Apache 2.2.29 (Default)"
-    echo "2: Install Apache 2.4.10"
+    echo "1: Install Apache 2.2.31 (Default)"
+    echo "2: Install Apache 2.4.20"
     read -p "Enter your choice (1 or 2): " ApacheSelect
 
     if [ "${ApacheSelect}" = "1" ]; then
-        echo "You will install Apache 2.2.29"
+        echo "You will install Apache 2.2.31"
     elif [ "${ApacheSelect}" = "2" ]; then
-        echo "You will install Apache 2.4.10"
+        echo "You will install Apache 2.4.20"
     else
-        echo "No input,You will install Apache 2.2.29"
+        echo "No input,You will install Apache 2.2.31"
         ApacheSelect="1"
+    fi
+    if [[ "${PHPSelect}" = "1" && "${ApacheSelect}" = "2" ]]; then
+        Echo_Red "PHP 5.2.17 is not compatible with Apache 2.4.*."
+        Echo_Red "Force use Apache 2.2.31"
+        ApacheSelect="1"
+    fi
+}
+
+Kill_PM()
+{
+    if ps aux | grep "yum" | grep -qv "grep"; then
+        killall yum
+    elif ps aux | grep "apt-get" | grep -qv "grep"; then
+        killall apt-get
     fi
 }
 
 Press_Install()
 {
     echo ""
-    echo "Press any key to install...or Press Ctrl+c to cancel"
+    Echo_Green "Press any key to install...or Press Ctrl+c to cancel"
     OLDCONFIG=`stty -g`
     stty -icanon -echo min 1 time 0
     dd count=1 2>/dev/null
     stty ${OLDCONFIG}
     . include/version.sh
+    Kill_PM
 }
 
 Press_Start()
 {
     echo ""
-    echo "Press any key to start...or Press Ctrl+c to cancel"
+    Echo_Green "Press any key to start...or Press Ctrl+c to cancel"
     OLDCONFIG=`stty -g`
     stty -icanon -echo min 1 time 0
     dd count=1 2>/dev/null
@@ -243,6 +273,9 @@ Get_Dist_Name()
         PM='apt'
     elif grep -Eqi "Raspbian" /etc/issue || grep -Eq "Raspbian" /etc/*-release; then
         DISTRO='Raspbian'
+        PM='apt'
+    elif grep -Eqi "Deepin" /etc/issue || grep -Eq "Deepin" /etc/*-release; then
+        DISTRO='Deepin'
         PM='apt'
     else
         DISTRO='unknow'
@@ -290,8 +323,8 @@ Download_Files()
     if [ -s "${FileName}" ]; then
         echo "${FileName} [found]"
     else
-        echo "Error: ${FileName} not found!!!download now..."
-        wget -c ${URL}
+        echo "Notice: ${FileName} not found!!!download now..."
+        wget -c --progress=bar:force ${URL}
     fi
 }
 
@@ -307,12 +340,49 @@ Tar_Cd()
     cd ${DirName}
 }
 
+Print_APP_Ver()
+{
+    echo "You will install ${Stack} stack."
+    if [ "${Stack}" != "lamp" ]; then
+        echo ${Nginx_Ver}
+    fi
+
+    if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "6" ]]; then
+        echo "${Mysql_Ver}"
+    elif [[ "${DBSelect}" = "4" || "${DBSelect}" = "5" ]]; then
+        echo "${Mariadb_Ver}"
+    fi
+
+    echo "${Php_Ver}"
+
+    if [ "${Stack}" != "lnmp" ]; then
+        echo "${Apache_Ver}"
+    fi
+
+    if [ "${SelectMalloc}" = "2" ]; then
+        echo "${Jemalloc_Ver}"
+    elif [ "${SelectMalloc}" = "3" ]; then
+        echo "${TCMalloc_Ver}"
+    fi
+    echo "Enable InnoDB: ${InstallInnodb}"
+    echo "Print lnmp.conf infomation..."
+    echo "Download Mirror: ${Download_Mirror}"
+    echo "Nginx Additional Modules: ${Nginx_Modules_Options}"
+    echo "PHP Additional Modules: ${PHP_Modules_Options}"
+    if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "6" ]]; then
+        echo "Database Directory: ${MySQL_Data_Dir}"
+    elif [[ "${DBSelect}" = "4" || "${DBSelect}" = "5" ]]; then
+        echo "Database Directory: ${MariaDB_Data_Dir}"
+    fi
+    echo "Default Website Directory: ${Default_Website_Dir}"
+}
+
 Print_Sys_Info()
 {
     cat /etc/issue
     cat /etc/*-release
     uname -a
-    MemTotal=`free -m | grep Mem | awk '{print  $2}'`  
+    MemTotal=`free -m | grep Mem | awk '{print  $2}'`
     echo "Memory is: ${MemTotal} MB "
     df -h
 }
@@ -379,6 +449,8 @@ Get_PHP_Ext_Dir()
        zend_ext_dir="/usr/local/php/lib/php/extensions/no-debug-non-zts-20121212/"
     elif echo "${Cur_PHP_Version}" | grep -Eqi '^5.6.'; then
        zend_ext_dir="/usr/local/php/lib/php/extensions/no-debug-non-zts-20131226/"
+   elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.0.'; then
+       zend_ext_dir="/usr/local/php/lib/php/extensions/no-debug-non-zts-20151012/"
     fi
 }
 
@@ -412,18 +484,46 @@ Check_DB()
     fi
 }
 
+Do_Query()
+{
+    echo "$1" >/tmp/.mysql.tmp
+    Check_DB
+    ${MySQL_Bin} --defaults-file=~/.my.cnf </tmp/.mysql.tmp
+    return $?
+}
+
+Make_TempMycnf()
+{
+    cat >~/.my.cnf<<EOF
+[client]
+user=root
+password='$1'
+EOF
+}
+
 Verify_DB_Password()
 {
     Check_DB
-    read -p "verify your current database root password: " DB_Root_Password
-    ${MySQL_Bin} -uroot -p${DB_Root_Password} -e "quit"
-    if [ $? -eq 0 ]; then
-        echo "MySQL root password correct."
-    else
-        echo "MySQL root password incorrect!Please check!"
-        Verify_DB_Password
+    status=1
+    while [ $status -eq 1 ]; do
+        stty -echo
+        echo "Enter current root password of Database (Password will not shown): "
+        read DB_Root_Password
+        echo
+        stty echo
+        Make_TempMycnf "${DB_Root_Password}"
+        Do_Query ""
+        status=$?
+    done
+    echo "OK, MySQL root password correct."
+}
+
+TempMycnf_Clean()
+{
+    if [ -s ~/.my.cnf ]; then
+        rm -f ~/.my.cnf
     fi
-    if [ "${DB_Root_Password}" = "" ]; then
-        Verify_DB_Password
+    if [ -s /tmp/.mysql.tmp ]; then
+        rm -f /tmp/.mysql.tmp
     fi
 }

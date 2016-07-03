@@ -14,23 +14,29 @@ Install_ImageMagic()
 
     cd ${cur_dir}/src
     Download_Files ${Download_Mirror}/web/imagemagick/${ImageMagick_Ver}.tar.gz ${ImageMagick_Ver}.tar.gz
-    Download_Files ${Download_Mirror}/web/imagick/${Imagick_Ver}.tgz ${Imagick_Ver}.tgz
 
     Tar_Cd ${ImageMagick_Ver}.tar.gz ${ImageMagick_Ver}
     ./configure --prefix=/usr/local/imagemagick
     make && make install
     cd ../
+    rm -rf ${cur_dir}/src/${ImageMagick_Ver}
 
-    Tar_Cd ${Imagick_Ver}.tgz ${Imagick_Ver}
+    if  echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.';then
+        Download_Files ${Download_Mirror}/web/imagick/imagick-3.1.2.tgz imagick-3.1.2.tgz
+        Tar_Cd imagick-3.1.2.tgz imagick-3.1.2
+    else
+        Download_Files ${Download_Mirror}/web/imagick/${Imagick_Ver}.tgz ${Imagick_Ver}.tgz
+        Tar_Cd ${Imagick_Ver}.tgz ${Imagick_Ver}
+    fi
     /usr/local/php/bin/phpize
     ./configure --with-php-config=/usr/local/php/bin/php-config --with-imagick=/usr/local/imagemagick
     make && make install
     cd ../
 
     sed -i '/the dl()/i\
-    extension = "imagick.so"' /usr/local/php/etc/php.ini
+extension = "imagick.so"' /usr/local/php/etc/php.ini
 
-    if [ -s "${zend_ext}" ]; then
+    if [ -s "${zend_ext}" ] && [ -s /usr/local/imagemagick/bin/convert ]; then
         Restart_PHP
         echo "====== ImageMagick install completed ======"
         echo "ImageMagick installed successfully, enjoy it!"

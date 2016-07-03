@@ -11,7 +11,7 @@ Install_Old_eA()
         echo "PHP 5.3.* and higher version Can't install eaccelerator 0.9.5.3!"
         echo "PHP 5.3.* please enter 2 or 3 !"
         echo "PHP 5.4.* please enter 3 !"
-        exit 1 
+        exit 1
     fi
 
     Download_Files ${Download_Mirror}/web/eaccelerator/eaccelerator-0.9.5.3.tar.bz2 eaccelerator-0.9.5.3.tar.bz2
@@ -33,7 +33,7 @@ Install_New_eA()
 
     if echo "${Cur_PHP_Version}" | grep -Eqi '^5.[456].';then
         echo "PHP 5.4.* and higher version Can't install eaccelerator 0.9.6.1!"
-        exit 1 
+        exit 1
     fi
 
     Download_Files ${Download_Mirror}/web/eaccelerator/eaccelerator-0.9.6.1.tar.bz2 eaccelerator-0.9.6.1.tar.bz2
@@ -55,7 +55,7 @@ Install_Dev_eA()
 
     if echo "${Cur_PHP_Version}" | grep -Eqi '^5.[56].';then
         echo "PHP 5.5.* and higher version do not support eaccelerator!"
-        exit 1 
+        exit 1
     fi
 
     Download_Files ${Download_Mirror}/web/eaccelerator/eaccelerator-eaccelerator-42067ac.tar.gz eaccelerator-eaccelerator-42067ac.tar.gz
@@ -95,7 +95,7 @@ Install_eAccelerator()
     echo "====== Installing eAccelerator ======"
     Press_Install
 
-    sed -ni '1,/;eaccelerator/p;/;ionCube/,$ p' /usr/local/php/etc/php.ini
+    sed -i '/\[eaccelerator\]/,/eaccelerator.content/d' /usr/local/php/etc/php.ini
     Get_PHP_Ext_Dir
     zend_ext="${zend_ext_dir}eaccelerator.so"
     if [ -s "${zend_ext}" ]; then
@@ -107,7 +107,7 @@ Install_eAccelerator()
         sleep 3
         exit 1
     fi
-    
+
     cd ${cur_dir}/src
     if [ "${ver}" = "1" ]; then
         Install_Old_eA
@@ -139,13 +139,9 @@ eaccelerator.compress_level="9"
 eaccelerator.keys = "disk_only"
 eaccelerator.sessions = "disk_only"
 eaccelerator.content = "disk_only"
-
 EOF
 
-    sed -i '/;eaccelerator/ {
-    r ea.ini
-    }' /usr/local/php/etc/php.ini
-
+    sed -i '/^;eaccelerator$/r ea.ini' /usr/local/php/etc/php.ini
     rm -f ea.ini
 
     if [ -s "${zend_ext}" ]; then
@@ -153,7 +149,7 @@ EOF
         echo "====== eAccelerator install completed ======"
         echo "eAccelerator installed successfully, enjoy it!"
     else
-        sed -ni '1,/;eaccelerator/p;/;ionCube/,$ p' /usr/local/php/etc/php.ini
+        sed -i '/\[eaccelerator\]/,/eaccelerator.content/d' /usr/local/php/etc/php.ini
         echo "eAccelerator install failed!"
     fi
 }
@@ -162,7 +158,7 @@ Uninstall_eAccelerator()
 {
     echo "You will uninstall eAccelerator..."
     Press_Start
-    sed -ni '1,/;eaccelerator/p;/;ionCube/,$ p' /usr/local/php/etc/php.ini
+    sed -i '/\[eaccelerator\]/,/eaccelerator.content/d' /usr/local/php/etc/php.ini
     echo "Delete eaccelerator_cache directory..."
     rm -rf /usr/local/eaccelerator_cache
     Restart_PHP

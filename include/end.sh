@@ -115,16 +115,45 @@ Check_PHP_Files()
 Check_Apache_Files()
 {
     isApache=""
-    if [[ -s /usr/local/apache/bin/httpd && -s /usr/local/apache/modules/libphp5.so && -s /usr/local/apache/conf/httpd.conf ]]; then
-        Echo_Green "Apache: OK"
-        isApache="ok"
+    if [ "${PHPSelect}" = "6" ]; then
+        if [[ -s /usr/local/apache/bin/httpd && -s /usr/local/apache/modules/libphp7.so && -s /usr/local/apache/conf/httpd.conf ]]; then
+            Echo_Green "Apache: OK"
+            isApache="ok"
+        else
+            Echo_Red "Error: Apache install failed."
+        fi
     else
-        Echo_Red "Error: Apache install failed."
+        if [[ -s /usr/local/apache/bin/httpd && -s /usr/local/apache/modules/libphp5.so && -s /usr/local/apache/conf/httpd.conf ]]; then
+            Echo_Green "Apache: OK"
+            isApache="ok"
+        else
+            Echo_Red "Error: Apache install failed."
+        fi
+    fi
+}
+
+Clean_Src_Dir()
+{
+    echo "Clean src directory..."
+    if [[ "${DBSelect}" = "4" || "${DBSelect}" = "5" ]]; then
+        rm -rf ${cur_dir}/src/${Mariadb_Ver}
+    else
+        rm -rf ${cur_dir}/src/${Mysql_Ver}
+    fi
+    rm -rf ${cur_dir}/src/${Php_Ver}
+    if [ "${Stack}" = "lnmp" ]; then
+        rm -rf ${cur_dir}/src/${Nginx_Ver}
+    elif [ "${Stack}" = "lnmpa" ]; then
+        rm -rf ${cur_dir}/src/${Nginx_Ver}
+        rm -rf ${cur_dir}/src/${Apache_Ver}
+    elif [ "${Stack}" = "lamp" ]; then
+        rm -rf ${cur_dir}/src/${Apache_Ver}
     fi
 }
 
 Print_Sucess_Info()
 {
+    Clean_Src_Dir
     echo "+------------------------------------------------------------------------+"
     echo "|          LNMP V${LNMP_Ver} for ${DISTRO} Linux Server, Written by Licess          |"
     echo "+------------------------------------------------------------------------+"
@@ -138,18 +167,18 @@ Print_Sucess_Info()
     echo "+------------------------------------------------------------------------+"
     echo "|  Add VirtualHost: lnmp vhost add                                       |"
     echo "+------------------------------------------------------------------------+"
-    echo "|  Default directory: /home/wwwroot/default                              |"
+    echo "|  Default directory: ${Default_Website_Dir}                              |"
     echo "+------------------------------------------------------------------------+"
-    echo "|  MySQL/MariaDB root password: ${MysqlRootPWD}                          |"
+    echo "|  MySQL/MariaDB root password: ${DB_Root_Password}                          |"
     echo "+------------------------------------------------------------------------+"
     lnmp status
-    netstat -ntl  
+    netstat -ntl
     Echo_Green "Install lnmp V${LNMP_Ver} completed! enjoy it."
 }
 
 Print_Failed_Info()
 {
-    Echo_Red "Sorry,Failed to install LNMP!"
+    Echo_Red "Sorry, Failed to install LNMP!"
     Echo_Red "Please visit http://bbs.vpser.net/forum-25-1.html feedback errors and logs."
     Echo_Red "You can download /root/lnmp-install.log from your server,and upload lnmp-install.log to LNMP Forum."
 }
@@ -159,7 +188,7 @@ Check_LNMP_Install()
     Check_Nginx_Files
     Check_DB_Files
     Check_PHP_Files
-    if [[ "$isNginx" = "ok" && "$isDB" = "ok" && "$isPHP" = "ok" ]]; then
+    if [[ "${isNginx}" = "ok" && "${isDB}" = "ok" && "${isPHP}" = "ok" ]]; then
         Print_Sucess_Info
     else
         Print_Failed_Info
@@ -172,7 +201,7 @@ Check_LNMPA_Install()
     Check_DB_Files
     Check_PHP_Files
     Check_Apache_Files
-    if [[ "$isNginx" = "ok" && "$isDB" = "ok" && "$isPHP" = "ok"  &&"$isApache" = "ok" ]]; then
+    if [[ "${isNginx}" = "ok" && "${isDB}" = "ok" && "${isPHP}" = "ok"  &&"${isApache}" = "ok" ]]; then
         Print_Sucess_Info
     else
         Print_Failed_Info
@@ -184,7 +213,7 @@ Check_LAMP_Install()
     Check_Apache_Files
     Check_DB_Files
     Check_PHP_Files
-    if [[ "$isApache" = "ok" && "$isDB" = "ok" && "$isPHP" = "ok" ]]; then
+    if [[ "${isApache}" = "ok" && "${isDB}" = "ok" && "${isPHP}" = "ok" ]]; then
         Print_Sucess_Info
     else
         Print_Failed_Info

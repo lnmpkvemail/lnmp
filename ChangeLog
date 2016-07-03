@@ -1,5 +1,30 @@
 更新记录
 
+LNMP 1.3
+
+优化安装脚本、升级脚本及组件安装脚本；
+增加lnmp.conf配置文件，可以自定义下载服务器地址、数据库目录及nginx和php编译参数；不论安装升级都会调用该文件里的设置；
+增加安装和升级时会根据配置自动优化相关参数；
+增加php7支持；
+增加mysql 5.7支持；
+增加phpmyadmin升级功能；
+php增加Composer工具；
+php 5.4以上版本增加intl、xsl扩展；
+增加nginx升级到1.9.5以上版本支持http2；
+增加php-redis、php-memcached、php-memcache、imagick PHP7下模块的支持；
+增加升级PHP/MySQL/MariaDB时对源目录进行完整备份，防范升级失败风险；
+增加卸载LNMP/LNMPA/LAMP时对数据库目录进行备份功能；
+增加lnmp脚本创建虚拟主机时可选创建MySQL数据库和FTP账号选项(需先安装好pureftpd)；
+增加安装或升级完清理目录节约硬盘空间；
+redis仅保留最新版，删除旧版支持；
+修正在部分系统下MySQL无法正确设置密码的问题；
+修正完善防火墙规则；
+pureftpd去掉MySQL的依赖和web面板，只使用lnmp ftp {add|list|edit|del} 进行ftp账号管理；
+调整pureftpd配置文件目录至/usr/local/pureftpd/etc/下；
+nginx.conf php启用配置简化为include enable-php.conf;
+诸多小的更新及调整......
+
+
 2015年6月1日发布LNMP 1.2
 
 完全重写优化安装脚本、升级脚本及组件安装等大部分脚本；

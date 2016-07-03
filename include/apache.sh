@@ -2,17 +2,17 @@
 
 Install_Apache_22()
 {
-    Echo_Blue "[+] Installing ${Apache_Version}..."
+    Echo_Blue "[+] Installing ${Apache_Ver}..."
     if [ "${Stack}" = "lamp" ]; then
         groupadd www
         useradd -s /sbin/nologin -g www www
-        mkdir -p /home/wwwroot/default
-        chmod +w /home/wwwroot/default
+        mkdir -p ${Default_Website_Dir}
+        chmod +w ${Default_Website_Dir}
         mkdir -p /home/wwwlogs
         chmod 777 /home/wwwlogs
-        chown -R www:www /home/wwwroot/default
+        chown -R www:www ${Default_Website_Dir}
     fi
-    Tar_Cd ${Apache_Version}.tar.gz ${Apache_Version}
+    Tar_Cd ${Apache_Ver}.tar.gz ${Apache_Ver}
     ./configure --prefix=/usr/local/apache --enable-mods-shared=most --enable-headers --enable-mime-magic --enable-proxy --enable-so --enable-rewrite --with-ssl --enable-ssl --enable-deflate --enable-suexec --with-included-apr --with-mpm=prefork --with-expat=builtin
     make && make install
 
@@ -40,23 +40,32 @@ Install_Apache_22()
     ln -sf /usr/local/lib/libltdl.so.3 /usr/lib/libltdl.so.3
     mkdir /usr/local/apache/conf/vhost
 
+    if [ "${Default_Website_Dir}" != "/home/wwwroot/default" ]; then
+        sed -i "s#/home/wwwroot/default#${Default_Website_Dir}#g" /usr/local/apache/conf/httpd.conf
+        sed -i "s#/home/wwwroot/default#${Default_Website_Dir}#g" /usr/local/apache/conf/extra/httpd-vhosts.conf
+    fi
+
+    if [ "${PHPSelect}" = "6" ]; then
+        sed -i '/^LoadModule php5_module/d' /usr/local/apache/conf/httpd.conf
+    fi
+
     \cp ${cur_dir}/init.d/init.d.httpd /etc/init.d/httpd
     chmod +x /etc/init.d/httpd
 }
 
 Install_Apache_24()
 {
-    Echo_Blue "[+] Installing ${Apache_Version}..."
+    Echo_Blue "[+] Installing ${Apache_Ver}..."
     if [ "${Stack}" = "lamp" ]; then
         groupadd www
         useradd -s /sbin/nologin -g www www
-        mkdir -p /home/wwwroot/default
-        chmod +w /home/wwwroot/default
+        mkdir -p ${Default_Website_Dir}
+        chmod +w ${Default_Website_Dir}
         mkdir -p /home/wwwlogs
         chmod 777 /home/wwwlogs
-        chown -R www:www /home/wwwroot/default
+        chown -R www:www ${Default_Website_Dir}
     fi
-    Tar_Cd ${Apache_Version}.tar.gz ${Apache_Version}
+    Tar_Cd ${Apache_Ver}.tar.gz ${Apache_Ver}
     cd srclib
     if [ -s "${cur_dir}/src/${APR_Ver}.tar.gz" ]; then
         echo "${APR_Ver}.tar.gz [found]"
@@ -91,6 +100,14 @@ Install_Apache_24()
     mkdir /usr/local/apache/conf/vhost
 
     sed -i 's/NameVirtualHost .*//g' /usr/local/apache/conf/extra/httpd-vhosts.conf
+    if [ "${Default_Website_Dir}" != "/home/wwwroot/default" ]; then
+        sed -i "s#/home/wwwroot/default#${Default_Website_Dir}#g" /usr/local/apache/conf/httpd.conf
+        sed -i "s#/home/wwwroot/default#${Default_Website_Dir}#g" /usr/local/apache/conf/extra/httpd-vhosts.conf
+    fi
+
+    if [ "${PHPSelect}" = "6" ]; then
+        sed -i '/^LoadModule php5_module/d' /usr/local/apache/conf/httpd.conf
+    fi
 
     \cp ${cur_dir}/init.d/init.d.httpd /etc/init.d/httpd
     chmod +x /etc/init.d/httpd

@@ -1,7 +1,7 @@
  #!/bin/bash
 
 Install_XCache()
-{       
+{
     echo "You will install ${XCache_Ver}..."
 
     xadmin_pass=""
@@ -16,11 +16,11 @@ Install_XCache()
     fi
     xmd5pass=`echo -n "${xadmin_pass}" |md5sum |awk '{print $1}'`
 
-    
+
     echo "====== Installing XCache ======"
     Press_Install
 
-    sed -i '/;xcache/,/;xcache end/d' /usr/local/php/etc/php.ini
+    sed -i '/\[xcache-common\]/,/xcache.coveragedump_directory/d' /usr/local/php/etc/php.ini
     Get_PHP_Ext_Dir
     zend_ext="${zend_ext_dir}xcache.so"
     if [ -s "${zend_ext}" ]; then
@@ -38,8 +38,7 @@ Install_XCache()
     make install
     cd ../
 
-    cat >>/usr/local/php/etc/php.ini<<EOF
-;xcache
+    cat >xcache.ini<<EOF
 [xcache-common]
 extension = ${zend_ext}
 
@@ -80,21 +79,22 @@ xcache.optimizer =           Off
 ; enable coverage data collecting and xcache_coverager_start/stop/get/clean() functions
 xcache.coverager =          Off
 xcache.coveragedump_directory = ""
-;xcache end
 
 EOF
+    sed -i '/;xcache/r xcache.ini' /usr/local/php/etc/php.ini
+    rm -f xcache.ini
 
     touch /tmp/xcache && chown www:www /tmp/xcache
 
-    \cp -a ${cur_dir}/src/${XCache_Ver}/htdocs /home/wwwroot/default/xcache
-    chown www:www -R /home/wwwroot/default/xcache
+    \cp -a ${cur_dir}/src/${XCache_Ver}/htdocs ${Default_Website_Dir}/xcache
+    chown www:www -R ${Default_Website_Dir}/xcache
 
     if [ -s "${zend_ext}" ]; then
         Restart_PHP
         echo "======== xcache install completed ======"
         echo "XCache installed successfully, enjoy it!"
     else
-        sed -i '/;xcache/,/;xcache end/d' /usr/local/php/etc/php.ini
+        sed -i '/\[xcache-common\]/,/xcache.coveragedump_directory/d' /usr/local/php/etc/php.ini
         echo "XCache install failed!"
     fi
 }
@@ -103,9 +103,9 @@ Uninstall_XCache()
 {
     echo "You will uninstall XCache..."
     Press_Start
-    sed -i '/;xcache/,/;xcache end/d' /usr/local/php/etc/php.ini
+    sed -i '/\[xcache-common\]/,/xcache.coveragedump_directory/d' /usr/local/php/etc/php.ini
     echo "Delete xcache files..."
-    rm -rf /home/wwwroot/default/xcache
+    rm -rf ${Default_Website_Dir}/xcache
     Restart_PHP
     echo "Uninstall XCache completed."
 }

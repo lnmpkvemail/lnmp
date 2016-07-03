@@ -7,7 +7,11 @@ Install_Nginx()
     useradd -s /sbin/nologin -g www www
 
     Tar_Cd ${Nginx_Ver}.tar.gz ${Nginx_Ver}
-    ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_spdy_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${NginxMAOpt}
+    if echo ${Nginx_Ver} | grep -Eqi 'nginx-[0-1].[5-8].[0-9]' || echo ${Nginx_Ver} | grep -Eqi 'nginx-1.9.[1-4]$'; then
+        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_spdy_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${NginxMAOpt} ${Nginx_Modules_Options}
+    else
+        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_v2_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${NginxMAOpt} ${Nginx_Modules_Options}
+    fi
     make && make install
     cd ../
 
@@ -40,22 +44,27 @@ Install_Nginx()
     \cp conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php-pathinfo.conf
     \cp conf/proxy-pass-php.conf /usr/local/nginx/conf/proxy-pass-php.conf
     \cp conf/enable-ssl-example.conf /usr/local/nginx/conf/enable-ssl-example.conf
+    \cp conf/enable-php5.2.17.conf /usr/local/nginx/conf/enable-php5.2.17.conf
 
-    mkdir -p /home/wwwroot/default
-    chmod +w /home/wwwroot/default
+    mkdir -p ${Default_Website_Dir}
+    chmod +w ${Default_Website_Dir}
     mkdir -p /home/wwwlogs
     chmod 777 /home/wwwlogs
 
-    chown -R www:www /home/wwwroot/default
+    chown -R www:www ${Default_Website_Dir}
 
     mkdir /usr/local/nginx/conf/vhost
 
+    if [ "${Default_Website_Dir}" != "/home/wwwroot/default" ]; then
+        sed -i "s#/home/wwwroot/default#${Default_Website_Dir}#g" /usr/local/nginx/conf/nginx.conf
+    fi
+
     if [ "${Stack}" = "lnmp" ]; then
-    cat >/home/wwwroot/default/.user.ini<<EOF
-open_basedir=/home/wwwroot/default:/tmp/:/proc/
+    cat >${Default_Website_Dir}/.user.ini<<EOF
+open_basedir=${Default_Website_Dir}:/tmp/:/proc/
 EOF
-    chmod 644 /home/wwwroot/default/.user.ini
-    chattr +i /home/wwwroot/default/.user.ini
+    chmod 644 ${Default_Website_Dir}/.user.ini
+    chattr +i ${Default_Website_Dir}/.user.ini
     fi
 
     \cp init.d/init.d.nginx /etc/init.d/nginx

@@ -79,26 +79,29 @@ Function_Vhost()
 esac
 }
 
-Function_Mysql()
+Function_Database()
 {
     case "$1" in
     [aA][dD][dD])
         Add_Database_Menu
         Add_Database
-    ;;
+        ;;
     [lL][iI][sS][tT])
         List_Database
-    ;;
+        ;;
     [dD][eE][lL])
         Del_Database
-    ;;
+        ;;
+    [eE][dD][iI][tT])
+        Edit_Database
+        ;;
     [eE][xX][iI][tT])
         exit 1
-    ;;
+        ;;
     *)
         echo "Usage: lnmp mysql {add|list|del}"
         exit 1
-    ;;
+        ;;
 esac
 }
 
@@ -115,6 +118,9 @@ Function_Ftp()
     [dD][eE][lL])
         Del_Ftp
     ;;
+    [eE][dD][iI][tT])
+        Edit_Ftp
+	;;
     [eE][xX][iI][tT])
         exit 1
     ;;
@@ -136,13 +142,13 @@ Add_VHost()
     if [ ! -f "/usr/local/nginx/conf/vhost/${domain}.conf" ] || [ ! -f "/usr/local/nginx/conf/vhost/${domain}.conf" ]; then
         echo "======================================"
         echo " Your domain: ${domain}"
-        echo "======================================" 
+        echo "======================================"
     else
         echo "==============================="
         echo "${domain} is exist!"
         echo "==============================="
     fi
-    
+
     read -p "Do you want to add more domain name? (y/n) " add_more_domainame
 
     if [ "${add_more_domainame}" == "y" ]; then
@@ -172,7 +178,7 @@ Add_VHost()
         if [ "${al_name}" = "" ]; then
             al_name="${domain}"
         fi
-        al="access_log  /home/wwwlogs/${al_name}.log  access;"
+        al="access_log  /home/wwwlogs/${al_name}.log;"
 
     echo "You access log filename: ${al_name}.log"
     fi
@@ -194,7 +200,7 @@ Add_VHost()
     read create_database
 
     if [ "${create_database}" == "y" ]; then
-        Verify_MySQL_Password
+        Verify_DB_Password
         Add_Database_Menu
     fi
 
@@ -206,9 +212,6 @@ Add_VHost()
         read create_ftp
 
         if [ "${create_ftp}" == "y" ]; then
-            if [ "${create_database}" != "y" ]; then
-                Verify_MySQL_Password
-            fi
             Add_Ftp_Menu
         fi
     fi
@@ -238,23 +241,8 @@ server
         index index.html index.htm index.php default.html default.htm default.php;
         root  ${vhostdir};
 
-        location /
-        {
-            try_files \$uri @apache;
-        }
-
-        location @apache
-        {
-            internal;
-            proxy_pass http://127.0.0.1:88;
-            include proxy.conf;
-        }
-
-        location ~ [^/]\.php(/|$)
-        {
-            proxy_pass http://127.0.0.1:88;
-            include proxy.conf;
-        }
+        #error_page   404   /404.html;
+        include proxy-pass-php.conf;
 
         location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
         {
@@ -264,6 +252,11 @@ server
         location ~ .*\.(js|css)?$
         {
             expires      12h;
+        }
+
+        location ~ /\.
+        {
+            deny all;
         }
 
         ${al}
@@ -277,7 +270,7 @@ php_admin_value open_basedir "${vhostdir}:/tmp/:/var/tmp/:/proc/"
 DocumentRoot "${vhostdir}"
 ServerName ${domain}
 ErrorLog "/home/wwwlogs/${al_name}-error_log"
-CustomLog "/home/wwwlogs/${al_name}-access_log" common
+CustomLog "/home/wwwlogs/${al_name}-access_log" combined
 <Directory "${vhostdir}">
     SetOutputFilter DEFLATE
     Options FollowSymLinks
@@ -374,7 +367,7 @@ Del_VHost()
         echo "Domain: ${domain} has been deleted."
         echo "Website files will not be deleted for security reasons."
         echo "You need to manually delete the website files."
-        echo "========================================================"    
+        echo "========================================================"
     fi
 }
 
@@ -387,18 +380,47 @@ Check_DB()
     fi
 }
 
-Verify_MySQL_Password()
+Make_TempMycnf()
 {
-    read -p "verify your current MySQL root password: " mysql_root_password
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "quit"
-    if [ $? -eq 0 ]; then
-        echo "MySQL root password correct."
-    else
-        echo "MySQL root password incorrect!Please check!"
-        Verify_MySQL_Password
+    cat >~/.my.cnf<<EOF
+[client]
+user=root
+password='$1'
+EOF
+}
+
+Verify_DB_Password()
+{
+    Check_DB
+    status=1
+    while [ $status -eq 1 ]; do
+        stty -echo
+        echo "Enter current root password of Database (Password will not shown): "
+        read DB_Root_Password
+        echo
+        stty echo
+        Make_TempMycnf "${DB_Root_Password}"
+        Do_Query ""
+        status=$?
+    done
+    echo "OK, MySQL root password correct."
+}
+
+Do_Query()
+{
+    echo "$1" >/tmp/.mysql.tmp
+    Check_DB
+    ${MySQL_Bin} --defaults-file=~/.my.cnf </tmp/.mysql.tmp
+    return $?
+}
+
+TempMycnf_Clean()
+{
+    if [ -s ~/.my.cnf ]; then
+        rm -f ~/.my.cnf
     fi
-    if [ "${mysql_root_password}" = "" ]; then
-        Verify_MySQL_Password
+    if [ -s /tmp/.mysql.tmp ]; then
+        rm -f /tmp/.mysql.tmp
     fi
 }
 
@@ -421,24 +443,42 @@ Add_Database_Menu()
 
 Add_Database()
 {
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "CREATE USER '${database_name}'@'127.0.0.1' IDENTIFIED BY '${mysql_password}'"
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "CREATE USER '${database_name}'@'localhost' IDENTIFIED BY '${mysql_password}'"
-    [ $? -eq 0 ] && echo "User ${database_name} create Sucessfully." || echo "User ${database_name} already exists!"
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "GRANT USAGE ON *.* TO '${database_name}'@'127.0.0.1' IDENTIFIED BY '${mysql_password}'"
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "GRANT USAGE ON *.* TO '${database_name}'@'localhost' IDENTIFIED BY '${mysql_password}'"
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "CREATE DATABASE ${database_name}"
-    [ $? -eq 0 ] && echo "Database: ${database_name} create Sucessfully." || echo "Database: ${database_name} already exists!"
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "GRANT ALL PRIVILEGES ON ${database_name}.* TO '${database_name}'@'127.0.0.1';"
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "GRANT ALL PRIVILEGES ON ${database_name}.* TO '${database_name}'@'localhost';"
-    [ $? -eq 0 ] && echo "GRANT ALL PRIVILEGES ON ${database_name} Sucessfully." || echo "GRANT ALL PRIVILEGES ON ${database_name} failed!"
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "FLUSH PRIVILEGES"
-    [ $? -eq 0 ] && echo "FLUSH PRIVILEGES Sucessfully." || echo "FLUSH PRIVILEGES failed!"
+    cat >/tmp/.add_mysql.sql<<EOF
+CREATE USER '${database_name}'@'localhost' IDENTIFIED BY '${mysql_password}';
+CREATE USER '${database_name}'@'127.0.0.1' IDENTIFIED BY '${mysql_password}';
+GRANT USAGE ON *.* TO '${database_name}'@'localhost' IDENTIFIED BY '${mysql_password}';
+GRANT USAGE ON *.* TO '${database_name}'@'127.0.0.1' IDENTIFIED BY '${mysql_password}';
+CREATE DATABASE IF NOT EXISTS \`${database_name}\`;
+GRANT ALL PRIVILEGES ON \`${database_name}\`.* TO '${database_name}'@'localhost';
+GRANT ALL PRIVILEGES ON \`${database_name}\`.* TO '${database_name}'@'127.0.0.1';
+FLUSH PRIVILEGES;
+EOF
+    ${MySQL_Bin} --defaults-file=~/.my.cnf < /tmp/.add_mysql.sql
+    [ $? -eq 0 ] && echo "Add database Sucessfully." || echo "Add database failed!"
+    rm -f /tmp/.add_mysql.sql
 }
 
 List_Database()
 {
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "SHOW DATABASES;"
+    ${MySQL_Bin} --defaults-file=~/.my.cnf -e "SHOW DATABASES;"
     [ $? -eq 0 ] && echo "List all databases Sucessfully." || echo "List all databases failed!"
+}
+
+Edit_Database()
+{
+    read -p "Enter database username: " database_username
+    if [ "${database_username}" = "" ]; then
+        echo "Database Username can't be empty!"
+        exit 1
+    fi
+    read -p "Enter NEW Password: " database_username_passwd
+    if [ "${database_username_passwd}" = "" ]; then
+        echo "Database Password can't be empty!"
+        exit 1
+    fi
+    Do_Query "UPDATE mysql.user SET Password=PASSWORD('${database_username_passwd}') WHERE User='${database_username}' AND Host IN ('localhost', '127.0.0.1', '::1');"
+    [ $? -eq 0 ] && echo "Edit user password Sucessfully." || echo "Edit user password databases failed!"
+    Do_Query "FLUSH PRIVILEGES;"
 }
 
 Del_Database()
@@ -450,14 +490,17 @@ Del_Database()
         exit 1
     fi
     echo "Your will delete database and MySQL user with same name: ${database_name}"
-    echo "Sleep 10s,Press ctrl+c to cancel..."
+    echo "Sleep 10s, Press ctrl+c to cancel..."
     sleep 10
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "DROP USER '${database_name}'@'127.0.0.1'"
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "DROP USER '${database_name}'@'localhost'"
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "DROP DATABASE ${database_name}"
-    [ $? -eq 0 ] && echo "Database: ${database_name} deleted Sucessfully." || echo "Database: ${database_name} not exist!"
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "FLUSH PRIVILEGES"
-    [ $? -eq 0 ] && echo "FLUSH PRIVILEGES Sucessfully." || echo "FLUSH PRIVILEGES failed!"
+    cat >/tmp/.del.mysql.sql<<EOF
+DROP USER '${database_name}'@'127.0.0.1';
+DROP USER '${database_name}'@'localhost';
+DROP DATABASE \`${database_name}\`;
+FLUSH PRIVILEGES;
+EOF
+    ${MySQL_Bin} --defaults-file=~/.my.cnf < /tmp/.del.mysql.sql
+    [ $? -eq 0 ] && echo "Delete database: ${database_name} Sucessfully." || echo "Delete database: ${database_name} failed!"
+    rm -f /tmp/.del.mysql.sql
 }
 
 Enter_Ftp_Name()
@@ -498,14 +541,46 @@ Add_Ftp()
 {
     www_uid=`id -u www`
     www_gid=`id -g www`
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "INSERT INTO ftpusers.users VALUES ('${ftp_account_name}', MD5('${ftp_account_password}'), ${www_uid}, ${www_gid}, '${vhostdir}', 0, 0, 0, 0, '*', '${domain}', '1', 0, 0)"
+	cat >/tmp/pass${ftp_account_name}<<EOF
+${ftp_account_password}
+${ftp_account_password}
+EOF
+	/usr/local/pureftpd/bin/pure-pw useradd ${ftp_account_name} -f /usr/local/pureftpd/etc/pureftpd.passwd -u ${www_uid} -g ${www_gid} -d ${vhostdir} -m < /tmp/pass${ftp_account_name}
     [ $? -eq 0 ] && echo "Created FTP User: ${ftp_account_name} Sucessfully." || echo "FTP User: ${ftp_account_name} already exists!"
+	rm -f /tmp/pass${ftp_account_name}
 }
 
 List_Ftp()
 {
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "SELECT User,Dir FROM ftpusers.users users ORDER BY User ASC"
+    /usr/local/pureftpd/bin/pure-pw list -f /usr/local/pureftpd/etc/pureftpd.passwd
     [ $? -eq 0 ] && echo "List FTP User Sucessfully." || echo "Read database failed."
+}
+
+Edit_Ftp()
+{
+    List_Ftp
+    Enter_Ftp_Name
+    read -p "Enter password for ftp account ${ftp_account_name}: " ftp_account_password
+    if [ "${ftp_account_password}" != "" ]; then
+		cat >/tmp/pass${ftp_account_name}<<EOF
+${ftp_account_password}
+${ftp_account_password}
+EOF
+		/usr/local/pureftpd/bin/pure-pw passwd ${ftp_account_name} -f /usr/local/pureftpd/etc/pureftpd.passwd -m < /tmp/pass${ftp_account_name}
+		[ $? -eq 0 ] && echo "FTP User: ${ftp_account_name} change password Sucessfully." || echo "FTP User: ${ftp_account_name} change password failed!"
+		rm -f /tmp/pass${ftp_account_name}
+	else
+        echo "FTP password will no change."
+    fi
+    read -p "Enter directory for ftp account ${ftp_account_name}: " vhostdir
+	if [ "${vhostdir}" != "" ]; then
+	    www_uid=`id -u www`
+		www_gid=`id -g www`
+		/usr/local/pureftpd/bin/pure-pw usermod ${ftp_account_name} -f /usr/local/pureftpd/etc/pureftpd.passwd -u ${www_uid} -g ${www_gid} -d ${vhostdir} -m
+		[ $? -eq 0 ] && echo "FTP User: ${ftp_account_name} change diretcory Sucessfully." || echo "FTP User: ${ftp_account_name} change directory failed!"
+	else
+        echo "Directory will no change."
+    fi
 }
 
 Del_Ftp()
@@ -515,7 +590,7 @@ Del_Ftp()
     echo "Your will delete ftp user ${ftp_account_name}"
     echo "Sleep 10s,Press ctrl+c to cancel..."
     sleep 10
-    ${MySQL_Bin} -uroot -p${mysql_root_password} -e "DELETE FROM ftpusers.users WHERE User='${ftp_account_name}'"
+    /usr/local/pureftpd/bin/pure-pw userdel ${ftp_account_name} -f /usr/local/pureftpd/etc/pureftpd.passwd -m
     [ $? -eq 0 ] && echo "FTP User: ${ftp_account_name} deleted Sucessfully." || echo "FTP User: ${ftp_account_name} not exists!"
 }
 
@@ -560,19 +635,19 @@ case "${arg1}" in
         Function_Vhost ${arg2}
         ;;
     database)
-        Verify_MySQL_Password
-        Function_Mysql ${arg2}
+        Verify_DB_Password
+        Function_Database ${arg2}
+        TempMycnf_Clean
         ;;
     ftp)
         Check_Pureftpd
-        Verify_MySQL_Password
         Function_Ftp ${arg2}
         ;;
     *)
         echo "Usage: lnmp {start|stop|reload|restart|kill|status}"
         echo "Usage: lnmp {nginx|mysql|mariadb|pureftpd|httpd} {start|stop|reload|restart|kill|status}"
         echo "Usage: lnmp vhost {add|list|del}"
-        echo "Usage: lnmp database {add|list|del}"
-        echo "Usage: lnmp ftp {add|list|del}"
+        echo "Usage: lnmp database {add|list|edit|del}"
+        echo "Usage: lnmp ftp {add|list|edit|del}"
 esac
 exit

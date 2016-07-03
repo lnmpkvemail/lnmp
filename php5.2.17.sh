@@ -8,6 +8,8 @@ if [ $(id -u) != "0" ]; then
     exit 1
 fi
 
+. lnmp.conf
+. include/version.sh
 . include/main.sh
 . include/init.sh
 . include/php.sh
@@ -27,8 +29,8 @@ Get_Dist_Name
 Check_DB
 Get_PHP_Ext_Dir
 if echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.'; then
-        echo "Do NOT need to install PHP 5.2.17!"
-        exit 1
+    echo "Do NOT need to install PHP 5.2.17!"
+    exit 1
 fi
 
 echo "=================================================="
@@ -37,9 +39,12 @@ echo "=================================================="
 
 Press_Start
 
+Install_PHP5217()
+{
+
 cd ${cur_dir}/src
-Download_Files http://soft.vpser.net/web/php/php-5.2.17.tar.gz php-5.2.17.tar.gz
-Download_Files http://soft.vpser.net/web/phpfpm/php-5.2.17-fpm-0.5.14.diff.gz php-5.2.17-fpm-0.5.14.diff.gz
+Download_Files ${Download_Mirror}/web/php/php-5.2.17.tar.gz php-5.2.17.tar.gz
+Download_Files ${Download_Mirror}/web/phpfpm/php-5.2.17-fpm-0.5.14.diff.gz php-5.2.17-fpm-0.5.14.diff.gz
 
 lnmp stop
 
@@ -90,12 +95,12 @@ sed -i 's/disable_functions =.*/disable_functions = passthru,exec,system,chroot,
 
 cd ${cur_dir}/src
 if [ "${Is_64bit}" = "y" ] ; then
-    Download_Files http://soft.vpser.net/web/zend/ZendOptimizer-3.3.9-linux-glibc23-x86_64.tar.gz
+    Download_Files ${Download_Mirror}/web/zend/ZendOptimizer-3.3.9-linux-glibc23-x86_64.tar.gz
     tar zxf ZendOptimizer-3.3.9-linux-glibc23-x86_64.tar.gz
     mkdir -p /usr/local/zend52/
     \cp ZendOptimizer-3.3.9-linux-glibc23-x86_64/data/5_2_x_comp/ZendOptimizer.so /usr/local/zend52/
 else
-    Download_Files http://soft.vpser.net/web/zend/ZendOptimizer-3.3.9-linux-glibc23-i386.tar.gz
+    Download_Files ${Download_Mirror}/web/zend/ZendOptimizer-3.3.9-linux-glibc23-i386.tar.gz
     tar zxf ZendOptimizer-3.3.9-linux-glibc23-i386.tar.gz
     mkdir -p /usr/local/zend52/
     \cp ZendOptimizer-3.3.9-linux-glibc23-i386/data/5_2_x_comp/ZendOptimizer.so /usr/local/zend52/
@@ -135,9 +140,13 @@ echo "Starting PHP 5.2.17 PHP-FPM..."
 rm -rf ${cur_dir}/src/php-5.2.17
 
 if [ -s /usr/local/php52/sbin/php-fpm ] && [ -s /usr/local/php52/etc/php.ini ] && [ -s /usr/local/php52/bin/php ]; then
-echo "==========================================="
-Echo_Green "You have successfully install PHP 5.2.17 "
-echo "==========================================="
+    echo "==========================================="
+    Echo_Green "You have successfully install PHP 5.2.17 "
+    echo "==========================================="
 else
-Echo_Red "Failed to install PHP 5.2.17!,you need try to run ./php5.2.17.sh 2>&1 | tee installphp5.2.17.log to record install logs."
+    Echo_Red "Failed to install PHP 5.2.17, you can download /root/installphp5.2.17.log from your server, and upload lnmp-install.log to LNMP Forum."
 fi
+
+}
+
+Install_PHP5217 2>&1 | tee /root/installphp5.2.17.log

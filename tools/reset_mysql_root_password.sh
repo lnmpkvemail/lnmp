@@ -24,6 +24,8 @@ else
     M_Name="mysql"
 fi
 
+cur_mysql_version=`/usr/local/mysql/bin/mysql -V | awk '{print $5}' | tr -d ","`
+
 mysql_root_password=""
 read -p "Enter New MySQL root password: " mysql_root_password
 if [ "${mysql_root_password}" = "" ]; then
@@ -38,12 +40,17 @@ echo "Starting MySQL with skip grant tables"
 echo "using mysql to flush privileges and reset password"
 sleep 5
 echo "update user set password = Password('${mysql_root_password}') where User = 'root'"
-/usr/local/${M_Name}/bin/mysql -u root mysql << EOF
+if echo "${cur_mysql_version}" | grep -Eqi '^5.7.'; then
+    /usr/local/${M_Name}/bin/mysql -u root mysql << EOF
+update user set authentication_string = Password('${mysql_root_password}') where User = 'root';
+EOF
+else
+    /usr/local/${M_Name}/bin/mysql -u root mysql << EOF
 update user set password = Password('${mysql_root_password}') where User = 'root';
 EOF
+fi
 
-reset_status=`echo $?`
-if [ ${reset_status} = "0" ]; then
+if [ $? -eq 0 ]; then
     echo "Password reset succesfully. Now killing mysqld softly"
     killall mysqld
     sleep 5

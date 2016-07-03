@@ -1,22 +1,10 @@
 #!/bin/bash
 
-Verify_MySQL_Password()
-{
-    read -p "verify your current MySQL root password:" mysql_root_password
-    /usr/local/mysql/bin/mysql -uroot -p${mysql_root_password} -e "quit"
-    if [ $? -eq 0 ]; then
-        echo "MySQL root password correct."
-    else
-        echo "MySQL root password incorrect!Please check!"
-        Verify_MySQL_Password
-    fi
-}
-
 Backup_MySQL2()
 {
     echo "Starting backup all databases..."
     echo "If the database is large, the backup time will be longer."
-    /usr/local/mysql/bin/mysqldump -uroot -p${mysql_root_password} --all-databases > /root/mysql_all_backup$(date +"%Y%m%d").sql
+    /usr/local/mysql/bin/mysqldump --defaults-file=~/.my.cnf --all-databases > /root/mysql_all_backup${Upgrade_Date}.sql
     if [ $? -eq 0 ]; then
         echo "MySQL databases backup successfully.";
     else
@@ -28,25 +16,30 @@ Backup_MySQL2()
     Remove_StartUp mysql
     mv /etc/init.d/mysql /etc/init.d/mysql2mariadb.bak.${Upgrade_Date}
     mv /etc/my.cnf /etc/my.conf.mysql2mariadbbak.${Upgrade_Date}
-    cp -a /usr/local/mysql /usr/local/mysql2mariadb${Upgrade_Date}
+    mv /usr/local/mysql /usr/local/mysql2mariadb${Upgrade_Date}
+    if [ "${MariaDB_Data_Dir}" != "/usr/local/mariadb/var" ]; then
+        mv ${MariaDB_Data_Dir} ${MariaDB_Data_Dir}${Upgrade_Date}
+    fi
+    if echo "${mariadb_version}" | grep -Eqi '^5.5.' &&  echo "${cur_mysql_version}" | grep -Eqi '^5.6.';then
+        sed -i 's/STATS_PERSISTENT=0//g' /root/mysql_all_backup${Upgrade_Date}.sql
+    fi
 }
 
 Upgrade_MySQL2MariaDB()
 {
-    cur_mysql_version=`/usr/local/mysql/bin/mysql -V | awk '{print $5}' | tr -d ","`
-
-    Verify_MySQL_Password
-
     Check_DB
     if [ "${Is_MySQL}" = "n" ]; then
         Echo_Red "Current database was MariaDB, Can't run MySQL2MariaDB upgrade script."
+        exit 1
     fi
+    Verify_DB_Password
 
+    cur_mysql_version=`/usr/local/mysql/bin/mysql -V | awk '{print $5}' | tr -d ","`
     mariadb_version=""
     echo "Current MySQL Version:${cur_mysql_version}"
     echo "You can get version number from https://downloads.mariadb.org/"
-    echo "Please enter MariaDB Version you want."
-    read -p "(example: 10.0.15 ): " mariadb_version
+    Echo_Yellow "Please enter MariaDB Version you want."
+    read -p "(example: 10.0.21 ): " mariadb_version
     if [ "${mariadb_version}" = "" ]; then
         echo "Error: You must input MariaDB Version!!"
         exit 1
@@ -55,27 +48,35 @@ Upgrade_MySQL2MariaDB()
     #do you want to install the InnoDB Storage Engine?
     echo "==========================="
 
-    installinnodb="y"
-    echo "Do you want to install the InnoDB Storage Engine?"
-    read -p "(Default yes,if you want please input: y ,if not please enter: n):" installinnodb
+    InstallInnodb="y"
+    Echo_Yellow "Do you want to install the InnoDB Storage Engine?"
+    read -p "(Default yes, if you want please enter: y , if not please enter: n): " InstallInnodb
 
-    case "${installinnodb}" in
-    y|Y|Yes|YES|yes|yES|yEs|YeS|yeS)
-    echo "You will install the InnoDB Storage Engine"
-    installinnodb="y"
-    ;;
-    n|N|No|NO|no|nO)
-    echo "You will NOT install the InnoDB Storage Engine!"
-    installinnodb="n"
-    ;;
+    case "${InstallInnodb}" in
+    [yY][eE][sS]|[yY])
+        echo "You will install the InnoDB Storage Engine"
+        InstallInnodb="y"
+        ;;
+    [nN][oO]|[nN])
+        echo "You will NOT install the InnoDB Storage Engine!"
+        InstallInnodb="n"
+        ;;
     *)
-    echo "No input,The InnoDB Storage Engine will enable."
-    installinnodb="y"
+        echo "No input, The InnoDB Storage Engine will enable."
+        InstallInnodb="y"
     esac
 
     echo "====================================================================="
     echo "You will upgrade MySQL V${cur_mysql_version} to MariaDB V${mariadb_version}"
     echo "====================================================================="
+
+    if [ -s /usr/local/include/jemalloc/jemalloc.h ] && lsof -n|grep "libjemalloc.so"|grep -q "mysqld"; then
+        MariaDBMAOpt=''
+    elif [ -s /usr/local/include/gperftools/tcmalloc.h ] && lsof -n|grep "libtcmalloc.so"|grep -q "mysqld"; then
+        MariaDBMAOpt="-DCMAKE_EXE_LINKER_FLAGS='-ltcmalloc' -DWITH_SAFEMALLOC=OFF"
+    else
+        MariaDBMAOpt=''
+    fi
 
     Press_Start
 
@@ -84,12 +85,12 @@ Upgrade_MySQL2MariaDB()
     if [ -s mariadb-${mariadb_version}.tar.gz ]; then
         echo "mariadb-${mariadb_version}.tar.gz [found]"
     else
-        echo "Error: mariadb-${mariadb_version}.tar.gz not found!!!download now......"
-        wget -c https://downloads.mariadb.org/interstitial/mariadb-${mariadb_version}/source/mariadb-${mariadb_version}.tar.gz
+        echo "Notice: mariadb-${mariadb_version}.tar.gz not found!!!download now......"
+        wget -c --progress=bar:force https://downloads.mariadb.org/interstitial/mariadb-${mariadb_version}/source/mariadb-${mariadb_version}.tar.gz
         if [ $? -eq 0 ]; then
             echo "Download mariadb-${mariadb_version}.tar.gz successfully!"
         else
-            wget -c https://downloads.mariadb.org/interstitial/mariadb-${mariadb_version}/kvm-tarbake-jaunty-x86/mariadb-${mariadb_version}.tar.gz
+            wget -c --progress=bar:force https://downloads.mariadb.org/interstitial/mariadb-${mariadb_version}/kvm-tarbake-jaunty-x86/mariadb-${mariadb_version}.tar.gz
             if [ $? -eq 0 ]; then
                 echo "Download mariadb-${mariadb_version}.tar.gz successfully!"
             else
@@ -103,79 +104,113 @@ Upgrade_MySQL2MariaDB()
     echo "============================check files=================================="
 
     Backup_MySQL2
-    
+
     echo "Starting upgrade MySQL to MariaDB..."
     Tar_Cd mariadb-${mariadb_version}.tar.gz mariadb-${mariadb_version}
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_READLINE=1 -DWITH_SSL=bundled -DWITH_ZLIB=system -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1
+    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MariaDBMAOpt}
     make && make install
 
     groupadd mariadb
     useradd -s /sbin/nologin -M -g mariadb mariadb
 
-    \cp support-files/my-medium.cnf /etc/my.cnf
-    sed '/skip-external-locking/i\pid-file = /usr/local/mariadb/var/mariadb.pid' -i /etc/my.cnf
-    sed '/skip-external-locking/i\log_error = /usr/local/mariadb/var/mariadb.err' -i /etc/my.cnf
-    sed '/skip-external-locking/i\basedir = /usr/local/mariadb' -i /etc/my.cnf
-    sed '/skip-external-locking/i\datadir = /usr/local/mariadb/var' -i /etc/my.cnf
-    sed '/skip-external-locking/i\user = mariadb' -i /etc/my.cnf
-    if [ $installinnodb = "y" ]; then
-        sed -i 's:#innodb:innodb:g' /etc/my.cnf
-        sed -i 's:/usr/local/mariadb/data:/usr/local/mariadb/var:g' /etc/my.cnf
-    else
-        sed '/skip-external-locking/i\default-storage-engine=MyISAM\nloose-skip-innodb' -i /etc/my.cnf
-    fi
+    cat > /etc/my.cnf<<EOF
+[client]
+#password	= your_password
+port		= 3306
+socket		= /tmp/mysql.sock
 
-    echo -e "\nexpire_logs_days = 10" >> /etc/my.cnf
-    sed -i '/skip-external-locking/a\max_connections = 1000' /etc/my.cnf
+[mysqld]
+port		= 3306
+socket		= /tmp/mysql.sock
+user    = mariadb
+basedir = /usr/local/mariadb
+datadir = ${MariaDB_Data_Dir}
+log_error = ${MariaDB_Data_Dir}/mariadb.err
+pid-file = ${MariaDB_Data_Dir}/mariadb.pid
+skip-external-locking
+key_buffer_size = 16M
+max_allowed_packet = 1M
+table_open_cache = 64
+sort_buffer_size = 512K
+net_buffer_length = 8K
+read_buffer_size = 256K
+read_rnd_buffer_size = 512K
+myisam_sort_buffer_size = 8M
+thread_cache_size = 8
+query_cache_size = 8M
+tmp_table_size = 16M
 
-cat > /etc/ld.so.conf.d/mariadb.conf<<EOF
-/usr/local/mariadb/lib
-/usr/local/lib
+#skip-networking
+max_connections = 500
+max_connect_errors = 100
+open_files_limit = 65535
+
+log-bin=mysql-bin
+binlog_format=mixed
+server-id	= 1
+expire_logs_days = 10
+
+default_storage_engine = InnoDB
+#innodb_data_home_dir = ${MariaDB_Data_Dir}
+#innodb_data_file_path = ibdata1:10M:autoextend
+#innodb_log_group_home_dir = ${MariaDB_Data_Dir}
+#innodb_buffer_pool_size = 16M
+#innodb_log_file_size = 5M
+#innodb_log_buffer_size = 8M
+#innodb_flush_log_at_trx_commit = 1
+#innodb_lock_wait_timeout = 50
+
+[mysqldump]
+quick
+max_allowed_packet = 16M
+
+[mysql]
+no-auto-rehash
+
+[myisamchk]
+key_buffer_size = 20M
+sort_buffer_size = 20M
+read_buffer = 2M
+write_buffer = 2M
+
+[mysqlhotcopy]
+interactive-timeout
 EOF
 
-    /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=/usr/local/mariadb/var --user=mariadb
-    chown -R mariadb /usr/local/mariadb/var
+    if [ "${InstallInnodb}" = "y" ]; then
+        sed -i 's:^#innodb:innodb:g' /etc/my.cnf
+    else
+        sed -i '/^default_storage_engine/d' /etc/my.cnf
+        sed -i '/skip-external-locking/i\default_storage_engine = MyISAM\nloose-skip-innodb' /etc/my.cnf
+    fi
+    MySQL_Opt
+    if [ -d "${MariaDB_Data_Dir}" ]; then
+        rm -rf ${MariaDB_Data_Dir}/*
+    else
+        mkdir -p ${MariaDB_Data_Dir}
+    fi
+    chown -R mariadb:mariadb ${MariaDB_Data_Dir}
+    /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
     chgrp -R mariadb /usr/local/mariadb/.
-    cp support-files/mysql.server /etc/init.d/mariadb
+    \cp support-files/mysql.server /etc/init.d/mariadb
     chmod 755 /etc/init.d/mariadb
 
-    if [ -d "/proc/vz" ];then
-        ulimit -s unlimited
-    fi
+    Mariadb_Sec_Setting
     /etc/init.d/mariadb start
 
-    /usr/local/mariadb/bin/mysqladmin -u root password $mysql_root_password
-
-cat > /tmp/mariadb_sec_script<<EOF
-use mysql;
-update user set password=password('${mysql_root_password}') where user='root';
-delete from user where not (user='root') ;
-delete from user where user='root' and password=''; 
-drop database test;
-DROP USER ''@'%';
-flush privileges;
-EOF
-
-    /usr/local/mariadb/bin/mysql -u root -p${mysql_root_password} -h localhost < /tmp/mariadb_sec_script
-
-    rm -f /tmp/mariadb_sec_script
-
-    echo "import backup databases..."
-    /usr/local/mariadb/bin/mysql -u root -p${mysql_root_password} < /root/mysql_all_backup$(date +"%Y%m%d").sql
+    echo "Restore backup databases..."
+    /usr/local/mariadb/bin/mysql --defaults-file=~/.my.cnf < /root/mysql_all_backup${Upgrade_Date}.sql
     [ $? -eq 0 ] && echo "MariaDB databases import successfully." || echo "MariaDB databases import failed,Please import databases manually!"
 
     echo "Repair databases..."
-    /usr/local/mariadb/bin/mysql_upgrade -u root -p${mysql_root_password}
-
-    ln -sf /usr/local/mariadb/bin/mysql /usr/bin/mysql
-    ln -sf /usr/local/mariadb/bin/mysqldump /usr/bin/mysqldump
-    ln -sf /usr/local/mariadb/bin/myisamchk /usr/bin/myisamchk
-    ln -sf /usr/local/mariadb/bin/mysqld_safe /usr/bin/mysqld_safe
+    /usr/local/mariadb/bin/mysql_upgrade -u root -p${DB_Root_Password}
 
     echo "Add to autostart..."
     StartUp mariadb
     echo "Stopping MariaDB..."
     /etc/init.d/mariadb stop
+    TempMycnf_Clean
+    cd ${cur_dir} && rm -rf ${cur_dir}/src/mariadb-${mariadb_version}
 
     sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#g' /bin/lnmp
 

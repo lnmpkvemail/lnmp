@@ -16,8 +16,8 @@ else
     Stack=$1
 fi
 
-LNMP_Ver='1.2'
-
+LNMP_Ver='1.3'
+. lnmp.conf
 . include/main.sh
 . include/init.sh
 . include/mysql.sh
@@ -46,7 +46,9 @@ echo "+------------------------------------------------------------------------+
 Init_Install()
 {
     Press_Install
+    Print_APP_Ver
     Print_Sys_Info
+    Check_Hosts
     if [ "${DISTRO}" = "RHEL" ]; then
         RHEL_Modify_Source
     fi
@@ -75,6 +77,7 @@ Init_Install()
     Install_Freetype
     Install_Curl
     Install_Pcre
+    Install_Icu4c
     if [ "${SelectMalloc}" = "2" ]; then
         Install_Jemalloc
     elif [ "${SelectMalloc}" = "3" ]; then
@@ -96,8 +99,10 @@ Init_Install()
         Install_MariaDB_5
     elif [ "${DBSelect}" = "5" ]; then
         Install_MariaDB_10
+    elif [ "${DBSelect}" = "6" ]; then
+        Install_MySQL_57
     fi
-    Export_PHP_Autoconf
+    TempMycnf_Clean
 }
 
 LNMP_Stack()
@@ -113,7 +118,10 @@ LNMP_Stack()
         Install_PHP_55
     elif [ "${PHPSelect}" = "5" ]; then
         Install_PHP_56
+    elif [ "${PHPSelect}" = "6" ]; then
+        Install_PHP_7
     fi
+    LNMP_PHP_Opt
     Install_Nginx
     Creat_PHP_Tools
     Add_LNMP_Startup
@@ -139,6 +147,8 @@ LNMPA_Stack()
         Install_PHP_55
     elif [ "${PHPSelect}" = "5" ]; then
         Install_PHP_56
+    elif [ "${PHPSelect}" = "6" ]; then
+        Install_PHP_7
     fi
     Install_Nginx
     Creat_PHP_Tools
@@ -154,7 +164,7 @@ LAMP_Stack()
         Install_Apache_22
     else
         Install_Apache_24
-    fi    
+    fi
     if [ "${PHPSelect}" = "1" ]; then
         Install_PHP_52
     elif [ "${PHPSelect}" = "2" ]; then
@@ -165,6 +175,8 @@ LAMP_Stack()
         Install_PHP_55
     elif [ "${PHPSelect}" = "5" ]; then
         Install_PHP_56
+    elif [ "${PHPSelect}" = "6" ]; then
+        Install_PHP_7
     fi
     Creat_PHP_Tools
     Add_LAMP_Startup
@@ -174,15 +186,15 @@ LAMP_Stack()
 case "${Stack}" in
     lnmp)
         Dispaly_Selection
-        LNMP_Stack 2>&1 | tee -a /root/lnmp-install.log
+        LNMP_Stack 2>&1 | tee /root/lnmp-install.log
         ;;
     lnmpa)
         Dispaly_Selection
-        LNMPA_Stack 2>&1 | tee -a /root/lnmp-install.log
+        LNMPA_Stack 2>&1 | tee /root/lnmp-install.log
         ;;
     lamp)
         Dispaly_Selection
-        LAMP_Stack 2>&1 | tee -a /root/lnmp-install.log
+        LAMP_Stack 2>&1 | tee /root/lnmp-install.log
         ;;
     *)
         Echo_Red "Usage: $0 {lnmp|lnmpa|lamp}"
