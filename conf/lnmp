@@ -125,11 +125,14 @@ Function_Ftp()
     [dD][eE][lL])
         Del_Ftp
         ;;
-	[eE][dD][iI][tT])
+    [eE][dD][iI][tT])
         Edit_Ftp
-	       ;;
+        ;;
     [eE][xX][iI][tT])
         exit 1
+        ;;
+    [sS][hH][oO][wW])
+        Show_Ftp
         ;;
     *)
         echo "Usage: lnmp ftp {add|list|del}"
@@ -539,13 +542,13 @@ Add_Ftp()
 {
     www_uid=`id -u www`
     www_gid=`id -g www`
-	cat >/tmp/pass${ftp_account_name}<<EOF
+    cat >/tmp/pass${ftp_account_name}<<EOF
 ${ftp_account_password}
 ${ftp_account_password}
 EOF
-	/usr/local/pureftpd/bin/pure-pw useradd ${ftp_account_name} -f /usr/local/pureftpd/etc/pureftpd.passwd -u ${www_uid} -g ${www_gid} -d ${vhostdir} -m < /tmp/pass${ftp_account_name}
+    /usr/local/pureftpd/bin/pure-pw useradd ${ftp_account_name} -f /usr/local/pureftpd/etc/pureftpd.passwd -u ${www_uid} -g ${www_gid} -d ${vhostdir} -m < /tmp/pass${ftp_account_name}
     [ $? -eq 0 ] && echo "Created FTP User: ${ftp_account_name} Sucessfully." || echo "FTP User: ${ftp_account_name} already exists!"
-	rm -f /tmp/pass${ftp_account_name}
+    rm -f /tmp/pass${ftp_account_name}
 }
 
 List_Ftp()
@@ -560,23 +563,23 @@ Edit_Ftp()
     Enter_Ftp_Name
     read -p "Enter password for ftp account ${ftp_account_name}: " ftp_account_password
     if [ "${ftp_account_password}" != "" ]; then
-		cat >/tmp/pass${ftp_account_name}<<EOF
+        cat >/tmp/pass${ftp_account_name}<<EOF
 ${ftp_account_password}
 ${ftp_account_password}
 EOF
-		/usr/local/pureftpd/bin/pure-pw passwd ${ftp_account_name} -f /usr/local/pureftpd/etc/pureftpd.passwd -m < /tmp/pass${ftp_account_name}
-		[ $? -eq 0 ] && echo "FTP User: ${ftp_account_name} change password Sucessfully." || echo "FTP User: ${ftp_account_name} change password failed!"
-		rm -f /tmp/pass${ftp_account_name}
-	else
+        /usr/local/pureftpd/bin/pure-pw passwd ${ftp_account_name} -f /usr/local/pureftpd/etc/pureftpd.passwd -m < /tmp/pass${ftp_account_name}
+        [ $? -eq 0 ] && echo "FTP User: ${ftp_account_name} change password Sucessfully." || echo "FTP User: ${ftp_account_name} change password failed!"
+        rm -f /tmp/pass${ftp_account_name}
+    else
         echo "FTP password will no change."
     fi
     read -p "Enter directory for ftp account ${ftp_account_name}: " vhostdir
-	if [ "${vhostdir}" != "" ]; then
-	    www_uid=`id -u www`
-		www_gid=`id -g www`
-		/usr/local/pureftpd/bin/pure-pw usermod ${ftp_account_name} -f /usr/local/pureftpd/etc/pureftpd.passwd -u ${www_uid} -g ${www_gid} -d ${vhostdir} -m
-		[ $? -eq 0 ] && echo "FTP User: ${ftp_account_name} change diretcory Sucessfully." || echo "FTP User: ${ftp_account_name} change directory failed!"
-	else
+    if [ "${vhostdir}" != "" ]; then
+        www_uid=`id -u www`
+        www_gid=`id -g www`
+        /usr/local/pureftpd/bin/pure-pw usermod ${ftp_account_name} -f /usr/local/pureftpd/etc/pureftpd.passwd -u ${www_uid} -g ${www_gid} -d ${vhostdir} -m
+        [ $? -eq 0 ] && echo "FTP User: ${ftp_account_name} change diretcory Sucessfully." || echo "FTP User: ${ftp_account_name} change directory failed!"
+    else
         echo "Directory will no change."
     fi
 }
@@ -590,6 +593,15 @@ Del_Ftp()
     sleep 10
     /usr/local/pureftpd/bin/pure-pw userdel ${ftp_account_name} -f /usr/local/pureftpd/etc/pureftpd.passwd -m
     [ $? -eq 0 ] && echo "FTP User: ${ftp_account_name} deleted Sucessfully." || echo "FTP User: ${ftp_account_name} not exists!"
+}
+
+Show_Ftp()
+{
+    List_Ftp
+    Enter_Ftp_Name
+    echo "Your ftp account ${ftp_account_name} details:"
+    /usr/local/pureftpd/bin/pure-pw show ${ftp_account_name}
+    [ $? -eq 0 ] && echo "Ok." || echo "failed."
 }
 
 Check_DB
@@ -649,6 +661,6 @@ case "${arg1}" in
         echo "Usage: lnmp {nginx|mysql|mariadb|php-fpm|pureftpd} {start|stop|reload|restart|kill|status}"
         echo "Usage: lnmp vhost {add|list|del}"
         echo "Usage: lnmp database {add|list|edit|del}"
-        echo "Usage: lnmp ftp {add|list|edit|del}"
+        echo "Usage: lnmp ftp {add|list|edit|del|show}"
 esac
 exit
