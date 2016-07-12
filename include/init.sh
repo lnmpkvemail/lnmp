@@ -81,8 +81,13 @@ Check_Hosts()
     if [ $? -eq 0 ] ; then
         echo "DNS...ok"
     else
-        echo "DNS...fail"
-        echo -e "nameserver 208.67.220.220\nnameserver 114.114.114.114" > /etc/resolv.conf
+        ping6 -c1 lnmp.org
+        if [ $? -eq 0 ] ; then
+            echo "IPv6...ok"
+        else
+            echo "DNS...fail"
+            echo -e "nameserver 208.67.220.220\nnameserver 114.114.114.114" > /etc/resolv.conf
+        fi
     fi
 }
 
