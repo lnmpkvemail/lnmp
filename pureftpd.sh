@@ -31,17 +31,24 @@ Install_Pureftpd()
 {
     Press_Install
 
-    echo "Download files..."
+    Echo_Blue "Installing dependent packages..."
+    if [ "$PM" = "yum" ]; then
+        yum -y install make gcc gcc-c++ gcc-g77 openssl openssl-devel
+    elif [ "$PM" = "apt" ]; then
+        apt-get update -y
+        apt-get install -y build-essential gcc g++ make openssl libssl-dev
+    fi
+    Echo_Blue "Download files..."
     cd ${cur_dir}/src
     Download_Files ${Download_Mirror}/ftp/pure-ftpd/${Pureftpd_Ver}.tar.gz ${Pureftpd_Ver}.tar.gz
 
-    echo "Installing pure-ftpd..."
+    Echo_Blue "Installing pure-ftpd..."
     Tar_Cd ${Pureftpd_Ver}.tar.gz ${Pureftpd_Ver}
     ./configure --prefix=/usr/local/pureftpd CFLAGS=-O2 --with-puredb --with-quotas --with-cookie --with-virtualhosts --with-diraliases --with-sysquotas --with-ratios --with-altlog --with-paranoidmsg --with-shadow --with-welcomemsg --with-throttling --with-uploadscript --with-language=english --with-rfc2640 --with-ftpwho --with-tls
 
     make && make install
 
-    echo "Copy configure files..."
+    Echo_Blue "Copy configure files..."
     \cp configuration-file/pure-config.pl /usr/local/pureftpd/sbin/
     chmod 755 /usr/local/pureftpd/sbin/pure-config.pl
     mkdir /usr/local/pureftpd/etc
@@ -68,7 +75,7 @@ Install_Pureftpd()
     fi
 
     if [[ -s /usr/local/pureftpd/sbin/pure-config.pl && -s /usr/local/pureftpd/etc/pure-ftpd.conf && -s /etc/init.d/pureftpd ]]; then
-        echo "Starting pureftpd..."
+        Echo_Blue "Starting pureftpd..."
         /etc/init.d/pureftpd start
         echo "+----------------------------------------------------------------------+"
         echo "| Install Pure-FTPd completed,enjoy it!"
@@ -84,7 +91,7 @@ Install_Pureftpd()
 Uninstall_Pureftpd()
 {
     if [ ! -f /usr/local/pureftpd/sbin/pure-config.pl ]; then
-        echo "Pureftpd was not installed!"
+        Echo_Red "Pureftpd was not installed!"
         exit 1
     fi
     echo "Stop pureftpd..."
