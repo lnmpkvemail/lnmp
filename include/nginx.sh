@@ -44,7 +44,6 @@ Install_Nginx()
     \cp conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php-pathinfo.conf
     \cp conf/proxy-pass-php.conf /usr/local/nginx/conf/proxy-pass-php.conf
     \cp conf/enable-ssl-example.conf /usr/local/nginx/conf/enable-ssl-example.conf
-    \cp conf/enable-php5.2.17.conf /usr/local/nginx/conf/enable-php5.2.17.conf
 
     mkdir -p ${Default_Website_Dir}
     chmod +w ${Default_Website_Dir}
