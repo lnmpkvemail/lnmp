@@ -53,6 +53,9 @@ Install_Pureftpd()
     chmod 755 /usr/local/pureftpd/sbin/pure-config.pl
     mkdir /usr/local/pureftpd/etc
     \cp ${cur_dir}/conf/pure-ftpd.conf /usr/local/pureftpd/etc/pure-ftpd.conf
+    if [ -L /etc/init.d/pureftpd ]; then
+        rm -f /etc/init.d/pureftpd
+    fi
     \cp ${cur_dir}/init.d/init.d.pureftpd /etc/init.d/pureftpd
     chmod +x /etc/init.d/pureftpd
     touch /usr/local/pureftpd/etc/pureftpd.passwd
