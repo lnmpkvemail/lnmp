@@ -2,49 +2,18 @@
 
 Dispaly_Selection()
 {
-#set mysql root password
-
-    DB_Root_Password="root"
-    Echo_Yellow "Please setup root password of MySQL.(Default password: root)"
-    read -p "Please enter: " DB_Root_Password
-    if [ "${DB_Root_Password}" = "" ]; then
-        DB_Root_Password="root"
-    fi
-    echo "MySQL root password: ${DB_Root_Password}"
-
-#do you want to enable or disable the InnoDB Storage Engine?
-    echo "==========================="
-
-    InstallInnodb="y"
-    Echo_Yellow "Do you want to enable or disable the InnoDB Storage Engine?"
-    read -p "Default enable,Enter your choice [Y/n]: " InstallInnodb
-
-    case "${InstallInnodb}" in
-    [yY][eE][sS]|[yY])
-        echo "You will enable the InnoDB Storage Engine"
-        InstallInnodb="y"
-        ;;
-    [nN][oO]|[nN])
-        echo "You will disable the InnoDB Storage Engine!"
-        InstallInnodb="n"
-        ;;
-    *)
-        echo "No input,The InnoDB Storage Engine will enable."
-        InstallInnodb="y"
-    esac
-
 #which MySQL Version do you want to install?
-    echo "==========================="
-
     DBSelect="2"
     Echo_Yellow "You have 5 options for your DataBase install."
     echo "1: Install MySQL 5.1.73"
     echo "2: Install MySQL 5.5.48 (Default)"
     echo "3: Install MySQL 5.6.29"
-    echo "4: Install MariaDB 5.5.48"
-    echo "5: Install MariaDB 10.0.23"
-    echo "6: Install MySQL 5.7.11"
-    read -p "Enter your choice (1, 2, 3, 4, 5 or 6): " DBSelect
+    echo "4: Install MySQL 5.7.11"
+    echo "5: Install MariaDB 5.5.48"
+    echo "6: Install MariaDB 10.0.23"
+    echo "7: Install MariaDB 10.1.16"
+    echo "0: DO NOT Install MySQL/MariaDB"
+    read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7 or 0): " DBSelect
 
     case "${DBSelect}" in
     1)
@@ -57,32 +26,71 @@ Dispaly_Selection()
         echo "You will Install MySQL 5.6.29"
         ;;
     4)
-        echo "You will install MariaDB 5.5.48"
+        echo "You will install MySQL 5.7.11"
         ;;
     5)
-        echo "You will install MariaDB 10.0.23"
+        echo "You will install MariaDB 5.5.48"
         ;;
     6)
-        echo "You will install MySQL 5.7.11"
+        echo "You will install MariaDB 10.0.23"
+        ;;
+    7)
+        echo "You will install MariaDB 10.1.16"
+        ;;
+    0)
+        echo "Do not install MySQL/MariaDB!"
         ;;
     *)
         echo "No input,You will install MySQL 5.5.48"
         DBSelect="2"
     esac
 
-    if [[ "${DBSelect}" = "3" || "${DBSelect}" = "5" || "${DBSelect}" = "6" ]] && [ `free -m | grep Mem | awk '{print  $2}'` -le 1024 ]; then
+    if [[ "${DBSelect}" = "3" || "${DBSelect}" = "4" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]] && [ `free -m | grep Mem | awk '{print  $2}'` -le 1024 ]; then
         echo "Memory less than 1GB, can't install MySQL 5.6, 5.7 or MairaDB 10!"
         exit 1
     fi
 
-    if [[ "${DBSelect}" = "4" || "${DBSelect}" = "5" ]]; then
+    if [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
         MySQL_Bin="/usr/local/mariadb/bin/mysql"
         MySQL_Config="/usr/local/mariadb/bin/mysql_config"
         MySQL_Dir="/usr/local/mariadb"
-    else
+    elif [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
         MySQL_Bin="/usr/local/mysql/bin/mysql"
         MySQL_Config="/usr/local/mysql/bin/mysql_config"
         MySQL_Dir="/usr/local/mysql"
+    fi
+
+    if [[ "${DBSelect}" != "0" ]]; then
+        #set mysql root password
+        echo "==========================="
+        DB_Root_Password="root"
+        Echo_Yellow "Please setup root password of MySQL.(Default password: root)"
+        read -p "Please enter: " DB_Root_Password
+        if [ "${DB_Root_Password}" = "" ]; then
+            DB_Root_Password="root"
+        fi
+        echo "MySQL root password: ${DB_Root_Password}"
+
+    #do you want to enable or disable the InnoDB Storage Engine?
+        echo "==========================="
+
+        InstallInnodb="y"
+        Echo_Yellow "Do you want to enable or disable the InnoDB Storage Engine?"
+        read -p "Default enable,Enter your choice [Y/n]: " InstallInnodb
+
+        case "${InstallInnodb}" in
+        [yY][eE][sS]|[yY])
+            echo "You will enable the InnoDB Storage Engine"
+            InstallInnodb="y"
+            ;;
+        [nN][oO]|[nN])
+            echo "You will disable the InnoDB Storage Engine!"
+            InstallInnodb="n"
+            ;;
+        *)
+            echo "No input,The InnoDB Storage Engine will enable."
+            InstallInnodb="y"
+        esac
     fi
 
 #which PHP Version do you want to install?
@@ -101,6 +109,10 @@ Dispaly_Selection()
     case "${PHPSelect}" in
     1)
         echo "You will install PHP 5.2.17"
+        if [[ "${DBSelect}" = 0 ]]; then
+            echo "You didn't select MySQL/MariaDB can't select PHP 5.2.17!"
+            exit 1
+        fi
         ;;
     2)
         echo "You will install PHP 5.3.29"
@@ -347,10 +359,12 @@ Print_APP_Ver()
         echo ${Nginx_Ver}
     fi
 
-    if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "6" ]]; then
+    if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
         echo "${Mysql_Ver}"
-    elif [[ "${DBSelect}" = "4" || "${DBSelect}" = "5" ]]; then
+    elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
         echo "${Mariadb_Ver}"
+    elif [[ "${DBSelect}" = "0" ]]; then
+        echo "Do not install MySQL/MariaDB!"
     fi
 
     echo "${Php_Ver}"
@@ -369,10 +383,12 @@ Print_APP_Ver()
     echo "Download Mirror: ${Download_Mirror}"
     echo "Nginx Additional Modules: ${Nginx_Modules_Options}"
     echo "PHP Additional Modules: ${PHP_Modules_Options}"
-    if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "6" ]]; then
+    if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
         echo "Database Directory: ${MySQL_Data_Dir}"
-    elif [[ "${DBSelect}" = "4" || "${DBSelect}" = "5" ]]; then
+    elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
         echo "Database Directory: ${MariaDB_Data_Dir}"
+    elif [[ "${DBSelect}" = "0" ]]; then
+        echo "Do not install MySQL/MariaDB!"
     fi
     echo "Default Website Directory: ${Default_Website_Dir}"
 }

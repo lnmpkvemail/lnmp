@@ -197,14 +197,16 @@ Add_VHost()
     echo "================================================"
     fi
 
-    echo "======================================================"
-    echo "Create database and MySQL user with same name (y/n)"
-    echo "======================================================"
-    read create_database
+    if [[ -s /usr/local/mysql/bin/mysql || -s /usr/local/mariadb/bin/mysql ]]; then
+        echo "======================================================"
+        echo "Create database and MySQL user with same name (y/n)"
+        echo "======================================================"
+        read create_database
 
-    if [ "${create_database}" == "y" ]; then
-        Verify_DB_Password
-        Add_Database_Menu
+        if [ "${create_database}" == "y" ]; then
+            Verify_DB_Password
+            Add_Database_Menu
+        fi
     fi
 
 

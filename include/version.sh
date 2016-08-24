@@ -14,8 +14,6 @@ Libunwind_Ver='libunwind-1.1'
 Libicu4c_Ver='icu4c-55_1'
 Boost_Ver='boost_1_59_0'
 Nginx_Ver='nginx-1.10.0'
-Mysql_Ver='mysql-5.5.48'
-Mariadb_Ver='mariadb-5.5.48'
 if [ "${DBSelect}" = "1" ]; then
     Mysql_Ver='mysql-5.1.73'
 elif [ "${DBSelect}" = "2" ]; then
@@ -23,13 +21,14 @@ elif [ "${DBSelect}" = "2" ]; then
 elif [ "${DBSelect}" = "3" ]; then
     Mysql_Ver='mysql-5.6.29'
 elif [ "${DBSelect}" = "4" ]; then
-    Mariadb_Ver='mariadb-5.5.48'
-elif [ "${DBSelect}" = "5" ]; then
-    Mariadb_Ver='mariadb-10.0.23'
-elif [ "${DBSelect}" = "6" ]; then
     Mysql_Ver='mysql-5.7.11'
+elif [ "${DBSelect}" = "5" ]; then
+    Mariadb_Ver='mariadb-5.5.48'
+elif [ "${DBSelect}" = "6" ]; then
+    Mariadb_Ver='mariadb-10.0.23'
+elif [ "${DBSelect}" = "7" ]; then
+    Mariadb_Ver='mariadb-10.1.16'
 fi
-Php_Ver='php-5.4.45'
 if [ "${PHPSelect}" = "1" ]; then
     Php_Ver='php-5.2.17'
 elif [ "${PHPSelect}" = "2" ]; then
@@ -43,7 +42,6 @@ elif [ "${PHPSelect}" = "5" ]; then
 elif [ "${PHPSelect}" = "6" ]; then
     Php_Ver='php-7.0.7'
 fi
-PhpMyAdmin_Ver='phpMyAdmin-4.4.15.6-all-languages'
 if [ "${PHPSelect}" = "1" ]; then
     PhpMyAdmin_Ver='phpMyAdmin-4.0.10.15-all-languages'
 else
@@ -54,7 +52,6 @@ else
 fi
 APR_Ver='apr-1.5.2'
 APR_Util_Ver='apr-util-1.5.4'
-Apache_Ver='httpd-2.2.31'
 if [ "${ApacheSelect}" = "1" ]; then
     Apache_Ver='httpd-2.2.31'
 elif [ "${ApacheSelect}" = "2" ]; then

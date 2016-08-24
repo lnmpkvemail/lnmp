@@ -7,13 +7,15 @@ Add_LNMP_Startup()
     chmod +x /bin/lnmp
     StartUp nginx
     /etc/init.d/nginx start
-    if [[ "${DBSelect}" = "4" || "${DBSelect}" = "5" ]]; then
+    if [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
         StartUp mariadb
         /etc/init.d/mariadb start
         sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#' /bin/lnmp
-    else
+    elif [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
         StartUp mysql
         /etc/init.d/mysql start
+    elif [[ "${DBSelect}" = "0" ]]; then
+        sed -i 's#/etc/init.d/mysql.*##' /bin/lnmp
     fi
     StartUp php-fpm
     /etc/init.d/php-fpm start
@@ -29,13 +31,15 @@ Add_LNMPA_Startup()
     chmod +x /bin/lnmp
     StartUp nginx
     /etc/init.d/nginx start
-    if [[ "${DBSelect}" = "4" || "${DBSelect}" = "5" ]]; then
+    if [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
         StartUp mariadb
         /etc/init.d/mariadb start
         sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#' /bin/lnmp
-    else
+    elif [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
         StartUp mysql
         /etc/init.d/mysql start
+    elif [[ "${DBSelect}" = "0" ]]; then
+        sed -i 's#/etc/init.d/mysql.*##' /bin/lnmp
     fi
     StartUp httpd
     /etc/init.d/httpd start
@@ -48,13 +52,15 @@ Add_LAMP_Startup()
     chmod +x /bin/lnmp
     StartUp httpd
     /etc/init.d/httpd start
-    if [[ "${DBSelect}" = "4" || "${DBSelect}" = "5" ]]; then
+    if [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
         StartUp mariadb
         /etc/init.d/mariadb start
         sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#' /bin/lnmp
-    else
+    elif [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
         StartUp mysql
         /etc/init.d/mysql start
+    elif [[ "${DBSelect}" = "0" ]]; then
+        sed -i 's#/etc/init.d/mysql.*##' /bin/lnmp
     fi
 }
 
@@ -74,20 +80,23 @@ Check_Nginx_Files()
 Check_DB_Files()
 {
     isDB=""
-    if [[ "${DBSelect}" = "4" || "${DBSelect}" = "5" ]]; then
+    if [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
         if [[ -s /usr/local/mariadb/bin/mysql && -s /usr/local/mariadb/bin/mysqld_safe && -s /etc/my.cnf ]]; then
             Echo_Green "MariaDB: OK"
             isDB="ok"
         else
             Echo_Red "Error: MariaDB install failed."
         fi
-    else
+    elif [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
         if [[ -s /usr/local/mysql/bin/mysql && -s /usr/local/mysql/bin/mysqld_safe && -s /etc/my.cnf ]]; then
             Echo_Green "MySQL: OK"
             isDB="ok"
         else
             Echo_Red "Error: MySQL install failed."
         fi
+    elif [[ "${DBSelect}" = "0" ]]; then
+        Echo_Green "Do not install MySQL/MariaDB."
+        isDB="ok"
     fi
 }
 
@@ -135,10 +144,10 @@ Check_Apache_Files()
 Clean_Src_Dir()
 {
     echo "Clean src directory..."
-    if [[ "${DBSelect}" = "4" || "${DBSelect}" = "5" ]]; then
-        rm -rf ${cur_dir}/src/${Mariadb_Ver}
-    else
+    if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
         rm -rf ${cur_dir}/src/${Mysql_Ver}
+    elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
+        rm -rf ${cur_dir}/src/${Mariadb_Ver}
     fi
     rm -rf ${cur_dir}/src/${Php_Ver}
     if [ "${Stack}" = "lnmp" ]; then
@@ -168,8 +177,10 @@ Print_Sucess_Info()
     echo "|  Add VirtualHost: lnmp vhost add                                       |"
     echo "+------------------------------------------------------------------------+"
     echo "|  Default directory: ${Default_Website_Dir}                              |"
-    echo "+------------------------------------------------------------------------+"
-    echo "|  MySQL/MariaDB root password: ${DB_Root_Password}                          |"
+    if [[ "${DBSelect}" != "0" ]]; then
+        echo "+------------------------------------------------------------------------+"
+        echo "|  MySQL/MariaDB root password: ${DB_Root_Password}                          |"
+    fi
     echo "+------------------------------------------------------------------------+"
     lnmp status
     netstat -ntl
