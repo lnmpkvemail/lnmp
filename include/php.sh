@@ -662,35 +662,6 @@ eof
     chmod 755 -R ${Default_Website_Dir}/phpmyadmin/
     chown www:www -R ${Default_Website_Dir}/phpmyadmin/
     echo "============================phpMyAdmin install completed======================="
-
-    #add iptables firewall rules
-    if [ -s /sbin/iptables ]; then
-        /sbin/iptables -I INPUT 1 -i lo -j ACCEPT
-        /sbin/iptables -I INPUT 2 -m state --state ESTABLISHED,RELATED -j ACCEPT
-        /sbin/iptables -I INPUT 3 -p tcp --dport 22 -j ACCEPT
-        /sbin/iptables -I INPUT 4 -p tcp --dport 80 -j ACCEPT
-        /sbin/iptables -I INPUT 5 -p tcp --dport 3306 -j DROP
-        /sbin/iptables -I INPUT 6 -p icmp -m icmp --icmp-type 8 -j ACCEPT
-        if [ "$PM" = "yum" ]; then
-            service iptables save
-            if [ -s /usr/sbin/firewalld ]; then
-                systemctl stop firewalld
-                systemctl disable firewalld
-            fi
-        elif [ "$PM" = "apt" ]; then
-            iptables-save > /etc/iptables.rules
-            cat >/etc/network/if-post-down.d/iptables<<EOF
-#!/bin/bash
-iptables-save > /etc/iptables.rules
-EOF
-            chmod +x /etc/network/if-post-down.d/iptables
-            cat >/etc/network/if-pre-up.d/iptables<<EOF
-#!/bin/bash
-iptables-restore < /etc/iptables.rules
-EOF
-            chmod +x /etc/network/if-pre-up.d/iptables
-        fi
-    fi
 }
 
 Check_PHP53_Curl()

@@ -126,6 +126,7 @@ LNMP_Stack()
     LNMP_PHP_Opt
     Install_Nginx
     Creat_PHP_Tools
+    Add_Iptables_Rules
     Add_LNMP_Startup
     Check_LNMP_Install
 }
@@ -154,6 +155,7 @@ LNMPA_Stack()
     fi
     Install_Nginx
     Creat_PHP_Tools
+    Add_Iptables_Rules
     Add_LNMPA_Startup
     Check_LNMPA_Install
 }
@@ -181,6 +183,7 @@ LAMP_Stack()
         Install_PHP_7
     fi
     Creat_PHP_Tools
+    Add_Iptables_Rules
     Add_LAMP_Startup
     Check_LAMP_Install
 }
