@@ -38,39 +38,37 @@ fi
 
     PHPSelect=""
     Echo_Yellow "You have 6 options for your PHP install."
-    echo "1: Install PHP 5.2.17"
-    echo "2: Install PHP 5.3.29"
-    echo "3: Install PHP 5.4.45"
-    echo "4: Install PHP 5.5.36"
-    echo "5: Install PHP 5.6.22"
-    echo "6: Install PHP 7.0.7"
+    echo "1: Install ${PHP_Info[0]}"
+    echo "2: Install ${PHP_Info[1]}"
+    echo "3: Install ${PHP_Info[2]}"
+    echo "4: Install ${PHP_Info[3]}"
+    echo "5: Install ${PHP_Info[4]}"
+    echo "6: Install ${PHP_Info[5]}"
     read -p "Enter your choice (1, 2, 3, 4, 5 or 6): " PHPSelect
 
     case "${PHPSelect}" in
     1)
-        echo "You will install PHP 5.2.17"
+        echo "You will install ${PHP_Info[0]}"
         MPHP_Path='/usr/local/php5.2'
-        #Php_Ver='php-5.2.17'
         ;;
     2)
-        echo "You will install PHP 5.3.29"
+        echo "You will install ${PHP_Info[1]}"
         MPHP_Path='/usr/local/php5.3'
-        #Php_Ver='5.3.29'
         ;;
     3)
-        echo "You will Install PHP 5.4.45"
+        echo "You will Install ${PHP_Info[2]}"
         MPHP_Path='/usr/local/php5.4'
         ;;
     4)
-        echo "You will install PHP 5.5.36"
+        echo "You will install ${PHP_Info[3]}"
         MPHP_Path='/usr/local/php5.5'
         ;;
     5)
-        echo "You will install PHP 5.6.22"
+        echo "You will install ${PHP_Info[4]}"
         MPHP_Path='/usr/local/php5.6'
         ;;
     6)
-        echo "You will install PHP 7.0.7"
+        echo "You will install ${PHP_Info[5]}"
         MPHP_Path='/usr/local/php7.0'
         ;;
     *)

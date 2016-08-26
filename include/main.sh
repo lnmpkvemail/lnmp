@@ -5,37 +5,37 @@ Dispaly_Selection()
 #which MySQL Version do you want to install?
     DBSelect="2"
     Echo_Yellow "You have 5 options for your DataBase install."
-    echo "1: Install MySQL 5.1.73"
-    echo "2: Install MySQL 5.5.48 (Default)"
-    echo "3: Install MySQL 5.6.29"
-    echo "4: Install MySQL 5.7.11"
-    echo "5: Install MariaDB 5.5.48"
-    echo "6: Install MariaDB 10.0.23"
-    echo "7: Install MariaDB 10.1.16"
+    echo "1: Install ${DB_Info[0]}"
+    echo "2: Install ${DB_Info[1]} (Default)"
+    echo "3: Install ${DB_Info[2]}"
+    echo "4: Install ${DB_Info[3]}"
+    echo "5: Install ${DB_Info[4]}"
+    echo "6: Install ${DB_Info[5]}"
+    echo "7: Install ${DB_Info[6]}"
     echo "0: DO NOT Install MySQL/MariaDB"
     read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7 or 0): " DBSelect
 
     case "${DBSelect}" in
     1)
-        echo "You will install MySQL 5.1.73"
+        echo "You will install ${DB_Info[0]}"
         ;;
     2)
-        echo "You will install MySQL 5.5.48"
+        echo "You will install ${DB_Info[1]}"
         ;;
     3)
-        echo "You will Install MySQL 5.6.29"
+        echo "You will Install ${DB_Info[2]}"
         ;;
     4)
-        echo "You will install MySQL 5.7.11"
+        echo "You will install ${DB_Info[3]}"
         ;;
     5)
-        echo "You will install MariaDB 5.5.48"
+        echo "You will install ${DB_Info[4]}"
         ;;
     6)
-        echo "You will install MariaDB 10.0.23"
+        echo "You will install ${DB_Info[5]}"
         ;;
     7)
-        echo "You will install MariaDB 10.1.16"
+        echo "You will install ${DB_Info[6]}"
         ;;
     0)
         echo "Do not install MySQL/MariaDB!"
@@ -98,39 +98,39 @@ Dispaly_Selection()
 
     PHPSelect="3"
     Echo_Yellow "You have 6 options for your PHP install."
-    echo "1: Install PHP 5.2.17"
-    echo "2: Install PHP 5.3.29"
-    echo "3: Install PHP 5.4.45 (Default)"
-    echo "4: Install PHP 5.5.36"
-    echo "5: Install PHP 5.6.22"
-    echo "6: Install PHP 7.0.7"
+    echo "1: Install ${PHP_Info[0]}"
+    echo "2: Install ${PHP_Info[1]}"
+    echo "3: Install ${PHP_Info[2]} (Default)"
+    echo "4: Install ${PHP_Info[3]}"
+    echo "5: Install ${PHP_Info[4]}"
+    echo "6: Install ${PHP_Info[5]}"
     read -p "Enter your choice (1, 2, 3, 4, 5 or 6): " PHPSelect
 
     case "${PHPSelect}" in
     1)
-        echo "You will install PHP 5.2.17"
+        echo "You will install ${PHP_Info[0]}"
         if [[ "${DBSelect}" = 0 ]]; then
-            echo "You didn't select MySQL/MariaDB can't select PHP 5.2.17!"
+            echo "You didn't select MySQL/MariaDB can't select ${PHP_Info[0]}!"
             exit 1
         fi
         ;;
     2)
-        echo "You will install PHP 5.3.29"
+        echo "You will install ${PHP_Info[1]}"
         ;;
     3)
-        echo "You will Install PHP 5.4.45"
+        echo "You will Install ${PHP_Info[2]}"
         ;;
     4)
-        echo "You will install PHP 5.5.36"
+        echo "You will install ${PHP_Info[3]}"
         ;;
     5)
-        echo "You will install PHP 5.6.22"
+        echo "You will install ${PHP_Info[4]}"
         ;;
     6)
-        echo "You will install PHP 7.0.7"
+        echo "You will install ${PHP_Info[5]}"
         ;;
     *)
-        echo "No input,You will install PHP 5.4.45"
+        echo "No input,You will install ${PHP_Info[2]}"
         PHPSelect="3"
     esac
 
@@ -196,16 +196,16 @@ Apache_Selection()
 
     ApacheSelect="1"
     Echo_Yellow "You have 2 options for your Apache install."
-    echo "1: Install Apache 2.2.31 (Default)"
-    echo "2: Install Apache 2.4.20"
+    echo "1: Install ${Apache_Info[0]} (Default)"
+    echo "2: Install ${Apache_Info[1]}"
     read -p "Enter your choice (1 or 2): " ApacheSelect
 
     if [ "${ApacheSelect}" = "1" ]; then
-        echo "You will install Apache 2.2.31"
+        echo "You will install ${Apache_Info[0]}"
     elif [ "${ApacheSelect}" = "2" ]; then
-        echo "You will install Apache 2.4.20"
+        echo "You will install ${Apache_Info[1]}"
     else
-        echo "No input,You will install Apache 2.2.31"
+        echo "No input,You will install ${Apache_Info[0]}"
         ApacheSelect="1"
     fi
     if [[ "${PHPSelect}" = "1" && "${ApacheSelect}" = "2" ]]; then

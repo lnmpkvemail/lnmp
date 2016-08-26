@@ -39,39 +39,39 @@ fi
 #which MySQL Version do you want to install?
 DBSelect="2"
 Echo_Yellow "You have 5 options for your DataBase install."
-echo "1: Install MySQL 5.1.73"
-echo "2: Install MySQL 5.5.48 (Default)"
-echo "3: Install MySQL 5.6.29"
-echo "4: Install MySQL 5.7.11"
-echo "5: Install MariaDB 5.5.48"
-echo "6: Install MariaDB 10.0.23"
-echo "7: Install MariaDB 10.1.16"
+echo "1: Install ${DB_Info[0]}"
+echo "2: Install ${DB_Info[1]} (Default)"
+echo "3: Install ${DB_Info[2]}"
+echo "4: Install ${DB_Info[3]}"
+echo "5: Install ${DB_Info[4]}"
+echo "6: Install ${DB_Info[5]}"
+echo "7: Install ${DB_Info[6]}"
 read -p "Enter your choice (1, 2, 3, 4, 5, 6 or 7): " DBSelect
 
 case "${DBSelect}" in
 1)
-    echo "You will install MySQL 5.1.73"
+    echo "You will install ${DB_Info[0]}"
     ;;
 2)
-    echo "You will install MySQL 5.5.48"
+    echo "You will install ${DB_Info[1]}"
     ;;
 3)
-    echo "You will Install MySQL 5.6.29"
+    echo "You will Install ${DB_Info[2]}"
     ;;
 4)
-    echo "You will install MySQL 5.7.11"
+    echo "You will install ${DB_Info[3]}"
     ;;
 5)
-    echo "You will install MariaDB 5.5.48"
+    echo "You will install ${DB_Info[4]}"
     ;;
 6)
-    echo "You will install MariaDB 10.0.23"
+    echo "You will install ${DB_Info[5]}"
     ;;
 7)
-    echo "You will install MariaDB 10.1.16"
+    echo "You will install ${DB_Info[6]}"
     ;;
 *)
-    echo "No input,You will install MySQL 5.5.48"
+    echo "No input,You will install ${DB_Info[1]}"
     DBSelect="2"
 esac
 
