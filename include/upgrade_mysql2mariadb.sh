@@ -15,7 +15,7 @@ Backup_MySQL2()
     echo "Remove autostart..."
     Remove_StartUp mysql
     mv /etc/init.d/mysql /etc/init.d/mysql2mariadb.bak.${Upgrade_Date}
-    mv /etc/my.cnf /etc/my.conf.mysql2mariadbbak.${Upgrade_Date}
+    mv /etc/my.cnf /etc/my.cnf.mysql2mariadbbak.${Upgrade_Date}
     mv /usr/local/mysql /usr/local/mysql2mariadb${Upgrade_Date}
     if [ "${MariaDB_Data_Dir}" != "/usr/local/mariadb/var" ]; then
         mv ${MariaDB_Data_Dir} ${MariaDB_Data_Dir}${Upgrade_Date}

@@ -13,7 +13,7 @@ Backup_MySQL()
     fi
     lnmp stop
     mv /etc/init.d/mysql /etc/init.d/mysql.bak.${Upgrade_Date}
-    mv /etc/my.cnf /etc/my.conf.bak.${Upgrade_Date}
+    mv /etc/my.cnf /etc/my.cnf.bak.${Upgrade_Date}
     mv /usr/local/mysql /usr/local/oldmysql${Upgrade_Date}
     if [ "${MySQL_Data_Dir}" != "/usr/local/mysql/var" ]; then
         mv ${MySQL_Data_Dir} ${MySQL_Data_Dir}${Upgrade_Date}

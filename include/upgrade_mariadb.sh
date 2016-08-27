@@ -14,7 +14,7 @@ Backup_MariaDB()
     lnmp stop
 
     mv /etc/init.d/mariadb /etc/init.d/mariadb.bak.${Upgrade_Date}
-    mv /etc/my.cnf /etc/my.conf.mariadb.bak.${Upgrade_Date}
+    mv /etc/my.cnf /etc/my.cnf.mariadb.bak.${Upgrade_Date}
     mv /usr/local/mariadb /usr/local/oldmariadb${Upgrade_Date}
     if [ "${MariaDB_Data_Dir}" != "/usr/local/mariadb/var" ]; then
         mv ${MariaDB_Data_Dir} ${MariaDB_Data_Dir}${Upgrade_Date}
