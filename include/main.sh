@@ -1,5 +1,9 @@
 #!/bin/bash
 
+DB_Info=('MySQL 5.1.73' 'MySQL 5.5.48' 'MySQL 5.6.29' 'MySQL 5.7.11' 'MariaDB 5.5.48' 'MariaDB 10.0.23' 'MariaDB 10.1.16')
+PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.36' 'PHP 5.6.22' 'PHP 7.0.7')
+Apache_Info=('Apache 2.2.31' 'Apache 2.4.20')
+
 Dispaly_Selection()
 {
 #which MySQL Version do you want to install?
@@ -41,7 +45,7 @@ Dispaly_Selection()
         echo "Do not install MySQL/MariaDB!"
         ;;
     *)
-        echo "No input,You will install MySQL 5.5.48"
+        echo "No input,You will install ${DB_Info[1]}"
         DBSelect="2"
     esac
 

@@ -70,7 +70,3 @@ Memcached_Ver='memcached-1.4.25'
 Libmemcached_Ver='libmemcached-1.0.18'
 PHPMemcached_Ver='memcached-2.2.0'
 PHPMemcache_Ver='memcache-3.0.8'
-
-DB_Info=('MySQL 5.1.73' 'MySQL 5.5.48' 'MySQL 5.6.29' 'MySQL 5.7.11' 'MariaDB 5.5.48' 'MariaDB 10.0.23' 'MariaDB 10.1.16')
-PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.36' 'PHP 5.6.22' 'PHP 7.0.7')
-Apache_Info=('Apache 2.2.31' 'Apache 2.4.20')
