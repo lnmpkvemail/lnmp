@@ -13,13 +13,13 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora
 
 安装前建议使用screen，执行：screen -S lnmp 后
 执行
-> wget -c http://soft.vpser.net/lnmp/lnmp1.3beta-full.tar.gz && tar zxf lnmp1.3beta-full.tar.gz && cd lnmp1.3-full && ./install.sh {lnmp|lnmpa|lamp}
+> wget -c http://soft.vpser.net/lnmp/lnmp1.4beta-full.tar.gz && tar zxf lnmp1.4beta-full.tar.gz && cd lnmp1.4-full && ./install.sh {lnmp|lnmpa|lamp}
 
 如断线可使用screen -r lnmp 恢复。**详细安装教程参考：<http://lnmp.org/install.html>**
 
 ##常用功能
 
-**以下操作需lnmp目录下执行，如lnmp1.3-full、lnmp1.3**
+**以下操作需lnmp目录下执行，如lnmp1.4-full、lnmp1.4**
 
 ##FTP服务器
 * 执行：./pureftpd.sh 安装，可使用lnmp ftp {add|list|del}进行管理。
@@ -52,7 +52,8 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora
 * IonCube，执行：./addons.sh {install|uninstall} ionCube 。
 
 ###其他：
-* 可选1，执行：./php5.2.17.sh 可安装一个不与LNMP冲突的PHP 5.2.17单独存在，目录在/usr/local/php52/，使用时需要将nginx虚拟主机配置文件里的 php-cgi.sock 修改为 php-cgi52.sock即可调用PHP5.2.17。
+* 可选1，执行：./multiplephp.sh 可以安装多个PHP版本，使用时需要将nginx虚拟主机配置文件里的include enable-php.conf替换为 include enable-php5.6.conf 即可前面的5.6换成你刚才安装的PHP的大版本号5.* 或7.0之类的。
+* 可选2，执行：./database.sh 可以直接单独安装MySQL或MariaDB数据库。
 **以下工具在lnmp安装包tools目录下**
 * 可选2，执行：./reset_mysql_root_password.sh 可重置MySQL/MariaDB的root密码。
 * 可选3，执行：./check502.sh  可检测php-fpm是否挂掉,502报错时重启，配合crontab使用。
