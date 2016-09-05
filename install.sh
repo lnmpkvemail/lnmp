@@ -34,6 +34,8 @@ if [ "${DISTRO}" = "unknow" ]; then
     exit 1
 fi
 
+Check_LNMPConf
+
 clear
 echo "+------------------------------------------------------------------------+"
 echo "|          LNMP V${LNMP_Ver} for ${DISTRO} Linux Server, Written by Licess          |"

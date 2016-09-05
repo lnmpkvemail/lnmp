@@ -356,6 +356,18 @@ Tar_Cd()
     cd ${DirName}
 }
 
+Check_LNMPConf()
+{
+    if [ ! -s "${cur_dir}/lnmp.conf" ]; then
+        Echo_Red "lnmp.conf was not exsit!"
+        exit 1
+    fi
+    if [[ "${Download_Mirror}" = "" || "${MySQL_Data_Dir}" = "" || "${MariaDB_Data_Dir}" = "" || "${Default_Website_Dir}" = "" ]]; then
+        Echo_Red "Can't get values from lnmp.conf!"
+        exit 1
+    fi
+}
+
 Print_APP_Ver()
 {
     echo "You will install ${Stack} stack."
