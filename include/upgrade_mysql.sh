@@ -250,6 +250,7 @@ myisam_sort_buffer_size = 8M
 thread_cache_size = 8
 query_cache_size = 8M
 tmp_table_size = 16M
+performance_schema_max_table_instances = 500
 
 explicit_defaults_for_timestamp = true
 #skip-networking
@@ -376,6 +377,7 @@ myisam_sort_buffer_size = 8M
 thread_cache_size = 8
 query_cache_size = 8M
 tmp_table_size = 16M
+performance_schema_max_table_instances = 500
 
 explicit_defaults_for_timestamp = true
 #skip-networking
