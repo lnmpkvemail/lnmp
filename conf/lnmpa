@@ -384,8 +384,10 @@ Check_DB()
 {
     if [[ -s /usr/local/mariadb/bin/mysql && -s /usr/local/mariadb/bin/mysqld_safe && -s /etc/my.cnf ]]; then
         MySQL_Bin="/usr/local/mariadb/bin/mysql"
-    else
+    elif [[ -s /usr/local/mysql/bin/mysql && -s /usr/local/mysql/bin/mysqld_safe && -s /etc/my.cnf ]]; then
         MySQL_Bin="/usr/local/mysql/bin/mysql"
+    else
+        MySQL_Bin="None"
     fi
 }
 

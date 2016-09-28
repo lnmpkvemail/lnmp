@@ -38,23 +38,25 @@ Uninstall_LNMP()
     lnmp stop
 
     Remove_StartUp nginx
-    Remove_StartUp ${DB_Name}
     Remove_StartUp php-fpm
-    if [ -d "${MariaDB_Data_Dir}" ]; then
+    if [ ${DB_Name} != "None" ]; then
+        Remove_StartUp ${DB_Name}
+        echo "Backup ${DB_Name} databases directory to /root/databases_backup_$(date +"%Y%m%d%H%M%S")"
         mv ${MariaDB_Data_Dir} /root/databases_backup_$(date +"%Y%m%d%H%M%S")
-    else
-        mv ${MySQL_Data_Dir} /root/databases_backup_$(date +"%Y%m%d%H%M%S")
     fi
     chattr -i ${Default_Website_Dir}/.user.ini
     echo "Deleting LNMP files..."
     rm -rf /usr/local/nginx
-    rm -rf /usr/local/${DB_Name}
     rm -rf /usr/local/php
     rm -rf /usr/local/zend
 
-    rm -f /etc/my.cnf
+    if [ ${DB_Name} != "None" ]; then
+        rm -rf /usr/local/${DB_Name}
+        rm -f /etc/my.cnf
+        rm -f /etc/init.d/${DB_Name}
+    fi
+
     rm -f /etc/init.d/nginx
-    rm -f /etc/init.d/${DB_Name}
     rm -f /etc/init.d/php-fpm
     rm -f /bin/lnmp
     echo "LNMP Uninstall completed."
@@ -67,23 +69,25 @@ Uninstall_LNMPA()
     lnmp stop
 
     Remove_StartUp nginx
-    Remove_StartUp ${DB_Name}
     Remove_StartUp httpd
-    if [ -d "${MariaDB_Data_Dir}" ]; then
+    if [ ${DB_Name} != "None" ]; then
+        Remove_StartUp ${DB_Name}
+        echo "Backup ${DB_Name} databases directory to /root/databases_backup_$(date +"%Y%m%d%H%M%S")"
         mv ${MariaDB_Data_Dir} /root/databases_backup_$(date +"%Y%m%d%H%M%S")
-    else
-        mv ${MySQL_Data_Dir} /root/databases_backup_$(date +"%Y%m%d%H%M%S")
     fi
     echo "Deleting LNMPA files..."
     rm -rf /usr/local/nginx
-    rm -rf /usr/local/${DB_Name}
     rm -rf /usr/local/php
     rm -rf /usr/local/apache
     rm -rf /usr/local/zend
 
-    rm -f /etc/my.cnf
+    if [ ${DB_Name} != "None" ]; then
+        rm -rf /usr/local/${DB_Name}
+        rm -f /etc/my.cnf
+        rm -f /etc/init.d/${DB_Name}
+    fi
+
     rm -f /etc/init.d/nginx
-    rm -f /etc/init.d/${DB_Name}
     rm -f /etc/init.d/httpd
     rm -f /bin/lnmp
     echo "LNMPA Uninstall completed."
@@ -96,21 +100,24 @@ Uninstall_LAMP()
     lnmp stop
 
     Remove_StartUp httpd
-    Remove_StartUp ${DB_Name}
-    if [ -d "${MariaDB_Data_Dir}" ]; then
+    if [ ${DB_Name} != "None" ]; then
+        Remove_StartUp ${DB_Name}
+        echo "Backup ${DB_Name} databases directory to /root/databases_backup_$(date +"%Y%m%d%H%M%S")"
         mv ${MariaDB_Data_Dir} /root/databases_backup_$(date +"%Y%m%d%H%M%S")
-    else
-        mv ${MySQL_Data_Dir} /root/databases_backup_$(date +"%Y%m%d%H%M%S")
     fi
     echo "Deleting LAMP files..."
     rm -rf /usr/local/apache
     rm -rf /usr/local/php
-    rm -rf /usr/local/${DB_Name}
     rm -rf /usr/local/zend
+
+    if [ ${DB_Name} != "None" ]; then
+        rm -rf /usr/local/${DB_Name}
+        rm -f /etc/my.cnf
+        rm -f /etc/init.d/${DB_Name}
+    fi
 
     rm -f /etc/my.cnf
     rm -f /etc/init.d/httpd
-    rm -f /etc/init.d/${DB_Name}
     rm -f /bin/lnmp
     echo "LAMP Uninstall completed."
 }
@@ -134,7 +141,9 @@ Uninstall_LAMP()
 ${MySQL_Dir}
 /usr/local/php
 /etc/init.d/nginx
+if [ ${DB_Name} != "None" ]; then
 /etc/init.d/${DB_Name}
+fi
 /etc/init.d/php-fpm
 /usr/local/zend
 /etc/my.cnf
@@ -154,7 +163,9 @@ ${MySQL_Dir}
 /usr/local/php
 /usr/local/apache
 /etc/init.d/nginx
+if [ ${DB_Name} != "None" ]; then
 /etc/init.d/${DB_Name}
+fi
 /etc/init.d/httpd
 /usr/local/zend
 /etc/my.cnf
@@ -172,7 +183,9 @@ EOF
 /usr/local/apache
 ${MySQL_Dir}
 /etc/init.d/httpd
+if [ ${DB_Name} != "None" ]; then
 /etc/init.d/${DB_Name}
+fi
 /usr/local/php
 /usr/local/zend
 /etc/my.cnf

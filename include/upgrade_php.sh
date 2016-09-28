@@ -148,6 +148,10 @@ Check_PHP_Upgrade_Files()
 
 Upgrade_PHP_52()
 {
+    if [ ${DB_Name} == "None" ]; then
+        echo "MySQL or MariaDB not found!"
+        exit 1
+    fi
     Check_Curl
     Check_Autoconf
     cd ${cur_dir}/src && rm -rf php-${php_version}

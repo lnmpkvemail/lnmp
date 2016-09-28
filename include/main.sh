@@ -507,12 +507,15 @@ Check_DB()
         MySQL_Dir="/usr/local/mariadb"
         Is_MySQL="n"
         DB_Name="mariadb"
-    else
+    elif [[ -s /usr/local/mysql/bin/mysql && -s /usr/local/mysql/bin/mysqld_safe && -s /etc/my.cnf ]]; then
         MySQL_Bin="/usr/local/mysql/bin/mysql"
         MySQL_Config="/usr/local/mysql/bin/mysql_config"
         MySQL_Dir="/usr/local/mysql"
         Is_MySQL="y"
         DB_Name="mysql"
+    else
+        Is_MySQL="None"
+        DB_Name="None"
     fi
 }
 

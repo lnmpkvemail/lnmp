@@ -27,12 +27,9 @@ echo "+-----------------------------------------------------------------------+"
 cur_dir=$(pwd)
 Get_OS_Bit
 Get_Dist_Name
-
-if [ -s /usr/local/mysql/bin/mysql ]; then
-    echo "You have install MySQL!"
-    exit 1
-elif [ -s /usr/local/mariadb/bin/mysql ]; then
-    echo "You have install MariaDB!"
+Check_DB
+if [ ${DB_Name} != "None" ]; then
+    echo "You have install ${DB_Name}!"
     exit 1
 fi
 
