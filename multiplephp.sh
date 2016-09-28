@@ -89,71 +89,72 @@ Press_Start
 
 Install_MPHP5.2()
 {
-cd ${cur_dir}/src
-Download_Files ${Download_Mirror}/web/php/${Php_Ver}.tar.gz ${Php_Ver}.tar.gz
-Download_Files ${Download_Mirror}/web/phpfpm/php-5.2.17-fpm-0.5.14.diff.gz php-5.2.17-fpm-0.5.14.diff.gz
+    cd ${cur_dir}/src
+    Download_Files ${Download_Mirror}/web/php/${Php_Ver}.tar.gz ${Php_Ver}.tar.gz
+    Download_Files ${Download_Mirror}/web/phpfpm/php-5.2.17-fpm-0.5.14.diff.gz php-5.2.17-fpm-0.5.14.diff.gz
 
-lnmp stop
+    lnmp stop
 
-if [[ -s /usr/local/autoconf-2.13/bin/autoconf && -s /usr/local/autoconf-2.13/bin/autoheader ]]; then
-    Echo_Green "Autconf 2.13...ok"
-else
-    Install_Autoconf
-fi
+    if [[ -s /usr/local/autoconf-2.13/bin/autoconf && -s /usr/local/autoconf-2.13/bin/autoheader ]]; then
+        Echo_Green "Autconf 2.13...ok"
+    else
+        Install_Autoconf
+    fi
 
-if [[ -s /usr/local/curl/bin/curl ]]; then
-    Echo_Green "Curl...ok"
-else
-    Install_Curl
-fi
+    if [[ -s /usr/local/curl/bin/curl ]]; then
+        Echo_Green "Curl...ok"
+    else
+        Install_Curl
+    fi
 
-ln -s /usr/lib/libevent-1.4.so.2 /usr/local/lib/libevent-1.4.so.2
-ln -s /usr/lib/libltdl.so /usr/lib/libltdl.so.3
+    ln -s /usr/lib/libevent-1.4.so.2 /usr/local/lib/libevent-1.4.so.2
+    ln -s /usr/lib/libltdl.so /usr/lib/libltdl.so.3
 
-cd ${cur_dir}/src
-rm -rf php-5.2.17
+    cd ${cur_dir}/src
+    rm -rf php-5.2.17
 
-echo "Start install ${Php_Ver}....."
-Export_PHP_Autoconf
-tar zxf ${Php_Ver}.tar.gz
-gzip -cd php-5.2.17-fpm-0.5.14.diff.gz | patch -d ${Php_Ver} -p1
-cd ${Php_Ver}
-patch -p1 < ${cur_dir}/src/patch/php-5.2.17-max-input-vars.patch
-patch -p0 < ${cur_dir}/src/patch/php-5.2.17-xml.patch
-patch -p1 < ${cur_dir}/src/patch/debian_patches_disable_SSLv2_for_openssl_1_0_0.patch
-./buildconf --force
-./configure --prefix=${MPHP_Path} --with-config-file-path=${MPHP_Path}/etc --with-mysql=${MySQL_Dir} --with-mysqli=${MySQL_Config} --with-pdo-mysql=${MySQL_Dir} --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --enable-discard-path --enable-magic-quotes --enable-safe-mode --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl=/usr/local/curl --enable-mbregex --enable-fastcgi --enable-fpm --enable-force-cgi-redirect --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --with-mime-magic
-make ZEND_EXTRA_LIBS='-liconv'
-make install
+    echo "Start install ${Php_Ver}....."
+    Export_PHP_Autoconf
+    tar zxf ${Php_Ver}.tar.gz
+    gzip -cd php-5.2.17-fpm-0.5.14.diff.gz | patch -d ${Php_Ver} -p1
+    cd ${Php_Ver}
+    patch -p1 < ${cur_dir}/src/patch/php-5.2.17-max-input-vars.patch
+    patch -p0 < ${cur_dir}/src/patch/php-5.2.17-xml.patch
+    patch -p1 < ${cur_dir}/src/patch/debian_patches_disable_SSLv2_for_openssl_1_0_0.patch
+    ./buildconf --force
+    ./configure --prefix=${MPHP_Path} --with-config-file-path=${MPHP_Path}/etc --with-mysql=${MySQL_Dir} --with-mysqli=${MySQL_Config} --with-pdo-mysql=${MySQL_Dir} --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --enable-discard-path --enable-magic-quotes --enable-safe-mode --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl=/usr/local/curl --enable-mbregex --enable-fastcgi --enable-fpm --enable-force-cgi-redirect --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --with-mime-magic
+    make ZEND_EXTRA_LIBS='-liconv'
+    make install
 
-\cp php.ini-dist ${MPHP_Path}/etc/php.ini
+    \cp php.ini-dist ${MPHP_Path}/etc/php.ini
 
-# php extensions
-sed -i 's#extension_dir = "./"#extension_dir = "${MPHP_Path}/lib/php/extensions/no-debug-non-zts-20060613/"\n#' ${MPHP_Path}/etc/php.ini
-sed -i 's#output_buffering = Off#output_buffering = On#' ${MPHP_Path}/etc/php.ini
-sed -i 's/post_max_size = 8M/post_max_size = 50M/g' ${MPHP_Path}/etc/php.ini
-sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 50M/g' ${MPHP_Path}/etc/php.ini
-sed -i 's/;date.timezone =/date.timezone = PRC/g' ${MPHP_Path}/etc/php.ini
-sed -i 's/short_open_tag = Off/short_open_tag = On/g' ${MPHP_Path}/etc/php.ini
-sed -i 's/; cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' ${MPHP_Path}/etc/php.ini
-sed -i 's/; cgi.fix_pathinfo=0/cgi.fix_pathinfo=0/g' ${MPHP_Path}/etc/php.ini
-sed -i 's/max_execution_time = 30/max_execution_time = 300/g' ${MPHP_Path}/etc/php.ini
-sed -i 's/disable_functions =.*/disable_functions = passthru,exec,system,chroot,scandir,chgrp,chown,shell_exec,proc_open,proc_get_status,ini_alter,ini_restore,dl,openlog,syslog,readlink,symlink,popepassthru,stream_socket_server,fsocket/g' ${MPHP_Path}/etc/php.ini
+    # php extensions
+    sed -i 's#extension_dir = "./"#extension_dir = "${MPHP_Path}/lib/php/extensions/no-debug-non-zts-20060613/"\n#' ${MPHP_Path}/etc/php.ini
+    sed -i 's#output_buffering = Off#output_buffering = On#' ${MPHP_Path}/etc/php.ini
+    sed -i 's/post_max_size = 8M/post_max_size = 50M/g' ${MPHP_Path}/etc/php.ini
+    sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 50M/g' ${MPHP_Path}/etc/php.ini
+    sed -i 's/;date.timezone =/date.timezone = PRC/g' ${MPHP_Path}/etc/php.ini
+    sed -i 's/short_open_tag = Off/short_open_tag = On/g' ${MPHP_Path}/etc/php.ini
+    sed -i 's/; cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' ${MPHP_Path}/etc/php.ini
+    sed -i 's/; cgi.fix_pathinfo=0/cgi.fix_pathinfo=0/g' ${MPHP_Path}/etc/php.ini
+    sed -i 's/max_execution_time = 30/max_execution_time = 300/g' ${MPHP_Path}/etc/php.ini
+    sed -i 's/disable_functions =.*/disable_functions = passthru,exec,system,chroot,scandir,chgrp,chown,shell_exec,proc_open,proc_get_status,ini_alter,ini_restore,dl,openlog,syslog,readlink,symlink,popepassthru,stream_socket_server,fsocket/g' ${MPHP_Path}/etc/php.ini
 
-cd ${cur_dir}/src
-if [ "${Is_64bit}" = "y" ] ; then
-    Download_Files ${Download_Mirror}/web/zend/ZendOptimizer-3.3.9-linux-glibc23-x86_64.tar.gz
-    tar zxf ZendOptimizer-3.3.9-linux-glibc23-x86_64.tar.gz
-    mkdir -p /usr/local/zend52/
-    \cp ZendOptimizer-3.3.9-linux-glibc23-x86_64/data/5_2_x_comp/ZendOptimizer.so /usr/local/zend52/ZendOptimizer5.2.so
-else
-    Download_Files ${Download_Mirror}/web/zend/ZendOptimizer-3.3.9-linux-glibc23-i386.tar.gz
-    tar zxf ZendOptimizer-3.3.9-linux-glibc23-i386.tar.gz
-    mkdir -p /usr/local/zend52/
-    \cp ZendOptimizer-3.3.9-linux-glibc23-i386/data/5_2_x_comp/ZendOptimizer.so /usr/local/zend52/ZendOptimizer5.2.so
-fi
+    cd ${cur_dir}/src
+    if [ "${Is_64bit}" = "y" ] ; then
+        Download_Files ${Download_Mirror}/web/zend/ZendOptimizer-3.3.9-linux-glibc23-x86_64.tar.gz
+        tar zxf ZendOptimizer-3.3.9-linux-glibc23-x86_64.tar.gz
+        mkdir -p /usr/local/zend52/
+        \cp ZendOptimizer-3.3.9-linux-glibc23-x86_64/data/5_2_x_comp/ZendOptimizer.so /usr/local/zend52/ZendOptimizer5.2.so
+    else
+        Download_Files ${Download_Mirror}/web/zend/ZendOptimizer-3.3.9-linux-glibc23-i386.tar.gz
+        tar zxf ZendOptimizer-3.3.9-linux-glibc23-i386.tar.gz
+        mkdir -p /usr/local/zend52/
+        \cp ZendOptimizer-3.3.9-linux-glibc23-i386/data/5_2_x_comp/ZendOptimizer.so /usr/local/zend52/ZendOptimizer5.2.so
+    fi
 
-cat >>${MPHP_Path}/etc/php.ini<<EOF
+    cat >>${MPHP_Path}/etc/php.ini<<EOF
+
 ;eaccelerator
 
 ;ionCube
@@ -166,34 +167,34 @@ zend_extension="/usr/local/zend52/ZendOptimizer5.2.so"
 ;xcache end
 EOF
 
-rm -f ${MPHP_Path}/etc/php-fpm.conf
-\cp ${cur_dir}/conf/php-fpm5.2.conf ${MPHP_Path}/etc/php-fpm.conf
-\cp ${cur_dir}/conf/enable-php5.2.conf /usr/local/nginx/conf/enable-php5.2.conf
-\cp ${cur_dir}/init.d/init.d.php-fpm5.2 /etc/init.d/php-fpm5.2
-chmod +x /etc/init.d/php-fpm5.2
+    rm -f ${MPHP_Path}/etc/php-fpm.conf
+    \cp ${cur_dir}/conf/php-fpm5.2.conf ${MPHP_Path}/etc/php-fpm.conf
+    \cp ${cur_dir}/conf/enable-php5.2.conf /usr/local/nginx/conf/enable-php5.2.conf
+    \cp ${cur_dir}/init.d/init.d.php-fpm5.2 /etc/init.d/php-fpm5.2
+    chmod +x /etc/init.d/php-fpm5.2
 
-sed -i "s#/usr/local/php/#${MPHP_Path}/#g" ${MPHP_Path}/etc/php-fpm.conf
-sed -i 's#php-cgi.sock#php-cgi5.2.sock#g' ${MPHP_Path}/etc/php-fpm.conf
-sed -i "s#/usr/local/php/#${MPHP_Path}/#g" /etc/init.d/php-fpm5.2
-sed -i 's@# Provides:          php-fpm@# Provides:          php-fpm5.2@g' /etc/init.d/php-fpm5.2
+    sed -i "s#/usr/local/php/#${MPHP_Path}/#g" ${MPHP_Path}/etc/php-fpm.conf
+    sed -i 's#php-cgi.sock#php-cgi5.2.sock#g' ${MPHP_Path}/etc/php-fpm.conf
+    sed -i "s#/usr/local/php/#${MPHP_Path}/#g" /etc/init.d/php-fpm5.2
+    sed -i 's@# Provides:          php-fpm@# Provides:          php-fpm5.2@g' /etc/init.d/php-fpm5.2
 
-StartUp php-fpm5.2
+    StartUp php-fpm5.2
 
-sleep 2
+    sleep 2
 
-lnmp start
-echo "Starting ${Php_Ver} PHP-FPM..."
-/etc/init.d/php-fpm5.2 start
+    lnmp start
+    echo "Starting ${Php_Ver} PHP-FPM..."
+    /etc/init.d/php-fpm5.2 start
 
-rm -rf ${cur_dir}/src/${Php_Ver}
+    rm -rf ${cur_dir}/src/${Php_Ver}
 
-if [ -s ${MPHP_Path}/sbin/php-fpm ] && [ -s ${MPHP_Path}/etc/php.ini ] && [ -s ${MPHP_Path}/bin/php ]; then
-    echo "==========================================="
-    Echo_Green "You have successfully install ${Php_Ver}"
-    echo "==========================================="
-else
-    Echo_Red "Failed to install {Php_Ver}, you can download /root/install-mphp5.2.log from your server, and upload install-mphp5.2.log to LNMP Forum."
-fi
+    if [ -s ${MPHP_Path}/sbin/php-fpm ] && [ -s ${MPHP_Path}/etc/php.ini ] && [ -s ${MPHP_Path}/bin/php ]; then
+        echo "==========================================="
+        Echo_Green "You have successfully install ${Php_Ver}"
+        echo "==========================================="
+    else
+        Echo_Red "Failed to install {Php_Ver}, you can download /root/install-mphp5.2.log from your server, and upload install-mphp5.2.log to LNMP Forum."
+    fi
 }
 
 Install_MPHP5.3()
@@ -261,8 +262,8 @@ zend_loader.license_path=
 
 EOF
 
-echo "Creating new php-fpm configure file..."
-cat >${MPHP_Path}/etc/php-fpm.conf<<EOF
+    echo "Creating new php-fpm configure file..."
+    cat >${MPHP_Path}/etc/php-fpm.conf<<EOF
 [global]
 pid = ${MPHP_Path}/var/run/php-fpm.pid
 error_log = ${MPHP_Path}/var/log/php-fpm.log
@@ -287,29 +288,29 @@ request_slowlog_timeout = 0
 slowlog = var/log/slow.log
 EOF
 
-echo "Copy php-fpm init.d file..."
-\cp ${cur_dir}/src/${Php_Ver}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm5.3
-chmod +x /etc/init.d/php-fpm5.3
+    echo "Copy php-fpm init.d file..."
+    \cp ${cur_dir}/src/${Php_Ver}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm5.3
+    chmod +x /etc/init.d/php-fpm5.3
 
-StartUp php-fpm5.3
+    StartUp php-fpm5.3
 
-\cp ${cur_dir}/conf/enable-php5.3.conf /usr/local/nginx/conf/enable-php5.3.conf
+    \cp ${cur_dir}/conf/enable-php5.3.conf /usr/local/nginx/conf/enable-php5.3.conf
 
-sleep 2
+    sleep 2
 
-lnmp start
-echo "Starting ${Php_Ver} PHP-FPM..."
-/etc/init.d/php-fpm5.3 start
+    lnmp start
+    echo "Starting ${Php_Ver} PHP-FPM..."
+    /etc/init.d/php-fpm5.3 start
 
-rm -rf ${cur_dir}/src/${Php_Ver}
+    rm -rf ${cur_dir}/src/${Php_Ver}
 
-if [ -s ${MPHP_Path}/sbin/php-fpm ] && [ -s ${MPHP_Path}/etc/php.ini ] && [ -s ${MPHP_Path}/bin/php ]; then
-    echo "==========================================="
-    Echo_Green "You have successfully install ${Php_Ver} "
-    echo "==========================================="
-else
-    Echo_Red "Failed to install ${Php_Ver}, you can download /root/install-mphp5.3.log from your server, and upload install-mphp5.3.log to LNMP Forum."
-fi
+    if [ -s ${MPHP_Path}/sbin/php-fpm ] && [ -s ${MPHP_Path}/etc/php.ini ] && [ -s ${MPHP_Path}/bin/php ]; then
+        echo "==========================================="
+        Echo_Green "You have successfully install ${Php_Ver} "
+        echo "==========================================="
+    else
+        Echo_Red "Failed to install ${Php_Ver}, you can download /root/install-mphp5.3.log from your server, and upload install-mphp5.3.log to LNMP Forum."
+    fi
 }
 
 Install_MPHP5.4()
@@ -374,8 +375,8 @@ zend_loader.license_path=
 
 EOF
 
-echo "Creating new php-fpm configure file..."
-cat >${MPHP_Path}/etc/php-fpm.conf<<EOF
+    echo "Creating new php-fpm configure file..."
+    cat >${MPHP_Path}/etc/php-fpm.conf<<EOF
 [global]
 pid = ${MPHP_Path}/var/run/php-fpm.pid
 error_log = ${MPHP_Path}/var/log/php-fpm.log
@@ -400,29 +401,29 @@ request_slowlog_timeout = 0
 slowlog = var/log/slow.log
 EOF
 
-echo "Copy php-fpm init.d file..."
-\cp ${cur_dir}/src/${Php_Ver}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm5.4
-chmod +x /etc/init.d/php-fpm5.4
+    echo "Copy php-fpm init.d file..."
+    \cp ${cur_dir}/src/${Php_Ver}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm5.4
+    chmod +x /etc/init.d/php-fpm5.4
 
-StartUp php-fpm5.4
+    StartUp php-fpm5.4
 
-\cp ${cur_dir}/conf/enable-php5.4.conf /usr/local/nginx/conf/enable-php5.4.conf
+    \cp ${cur_dir}/conf/enable-php5.4.conf /usr/local/nginx/conf/enable-php5.4.conf
 
-sleep 2
+    sleep 2
 
-lnmp start
-echo "Starting ${Php_Ver} PHP-FPM..."
-/etc/init.d/php-fpm5.4 start
+    lnmp start
+    echo "Starting ${Php_Ver} PHP-FPM..."
+    /etc/init.d/php-fpm5.4 start
 
-rm -rf ${cur_dir}/src/${Php_Ver}
+    rm -rf ${cur_dir}/src/${Php_Ver}
 
-if [ -s ${MPHP_Path}/sbin/php-fpm ] && [ -s ${MPHP_Path}/etc/php.ini ] && [ -s ${MPHP_Path}/bin/php ]; then
-    echo "==========================================="
-    Echo_Green "You have successfully install ${Php_Ver} "
-    echo "==========================================="
-else
-    Echo_Red "Failed to install ${Php_Ver}, you can download /root/install-mphp5.4.log from your server, and upload install-mphp5.4.log to LNMP Forum."
-fi
+    if [ -s ${MPHP_Path}/sbin/php-fpm ] && [ -s ${MPHP_Path}/etc/php.ini ] && [ -s ${MPHP_Path}/bin/php ]; then
+        echo "==========================================="
+        Echo_Green "You have successfully install ${Php_Ver} "
+        echo "==========================================="
+    else
+        Echo_Red "Failed to install ${Php_Ver}, you can download /root/install-mphp5.4.log from your server, and upload install-mphp5.4.log to LNMP Forum."
+    fi
 }
 
 Install_MPHP5.5()
@@ -487,8 +488,8 @@ zend_loader.license_path=
 
 EOF
 
-echo "Creating new php-fpm configure file..."
-cat >${MPHP_Path}/etc/php-fpm.conf<<EOF
+    echo "Creating new php-fpm configure file..."
+    cat >${MPHP_Path}/etc/php-fpm.conf<<EOF
 [global]
 pid = ${MPHP_Path}/var/run/php-fpm.pid
 error_log = ${MPHP_Path}/var/log/php-fpm.log
@@ -513,29 +514,29 @@ request_slowlog_timeout = 0
 slowlog = var/log/slow.log
 EOF
 
-echo "Copy php-fpm init.d file..."
-\cp ${cur_dir}/src/${Php_Ver}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm5.5
-chmod +x /etc/init.d/php-fpm5.5
+    echo "Copy php-fpm init.d file..."
+    \cp ${cur_dir}/src/${Php_Ver}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm5.5
+    chmod +x /etc/init.d/php-fpm5.5
 
-StartUp php-fpm5.5
+    StartUp php-fpm5.5
 
-\cp ${cur_dir}/conf/enable-php5.5.conf /usr/local/nginx/conf/enable-php5.5.conf
+    \cp ${cur_dir}/conf/enable-php5.5.conf /usr/local/nginx/conf/enable-php5.5.conf
 
-sleep 2
+    sleep 2
 
-lnmp start
-echo "Starting ${Php_Ver} PHP-FPM..."
-/etc/init.d/php-fpm5.5 start
+    lnmp start
+    echo "Starting ${Php_Ver} PHP-FPM..."
+    /etc/init.d/php-fpm5.5 start
 
-rm -rf ${cur_dir}/src/${Php_Ver}
+    rm -rf ${cur_dir}/src/${Php_Ver}
 
-if [ -s ${MPHP_Path}/sbin/php-fpm ] && [ -s ${MPHP_Path}/etc/php.ini ] && [ -s ${MPHP_Path}/bin/php ]; then
-    echo "==========================================="
-    Echo_Green "You have successfully install ${Php_Ver} "
-    echo "==========================================="
-else
-    Echo_Red "Failed to install ${Php_Ver}, you can download /root/install-mphp5.5.log from your server, and upload install-mphp5.5.log to LNMP Forum."
-fi
+    if [ -s ${MPHP_Path}/sbin/php-fpm ] && [ -s ${MPHP_Path}/etc/php.ini ] && [ -s ${MPHP_Path}/bin/php ]; then
+        echo "==========================================="
+        Echo_Green "You have successfully install ${Php_Ver} "
+        echo "==========================================="
+    else
+        Echo_Red "Failed to install ${Php_Ver}, you can download /root/install-mphp5.5.log from your server, and upload install-mphp5.5.log to LNMP Forum."
+    fi
 }
 
 Install_MPHP5.6()
@@ -581,7 +582,7 @@ Install_MPHP5.6()
     fi
 
     echo "Write ZendGuardLoader to php.ini..."
-cat >>${MPHP_Path}/etc/php.ini<<EOF
+    cat >>${MPHP_Path}/etc/php.ini<<EOF
 
 ;eaccelerator
 
@@ -600,8 +601,8 @@ zend_loader.license_path=
 
 EOF
 
-echo "Creating new php-fpm configure file..."
-cat >${MPHP_Path}/etc/php-fpm.conf<<EOF
+    echo "Creating new php-fpm configure file..."
+    cat >${MPHP_Path}/etc/php-fpm.conf<<EOF
 [global]
 pid = ${MPHP_Path}/var/run/php-fpm.pid
 error_log = ${MPHP_Path}/var/log/php-fpm.log
@@ -626,29 +627,29 @@ request_slowlog_timeout = 0
 slowlog = var/log/slow.log
 EOF
 
-echo "Copy php-fpm init.d file..."
-\cp ${cur_dir}/src/${Php_Ver}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm5.6
-chmod +x /etc/init.d/php-fpm5.6
+    echo "Copy php-fpm init.d file..."
+    \cp ${cur_dir}/src/${Php_Ver}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm5.6
+    chmod +x /etc/init.d/php-fpm5.6
 
-StartUp php-fpm5.6
+    StartUp php-fpm5.6
 
-\cp ${cur_dir}/conf/enable-php5.6.conf /usr/local/nginx/conf/enable-php5.6.conf
+    \cp ${cur_dir}/conf/enable-php5.6.conf /usr/local/nginx/conf/enable-php5.6.conf
 
-sleep 2
+    sleep 2
 
-lnmp start
-echo "Starting ${Php_Ver} PHP-FPM..."
-/etc/init.d/php-fpm5.6 start
+    lnmp start
+    echo "Starting ${Php_Ver} PHP-FPM..."
+    /etc/init.d/php-fpm5.6 start
 
-rm -rf ${cur_dir}/src/${Php_Ver}
+    rm -rf ${cur_dir}/src/${Php_Ver}
 
-if [ -s ${MPHP_Path}/sbin/php-fpm ] && [ -s ${MPHP_Path}/etc/php.ini ] && [ -s ${MPHP_Path}/bin/php ]; then
-    echo "==========================================="
-    Echo_Green "You have successfully install ${Php_Ver} "
-    echo "==========================================="
-else
-    Echo_Red "Failed to install ${Php_Ver}, you can download /root/install-mphp5.6.log from your server, and upload install-mphp5.6.log to LNMP Forum."
-fi
+    if [ -s ${MPHP_Path}/sbin/php-fpm ] && [ -s ${MPHP_Path}/etc/php.ini ] && [ -s ${MPHP_Path}/bin/php ]; then
+        echo "==========================================="
+        Echo_Green "You have successfully install ${Php_Ver} "
+        echo "==========================================="
+    else
+        Echo_Red "Failed to install ${Php_Ver}, you can download /root/install-mphp5.6.log from your server, and upload install-mphp5.6.log to LNMP Forum."
+    fi
 }
 
 Install_MPHP7.0()
@@ -703,8 +704,8 @@ cat >>${MPHP_Path}/etc/php.ini<<EOF
 
 EOF
 
-echo "Creating new php-fpm configure file..."
-cat >${MPHP_Path}/etc/php-fpm.conf<<EOF
+    echo "Creating new php-fpm configure file..."
+    cat >${MPHP_Path}/etc/php-fpm.conf<<EOF
 [global]
 pid = ${MPHP_Path}/var/run/php-fpm.pid
 error_log = ${MPHP_Path}/var/log/php-fpm.log
@@ -729,29 +730,29 @@ request_slowlog_timeout = 0
 slowlog = var/log/slow.log
 EOF
 
-echo "Copy php-fpm init.d file..."
-\cp ${cur_dir}/src/${Php_Ver}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm7.0
-chmod +x /etc/init.d/php-fpm7.0
+    echo "Copy php-fpm init.d file..."
+    \cp ${cur_dir}/src/${Php_Ver}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm7.0
+    chmod +x /etc/init.d/php-fpm7.0
 
-StartUp php-fpm7.0
+    StartUp php-fpm7.0
 
-\cp ${cur_dir}/conf/enable-php7.0.conf /usr/local/nginx/conf/enable-php7.0.conf
+    \cp ${cur_dir}/conf/enable-php7.0.conf /usr/local/nginx/conf/enable-php7.0.conf
 
-sleep 2
+    sleep 2
 
-lnmp start
-echo "Starting ${Php_Ver} PHP-FPM..."
-/etc/init.d/php-fpm7.0 start
+    lnmp start
+    echo "Starting ${Php_Ver} PHP-FPM..."
+    /etc/init.d/php-fpm7.0 start
 
-rm -rf ${cur_dir}/src/${Php_Ver}
+    rm -rf ${cur_dir}/src/${Php_Ver}
 
-if [ -s ${MPHP_Path}/sbin/php-fpm ] && [ -s ${MPHP_Path}/etc/php.ini ] && [ -s ${MPHP_Path}/bin/php ]; then
-    echo "==========================================="
-    Echo_Green "You have successfully install ${Php_Ver} "
-    echo "==========================================="
-else
-    Echo_Red "Failed to install ${Php_Ver}, you can download /root/install-mphp7.0.log from your server, and upload install-mphp7.0.log to LNMP Forum."
-fi
+    if [ -s ${MPHP_Path}/sbin/php-fpm ] && [ -s ${MPHP_Path}/etc/php.ini ] && [ -s ${MPHP_Path}/bin/php ]; then
+        echo "==========================================="
+        Echo_Green "You have successfully install ${Php_Ver} "
+        echo "==========================================="
+    else
+        Echo_Red "Failed to install ${Php_Ver}, you can download /root/install-mphp7.0.log from your server, and upload install-mphp7.0.log to LNMP Forum."
+    fi
 }
 
 if [ "${PHPSelect}" = "1" ]; then
