@@ -37,7 +37,7 @@ fi
 DBSelect="2"
 Echo_Yellow "You have 5 options for your DataBase install."
 echo "1: Install ${DB_Info[0]}"
-echo "2: Install ${DB_Info[1]} (Default)"
+echo "2: Install ${DB_Info[1]}"
 echo "3: Install ${DB_Info[2]}"
 echo "4: Install ${DB_Info[3]}"
 echo "5: Install ${DB_Info[4]}"
@@ -68,8 +68,8 @@ case "${DBSelect}" in
     echo "You will install ${DB_Info[6]}"
     ;;
 *)
-    echo "No input,You will install ${DB_Info[1]}"
-    DBSelect="2"
+    echo "You didn't select MySQL or MariaDB!"
+    exit 1
 esac
 
 if [[ "${DBSelect}" = "3" || "${DBSelect}" = "4" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]] && [ `free -m | grep Mem | awk '{print  $2}'` -le 1024 ]; then
