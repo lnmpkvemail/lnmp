@@ -58,8 +58,16 @@ Start_Upgrade_PHP()
         mv /etc/init.d/php-fpm /etc/init.d/php-fpm.bak.${Upgrade_Date}
         mv /usr/local/php /usr/local/oldphp${Upgrade_Date}
     else
-        mv /usr/local/apache/modules/libphp5.so /usr/local/apache/modules/libphp5.so.bak.${Upgrade_Date}
+        if echo "${Cur_PHP_Version}" | grep -Eqi '^7.';then
+            mv /usr/local/apache/modules/libphp7.so /usr/local/apache/modules/libphp7.so.bak.${Upgrade_Date}
+        else
+            mv /usr/local/apache/modules/libphp5.so /usr/local/apache/modules/libphp5.so.bak.${Upgrade_Date}
+        fi
         mv /usr/local/php /usr/local/oldphp${Upgrade_Date}
+        \cp /usr/local/apache/conf/httpd.conf /usr/local/apache/conf/httpd.conf.bak.${Upgrade_Date}
+        if echo "${Cur_PHP_Version}" | grep -Eqi '^7.' && echo "${php_version}" | grep -Eqi '^5.';then
+            sed -i '/libphp7.so/d' /usr/local/apache/conf/httpd.conf
+        fi
     fi
 
 }
