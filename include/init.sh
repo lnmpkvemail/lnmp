@@ -77,17 +77,14 @@ Check_Hosts()
     else
         echo "127.0.0.1 localhost.localdomain localhost" >> /etc/hosts
     fi
-    ping -c1 lnmp.org
-    if [ $? -eq 0 ] ; then
-        echo "DNS...ok"
+    pingresult=`ping -c1 lnmp.org 2>&1`
+    echo ${pingresult}
+    if echo ${pingresult} | grep -q "unknown host"; then
+        echo "DNS...fail"
+        echo "Writing nameserver to /etc/resolv.conf ..."
+        echo -e "nameserver 208.67.220.220\nnameserver 114.114.114.114" > /etc/resolv.conf
     else
-        ping6 -c1 lnmp.org
-        if [ $? -eq 0 ] ; then
-            echo "IPv6...ok"
-        else
-            echo "DNS...fail"
-            echo -e "nameserver 208.67.220.220\nnameserver 114.114.114.114" > /etc/resolv.conf
-        fi
+        echo "DNS...ok"
     fi
 }
 
