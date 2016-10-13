@@ -17,6 +17,8 @@ Install_ionCube()
        zend_ext="/usr/local/ioncube/ioncube_loader_lin_5.5.so"
     elif echo "${Cur_PHP_Version}" | grep -Eqi '^5.6.'; then
        zend_ext="/usr/local/ioncube/ioncube_loader_lin_5.6.so"
+    elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.0.'; then
+       zend_ext="/usr/local/ioncube/ioncube_loader_lin_7.0.so"
     fi
 
     if [ -s "${zend_ext}" ]; then
