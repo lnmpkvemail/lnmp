@@ -8,8 +8,9 @@ Add_Iptables_Rules()
         /sbin/iptables -I INPUT 2 -m state --state ESTABLISHED,RELATED -j ACCEPT
         /sbin/iptables -I INPUT 3 -p tcp --dport 22 -j ACCEPT
         /sbin/iptables -I INPUT 4 -p tcp --dport 80 -j ACCEPT
-        /sbin/iptables -I INPUT 5 -p tcp --dport 3306 -j DROP
-        /sbin/iptables -I INPUT 6 -p icmp -m icmp --icmp-type 8 -j ACCEPT
+        /sbin/iptables -I INPUT 5 -p tcp --dport 443 -j ACCEPT
+        /sbin/iptables -I INPUT 6 -p tcp --dport 3306 -j DROP
+        /sbin/iptables -I INPUT 7 -p icmp -m icmp --icmp-type 8 -j ACCEPT
         if [ "$PM" = "yum" ]; then
             service iptables save
             if [ -s /usr/sbin/firewalld ]; then
