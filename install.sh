@@ -26,6 +26,8 @@ LNMP_Ver='1.4'
 . include/nginx.sh
 . include/apache.sh
 . include/end.sh
+. include/only.sh
+. include/multiplephp.sh
 
 Get_Dist_Name
 
@@ -202,6 +204,15 @@ case "${Stack}" in
     lamp)
         Dispaly_Selection
         LAMP_Stack 2>&1 | tee /root/lnmp-install.log
+        ;;
+    nginx)
+        Install_Only_Nginx 2>&1 | tee /root/nginx-install.log
+        ;;
+    db)
+        Install_Only_Database
+        ;;
+    mphp)
+        Install_Multiplephp
         ;;
     *)
         Echo_Red "Usage: $0 {lnmp|lnmpa|lamp}"

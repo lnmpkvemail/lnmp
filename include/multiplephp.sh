@@ -1,32 +1,11 @@
 #!/bin/bash
-PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
-export PATH
 
-# Check if user is root
-if [ $(id -u) != "0" ]; then
-    echo "Error: You must be root to run this script, please use root to install lnmp"
-    exit 1
-fi
-
-. lnmp.conf
-. include/main.sh
-. include/init.sh
-. include/php.sh
-
-clear
-echo "+-----------------------------------------------------------------------+"
-echo "|    Install Multiple PHP Versions for LNMP Stack, Written by Licess    |"
-echo "+-----------------------------------------------------------------------+"
-echo "|          A tool to install Multiple PHP Versions for LNMP             |"
-echo "+-----------------------------------------------------------------------+"
-echo "|          For more information please visit http://www.lnmp.org        |"
-echo "+-----------------------------------------------------------------------+"
-
-cur_dir=$(pwd)
-Get_OS_Bit
-Get_Dist_Name
-Check_DB
-Check_Stack
+Install_Multiplephp()
+{
+    Get_OS_Bit
+    Get_Dist_Name
+    Check_DB
+    Check_Stack
 
 if [ ${Get_Stack} != "lnmp" ]; then
     echo "Multiple PHP Versions ONLY for LNMP Stack!"
@@ -80,13 +59,13 @@ fi
         exit 1
     esac
 
-. include/version.sh
+Press_Install
 if [[ -d "${MPHP_Path}" ]]; then
     echo "${Php_Ver} already exists!"
     exit 1
 fi
-Press_Start
 PHP_with_curl
+Check_Curl
 
 Install_MPHP5.2()
 {
@@ -160,8 +139,8 @@ Install_MPHP5.2()
 
 ;ionCube
 
-[Zend Optimizer] 
-zend_optimizer.optimization_level=1 
+[Zend Optimizer]
+zend_optimizer.optimization_level=1
 zend_extension="/usr/local/zend52/ZendOptimizer5.2.so"
 
 ;xcache
@@ -769,3 +748,4 @@ elif [ "${PHPSelect}" = "5" ]; then
 elif [ "${PHPSelect}" = "6" ]; then
     Install_MPHP7.0 2>&1 | tee /root/install-mphp7.0.log
 fi
+}

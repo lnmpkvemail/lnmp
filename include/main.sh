@@ -4,7 +4,7 @@ DB_Info=('MySQL 5.1.73' 'MySQL 5.5.48' 'MySQL 5.6.29' 'MySQL 5.7.11' 'MariaDB 5.
 PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.36' 'PHP 5.6.22' 'PHP 7.0.7')
 Apache_Info=('Apache 2.2.31' 'Apache 2.4.20')
 
-Dispaly_Selection()
+Database_Selection()
 {
 #which MySQL Version do you want to install?
     DBSelect="2"
@@ -75,7 +75,7 @@ Dispaly_Selection()
         fi
         echo "MySQL root password: ${DB_Root_Password}"
 
-    #do you want to enable or disable the InnoDB Storage Engine?
+        #do you want to enable or disable the InnoDB Storage Engine?
         echo "==========================="
 
         InstallInnodb="y"
@@ -96,7 +96,10 @@ Dispaly_Selection()
             InstallInnodb="y"
         esac
     fi
+}
 
+PHP_Selection()
+{
 #which PHP Version do you want to install?
     echo "==========================="
 
@@ -137,7 +140,10 @@ Dispaly_Selection()
         echo "No input,You will install ${PHP_Info[2]}"
         PHPSelect="3"
     esac
+}
 
+MemoryAllocator_Selection()
+{
 #which Memory Allocator do you want to install?
     echo "==========================="
 
@@ -178,6 +184,13 @@ Dispaly_Selection()
         MariaDBMAOpt="-DCMAKE_EXE_LINKER_FLAGS='-ltcmalloc' -DWITH_SAFEMALLOC=OFF"
         NginxMAOpt='--with-google_perftools_module'
     fi
+}
+
+Dispaly_Selection()
+{
+    Database_Selection
+    PHP_Selection
+    MemoryAllocator_Selection
 }
 
 Apache_Selection()
