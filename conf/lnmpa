@@ -11,7 +11,7 @@ fi
 echo "+-------------------------------------------+"
 echo "|    Manager for LNMP, Written by Licess    |"
 echo "+-------------------------------------------+"
-echo "|              http://lnmp.org              |"
+echo "|              https://lnmp.org             |"
 echo "+-------------------------------------------+"
 
 arg1=$1

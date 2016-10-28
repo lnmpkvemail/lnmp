@@ -44,7 +44,7 @@ echo "|          LNMP V${LNMP_Ver} for ${DISTRO} Linux Server, Written by Licess
 echo "+------------------------------------------------------------------------+"
 echo "|        A tool to auto-compile & install LNMP/LNMPA/LAMP on Linux       |"
 echo "+------------------------------------------------------------------------+"
-echo "|          For more information please visit http://www.lnmp.org         |"
+echo "|           For more information please visit https://lnmp.org           |"
 echo "+------------------------------------------------------------------------+"
 
 Init_Install()

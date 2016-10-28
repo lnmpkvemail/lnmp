@@ -58,7 +58,7 @@ echo "|            Addons script for LNMP V1.2, Written by Licess             |"
 echo "+-----------------------------------------------------------------------+"
 echo "|    A tool to Install cache,optimizer,accelerator...addons for LNMP    |"
 echo "+-----------------------------------------------------------------------+"
-echo "|          For more information please visit http://www.lnmp.org        |"
+echo "|           For more information please visit https://lnmp.org          |"
 echo "+-----------------------------------------------------------------------+"
 
 if [[ "${action}" == "" || "${action2}" == "" ]]; then

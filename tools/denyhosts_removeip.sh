@@ -1,6 +1,6 @@
 #!/bin/bash
 # Author:licess
-# Website:http://www.vpser.net & http://lnmp.org
+# Website:https://www.vpser.net & https://lnmp.org
 
 HOST=$1
 if [ -z "${HOST}" ]; then

@@ -1,6 +1,6 @@
 #!/bin/bash
 # author: licess
-# website: http://www.lnmp.org
+# website: https://lnmp.org
 
 CheckURL="http://www.vpser.net"
 

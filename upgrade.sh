@@ -51,7 +51,7 @@ echo "|            Upgrade script for LNMP V1.3, Written by Licess            |"
 echo "+-----------------------------------------------------------------------+"
 echo "|     A tool to upgrade Nginx,MySQL/Mariadb,PHP for LNMP/LNMPA/LAMP     |"
 echo "+-----------------------------------------------------------------------+"
-echo "|          For more information please visit http://www.lnmp.org        |"
+echo "|           For more information please visit https://lnmp.org          |"
 echo "+-----------------------------------------------------------------------+"
 
 if [ "${action}" == "" ]; then

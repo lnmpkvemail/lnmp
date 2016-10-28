@@ -15,7 +15,7 @@
 ### END INIT INFO
 
 # Author:   licess
-# website:  http://lnmp.org
+# website:  https://lnmp.org
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 NAME=nginx

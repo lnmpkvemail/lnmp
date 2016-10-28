@@ -2,7 +2,7 @@
 
 #Funciont: Backup website and mysql database
 #Author: licess
-#Website: http://lnmp.org
+#Website: https://lnmp.org
 
 #IMPORTANT!!!Please Setting the following Values!
 

@@ -28,7 +28,7 @@ echo "|          LNMP V${LNMP_Ver} for ${DISTRO} Linux Server, Written by Licess
 echo "+------------------------------------------------------------------------+"
 echo "|        A tool to auto-compile & install Nginx+MySQL+PHP on Linux       |"
 echo "+------------------------------------------------------------------------+"
-echo "|          For more information please visit http://www.lnmp.org         |"
+echo "|           For more information please visit https://lnmp.org           |"
 echo "+------------------------------------------------------------------------+"
 
 Uninstall_LNMP()
