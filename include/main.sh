@@ -547,6 +547,7 @@ Make_TempMycnf()
 user=root
 password='$1'
 EOF
+    chmod 600 ~/.my.cnf
 }
 
 Verify_DB_Password()
