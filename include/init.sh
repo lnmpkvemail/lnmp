@@ -116,13 +116,17 @@ Ubuntu_Modify_Source()
     elif grep -Eqi "10.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^10.04'; then
         CodeName='lucid'
     elif grep -Eqi "14.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^14.10'; then
-        Ubuntu_Deadline utopic
+        CodeName='utopic'
     elif grep -Eqi "15.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^15.04'; then
         Ubuntu_Deadline vivid
     elif grep -Eqi "12.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^12.04'; then
         Ubuntu_Deadline precise
     elif grep -Eqi "15.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^15.10'; then
         Ubuntu_Deadline wily
+    elif grep -Eqi "16.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^16.10'; then
+        Ubuntu_Deadline yakkety
+    elif grep -Eqi "14.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^14.04'; then
+        Ubuntu_Deadline trusty
     fi
     if [ "${CodeName}" != "" ]; then
         \cp /etc/apt/sources.list /etc/apt/sources.list.$(date +"%Y%m%d")
@@ -152,18 +156,13 @@ Check_Old_Releases_URL()
 
 Ubuntu_Deadline()
 {
-    utopic_deadline=`date -d "2015-10-1 00:00:00" +%s`
     vivid_deadline=`date -d "2016-2-24 00:00:00" +%s`
     precise_deadline=`date -d "2017-5-27 00:00:00" +%s`
     wily_deadline=`date -d "2016-7-22 00:00:00" +%s`
+    yakkety_deadline=`date -d "2017-7-22 00:00:00" +%s`
+    trusty_deadline=`date -d "2019-7-22 00:00:00" +%s`
     cur_time=`date  +%s`
     case "$1" in
-        utopic)
-            if [ ${cur_time} -gt ${utopic_deadline} ]; then
-                echo "${cur_time} > ${utopic_deadline}"
-                Check_Old_Releases_URL utopic
-            fi
-            ;;
         vivid)
             if [ ${cur_time} -gt ${vivid_deadline} ]; then
                 echo "${cur_time} > ${vivid_deadline}"
@@ -180,6 +179,18 @@ Ubuntu_Deadline()
             if [ ${cur_time} -gt ${wily_deadline} ]; then
                 echo "${cur_time} > ${wily_deadline}"
                 Check_Old_Releases_URL wily
+            fi
+            ;;
+        yakkety)
+            if [ ${cur_time} -gt ${yakkety_deadline} ]; then
+                echo "${cur_time} > ${yakkety_deadline}"
+                Check_Old_Releases_URL yakkety
+            fi
+            ;;
+        trusty)
+            if [ ${cur_time} -gt ${trusty_deadline} ]; then
+                echo "${cur_time} > ${trusty_deadline}"
+                Check_Old_Releases_URL trusty
             fi
             ;;
     esac
