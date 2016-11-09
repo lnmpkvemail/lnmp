@@ -18,6 +18,7 @@ Upgrade_Date=$(date +"%Y%m%d%H%M%S")
 . include/main.sh
 . include/init.sh
 . include/php.sh
+. include/nginx.sh
 . include/mysql.sh
 . include/mariadb.sh
 . include/upgrade_nginx.sh

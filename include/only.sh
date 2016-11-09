@@ -18,6 +18,7 @@ Install_Only_Nginx()
     elif [ "$PM" = "apt" ]; then
         Deb_Dependent
     fi
+    Install_Pcre
     Download_Files ${Download_Mirror}/web/nginx/${Nginx_Ver}.tar.gz ${Nginx_Ver}.tar.gz
     Install_Nginx
     StartUp nginx

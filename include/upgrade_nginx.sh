@@ -44,11 +44,12 @@ Upgrade_Nginx()
     fi
     echo "============================check files=================================="
 
+    Install_Nginx_Openssl
     Tar_Cd nginx-${Nginx_Version}.tar.gz nginx-${Nginx_Version}
     if echo ${Nginx_Version} | grep -Eqi '^[0-1].[5-8].[0-9]' || echo ${Nginx_Version} | grep -Eqi '^1.9.[1-4]$'; then
-        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_spdy_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${NginxMAOpt} ${Nginx_Modules_Options}
+        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_spdy_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${Nginx_With_Openssl} ${NginxMAOpt} ${Nginx_Modules_Options}
     else
-        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_v2_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${NginxMAOpt} ${Nginx_Modules_Options}
+        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_v2_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${Nginx_With_Openssl} ${NginxMAOpt} ${Nginx_Modules_Options}
     fi
     make
 
@@ -60,7 +61,13 @@ Upgrade_Nginx()
     make upgrade
 
     cd ${cur_dir} && rm -rf ${cur_dir}/src/nginx-${Nginx_Version}
-    Echo_Green "======== upgrade nginx completed ======"
-    echo "Program will display Nginx Version......"
-    /usr/local/nginx/sbin/nginx -v
+
+    echo "Checking ..."
+    if [[ -s /usr/local/nginx/conf/nginx.conf && -s /usr/local/nginx/sbin/nginx ]]; then
+        echo "Program will display Nginx Version......"
+        /usr/local/nginx/sbin/nginx -v
+        Echo_Green "======== upgrade nginx completed ======"
+    else
+        Echo_Red "Error: Nginx upgrade failed."
+    fi
 }
