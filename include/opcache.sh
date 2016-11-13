@@ -49,12 +49,12 @@ EOF
         \cp ${cur_dir}/conf/ocp.php ${Default_Website_Dir}/ocp.php
         Restart_PHP
         if [ -s "${zend_ext}" ]; then
-            echo "====== Opcache install completed ======"
-            echo "Opcache installed successfully, enjoy it!"
+            Echo_Green "====== Opcache install completed ======"
+            Echo_Green "Opcache installed successfully, enjoy it!"
             exit 0
         else
             sed -i '/\[Zend Opcache\]/,/opcache.enable_cli/d' /usr/local/php/etc/php.ini
-            echo "OPcache install failed!"
+            Echo_Red "OPcache install failed!"
             exit 1
         fi
     else
@@ -111,5 +111,5 @@ Uninstall_Opcache()
     Press_Start
     sed -i '/\[Zend Opcache\]/,/opcache.enable_cli/d' /usr/local/php/etc/php.ini
     Restart_PHP
-    echo "Uninstall Opcache completed."
+    Echo_Green "Uninstall Opcache completed."
 }

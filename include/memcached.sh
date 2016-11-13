@@ -145,11 +145,11 @@ extension = \"${PHP_ZTS}\"" /usr/local/php/etc/php.ini
     /etc/init.d/memcached start
 
     if [ -s "${zend_ext}" ] && [ -s /usr/local/memcached/bin/memcached ]; then
-        echo "====== Memcached install completed ======"
-        echo "Memcached installed successfully, enjoy it!"
+        Echo_Green "====== Memcached install completed ======"
+        Echo_Green "Memcached installed successfully, enjoy it!"
     else
         sed -i "/${PHP_ZTS}/d" /usr/local/php/etc/php.ini
-        echo "Memcached install failed!"
+        Echo_Red "Memcached install failed!"
     fi
 }
 
@@ -175,5 +175,5 @@ Uninstall_Memcached()
             iptables-save > /etc/iptables.rules
         fi
     fi
-    echo "Uninstall Memcached completed."
+    Echo_Green "Uninstall Memcached completed."
 }

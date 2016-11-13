@@ -91,11 +91,11 @@ EOF
 
     if [ -s "${zend_ext}" ]; then
         Restart_PHP
-        echo "======== xcache install completed ======"
-        echo "XCache installed successfully, enjoy it!"
+        Echo_Green "======== xcache install completed ======"
+        Echo_Green "XCache installed successfully, enjoy it!"
     else
         sed -i '/\[xcache-common\]/,/xcache.coveragedump_directory/d' /usr/local/php/etc/php.ini
-        echo "XCache install failed!"
+        Echo_Red "XCache install failed!"
     fi
 }
 
@@ -107,5 +107,5 @@ Uninstall_XCache()
     echo "Delete xcache files..."
     rm -rf ${Default_Website_Dir}/xcache
     Restart_PHP
-    echo "Uninstall XCache completed."
+    Echo_Green "Uninstall XCache completed."
 }

@@ -67,11 +67,11 @@ extension = "redis.so"' /usr/local/php/etc/php.ini
     /etc/init.d/redis start
 
     if [ -s "${zend_ext}" ] && [ -s /usr/local/redis/bin/redis-server ]; then
-        echo "====== Redis install completed ======"
-        echo "Redis installed successfully, enjoy it!"
+        Echo_Green "====== Redis install completed ======"
+        Echo_Green "Redis installed successfully, enjoy it!"
     else
         sed -i '/redis.so/d' /usr/local/php/etc/php.ini
-        echo "Redis install failed!"
+        Echo_Red "Redis install failed!"
     fi
 }
 
@@ -93,5 +93,5 @@ Uninstall_Redis()
             iptables-save > /etc/iptables.rules
         fi
     fi
-    echo "Uninstall Redis completed."
+    Echo_Green "Uninstall Redis completed."
 }

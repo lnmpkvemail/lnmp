@@ -38,11 +38,11 @@ extension = "imagick.so"' /usr/local/php/etc/php.ini
 
     if [ -s "${zend_ext}" ] && [ -s /usr/local/imagemagick/bin/convert ]; then
         Restart_PHP
-        echo "====== ImageMagick install completed ======"
-        echo "ImageMagick installed successfully, enjoy it!"
+        Echo_Green "====== ImageMagick install completed ======"
+        Echo_Green "ImageMagick installed successfully, enjoy it!"
     else
         sed -i '/imagick.so/d' /usr/local/php/etc/php.ini
-        echo "imagick install failed!"
+        Echo_Red "imagick install failed!"
     fi
 }
 
@@ -54,5 +54,5 @@ Uninstall_ImageMagick()
     echo "Delete ImageMagick directory..."
     rm -rf /usr/local/imagemagick
     Restart_PHP
-    echo "Uninstall ImageMagick completed."
+    Echo_Green "Uninstall ImageMagick completed."
 }

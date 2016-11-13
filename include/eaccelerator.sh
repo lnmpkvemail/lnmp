@@ -146,11 +146,11 @@ EOF
 
     if [ -s "${zend_ext}" ]; then
         Restart_PHP
-        echo "====== eAccelerator install completed ======"
-        echo "eAccelerator installed successfully, enjoy it!"
+        Echo_Green "====== eAccelerator install completed ======"
+        Echo_Green "eAccelerator installed successfully, enjoy it!"
     else
         sed -i '/\[eaccelerator\]/,/eaccelerator.content/d' /usr/local/php/etc/php.ini
-        echo "eAccelerator install failed!"
+        Echo_Red "eAccelerator install failed!"
     fi
 }
 
@@ -162,5 +162,5 @@ Uninstall_eAccelerator()
     echo "Delete eaccelerator_cache directory..."
     rm -rf /usr/local/eaccelerator_cache
     Restart_PHP
-    echo "Uninstall eAccelerator completed."
+    Echo_Green "Uninstall eAccelerator completed."
 }

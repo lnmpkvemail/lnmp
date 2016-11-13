@@ -62,11 +62,11 @@ EOF
 
     if [ -s "${zend_ext}" ]; then
         Restart_PHP
-        echo "====== ionCube install completed ======"
-        echo "ionCube installed successfully, enjoy it!"
+        Echo_Green "====== ionCube install completed ======"
+        Echo_Green "ionCube installed successfully, enjoy it!"
     else
         sed -i '/\[ionCube Loader\]/,/;ioncubeend/d' /usr/local/php/etc/php.ini
-        echo "ionCube install failed!"
+        Echo_Red "ionCube install failed!"
     fi
  }
 
@@ -78,5 +78,5 @@ EOF
     echo "Delete ionCube files..."
     rm -rf /usr/local/ioncube/
     Restart_PHP
-    echo "Uninstall ionCube completed."
+    Echo_Green "Uninstall ionCube completed."
  }
