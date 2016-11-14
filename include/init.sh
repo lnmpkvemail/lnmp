@@ -367,8 +367,7 @@ Install_Jemalloc()
 {
     Echo_Blue "[+] Installing ${Jemalloc_Ver}"
     cd ${cur_dir}/src
-    tar jxf ${Jemalloc_Ver}.tar.bz2
-    cd ${Jemalloc_Ver}
+    Tarj_Cd ${Jemalloc_Ver}.tar.bz2 ${Jemalloc_Ver}
     ./configure
     make && make install
     ldconfig
