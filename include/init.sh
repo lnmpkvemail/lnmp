@@ -251,9 +251,9 @@ Check_Download()
     Download_Files ${Download_Mirror}/datebase/phpmyadmin/${PhpMyAdmin_Ver}.tar.gz ${PhpMyAdmin_Ver}.tar.gz
     Download_Files ${Download_Mirror}/prober/p.tar.gz p.tar.gz
     if [ "${Stack}" != "lnmp" ]; then
-        Download_Files ${Download_Mirror}/web/apache/${Apache_Ver}.tar.gz ${Apache_Ver}.tar.gz
-        Download_Files ${Download_Mirror}/web/apache/${APR_Ver}.tar.gz ${APR_Ver}.tar.gz
-        Download_Files ${Download_Mirror}/web/apache/${APR_Util_Ver}.tar.gz ${APR_Util_Ver}.tar.gz
+        Download_Files ${Download_Mirror}/web/apache/${Apache_Ver}.tar.bz2 ${Apache_Ver}.tar.bz2
+        Download_Files ${Download_Mirror}/web/apache/${APR_Ver}.tar.bz2 ${APR_Ver}.tar.bz2
+        Download_Files ${Download_Mirror}/web/apache/${APR_Util_Ver}.tar.bz2 ${APR_Util_Ver}.tar.bz2
     fi
 }
 
@@ -416,8 +416,8 @@ Install_Boost()
 {
     Echo_Blue "[+] Installing ${Boost_Ver}"
     cd ${cur_dir}/src
-    Download_Files ${Download_Mirror}/lib/boost/${Boost_Ver}.tar.gz ${Boost_Ver}.tar.gz
-    Tar_Cd ${Boost_Ver}.tar.gz ${Boost_Ver}
+    Download_Files ${Download_Mirror}/lib/boost/${Boost_Ver}.tar.bz2 ${Boost_Ver}.tar.bz2
+    Tarj_Cd ${Boost_Ver}.tar.bz2 ${Boost_Ver}
     ./bootstrap.sh
     ./b2
     ./b2 install
