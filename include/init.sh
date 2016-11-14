@@ -228,10 +228,10 @@ Check_Download()
     Download_Files ${Download_Mirror}/web/libiconv/${Libiconv_Ver}.tar.gz ${Libiconv_Ver}.tar.gz
     Download_Files ${Download_Mirror}/web/libmcrypt/${LibMcrypt_Ver}.tar.gz ${LibMcrypt_Ver}.tar.gz
     Download_Files ${Download_Mirror}/web/mcrypt/${Mcypt_Ver}.tar.gz ${Mcypt_Ver}.tar.gz
-    Download_Files ${Download_Mirror}/web/mhash/${Mash_Ver}.tar.gz ${Mash_Ver}.tar.gz
-    Download_Files ${Download_Mirror}/lib/freetype/${Freetype_Ver}.tar.gz ${Freetype_Ver}.tar.gz
-    Download_Files ${Download_Mirror}/lib/curl/${Curl_Ver}.tar.gz ${Curl_Ver}.tar.gz
-    Download_Files ${Download_Mirror}/web/pcre/${Pcre_Ver}.tar.gz ${Pcre_Ver}.tar.gz
+    Download_Files ${Download_Mirror}/web/mhash/${Mhash_Ver}.tar.bz2 ${Mhash_Ver}.tar.bz2
+    Download_Files ${Download_Mirror}/lib/freetype/${Freetype_Ver}.tar.bz2 ${Freetype_Ver}.tar.bz2
+    Download_Files ${Download_Mirror}/lib/curl/${Curl_Ver}.tar.bz2 ${Curl_Ver}.tar.bz2
+    Download_Files ${Download_Mirror}/web/pcre/${Pcre_Ver}.tar.bz2 ${Pcre_Ver}.tar.bz2
     if [ "${SelectMalloc}" = "2" ]; then
         Download_Files ${Download_Mirror}/lib/jemalloc/${Jemalloc_Ver}.tar.bz2 ${Jemalloc_Ver}.tar.bz2
     elif [ "${SelectMalloc}" = "3" ]; then
@@ -244,11 +244,11 @@ Check_Download()
     elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
         Download_Files ${Download_Mirror}/datebase/mariadb/${Mariadb_Ver}.tar.gz ${Mariadb_Ver}.tar.gz
     fi
-    Download_Files ${Download_Mirror}/web/php/${Php_Ver}.tar.gz ${Php_Ver}.tar.gz
+    Download_Files ${Download_Mirror}/web/php/${Php_Ver}.tar.bz2 ${Php_Ver}.tar.bz2
     if [ ${PHPSelect} = "1" ]; then
         Download_Files ${Download_Mirror}/web/phpfpm/${Php_Ver}-fpm-0.5.14.diff.gz ${Php_Ver}-fpm-0.5.14.diff.gz
     fi
-    Download_Files ${Download_Mirror}/datebase/phpmyadmin/${PhpMyAdmin_Ver}.tar.gz ${PhpMyAdmin_Ver}.tar.gz
+    Download_Files ${Download_Mirror}/datebase/phpmyadmin/${PhpMyAdmin_Ver}.tar.bz2 ${PhpMyAdmin_Ver}.tar.bz2
     Download_Files ${Download_Mirror}/prober/p.tar.gz p.tar.gz
     if [ "${Stack}" != "lnmp" ]; then
         Download_Files ${Download_Mirror}/web/apache/${Apache_Ver}.tar.bz2 ${Apache_Ver}.tar.bz2
@@ -309,8 +309,8 @@ Install_Mcrypt()
 
 Install_Mhash()
 {
-    Echo_Blue "[+] Installing ${Mash_Ver}"
-    Tar_Cd ${Mash_Ver}.tar.gz ${Mash_Ver}
+    Echo_Blue "[+] Installing ${Mhash_Ver}"
+    Tarj_Cd ${Mhash_Ver}.tar.bz2 ${Mhash_Ver}
     ./configure
     make && make install
     ln -sf /usr/local/lib/libmhash.a /usr/lib/libmhash.a
@@ -320,13 +320,13 @@ Install_Mhash()
     ln -sf /usr/local/lib/libmhash.so.2.0.1 /usr/lib/libmhash.so.2.0.1
     ldconfig
     cd ${cur_dir}/src/
-    rm -rf ${cur_dir}/src/${Mash_Ver}
+    rm -rf ${cur_dir}/src/${Mhash_Ver}
 }
 
 Install_Freetype()
 {
     Echo_Blue "[+] Installing ${Freetype_Ver}"
-    Tar_Cd ${Freetype_Ver}.tar.gz ${Freetype_Ver}
+    Tarj_Cd ${Freetype_Ver}.tar.bz2 ${Freetype_Ver}
     ./configure --prefix=/usr/local/freetype
     make && make install
 
@@ -343,7 +343,7 @@ EOF
 Install_Curl()
 {
     Echo_Blue "[+] Installing ${Curl_Ver}"
-    Tar_Cd ${Curl_Ver}.tar.gz ${Curl_Ver}
+    Tarj_Cd ${Curl_Ver}.tar.bz2 ${Curl_Ver}
     ./configure --prefix=/usr/local/curl --enable-ares --without-nss --with-ssl
     make && make install
     cd ${cur_dir}/src/
@@ -355,7 +355,7 @@ Install_Pcre()
     Cur_Pcre_Ver=`pcre-config --version`
     if echo "${Cur_Pcre_Ver}" | grep -vEqi '^8.';then
         Echo_Blue "[+] Installing ${Pcre_Ver}"
-        Tar_Cd ${Pcre_Ver}.tar.gz ${Pcre_Ver}
+        Tarj_Cd ${Pcre_Ver}.tar.bz2 ${Pcre_Ver}
         ./configure
         make && make install
         cd ${cur_dir}/src/

@@ -28,18 +28,18 @@ Start_Upgrade_PHP()
         exit 1
     fi
     Press_Start
-    if [ -s php-${php_version}.tar.gz ]; then
-        echo "php-${php_version}.tar.gz [found]"
+    if [ -s php-${php_version}.tar.bz2 ]; then
+        echo "php-${php_version}.tar.bz2 [found]"
     else
-        echo "Notice: php-$php_version.tar.gz not found!!!download now..."
+        echo "Notice: php-$php_version.tar.bz2 not found!!!download now..."
         cd ${cur_dir}/src
-        wget -c --progress=bar:force http://php.net/distributions/php-${php_version}.tar.gz
+        wget -c --progress=bar:force http://php.net/distributions/php-${php_version}.tar.bz2
         if [ $? -eq 0 ]; then
-            echo "Download php-${php_version}.tar.gz successfully!"
+            echo "Download php-${php_version}.tar.bz2 successfully!"
         else
-            wget -c --progress=bar:force http://museum.php.net/php5/php-${php_version}.tar.gz
+            wget -c --progress=bar:force http://museum.php.net/php5/php-${php_version}.tar.bz2
             if [ $? -eq 0 ]; then
-                echo "Download php-${php_version}.tar.gz successfully!"
+                echo "Download php-${php_version}.tar.bz2 successfully!"
             else
                 echo "You enter PHP Version was:"${php_version}
                 Echo_Red "Error! You entered a wrong version number, please check!"
@@ -150,7 +150,7 @@ Upgrade_PHP_52()
     Check_Curl
     Check_Autoconf
     cd ${cur_dir}/src && rm -rf php-${php_version}
-    tar zxf php-${php_version}.tar.gz
+    tar jxf php-${php_version}.tar.bz2
     if [ "${Stack}" = "lnmp" ]; then
         gzip -cd php-${php_version}-fpm-0.5.14.diff.gz | patch -d php-${php_version} -p1
     fi
@@ -227,7 +227,7 @@ EOF
 Upgrade_PHP_53()
 {
     Echo_Blue "Start install php-${php_version}"
-    Tar_Cd php-${php_version}.tar.gz php-${php_version}
+    Tarj_Cd php-${php_version}.tar.bz2 php-${php_version}
     patch -p1 < ${cur_dir}/src/patch/php-5.3-multipart-form-data.patch
     if [ "${Stack}" = "lnmp" ]; then
         ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-magic-quotes --enable-safe-mode --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl=/usr/local/curl --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo ${PHP_Modules_Options}
@@ -329,7 +329,7 @@ fi
 Upgrade_PHP_54()
 {
     Echo_Blue "Start install php-${php_version}"
-    Tar_Cd php-${php_version}.tar.gz php-${php_version}
+    Tarj_Cd php-${php_version}.tar.bz2 php-${php_version}
     if [ "${Stack}" = "lnmp" ]; then
         ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization ${with_curl} --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo ${PHP_Modules_Options}
     else
@@ -432,7 +432,7 @@ fi
 Upgrade_PHP_556()
 {
     Echo_Blue "Start install php-${php_version}"
-    Tar_Cd php-${php_version}.tar.gz php-${php_version}
+    Tarj_Cd php-${php_version}.tar.bz2 php-${php_version}
     if [ "${Stack}" = "lnmp" ]; then
         ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization ${with_curl} --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-opcache ${PHP_Modules_Options}
     else
@@ -561,7 +561,7 @@ Upgrade_PHP_7()
         apt-get install -y libicu-dev
     fi
     Install_Icu4c
-    Tar_Cd php-${php_version}.tar.gz php-${php_version}
+    Tarj_Cd php-${php_version}.tar.bz2 php-${php_version}
     if [ "${Stack}" = "lnmp" ]; then
         ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --enable-fpm --with-fpm-user=www --with-fpm-group=www --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization ${with_curl} --enable-mbregex --enable-mbstring --enable-intl --enable-pcntl --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-opcache ${PHP_Modules_Options}
     else

@@ -38,7 +38,7 @@ Install_PHP_52()
     Echo_Blue "[+] Installing ${Php_Ver}..."
     Export_PHP_Autoconf
     cd ${cur_dir}/src && rm -rf ${Php_Ver}
-    tar zxf ${Php_Ver}.tar.gz
+    tar jxf ${Php_Ver}.tar.bz2
     if [ "${Stack}" = "lnmp" ]; then
         gzip -cd ${Php_Ver}-fpm-0.5.14.diff.gz | patch -d ${Php_Ver} -p1
     fi
@@ -112,7 +112,7 @@ EOF
 Install_PHP_53()
 {
     Echo_Blue "[+] Installing ${Php_Ver}..."
-    Tar_Cd ${Php_Ver}.tar.gz ${Php_Ver}
+    Tarj_Cd ${Php_Ver}.tar.bz2 ${Php_Ver}
     patch -p1 < ${cur_dir}/src/patch/php-5.3-multipart-form-data.patch
     if [ "${Stack}" = "lnmp" ]; then
         ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-magic-quotes --enable-safe-mode --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl=/usr/local/curl --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo ${PHP_Modules_Options}
@@ -215,7 +215,7 @@ Install_PHP_54()
 {
     Echo_Blue "[+] Installing ${Php_Ver}..."
     PHP_with_curl
-    Tar_Cd ${Php_Ver}.tar.gz ${Php_Ver}
+    Tarj_Cd ${Php_Ver}.tar.bz2 ${Php_Ver}
     if [ "${Stack}" = "lnmp" ]; then
         ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization ${with_curl} --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-intl --with-xsl ${PHP_Modules_Options}
     else
@@ -315,7 +315,7 @@ Install_PHP_55()
 {
     Echo_Blue "[+] Installing ${Php_Ver}..."
     PHP_with_curl
-    Tar_Cd ${Php_Ver}.tar.gz ${Php_Ver}
+    Tarj_Cd ${Php_Ver}.tar.bz2 ${Php_Ver}
     if [ "${Stack}" = "lnmp" ]; then
         ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization ${with_curl} --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-opcache --enable-intl --with-xsl ${PHP_Modules_Options}
     else
@@ -415,7 +415,7 @@ Install_PHP_56()
 {
     Echo_Blue "[+] Installing ${Php_Ver}"
     PHP_with_curl
-    Tar_Cd ${Php_Ver}.tar.gz ${Php_Ver}
+    Tarj_Cd ${Php_Ver}.tar.bz2 ${Php_Ver}
     if [ "${Stack}" = "lnmp" ]; then
         ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization ${with_curl} --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-opcache --enable-intl --with-xsl ${PHP_Modules_Options}
     else
@@ -515,7 +515,7 @@ Install_PHP_7()
 {
     Echo_Blue "[+] Installing ${Php_Ver}"
     PHP_with_curl
-    Tar_Cd ${Php_Ver}.tar.gz ${Php_Ver}
+    Tarj_Cd ${Php_Ver}.tar.bz2 ${Php_Ver}
     if [ "${Stack}" = "lnmp" ]; then
         ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --enable-fpm --with-fpm-user=www --with-fpm-group=www --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization ${with_curl} --enable-mbregex --enable-mbstring --enable-intl --enable-pcntl --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-opcache --with-xsl ${PHP_Modules_Options}
     else
@@ -649,7 +649,7 @@ eof
     fi
     echo "============================Install PHPMyAdmin================================="
     [[ -d ${Default_Website_Dir}/phpmyadmin ]] && rm -rf ${Default_Website_Dir}/phpmyadmin
-    tar zxf ${PhpMyAdmin_Ver}.tar.gz
+    tar zxf ${PhpMyAdmin_Ver}.tar.bz2
     mv ${PhpMyAdmin_Ver} ${Default_Website_Dir}/phpmyadmin
     \cp ${cur_dir}/conf/config.inc.php ${Default_Website_Dir}/phpmyadmin/config.inc.php
     sed -i 's/LNMPORG/LNMP.org'$RANDOM'VPSer.net/g' ${Default_Website_Dir}/phpmyadmin/config.inc.php

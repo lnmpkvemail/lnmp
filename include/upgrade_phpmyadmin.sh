@@ -17,13 +17,13 @@ Upgrade_phpMyAdmin()
 
     echo "============================check files=================================="
     cd ${cur_dir}/src
-    if [ -s phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.gz ]; then
-        echo "phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.gz [found]"
+    if [ -s phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.bz2 ]; then
+        echo "phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.bz2 [found]"
     else
-        echo "Notice: phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.gz not found!!!download now......"
-        wget -c --progress=bar:force https://files.phpmyadmin.net/phpMyAdmin/${phpMyAdmin_Version}/phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.gz
+        echo "Notice: phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.bz2 not found!!!download now......"
+        wget -c --progress=bar:force https://files.phpmyadmin.net/phpMyAdmin/${phpMyAdmin_Version}/phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.bz2
         if [ $? -eq 0 ]; then
-            echo "Download phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.gz successfully!"
+            echo "Download phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.bz2 successfully!"
         else
             echo "You enter phpMyAdmin Version was:"${phpMyAdmin_Version}
             Echo_Red "Error! You entered a wrong version number, please check!"
@@ -34,8 +34,8 @@ Upgrade_phpMyAdmin()
     echo "============================check files=================================="
     echo "Backup old phpMyAdmin..."
     mv ${Default_Website_Dir}/phpmyadmin ${Default_Website_Dir}/phpmyadmin${Upgrade_Date}
-    echo "Uncompress phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.gz ..."
-    tar zxf phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.gz
+    echo "Uncompress phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.bz2 ..."
+    tar jxf phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.bz2
     mv phpMyAdmin-${phpMyAdmin_Version}-all-languages ${Default_Website_Dir}/phpmyadmin
     \cp ${cur_dir}/conf/config.inc.php ${Default_Website_Dir}/phpmyadmin/config.inc.php
     sed -i 's/LNMPORG/LNMP.org'$RANDOM'VPSer.net/g' ${Default_Website_Dir}/phpmyadmin/config.inc.php
