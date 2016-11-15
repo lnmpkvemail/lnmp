@@ -141,9 +141,7 @@ Uninstall_LAMP()
 ${MySQL_Dir}
 /usr/local/php
 /etc/init.d/nginx
-if [ ${DB_Name} != "None" ]; then
 /etc/init.d/${DB_Name}
-fi
 /etc/init.d/php-fpm
 /usr/local/zend
 /etc/my.cnf
@@ -163,9 +161,7 @@ ${MySQL_Dir}
 /usr/local/php
 /usr/local/apache
 /etc/init.d/nginx
-if [ ${DB_Name} != "None" ]; then
 /etc/init.d/${DB_Name}
-fi
 /etc/init.d/httpd
 /usr/local/zend
 /etc/my.cnf
@@ -183,9 +179,7 @@ EOF
 /usr/local/apache
 ${MySQL_Dir}
 /etc/init.d/httpd
-if [ ${DB_Name} != "None" ]; then
 /etc/init.d/${DB_Name}
-fi
 /usr/local/php
 /usr/local/zend
 /etc/my.cnf
