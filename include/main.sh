@@ -353,7 +353,7 @@ Download_Files()
         echo "${FileName} [found]"
     else
         echo "Notice: ${FileName} not found!!!download now..."
-        wget -c --progress=bar:force ${URL}
+        wget -c --progress=bar:force --prefer-family=IPv4 ${URL}
     fi
 }
 
