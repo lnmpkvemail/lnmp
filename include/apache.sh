@@ -12,7 +12,7 @@ Install_Apache_22()
         chmod 777 /home/wwwlogs
         chown -R www:www ${Default_Website_Dir}
     fi
-    Tar_Cd ${Apache_Ver}.tar.bz2 ${Apache_Ver}
+    Tarj_Cd ${Apache_Ver}.tar.bz2 ${Apache_Ver}
     ./configure --prefix=/usr/local/apache --enable-mods-shared=most --enable-headers --enable-mime-magic --enable-proxy --enable-so --enable-rewrite --with-ssl --enable-ssl --enable-deflate --enable-suexec --with-included-apr --with-mpm=prefork --with-expat=builtin
     make && make install
 
@@ -65,7 +65,7 @@ Install_Apache_24()
         chmod 777 /home/wwwlogs
         chown -R www:www ${Default_Website_Dir}
     fi
-    Tar_Cd ${Apache_Ver}.tar.bz2 ${Apache_Ver}
+    Tarj_Cd ${Apache_Ver}.tar.bz2 ${Apache_Ver}
     cd srclib
     if [ -s "${cur_dir}/src/${APR_Ver}.tar.bz2" ]; then
         echo "${APR_Ver}.tar.bz2 [found]"
@@ -79,8 +79,8 @@ Install_Apache_24()
     else
         Download_Files ${Download_Mirror}/web/apache/${APR_Util_Ver}.tar.bz2 ${APR_Util_Ver}.tar.bz2
     fi
-    tar zxf ${APR_Ver}.tar.bz2
-    tar zxf ${APR_Util_Ver}.tar.bz2
+    tar jxf ${APR_Ver}.tar.bz2
+    tar jxf ${APR_Util_Ver}.tar.bz2
     mv ${APR_Ver} apr
     mv ${APR_Util_Ver} apr-util
     cd ..

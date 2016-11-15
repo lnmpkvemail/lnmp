@@ -649,7 +649,7 @@ eof
     fi
     echo "============================Install PHPMyAdmin================================="
     [[ -d ${Default_Website_Dir}/phpmyadmin ]] && rm -rf ${Default_Website_Dir}/phpmyadmin
-    tar zxf ${PhpMyAdmin_Ver}.tar.bz2
+    tar jxf ${PhpMyAdmin_Ver}.tar.bz2
     mv ${PhpMyAdmin_Ver} ${Default_Website_Dir}/phpmyadmin
     \cp ${cur_dir}/conf/config.inc.php ${Default_Website_Dir}/phpmyadmin/config.inc.php
     sed -i 's/LNMPORG/LNMP.org'$RANDOM'VPSer.net/g' ${Default_Website_Dir}/phpmyadmin/config.inc.php
