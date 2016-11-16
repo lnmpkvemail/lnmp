@@ -26,7 +26,7 @@ Pear_Pecl_Set()
 Install_Composer()
 {
     curl -sS --connect-timeout 10 -m 60 https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-    if [ $? -ne 0 ]; then
+    if [ $? -eq 0 ]; then
         echo "Composer install successfully."
     else
         echo "Composer install failed!"
