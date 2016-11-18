@@ -34,6 +34,8 @@ CentOS_RemoveAMP()
     rpm -qa|grep php
     rpm -e php-mysql php-cli php-gd php-common php
 
+    Remove_Error_Libcurl
+
     yum -y remove httpd*
     yum -y remove mysql-server mysql mysql-libs
     yum -y remove php*
@@ -348,6 +350,7 @@ Install_Curl()
     make && make install
     cd ${cur_dir}/src/
     rm -rf ${cur_dir}/src/${Curl_Ver}
+    Remove_Error_Libcurl
 }
 
 Install_Pcre()
@@ -502,4 +505,11 @@ Deb_Lib_Opt()
 eof
 
     echo "fs.file-max=65535" >> /etc/sysctl.conf
+}
+
+Remove_Error_Libcurl()
+{
+    if [ -s /usr/local/lib/libcurl.so ]; then
+        rm -f /usr/local/lib/libcurl*
+    fi
 }
