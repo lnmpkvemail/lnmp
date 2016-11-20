@@ -33,15 +33,17 @@ Install_ImageMagic()
     make && make install
     cd ../
 
-    sed -i '/the dl()/i\
-extension = "imagick.so"' /usr/local/php/etc/php.ini
+    rm -f /usr/local/php/conf.d/008-imagick.ini
+    cat >/usr/local/php/conf.d/008-imagick.ini<<EOF
+extension = "imagick.so"
+EOF
 
     if [ -s "${zend_ext}" ] && [ -s /usr/local/imagemagick/bin/convert ]; then
         Restart_PHP
         Echo_Green "====== ImageMagick install completed ======"
         Echo_Green "ImageMagick installed successfully, enjoy it!"
     else
-        sed -i '/imagick.so/d' /usr/local/php/etc/php.ini
+        rm -f /usr/local/php/conf.d/008-imagick.ini
         Echo_Red "imagick install failed!"
     fi
 }
@@ -50,7 +52,7 @@ Uninstall_ImageMagick()
 {
     echo "You will uninstall ImageMagick..."
     Press_Start
-    sed -i '/imagick.so/d' /usr/local/php/etc/php.ini
+    rm -f /usr/local/php/conf.d/008-imagick.ini
     echo "Delete ImageMagick directory..."
     rm -rf /usr/local/imagemagick
     Restart_PHP

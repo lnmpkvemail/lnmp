@@ -38,7 +38,8 @@ Install_XCache()
     make install
     cd ../
 
-    cat >xcache.ini<<EOF
+    rm -f /usr/local/php/conf.d/006-xcache.ini
+    cat >/usr/local/php/conf.d/006-xcache.ini<<EOF
 [xcache-common]
 extension = ${zend_ext}
 
@@ -81,8 +82,6 @@ xcache.coverager =          Off
 xcache.coveragedump_directory = ""
 
 EOF
-    sed -i '/;xcache/r xcache.ini' /usr/local/php/etc/php.ini
-    rm -f xcache.ini
 
     touch /tmp/xcache && chown www:www /tmp/xcache
 
@@ -94,7 +93,7 @@ EOF
         Echo_Green "======== xcache install completed ======"
         Echo_Green "XCache installed successfully, enjoy it!"
     else
-        sed -i '/\[xcache-common\]/,/xcache.coveragedump_directory/d' /usr/local/php/etc/php.ini
+        rm -f /usr/local/php/conf.d/006-xcache.ini
         Echo_Red "XCache install failed!"
     fi
 }
@@ -103,7 +102,7 @@ Uninstall_XCache()
 {
     echo "You will uninstall XCache..."
     Press_Start
-    sed -i '/\[xcache-common\]/,/xcache.coveragedump_directory/d' /usr/local/php/etc/php.ini
+    rm -f /usr/local/php/conf.d/006-xcache.ini
     echo "Delete xcache files..."
     rm -rf ${Default_Website_Dir}/xcache
     Restart_PHP

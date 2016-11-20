@@ -99,8 +99,8 @@ Install_eAccelerator()
         rm -f "${zend_ext}"
     fi
     if echo "${Cur_PHP_Version}" | grep -vEqi '^5.[2345].';then
-        echo "Error: Current PHP Version can't install eAccelerator."
-        echo "Maybe php was didn't install or php configuration file has errors.Please check."
+        Echo_Red "Error: Current PHP Version can't install eAccelerator."
+        Echo_Red "Maybe php was didn't install or php configuration file has errors.Please check."
         sleep 3
         exit 1
     fi
@@ -116,8 +116,9 @@ Install_eAccelerator()
 
     mkdir -p /usr/local/eaccelerator_cache
     rm -rf /usr/local/eaccelerator_cache/*
+    rm -f /usr/local/php/conf.d/003-eaccelerator.ini
 
-    cat >ea.ini<<EOF
+    cat >/usr/local/php/conf.d/003-eaccelerator.ini<<EOF
 [eaccelerator]
 zend_extension="${zend_ext}"
 eaccelerator.shm_size="1"
@@ -138,15 +139,12 @@ eaccelerator.sessions = "disk_only"
 eaccelerator.content = "disk_only"
 EOF
 
-    sed -i '/^;eaccelerator$/r ea.ini' /usr/local/php/etc/php.ini
-    rm -f ea.ini
-
     if [ -s "${zend_ext}" ]; then
         Restart_PHP
         Echo_Green "====== eAccelerator install completed ======"
         Echo_Green "eAccelerator installed successfully, enjoy it!"
     else
-        sed -i '/\[eaccelerator\]/,/eaccelerator.content/d' /usr/local/php/etc/php.ini
+        rm -f /usr/local/php/conf.d/003-eaccelerator.ini
         Echo_Red "eAccelerator install failed!"
     fi
 }
@@ -155,7 +153,7 @@ Uninstall_eAccelerator()
 {
     echo "You will uninstall eAccelerator..."
     Press_Start
-    sed -i '/\[eaccelerator\]/,/eaccelerator.content/d' /usr/local/php/etc/php.ini
+    rm -f /usr/local/php/conf.d/003-eaccelerator.ini
     echo "Delete eaccelerator_cache directory..."
     rm -rf /usr/local/eaccelerator_cache
     Restart_PHP

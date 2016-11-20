@@ -199,18 +199,10 @@ Upgrade_PHP_52()
         \cp ZendOptimizer-3.3.9-linux-glibc23-i386/data/5_2_x_comp/ZendOptimizer.so /usr/local/zend/
     fi
 
-    cat >>/usr/local/php/etc/php.ini<<EOF
-
-;eaccelerator
-
-;ionCube
-
+    cat >/usr/local/php/conf.d/002-zendoptimizer.ini<<EOF
 [Zend Optimizer]
 zend_optimizer.optimization_level=1
 zend_extension="/usr/local/zend/ZendOptimizer.so"
-
-;xcache
-
 EOF
 
     if [ "${Stack}" = "lnmp" ]; then
@@ -272,21 +264,13 @@ Upgrade_PHP_53()
     fi
 
     echo "Write ZendGuardLoader to php.ini......"
-    cat >>/usr/local/php/etc/php.ini<<EOF
-
-;eaccelerator
-
-;ionCube
-
+    cat >/usr/local/php/conf.d/002-zendguardloader.ini<<EOF
 [Zend Optimizer]
 zend_extension=/usr/local/zend/ZendGuardLoader.so
 zend_loader.enable=1
 zend_loader.disable_licensing=0
 zend_loader.obfuscation_level_support=3
 zend_loader.license_path=
-
-;xcache
-
 EOF
 
 if [ "${Stack}" = "lnmp" ]; then
@@ -373,23 +357,13 @@ Upgrade_PHP_54()
     fi
 
     echo "Write ZendGuardLoader to php.ini......"
-    cat >>/usr/local/php/etc/php.ini<<EOF
-
-;eaccelerator
-
-;ionCube
-
-;opcache
-
+    cat >/usr/local/php/conf.d/002-zendguardloader.ini<<EOF
 [Zend ZendGuard Loader]
 zend_extension=/usr/local/zend/ZendGuardLoader.so
 zend_loader.enable=1
 zend_loader.disable_licensing=0
 zend_loader.obfuscation_level_support=3
 zend_loader.license_path=
-
-;xcache
-
 EOF
 
 if [ "${Stack}" = "lnmp" ]; then
@@ -492,23 +466,13 @@ Upgrade_PHP_556()
     fi
 
     echo "Write ZendGuardLoader to php.ini......"
-    cat >>/usr/local/php/etc/php.ini<<EOF
-
-;eaccelerator
-
-;ionCube
-
-;opcache
-
+    cat >/usr/local/php/conf.d/002-zendguardloader.ini<<EOF
 [Zend ZendGuard Loader]
 zend_extension=/usr/local/zend/ZendGuardLoader.so
 zend_loader.enable=1
 zend_loader.disable_licensing=0
 zend_loader.obfuscation_level_support=3
 zend_loader.license_path=
-
-;xcache
-
 EOF
 
     echo "Download Opcache Control Panel..."
@@ -594,14 +558,7 @@ Upgrade_PHP_7()
     echo "unavailable now."
 
     echo "Write ZendGuardLoader to php.ini..."
-    cat >>/usr/local/php/etc/php.ini<<EOF
-
-;eaccelerator
-
-;ionCube
-
-;opcache
-
+    cat >/usr/local/php/conf.d/002-zendguardloader.ini<<EOF
 [Zend ZendGuard Loader]
 ;php7 do not support zendguardloader @Sep.2015,after support you can uncomment the following line.
 ;zend_extension=/usr/local/zend/ZendGuardLoader.so
@@ -609,9 +566,6 @@ Upgrade_PHP_7()
 ;zend_loader.disable_licensing=0
 ;zend_loader.obfuscation_level_support=3
 ;zend_loader.license_path=
-
-;xcache
-
 EOF
 
 if [ "${Stack}" = "lnmp" ]; then

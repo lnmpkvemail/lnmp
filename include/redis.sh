@@ -56,8 +56,10 @@ Install_Redis()
     make && make install
     cd ../
 
-sed -i '/the dl()/i\
-extension = "redis.so"' /usr/local/php/etc/php.ini
+    rm -f /usr/local/php/conf.d/007-redis.ini
+    cat >/usr/local/php/conf.d/007-redis.ini<<EOF
+extension = "redis.so"
+EOF
 
     \cp ${cur_dir}/init.d/init.d.redis /etc/init.d/redis
     chmod +x /etc/init.d/redis
@@ -70,7 +72,7 @@ extension = "redis.so"' /usr/local/php/etc/php.ini
         Echo_Green "====== Redis install completed ======"
         Echo_Green "Redis installed successfully, enjoy it!"
     else
-        sed -i '/redis.so/d' /usr/local/php/etc/php.ini
+        rm -f /usr/local/php/conf.d/007-redis.ini
         Echo_Red "Redis install failed!"
     fi
 }
@@ -79,7 +81,7 @@ Uninstall_Redis()
 {
     echo "You will uninstall Redis..."
     Press_Start
-    sed -i '/redis.so/d' /usr/local/php/etc/php.ini
+    rm -f /usr/local/php/conf.d/007-redis.ini
     Restart_PHP
     Remove_StartUp redis
     echo "Delete Redis files..."

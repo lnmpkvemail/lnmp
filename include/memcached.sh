@@ -78,26 +78,16 @@ Install_Memcached()
     echo "====== Installing memcached ======"
     Press_Install
 
-    sed -i '/memcache.so/d' /usr/local/php/etc/php.ini
-    sed -i '/memcached.so/d' /usr/local/php/etc/php.ini
+    rm -f /usr/local/php/conf.d/005-memcached.ini
     Get_PHP_Ext_Dir
     zend_ext=${zend_ext_dir}${PHP_ZTS}
     if [ -s "${zend_ext}" ]; then
         rm -f "${zend_ext}"
     fi
 
-    if echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.';then
-        sed -i "/extension_dir =/a\
-extension = \"${PHP_ZTS}\"" /usr/local/php/etc/php.ini
-    elif echo "${Cur_PHP_Version}" | grep -Eqi '^5.[3456].' || echo "${Cur_PHP_Version}" | grep -Eqi '^7.';then
-        sed -i "/the dl()/i\
-extension = \"${PHP_ZTS}\"" /usr/local/php/etc/php.ini
-    else
-        echo "Error: can't get php version!"
-        echo "Maybe php was didn't install or php configuration file has errors.Please check."
-        sleep 3
-        exit 1
-    fi
+    cat >/usr/local/php/conf.d/005-memcached.ini<<EOF
+extension = ${PHP_ZTS}
+EOF
 
     echo "Install memcached..."
     cd ${cur_dir}/src
@@ -148,7 +138,7 @@ extension = \"${PHP_ZTS}\"" /usr/local/php/etc/php.ini
         Echo_Green "====== Memcached install completed ======"
         Echo_Green "Memcached installed successfully, enjoy it!"
     else
-        sed -i "/${PHP_ZTS}/d" /usr/local/php/etc/php.ini
+        rm -f /usr/local/php/conf.d/005-memcached.ini
         Echo_Red "Memcached install failed!"
     fi
 }
@@ -157,8 +147,7 @@ Uninstall_Memcached()
 {
     echo "You will uninstall Memcached..."
     Press_Start
-    sed -i '/memcache.so/d' /usr/local/php/etc/php.ini
-    sed -i '/memcached.so/d' /usr/local/php/etc/php.ini
+    rm -f /usr/local/php/conf.d/005-memcached.ini
     Restart_PHP
     Remove_StartUp memcached
     echo "Delete Memcached files..."

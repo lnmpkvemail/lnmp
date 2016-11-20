@@ -51,21 +51,19 @@ Install_ionCube()
     mv ioncube /usr/local/
 
     echo "Writing ionCube Loader to configure files..."
-    cat >ionCube.ini<<EOF
+    rm -f /usr/local/php/conf.d/001-ioncube.ini
+    cat >/usr/local/php/conf.d/001-ioncube.ini<<EOF
 [ionCube Loader]
 zend_extension="${zend_ext}"
 ;ioncubeend
 EOF
-
-    sed -i '/^;ionCube$/r ionCube.ini' /usr/local/php/etc/php.ini
-    rm -f ionCube.ini
 
     if [ -s "${zend_ext}" ]; then
         Restart_PHP
         Echo_Green "====== ionCube install completed ======"
         Echo_Green "ionCube installed successfully, enjoy it!"
     else
-        sed -i '/\[ionCube Loader\]/,/;ioncubeend/d' /usr/local/php/etc/php.ini
+        /usr/local/php/conf.d/001-ioncube.ini
         Echo_Red "ionCube install failed!"
     fi
  }
@@ -74,7 +72,7 @@ EOF
  {
     echo "You will uninstall ionCube..."
     Press_Start
-    sed -i '/\[ionCube Loader\]/,/;ioncubeend/d' /usr/local/php/etc/php.ini
+    /usr/local/php/conf.d/001-ioncube.ini
     echo "Delete ionCube files..."
     rm -rf /usr/local/ioncube/
     Restart_PHP
