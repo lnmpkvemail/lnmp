@@ -272,6 +272,10 @@ server
 
         include ${rewrite}.conf;
         #error_page   404   /404.html;
+
+        # Deny access to PHP files in specific directory
+        #location ~ /(wp-content|uploads|wp-includes|images)/.*\.php$ { deny all; }
+
         include enable-php.conf;
 
         location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
