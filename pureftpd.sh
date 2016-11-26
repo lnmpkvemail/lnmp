@@ -80,12 +80,12 @@ Install_Pureftpd()
     if [[ -s /usr/local/pureftpd/sbin/pure-config.pl && -s /usr/local/pureftpd/etc/pure-ftpd.conf && -s /etc/init.d/pureftpd ]]; then
         Echo_Blue "Starting pureftpd..."
         /etc/init.d/pureftpd start
-        echo "+----------------------------------------------------------------------+"
-        echo "| Install Pure-FTPd completed,enjoy it!"
-        echo "| =>use command: lnmp ftp {add|list|del} to manage FTP users."
-        echo "+----------------------------------------------------------------------+"
-        echo "| For more information please visit http://www.lnmp.org"
-        echo "+----------------------------------------------------------------------+"
+        Echo_Green "+----------------------------------------------------------------------+"
+        Echo_Green "| Install Pure-FTPd completed,enjoy it!"
+        Echo_Green "| =>use command: lnmp ftp {add|list|del} to manage FTP users."
+        Echo_Green "+----------------------------------------------------------------------+"
+        Echo_Green "| For more information please visit https://lnmp.org"
+        Echo_Green "+----------------------------------------------------------------------+"
     else
         Echo_Red "Pureftpd install failed!"
     fi
