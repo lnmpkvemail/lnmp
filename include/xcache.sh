@@ -5,18 +5,18 @@ Install_XCache()
     echo "You will install ${XCache_Ver}..."
 
     xadmin_pass=""
-    read -p "Please enter admin password of XCache Administration Page: " xadmin_pass
-    if [ "${xadmin_pass}" = "" ]; then
-        echo "password can't be NULL!"
-        exit 1
-    else
-    echo "================================================="
-    echo "Your admin password of XCache was:${xadmin_pass}"
-    echo "================================================="
-    fi
+    while :;do
+        read -p "Please enter admin password of XCache Administration Page: " xadmin_pass
+        if [ "${xadmin_pass}" != "" ]; then
+            echo "================================================="
+            echo "Your admin password of XCache was: ${xadmin_pass}"
+            echo "================================================="
+            break
+        else
+            Echo_Red "Password cannot be empty!"
+        fi
+    done
     xmd5pass=`echo -n "${xadmin_pass}" |md5sum |awk '{print $1}'`
-
-
     echo "====== Installing XCache ======"
     Press_Install
 

@@ -24,7 +24,7 @@ action2=$2
 . include/imageMagick.sh
 . include/ionCube.sh
 
-Display_Upgrade_Menu()
+Display_Addons_Menu()
 {
     echo "##### cache / optimizer / accelerator #####"
     echo "1: eAccelerator"
@@ -63,7 +63,7 @@ echo "+-----------------------------------------------------------------------+"
 
 if [[ "${action}" == "" || "${action2}" == "" ]]; then
     action='install'
-    Display_Upgrade_Menu
+    Display_Addons_Menu
 fi
 Get_OS_Bit
 Get_Dist_Name
