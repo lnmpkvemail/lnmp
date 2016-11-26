@@ -20,6 +20,10 @@ Install_Only_Nginx()
     fi
     cd ${cur_dir}/src
     Install_Pcre
+    if [ `grep -L '/usr/local/lib'    '/etc/ld.so.conf'` ]; then
+        echo "/usr/local/lib" >> /etc/ld.so.conf
+    fi
+    ldconfig
     Download_Files ${Download_Mirror}/web/nginx/${Nginx_Ver}.tar.gz ${Nginx_Ver}.tar.gz
     Install_Nginx
     StartUp nginx
