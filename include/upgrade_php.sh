@@ -72,15 +72,6 @@ Start_Upgrade_PHP()
 
 }
 
-Check_Curl()
-{
-    if [ -s /usr/local/curl/bin/curl ]; then
-        Echo_Green "Curl ...ok"
-    else
-        Install_Curl
-    fi
-}
-
 Check_Autoconf()
 {
     if [[ -s /usr/local/autoconf-2.13/bin/autoconf && -s /usr/local/autoconf-2.13/bin/autoheader ]]; then

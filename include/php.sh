@@ -33,6 +33,15 @@ Install_Composer()
     fi
 }
 
+Check_Curl()
+{
+    if [ -s /usr/local/curl/bin/curl ]; then
+        Echo_Green "Curl ...ok"
+    else
+        Install_Curl
+    fi
+}
+
 Install_PHP_52()
 {
     Echo_Blue "[+] Installing ${Php_Ver}..."
