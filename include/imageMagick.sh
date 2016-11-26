@@ -5,7 +5,7 @@ Install_ImageMagic()
     echo "====== Installing ImageMagic ======"
     Press_Install
 
-    sed -i '/imagick.so/d' /usr/local/php/etc/php.ini
+    rm -f /usr/local/php/conf.d/008-imagick.ini
     Get_PHP_Ext_Dir
     zend_ext="${zend_ext_dir}imagick.so"
     if [ -s "${zend_ext}" ]; then
@@ -33,7 +33,6 @@ Install_ImageMagic()
     make && make install
     cd ../
 
-    rm -f /usr/local/php/conf.d/008-imagick.ini
     cat >/usr/local/php/conf.d/008-imagick.ini<<EOF
 extension = "imagick.so"
 EOF

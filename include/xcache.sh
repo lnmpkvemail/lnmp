@@ -20,7 +20,7 @@ Install_XCache()
     echo "====== Installing XCache ======"
     Press_Install
 
-    sed -i '/\[xcache-common\]/,/xcache.coveragedump_directory/d' /usr/local/php/etc/php.ini
+    rm -f /usr/local/php/conf.d/006-xcache.ini
     Get_PHP_Ext_Dir
     zend_ext="${zend_ext_dir}xcache.so"
     if [ -s "${zend_ext}" ]; then
@@ -38,7 +38,6 @@ Install_XCache()
     make install
     cd ../
 
-    rm -f /usr/local/php/conf.d/006-xcache.ini
     cat >/usr/local/php/conf.d/006-xcache.ini<<EOF
 [xcache-common]
 extension = ${zend_ext}

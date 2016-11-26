@@ -6,7 +6,7 @@ Install_Redis()
     echo "Install ${Redis_Stable_Ver} Stable Version..."
     Press_Install
 
-    sed -i '/redis.so/d' /usr/local/php/etc/php.ini
+    rm -f /usr/local/php/conf.d/007-redis.ini
     Get_PHP_Ext_Dir
     zend_ext="${zend_ext_dir}redis.so"
     if [ -s "${zend_ext}" ]; then
@@ -56,7 +56,6 @@ Install_Redis()
     make && make install
     cd ../
 
-    rm -f /usr/local/php/conf.d/007-redis.ini
     cat >/usr/local/php/conf.d/007-redis.ini<<EOF
 extension = "redis.so"
 EOF

@@ -5,7 +5,7 @@ Install_ionCube()
     echo "====== Installing ionCube ======"
     Press_Install
 
-    sed -i '/\[ionCube Loader\]/,/;ioncubeend/d' /usr/local/php/etc/php.ini
+    rm -f /usr/local/php/conf.d/001-ioncube.ini
     Get_PHP_Ext_Dir
     if echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.'; then
        zend_ext="/usr/local/ioncube/ioncube_loader_lin_5.2.so"
@@ -51,7 +51,6 @@ Install_ionCube()
     mv ioncube /usr/local/
 
     echo "Writing ionCube Loader to configure files..."
-    rm -f /usr/local/php/conf.d/001-ioncube.ini
     cat >/usr/local/php/conf.d/001-ioncube.ini<<EOF
 [ionCube Loader]
 zend_extension="${zend_ext}"
