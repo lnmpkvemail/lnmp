@@ -29,6 +29,7 @@ Install_Only_Nginx()
     StartUp nginx
     /etc/init.d/nginx start
     Add_Iptables_Rules
+    \cp ${cur_dir}/conf/index.html ${Default_Website_Dir}/index.html
     Check_Nginx_Files
 }
 
