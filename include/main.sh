@@ -570,11 +570,7 @@ Verify_DB_Password()
     Check_DB
     status=1
     while [ $status -eq 1 ]; do
-        stty -echo
-        echo "Enter current root password of Database (Password will not shown): "
-        read DB_Root_Password
-        echo
-        stty echo
+        read -s -p "Enter current root password of Database (Password will not shown): " DB_Root_Password
         Make_TempMycnf "${DB_Root_Password}"
         Do_Query ""
         status=$?
