@@ -19,10 +19,9 @@ Install_ionCube()
        zend_ext="/usr/local/ioncube/ioncube_loader_lin_5.6.so"
     elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.0.'; then
        zend_ext="/usr/local/ioncube/ioncube_loader_lin_7.0.so"
-    fi
-
-    if [ -s "${zend_ext}" ]; then
-        rm -f "${zend_ext}"
+    else
+        Echo_Red "Do not support current PHP version or PHP error!"
+        exit 1
     fi
 
     rm -rf /usr/local/ioncube
@@ -62,7 +61,7 @@ EOF
         Echo_Green "====== ionCube install completed ======"
         Echo_Green "ionCube installed successfully, enjoy it!"
     else
-        /usr/local/php/conf.d/001-ioncube.ini
+        rm -f /usr/local/php/conf.d/001-ioncube.ini
         Echo_Red "ionCube install failed!"
     fi
  }
@@ -71,7 +70,7 @@ EOF
  {
     echo "You will uninstall ionCube..."
     Press_Start
-    /usr/local/php/conf.d/001-ioncube.ini
+    rm -f /usr/local/php/conf.d/001-ioncube.ini
     echo "Delete ionCube files..."
     rm -rf /usr/local/ioncube/
     Restart_PHP
