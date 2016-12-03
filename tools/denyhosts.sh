@@ -25,7 +25,7 @@ fi
 
 echo "Downloading..."
 cd ../src
-Download_Files http://soft.vpser.net/security/denyhosts/DenyHosts-2.6.tar.gz DenyHosts-2.6.tar.gz
+Download_Files ${Download_Mirror}/security/denyhosts/DenyHosts-2.6.tar.gz DenyHosts-2.6.tar.gz
 Tar_Cd DenyHosts-2.6.tar.gz DenyHosts-2.6
 echo "Installing..."
 python setup.py install

@@ -24,7 +24,7 @@ fi
 
 echo "Downloading..."
 cd ../src
-Download_Files http://soft.vpser.net/security/fail2ban/fail2ban-0.9.1.tar.gz fail2ban-0.9.1.tar.gz
+Download_Files ${Download_Mirror}/security/fail2ban/fail2ban-0.9.1.tar.gz fail2ban-0.9.1.tar.gz
 tar zxf fail2ban-0.9.1.tar.gz && cd fail2ban-0.9.1
 echo "Installing..."
 python setup.py install
