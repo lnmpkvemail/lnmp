@@ -5,11 +5,9 @@ Check_Stack_Choose()
     Check_Stack
     if [[ "${Get_Stack}" = "lnmp" && "${Stack}" = "" ]]; then
         echo "Current Stack: ${Get_Stack}, please run: ./upgrade.sh php"
-        sleep 3
         exit 1
     elif [[ "${Get_Stack}" = "lnmpa" || "${Get_Stack}" = "lamp" ]] && [[ "${Stack}" = "lnmp" ]]; then
         echo "Current Stack: ${Get_Stack}, please run: ./upgrade.sh phpa"
-        sleep 3
         exit 1
     fi
 }
@@ -551,7 +549,7 @@ Upgrade_PHP_7()
     echo "Write ZendGuardLoader to php.ini..."
     cat >/usr/local/php/conf.d/002-zendguardloader.ini<<EOF
 [Zend ZendGuard Loader]
-;php7 do not support zendguardloader @Sep.2015,after support you can uncomment the following line.
+;php7 do not support zendguardloader,after support you can uncomment the following line.
 ;zend_extension=/usr/local/zend/ZendGuardLoader.so
 ;zend_loader.enable=1
 ;zend_loader.disable_licensing=0
@@ -610,7 +608,7 @@ Upgrade_PHP()
         Upgrade_PHP_54
     elif echo "${php_version}" | grep -Eqi '^5.[56].';then
         Upgrade_PHP_556
-    elif echo "${php_version}" | grep -Eqi '^7.';then
+    elif echo "${php_version}" | grep -Eqi '^7.[01].';then
         Upgrade_PHP_7
     fi
 }

@@ -126,6 +126,8 @@ LNMP_Stack()
         Install_PHP_56
     elif [ "${PHPSelect}" = "6" ]; then
         Install_PHP_7
+    elif [ "${PHPSelect}" = "7" ]; then
+        Install_PHP_71
     fi
     LNMP_PHP_Opt
     Install_Nginx
@@ -156,6 +158,8 @@ LNMPA_Stack()
         Install_PHP_56
     elif [ "${PHPSelect}" = "6" ]; then
         Install_PHP_7
+    elif [ "${PHPSelect}" = "7" ]; then
+        Install_PHP_71
     fi
     Install_Nginx
     Creat_PHP_Tools
@@ -185,6 +189,8 @@ LAMP_Stack()
         Install_PHP_56
     elif [ "${PHPSelect}" = "6" ]; then
         Install_PHP_7
+    elif [ "${PHPSelect}" = "7" ]; then
+        Install_PHP_71
     fi
     Creat_PHP_Tools
     Add_Iptables_Rules

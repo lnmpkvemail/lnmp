@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DB_Info=('MySQL 5.1.73' 'MySQL 5.5.53' 'MySQL 5.6.34' 'MySQL 5.7.16' 'MariaDB 5.5.53' 'MariaDB 10.0.28' 'MariaDB 10.1.19')
-PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.38' 'PHP 5.6.28' 'PHP 7.0.13')
+PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.38' 'PHP 5.6.28' 'PHP 7.0.13' 'PHP 7.1.0')
 Apache_Info=('Apache 2.2.31' 'Apache 2.4.23')
 
 Database_Selection()
@@ -107,11 +107,12 @@ PHP_Selection()
     Echo_Yellow "You have 6 options for your PHP install."
     echo "1: Install ${PHP_Info[0]}"
     echo "2: Install ${PHP_Info[1]}"
-    echo "3: Install ${PHP_Info[2]} (Default)"
-    echo "4: Install ${PHP_Info[3]}"
+    echo "3: Install ${PHP_Info[2]}"
+    echo "4: Install ${PHP_Info[3]} (Default)"
     echo "5: Install ${PHP_Info[4]}"
     echo "6: Install ${PHP_Info[5]}"
-    read -p "Enter your choice (1, 2, 3, 4, 5 or 6): " PHPSelect
+    echo "7: Install ${PHP_Info[6]}"
+    read -p "Enter your choice (1, 2, 3, 4, 5, 6 or 7): " PHPSelect
 
     case "${PHPSelect}" in
     1)
@@ -136,9 +137,12 @@ PHP_Selection()
     6)
         echo "You will install ${PHP_Info[5]}"
         ;;
+    7)
+        echo "You will install ${PHP_Info[6]}"
+        ;;
     *)
-        echo "No input,You will install ${PHP_Info[2]}"
-        PHPSelect="3"
+        echo "No input,You will install ${PHP_Info[3]}"
+        PHPSelect="4"
     esac
 }
 
@@ -511,6 +515,8 @@ Get_PHP_Ext_Dir()
        zend_ext_dir="/usr/local/php/lib/php/extensions/no-debug-non-zts-20131226/"
    elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.0.'; then
        zend_ext_dir="/usr/local/php/lib/php/extensions/no-debug-non-zts-20151012/"
+   elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.1.'; then
+       zend_ext_dir="/usr/local/php/lib/php/extensions/no-debug-non-zts-20160303/"
     fi
 }
 
