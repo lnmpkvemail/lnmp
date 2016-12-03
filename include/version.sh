@@ -46,12 +46,14 @@ elif [ "${PHPSelect}" = "7" ]; then
     Php_Ver='php-7.1.0'
 fi
 if [ "${PHPSelect}" = "1" ]; then
-    PhpMyAdmin_Ver='phpMyAdmin-4.0.10.17-all-languages'
-else
-    PhpMyAdmin_Ver='phpMyAdmin-4.4.15.8-all-languages'
-    if [ "${DBSelect}" = "1" ]; then
-        PhpMyAdmin_Ver='phpMyAdmin-4.0.10.17-all-languages'
+    PhpMyAdmin_Ver='phpMyAdmin-4.0.10.18-all-languages'
+elif [[ "${PHPSelect}" = "2" || "${PHPSelect}" = "3" ]]; then
+    PhpMyAdmin_Ver='phpMyAdmin-4.4.15.9-all-languages'
+    if [ "${DBSelect}" = "1" ]]; then
+        PhpMyAdmin_Ver='phpMyAdmin-4.0.10.18-all-languages'
     fi
+else
+    PhpMyAdmin_Ver='phpMyAdmin-4.6.5.1-all-languages'
 fi
 APR_Ver='apr-1.5.2'
 APR_Util_Ver='apr-util-1.5.4'
