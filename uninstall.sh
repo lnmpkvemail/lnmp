@@ -42,7 +42,11 @@ Uninstall_LNMP()
     if [ ${DB_Name} != "None" ]; then
         Remove_StartUp ${DB_Name}
         echo "Backup ${DB_Name} databases directory to /root/databases_backup_$(date +"%Y%m%d%H%M%S")"
-        mv ${MariaDB_Data_Dir} /root/databases_backup_$(date +"%Y%m%d%H%M%S")
+        if [ ${DB_Name} == "mysql" ]; then
+            mv ${MySQL_Data_Dir} /root/databases_backup_$(date +"%Y%m%d%H%M%S")
+        elif [ ${DB_Name} == "mariadb" ]; then
+            mv ${MariaDB_Data_Dir} /root/databases_backup_$(date +"%Y%m%d%H%M%S")
+        fi
     fi
     chattr -i ${Default_Website_Dir}/.user.ini
     echo "Deleting LNMP files..."
@@ -73,7 +77,11 @@ Uninstall_LNMPA()
     if [ ${DB_Name} != "None" ]; then
         Remove_StartUp ${DB_Name}
         echo "Backup ${DB_Name} databases directory to /root/databases_backup_$(date +"%Y%m%d%H%M%S")"
-        mv ${MariaDB_Data_Dir} /root/databases_backup_$(date +"%Y%m%d%H%M%S")
+        if [ ${DB_Name} == "mysql" ]; then
+            mv ${MySQL_Data_Dir} /root/databases_backup_$(date +"%Y%m%d%H%M%S")
+        elif [ ${DB_Name} == "mariadb" ]; then
+            mv ${MariaDB_Data_Dir} /root/databases_backup_$(date +"%Y%m%d%H%M%S")
+        fi
     fi
     echo "Deleting LNMPA files..."
     rm -rf /usr/local/nginx
@@ -103,7 +111,11 @@ Uninstall_LAMP()
     if [ ${DB_Name} != "None" ]; then
         Remove_StartUp ${DB_Name}
         echo "Backup ${DB_Name} databases directory to /root/databases_backup_$(date +"%Y%m%d%H%M%S")"
-        mv ${MariaDB_Data_Dir} /root/databases_backup_$(date +"%Y%m%d%H%M%S")
+        if [ ${DB_Name} == "mysql" ]; then
+            mv ${MySQL_Data_Dir} /root/databases_backup_$(date +"%Y%m%d%H%M%S")
+        elif [ ${DB_Name} == "mariadb" ]; then
+            mv ${MariaDB_Data_Dir} /root/databases_backup_$(date +"%Y%m%d%H%M%S")
+        fi
     fi
     echo "Deleting LAMP files..."
     rm -rf /usr/local/apache
