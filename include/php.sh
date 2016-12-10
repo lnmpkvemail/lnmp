@@ -661,7 +661,7 @@ Creat_PHP_Tools()
 {
     echo "Create PHP Info Tool..."
     cat >${Default_Website_Dir}/phpinfo.php<<eof
-<?
+<?php
 phpinfo();
 ?>
 eof
