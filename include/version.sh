@@ -49,7 +49,7 @@ if [ "${PHPSelect}" = "1" ]; then
     PhpMyAdmin_Ver='phpMyAdmin-4.0.10.18-all-languages'
 elif [[ "${PHPSelect}" = "2" || "${PHPSelect}" = "3" ]]; then
     PhpMyAdmin_Ver='phpMyAdmin-4.4.15.9-all-languages'
-    if [ "${DBSelect}" = "1" ]]; then
+    if [ "${DBSelect}" = "1" ]; then
         PhpMyAdmin_Ver='phpMyAdmin-4.0.10.18-all-languages'
     fi
 else
