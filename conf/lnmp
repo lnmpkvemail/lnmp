@@ -199,7 +199,7 @@ EOF
 
 Multiple_PHP_Select()
 {
-    if [[ ! -s /usr/local/php5.2/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.2.conf ]] && [[ ! -s /usr/local/php5.3/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.3.conf ]] && [[ ! -s /usr/local/php5.4/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.4.conf ]] && [[ ! -s /usr/local/php5.5/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.5.conf ]] && [[ ! -s /usr/local/php5.6/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.6.conf ]] && [[ ! -s /usr/local/php7.0/sbin/php-fpm && -s /usr/local/nginx/conf/enable-php7.0.conf ]]; then
+    if [[ ! -s /usr/local/php5.2/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.2.conf ]] && [[ ! -s /usr/local/php5.3/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.3.conf ]] && [[ ! -s /usr/local/php5.4/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.4.conf ]] && [[ ! -s /usr/local/php5.5/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.5.conf ]] && [[ ! -s /usr/local/php5.6/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.6.conf ]] && [[ ! -s /usr/local/php7.0/sbin/php-fpm && -s /usr/local/nginx/conf/enable-php7.0.conf ]] && [[ ! -s /usr/local/php7.1/sbin/php-fpm && -s /usr/local/nginx/conf/enable-php7.1.conf ]]; then
         include_enable_php="include enable-php.conf;"
     else
         echo "Please select the PHP version of current virtual host."
@@ -224,7 +224,10 @@ Multiple_PHP_Select()
         if [[ -s /usr/local/php7.0/sbin/php-fpm && -s /usr/local/nginx/conf/enable-php7.0.conf && -s /etc/init.d/php-fpm7.0 ]]; then
             Echo_Green "7: PHP 7.0 [found]"
         fi
-        Echo_Yellow "Enter your choice (1, 2, 3, 4, 5, 6 or 7): "
+        if [[ -s /usr/local/php7.1/sbin/php-fpm && -s /usr/local/nginx/conf/enable-php7.1.conf && -s /etc/init.d/php-fpm7.1 ]]; then
+            Echo_Green "8: PHP 7.1 [found]"
+        fi
+        Echo_Yellow "Enter your choice (1, 2, 3, 4, 5, 6 ,7 or 8): "
         read php_select
         case "${php_select}" in
         1)
@@ -254,6 +257,10 @@ Multiple_PHP_Select()
         7)
             echo "Current selection:: PHP 7.0.12"
             include_enable_php="include enable-php7.0.conf;"
+            ;;
+        8)
+            echo "Current selection:: PHP 7.1.0"
+            include_enable_php="include enable-php7.1.conf;"
             ;;
         *)
             echo "Default,Current selection: PHP ${Cur_PHP_Version}"
