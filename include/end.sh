@@ -47,7 +47,7 @@ Add_LNMP_Startup()
     elif [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
         StartUp mysql
         /etc/init.d/mysql start
-    elif [[ "${DBSelect}" = "0" ]]; then
+    elif [ "${DBSelect}" = "0" ]; then
         sed -i 's#/etc/init.d/mysql.*##' /bin/lnmp
     fi
     StartUp php-fpm
@@ -71,7 +71,7 @@ Add_LNMPA_Startup()
     elif [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
         StartUp mysql
         /etc/init.d/mysql start
-    elif [[ "${DBSelect}" = "0" ]]; then
+    elif [ "${DBSelect}" = "0" ]; then
         sed -i 's#/etc/init.d/mysql.*##' /bin/lnmp
     fi
     StartUp httpd
@@ -92,7 +92,7 @@ Add_LAMP_Startup()
     elif [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
         StartUp mysql
         /etc/init.d/mysql start
-    elif [[ "${DBSelect}" = "0" ]]; then
+    elif [ "${DBSelect}" = "0" ]; then
         sed -i 's#/etc/init.d/mysql.*##' /bin/lnmp
     fi
 }
@@ -127,7 +127,7 @@ Check_DB_Files()
         else
             Echo_Red "Error: MySQL install failed."
         fi
-    elif [[ "${DBSelect}" = "0" ]]; then
+    elif [ "${DBSelect}" = "0" ]; then
         Echo_Green "Do not install MySQL/MariaDB."
         isDB="ok"
     fi
@@ -210,7 +210,7 @@ Print_Sucess_Info()
     echo "|  Add VirtualHost: lnmp vhost add                                       |"
     echo "+------------------------------------------------------------------------+"
     echo "|  Default directory: ${Default_Website_Dir}                              |"
-    if [[ "${DBSelect}" != "0" ]]; then
+    if [ "${DBSelect}" != "0" ]; then
         echo "+------------------------------------------------------------------------+"
         echo "|  MySQL/MariaDB root password: ${DB_Root_Password}                          |"
     fi

@@ -868,6 +868,7 @@ Add_Letsencrypt()
     /bin/certbot certonly --email ${email} --agree-tos -n --webroot -w ${vhostdir} ${letsdomain}
     lets_status=$?
     if [ "${lets_status}" = 0 ]; then
+        Check_Lets_Cron
         echo "Let's Encrypt SSL Certificate create successfully."
     else
         Echo_Red "Let's Encrypt SSL Certificate create failed!"
@@ -965,6 +966,16 @@ Add_SSL()
         if [ "${lets_status}" = 0 ]; then
             Create_SSL_Config
         fi
+    fi
+}
+
+Check_Lets_Cron()
+{
+    if crontab -l|grep -q "/bin/certbot renew";then
+        echo "Let's encrypt crontab renew rule is exist."
+    else
+        echo "Add Let's encrypt crontab renew rule..."
+        (crontab -l ; echo '0 3 */7 * * /bin/certbot renew --renew-hook "/etc/init.d/nginx reload"') | crontab -
     fi
 }
 

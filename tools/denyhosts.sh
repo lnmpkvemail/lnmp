@@ -8,7 +8,7 @@ if [ $(id -u) != "0" ]; then
     exit 1
 fi
 
-. ../include/main.sh
+. ../lnmp.conf
 Get_Dist_Name
 
 Press_Start
