@@ -52,8 +52,8 @@ FTP服务器
   IonCube，执行：./addons.sh {install|uninstall} ionCube 。
 
 其他：
-  可选1，执行：./multiplephp.sh 可以安装多个PHP版本，使用时需要将nginx虚拟主机配置文件里的include enable-php.conf替换为 include enable-php5.6.conf 即可前面的5.6换成你刚才安装的PHP的大版本号5.* 或7.0之类的。
-  可选2，执行：./database.sh 可以直接单独安装MySQL或MariaDB数据库。
+  可选1，执行：./install.sh mphp 可以安装多个PHP版本，只支持LNMP模式，lnmp vhost add时进行选择或使用时需要将nginx虚拟主机配置文件里的include enable-php.conf替换为 include enable-php5.6.conf 即可前面的5.6换成你刚才安装的PHP的大版本号5.* 或7.0之类的。
+  可选2，执行：./install.sh db 可以直接单独安装MySQL或MariaDB数据库。
   以下工具在lnmp安装包tools目录下
   可选2，执行：./reset_mysql_root_password.sh 可重置MySQL/MariaDB的root密码。
   可选3，执行：./check502.sh  可检测php-fpm是否挂掉,502报错时重启，配合crontab使用。
@@ -76,6 +76,9 @@ FTP服务器
   添加：lnmp vhost add
   删除：lnmp vhost del
   列出：lnmp vhost list
+  数据库管理：lnmp database {add|list|edit|del}
+  FTP用户管理：lnmp ftp {add|list|edit|del|show}
+  SSL添加：lnmp ssl add
 
 相关图形界面
   PHPMyAdmin：http://yourIP/phpmyadmin/
@@ -106,4 +109,4 @@ LNMP相关目录文件
 
 技术支持
 
-技术支持论坛：http://bbs.vpser.net/forum-25-1.html
+技术支持论坛：https://bbs.vpser.net/forum-25-1.html

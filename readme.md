@@ -1,11 +1,11 @@
-**当前1.3版本为测试版本，如有问题请到 <http://bbs.vpser.net/forum-25-1.html> 进行反馈，谢谢。**
+**当前1.4版本为测试版本，如有问题请到 <https://bbs.vpser.net/forum-25-1.html> 进行反馈，谢谢。**
 #LNMP一键安装包 - Readme
 
 **LNMP一键安装包是什么?**
 
 LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora、Debian/Ubuntu/Raspbian VPS(VDS)或独立主机安装LNMP(Nginx/MySQL/PHP)、LNMPA(Nginx/MySQL/PHP/Apache)、LAMP(Apache/MySQL/PHP)生产环境的Shell程序。同时提供一些实用的辅助工具如：虚拟主机管理、FTP用户管理、Nginx、MySQL/MariaDB、PHP的升级、常用缓存组件的安装、重置MySQL root密码、502自动重启、日志切割、SSH防护DenyHosts/Fail2Ban、备份等许多实用脚本。
 
-* LNMP官网：<http://lnmp.org>
+* LNMP官网：<https://lnmp.org>
 * 作者: licess <admin@lnmp.org>
 
 
@@ -15,7 +15,7 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora
 执行
 > wget -c http://soft.vpser.net/lnmp/lnmp1.4beta-full.tar.gz && tar zxf lnmp1.4beta-full.tar.gz && cd lnmp1.4-full && ./install.sh {lnmp|lnmpa|lamp}
 
-如断线可使用screen -r lnmp 恢复。**详细安装教程参考：<http://lnmp.org/install.html>**
+如断线可使用screen -r lnmp 恢复。**详细安装教程参考：<https://lnmp.org/install.html>**
 
 ##常用功能
 
@@ -52,8 +52,8 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora
 * IonCube，执行：./addons.sh {install|uninstall} ionCube 。
 
 ###其他：
-* 可选1，执行：./multiplephp.sh 可以安装多个PHP版本，使用时需要将nginx虚拟主机配置文件里的include enable-php.conf替换为 include enable-php5.6.conf 即可前面的5.6换成你刚才安装的PHP的大版本号5.* 或7.0之类的。
-* 可选2，执行：./database.sh 可以直接单独安装MySQL或MariaDB数据库。
+* 可选1，执行：./install.sh mphp 可以安装多个PHP版本，只支持LNMP模式，lnmp vhost add时进行选择或使用时需要将nginx虚拟主机配置文件里的include enable-php.conf替换为 include enable-php5.6.conf 即可前面的5.6换成你刚才安装的PHP的大版本号5.* 或7.0之类的。
+* 可选2，执行：./install.sh db 可以直接单独安装MySQL或MariaDB数据库。
 **以下工具在lnmp安装包tools目录下**
 * 可选2，执行：./reset_mysql_root_password.sh 可重置MySQL/MariaDB的root密码。
 * 可选3，执行：./check502.sh  可检测php-fpm是否挂掉,502报错时重启，配合crontab使用。
@@ -76,6 +76,9 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora
 * 添加：lnmp vhost add
 * 删除：lnmp vhost del
 * 列出：lnmp vhost list
+* 数据库管理：lnmp database {add|list|edit|del}
+* FTP用户管理：lnmp ftp {add|list|edit|del|show}
+* SSL添加：lnmp ssl add
 
 ##相关图形界面
 * PHPMyAdmin：http://yourIP/phpmyadmin/
@@ -106,4 +109,4 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora
 
 ##技术支持
 
-**技术支持论坛：<http://bbs.vpser.net/forum-25-1.html>**
+**技术支持论坛：<https://bbs.vpser.net/forum-25-1.html>**
