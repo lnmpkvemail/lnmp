@@ -683,7 +683,7 @@ eof
     tar jxf ${PhpMyAdmin_Ver}.tar.bz2
     mv ${PhpMyAdmin_Ver} ${Default_Website_Dir}/phpmyadmin
     \cp ${cur_dir}/conf/config.inc.php ${Default_Website_Dir}/phpmyadmin/config.inc.php
-    sed -i 's/LNMPORG/LNMP.org'$RANDOM'VPSer.net/g' ${Default_Website_Dir}/phpmyadmin/config.inc.php
+    sed -i 's/LNMPORG/LNMP.org_'$RANDOM$RANDOM$RANDOM$RANDOM'_VPSer.net/g' ${Default_Website_Dir}/phpmyadmin/config.inc.php
     mkdir ${Default_Website_Dir}/phpmyadmin/{upload,save}
     chmod 755 -R ${Default_Website_Dir}/phpmyadmin/
     chown www:www -R ${Default_Website_Dir}/phpmyadmin/
