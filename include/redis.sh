@@ -26,6 +26,7 @@ Install_Redis()
     \cp redis.conf  /usr/local/redis/etc/
     sed -i 's/daemonize no/daemonize yes/g' /usr/local/redis/etc/redis.conf
     sed -i 's/^# bind 127.0.0.1/bind 127.0.0.1/g' /usr/local/redis/etc/redis.conf
+    sed -i 's#^pidfile /var/run/redis_6379.pid#pidfile /var/run/redis.pid#g' /usr/local/redis/etc/redis.conf
     cd ../
     rm -rf ${cur_dir}/src/${Redis_Stable_Ver}
 
