@@ -53,6 +53,7 @@ Init_Install()
     Print_APP_Ver
     Print_Sys_Info
     Check_Hosts
+    Check_Mirror
     if [ "${DISTRO}" = "RHEL" ]; then
         RHEL_Modify_Source
     fi

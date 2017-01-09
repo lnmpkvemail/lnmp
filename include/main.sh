@@ -475,6 +475,22 @@ Remove_StartUp()
     fi
 }
 
+Check_Mirror()
+{
+    country=`curl -sS --connect-timeout 10 -m 60 http://ip.vpser.net/country`
+    if [[ "${country}" = "CN" && "${Download_Mirror}" = "http://soft.vpser.net" ]]; then
+        random=`date '+%s'`
+        lastnum=${random:(-1)}
+        if [ "$((lastnum % 2))" = 0 ]; then
+            echo "Change to mirror http://soft6.vpser.net"
+            Download_Mirror='http://soft6.vpser.net'
+        else
+            echo "Change to mirror http://soft9.vpser.net"
+            Download_Mirror='http://soft9.vpser.net'
+        fi
+    fi
+}
+
 Color_Text()
 {
   echo -e " \e[0;$2m$1\e[0m"

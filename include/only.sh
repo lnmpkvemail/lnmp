@@ -31,6 +31,8 @@ Install_Only_Nginx()
     Add_Iptables_Rules
     \cp ${cur_dir}/conf/index.html ${Default_Website_Dir}/index.html
     Check_Nginx_Files
+    exit 0
+    exit 0
 }
 
 Install_Database()
@@ -80,9 +82,13 @@ Install_Database()
         if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
             Echo_Green "MySQL root password: ${DB_Root_Password}"
             Echo_Green "Install ${Mysql_Ver} completed! enjoy it."
+            exit 0
+            exit 0
         elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
             Echo_Green "MariaDB root password: ${DB_Root_Password}"
             Echo_Green "Install ${Mariadb_Ver} completed! enjoy it."
+            exit 0
+            exit 0
         fi
     fi
 }
