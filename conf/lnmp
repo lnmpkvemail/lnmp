@@ -864,6 +864,19 @@ Add_Letsencrypt()
             yum -y install epel-release
         fi
     fi
+
+    country=`curl -sS --connect-timeout 10 -m 60 http://ip.vpser.net/country`
+    if [ "${country}" = "CN" ]; then
+        mkdir ~/.pip
+        cat > ~/.pip/pip.conf <<EOF
+[global]
+index-url = https://pypi.doubanio.com/simple/
+
+[install]
+trusted-host=pypi.doubanio.com
+EOF
+    fi
+
     echo "Starting create SSL Certificate use Let's Encrypt..."
     /bin/certbot certonly --email ${email} --agree-tos -n --webroot -w ${vhostdir} ${letsdomain}
     lets_status=$?
