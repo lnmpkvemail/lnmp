@@ -63,15 +63,15 @@ elif [ "${ApacheSelect}" = "2" ]; then
     Apache_Ver='httpd-2.4.25'
 fi
 
-Pureftpd_Ver='pure-ftpd-1.0.43'
+Pureftpd_Ver='pure-ftpd-1.0.44'
 
 XCache_Ver='xcache-3.2.0'
-ImageMagick_Ver='ImageMagick-7.0.3-8'
+ImageMagick_Ver='ImageMagick-7.0.4-3'
 Imagick_Ver='imagick-3.4.3RC1'
 ZendOpcache_Ver='zendopcache-7.0.5'
-Redis_Stable_Ver='redis-3.2.5'
+Redis_Stable_Ver='redis-3.2.6'
 PHPRedis_Ver='redis-2.2.7'
-Memcached_Ver='memcached-1.4.33'
+Memcached_Ver='memcached-1.4.34'
 Libmemcached_Ver='libmemcached-1.0.18'
 PHPMemcached_Ver='memcached-2.2.0'
 PHPMemcache_Ver='memcache-3.0.8'
