@@ -23,6 +23,7 @@ action2=$2
 . include/redis.sh
 . include/imageMagick.sh
 . include/ionCube.sh
+. include/apcu.sh
 
 Display_Addons_Menu()
 {
@@ -32,13 +33,14 @@ Display_Addons_Menu()
     echo "3: Memcached"
     echo "4: opcache"
     echo "5: Redis"
+    echo "6: apcu"
     echo "##### Image Processing #####"
-    echo "6: imageMagick"
+    echo "7: imageMagick"
     echo "##### encryption/decryption utility for PHP #####"
-    echo "7: ionCube Loader"
+    echo "8: ionCube Loader"
     echo "exit: Exit current script"
     echo "#####################################################"
-    read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7 or exit): " action2
+    read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8 or exit): " action2
 }
 
 Restart_PHP()
@@ -86,10 +88,13 @@ Get_Dist_Name
             5|[rR]edis)
                 Install_Redis
                 ;;
-            6|image[mM]agick)
+            6|apcu)
+                Install_Apcu
+                ;;
+            7|image[mM]agick)
                 Install_ImageMagic
                 ;;
-            7|ion[cC]ube)
+            8|ion[cC]ube)
                 Install_ionCube
                 ;;
             [eE][xX][iI][tT])
@@ -117,6 +122,9 @@ Get_Dist_Name
             [rR]edis)
                 Uninstall_Redis
                 ;;
+            apcu)
+                Uninstall_Apcu
+                ;;
             image[mM]agick)
                 Uninstall_ImageMagick
                 ;;
@@ -124,7 +132,7 @@ Get_Dist_Name
                 Uninstall_ionCube
                 ;;
             *)
-                echo "Usage: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|imagemagick|ioncube}"
+                echo "Usage: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube}"
                 ;;
         esac
         ;;
@@ -132,7 +140,7 @@ Get_Dist_Name
         exit 1
         ;;
     *)
-        echo "Usage: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|imagemagick|ioncube}"
+        echo "Usage: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube}"
         exit 1
         ;;
     esac
