@@ -60,7 +60,7 @@ APR_Util_Ver='apr-util-1.5.4'
 if [ "${ApacheSelect}" = "1" ]; then
     Apache_Ver='httpd-2.2.31'
 elif [ "${ApacheSelect}" = "2" ]; then
-    Apache_Ver='httpd-2.4.23'
+    Apache_Ver='httpd-2.4.25'
 fi
 
 Pureftpd_Ver='pure-ftpd-1.0.43'
