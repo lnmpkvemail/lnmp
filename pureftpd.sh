@@ -77,6 +77,10 @@ Install_Pureftpd()
         fi
     fi
 
+    if [ ! -s /bin/lnmp ]; then
+        \cp ${cur_dir}/conf/lnmp /bin/lnmp
+    fi
+
     if [[ -s /usr/local/pureftpd/sbin/pure-config.pl && -s /usr/local/pureftpd/etc/pure-ftpd.conf && -s /etc/init.d/pureftpd ]]; then
         Echo_Blue "Starting pureftpd..."
         /etc/init.d/pureftpd start
