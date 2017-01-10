@@ -518,8 +518,8 @@ Echo_Blue()
 
 Get_PHP_Ext_Dir()
 {
-    Cur_PHP_Version=`/usr/local/php/bin/php -r 'echo PHP_VERSION;'`
-    zend_ext_dir="`/usr/local/php/bin/php -r 'echo PHP_EXTENSION_DIR;'`/"
+    Cur_PHP_Version="`/usr/local/php/bin/php-config --version`"
+    zend_ext_dir="`/usr/local/php/bin/php-config --extension-dir`/"
 }
 
 Check_Stack()
