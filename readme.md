@@ -13,7 +13,7 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora
 
 安装前建议使用screen，执行：screen -S lnmp 后
 执行
-> wget -c http://soft.vpser.net/lnmp/lnmp1.4beta-full.tar.gz && tar zxf lnmp1.4beta-full.tar.gz && cd lnmp1.4-full && ./install.sh {lnmp|lnmpa|lamp}
+> wget -c http://soft.vpser.net/lnmp/lnmp1.4beta.tar.gz && tar zxf lnmp1.4beta.tar.gz && cd lnmp1.4 && ./install.sh {lnmp|lnmpa|lamp}
 
 如断线可使用screen -r lnmp 恢复。**详细安装教程参考：<https://lnmp.org/install.html>**
 
