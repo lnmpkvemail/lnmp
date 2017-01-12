@@ -31,7 +31,15 @@ Start_Upgrade_PHP()
     else
         echo "Notice: php-$php_version.tar.bz2 not found!!!download now..."
         cd ${cur_dir}/src
-        wget -c --progress=bar:force http://php.net/distributions/php-${php_version}.tar.bz2
+        country=`curl -sS --connect-timeout 10 -m 60 http://ip.vpser.net/country`
+        if [ "${country}" = "CN" ]; then
+            wget -c --progress=bar:force http://cn.php.net/distributions/php-${php_version}.tar.bz2
+            if [ $? -ne 0 ]; then
+                wget -c --progress=bar:force http://php.net/distributions/php-${php_version}.tar.bz2
+            fi
+        else
+            wget -c --progress=bar:force http://php.net/distributions/php-${php_version}.tar.bz2
+        fi
         if [ $? -eq 0 ]; then
             echo "Download php-${php_version}.tar.bz2 successfully!"
         else
@@ -41,7 +49,6 @@ Start_Upgrade_PHP()
             else
                 echo "You enter PHP Version was:"${php_version}
                 Echo_Red "Error! You entered a wrong version number, please check!"
-                sleep 5
                 exit 1
             fi
         fi
