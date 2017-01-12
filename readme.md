@@ -21,6 +21,9 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora
 
 **以下操作需lnmp目录下执行，如lnmp1.4-full、lnmp1.4**
 
+##自定义参数
+* lnmp.conf配置文件，可以修改lnmp.conf自定义下载服务器地址、网站/数据库目录及添加nginx模块和php编译参数；不论安装升级都会调用该文件里的设置(如果修改了默认的参数建议备份此文件)；
+
 ##FTP服务器
 * 执行：./pureftpd.sh 安装，可使用lnmp ftp {add|list|del}进行管理。
 
