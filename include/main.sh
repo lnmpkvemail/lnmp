@@ -482,11 +482,17 @@ Check_Mirror()
         random=`date '+%s'`
         lastnum=${random:(-1)}
         if [ "$((lastnum % 2))" = 0 ]; then
-            echo "Change to mirror http://soft6.vpser.net"
-            Download_Mirror='http://soft6.vpser.net'
+            mirror_code=`curl -o /dev/null -m 10 --connect-timeout 10 -s -w %{http_code} http://soft6.vpser.net`
+            if [ "${mirror_code}" = "200" ]; then
+                echo "Change to mirror http://soft6.vpser.net"
+                Download_Mirror='http://soft6.vpser.net'
+            fi
         else
-            echo "Change to mirror http://soft9.vpser.net"
-            Download_Mirror='http://soft9.vpser.net'
+            mirror_code=`curl -o /dev/null -m 10 --connect-timeout 10 -s -w %{http_code} http://soft9.vpser.net`
+            if [ "${mirror_code}" = "200" ]; then
+                echo "Change to mirror http://soft9.vpser.net"
+                Download_Mirror='http://soft9.vpser.net'
+            fi
         fi
     fi
 }
