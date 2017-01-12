@@ -36,13 +36,14 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora
 * 参数: phpmyadmin    可升级phpMyadmin。
 
 ##扩展插件
-**执行: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|imagemagick|ioncube}**
+**执行: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube}**
 ###缓存加速：
 * 参数: xcache 安装时需选择版本和设置密码，http://yourIP/xcache/ 进行管理，用户名 admin，密码为安装xcache时设置的。
-* 参数: redis
+* 参数: redis  安装redis
 * 参数: memcached 可选择php-memcache或php-memcached扩展。
-* 参数: opcache http://yourIP/ocp.php 进行管理。
-* 参数: eaccelerator 安装。  
+* 参数: opcache 可访问 http://yourIP/ocp.php 进行管理。
+* 参数: eaccelerator 安装。
+* 参数: apcu 安装apcu php扩展，支持php7，可访问 http://yourIP/apc.php 进行管理。 
 **请勿安装多个缓存类扩展模块，多个可能导致网站出现问题 ！**
 
 ###图像处理：
@@ -54,11 +55,12 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora
 ###其他：
 * 可选1，执行：./install.sh mphp 可以安装多个PHP版本，只支持LNMP模式，lnmp vhost add时进行选择或使用时需要将nginx虚拟主机配置文件里的include enable-php.conf替换为 include enable-php5.6.conf 即可前面的5.6换成你刚才安装的PHP的大版本号5.* 或7.0之类的。
 * 可选2，执行：./install.sh db 可以直接单独安装MySQL或MariaDB数据库。
+* 可选3，执行：./install.sh nginx 可以直接单独安装Nginx。
 **以下工具在lnmp安装包tools目录下**
-* 可选2，执行：./reset_mysql_root_password.sh 可重置MySQL/MariaDB的root密码。
-* 可选3，执行：./check502.sh  可检测php-fpm是否挂掉,502报错时重启，配合crontab使用。
-* 可选4，执行：./cut_nginx_logs.sh 日志切割脚本。
-* 可选5，执行：./remove_disable_function.sh 运行此脚本可删掉禁用函数。
+* 可选4，执行：./reset_mysql_root_password.sh 可重置MySQL/MariaDB的root密码。
+* 可选5，执行：./check502.sh  可检测php-fpm是否挂掉,502报错时重启，配合crontab使用。
+* 可选6，执行：./cut_nginx_logs.sh 日志切割脚本。
+* 可选7，执行：./remove_disable_function.sh 运行此脚本可删掉禁用函数。
 
 ###卸载
 * 卸载LNMP、LNMPA或LAMP可执行：./uninstall.sh 按提示选择即可卸载。
@@ -86,6 +88,7 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora
 * PHP探针：http://yourIP/p.php
 * Xcache管理界面：http://yourIP/xcache/
 * Zend Opcache管理界面：http://yourIP/ocp.php
+* apcu管理界面：http://yourIP/apc.php
 
 ##LNMP相关目录文件
 
