@@ -49,8 +49,6 @@ Install_Pureftpd()
     make && make install
 
     Echo_Blue "Copy configure files..."
-    \cp configuration-file/pure-config.pl /usr/local/pureftpd/sbin/
-    chmod 755 /usr/local/pureftpd/sbin/pure-config.pl
     mkdir /usr/local/pureftpd/etc
     \cp ${cur_dir}/conf/pure-ftpd.conf /usr/local/pureftpd/etc/pure-ftpd.conf
     if [ -L /etc/init.d/pureftpd ]; then
@@ -79,9 +77,15 @@ Install_Pureftpd()
 
     if [ ! -s /bin/lnmp ]; then
         \cp ${cur_dir}/conf/lnmp /bin/lnmp
+        chmod +x /bin/lnmp
+    fi
+    id -u www
+    if [ $? -ne 0 ]; then
+        groupadd www
+        useradd -s /sbin/nologin -g www www
     fi
 
-    if [[ -s /usr/local/pureftpd/sbin/pure-config.pl && -s /usr/local/pureftpd/etc/pure-ftpd.conf && -s /etc/init.d/pureftpd ]]; then
+    if [[ -s /usr/local/pureftpd/sbin/pure-ftpd && -s /usr/local/pureftpd/etc/pure-ftpd.conf && -s /etc/init.d/pureftpd ]]; then
         Echo_Blue "Starting pureftpd..."
         /etc/init.d/pureftpd start
         Echo_Green "+----------------------------------------------------------------------+"
@@ -97,7 +101,7 @@ Install_Pureftpd()
 
 Uninstall_Pureftpd()
 {
-    if [ ! -f /usr/local/pureftpd/sbin/pure-config.pl ]; then
+    if [ ! -f /usr/local/pureftpd/sbin/pure-ftpd ]; then
         Echo_Red "Pureftpd was not installed!"
         exit 1
     fi

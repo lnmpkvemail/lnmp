@@ -235,7 +235,7 @@ Add_VHost()
         fi
     fi
 
-    if [ -f /usr/local/pureftpd/sbin/pure-config.pl ]; then
+    if [ -f /usr/local/pureftpd/sbin/pure-ftpd ]; then
         Echo_Yellow "Create ftp account (y/n) "
         read create_ftp
 
@@ -534,7 +534,7 @@ Add_Ftp_Menu()
 
 Check_Pureftpd()
 {
-    if [ ! -f /usr/local/pureftpd/sbin/pure-config.pl ]; then
+    if [ ! -f /usr/local/pureftpd/sbin/pure-ftpd ]; then
         echo "Pureftpd was not installed!"
         exit 1
     fi
