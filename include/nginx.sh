@@ -77,7 +77,7 @@ EOF
         chmod 644 ${Default_Website_Dir}/.user.ini
         chattr +i ${Default_Website_Dir}/.user.ini
         cat >>/usr/local/nginx/conf/fastcgi.conf<<EOF
-fastcgi_param PHP_ADMIN_VALUE "open_basedir=$document_root/:/tmp/:/proc/";
+fastcgi_param PHP_ADMIN_VALUE "open_basedir=\$document_root/:/tmp/:/proc/";
 EOF
     fi
 
