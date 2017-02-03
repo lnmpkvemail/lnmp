@@ -171,6 +171,7 @@ EOF
         Echo_Green "You have successfully install ${Php_Ver}"
         echo "==========================================="
     else
+        rm -rf ${MPHP_Path}
         Echo_Red "Failed to install {Php_Ver}, you can download /root/install-mphp5.2.log from your server, and upload install-mphp5.2.log to LNMP Forum."
     fi
 }
@@ -277,6 +278,7 @@ EOF
         Echo_Green "You have successfully install ${Php_Ver} "
         echo "==========================================="
     else
+        rm -rf ${MPHP_Path}
         Echo_Red "Failed to install ${Php_Ver}, you can download /root/install-mphp5.3.log from your server, and upload install-mphp5.3.log to LNMP Forum."
     fi
 }
@@ -380,6 +382,7 @@ EOF
         Echo_Green "You have successfully install ${Php_Ver} "
         echo "==========================================="
     else
+        rm -rf ${MPHP_Path}
         Echo_Red "Failed to install ${Php_Ver}, you can download /root/install-mphp5.4.log from your server, and upload install-mphp5.4.log to LNMP Forum."
     fi
 }
@@ -483,6 +486,7 @@ EOF
         Echo_Green "You have successfully install ${Php_Ver} "
         echo "==========================================="
     else
+        rm -rf ${MPHP_Path}
         Echo_Red "Failed to install ${Php_Ver}, you can download /root/install-mphp5.5.log from your server, and upload install-mphp5.5.log to LNMP Forum."
     fi
 }
@@ -586,6 +590,7 @@ EOF
         Echo_Green "You have successfully install ${Php_Ver} "
         echo "==========================================="
     else
+        rm -rf ${MPHP_Path}
         Echo_Red "Failed to install ${Php_Ver}, you can download /root/install-mphp5.6.log from your server, and upload install-mphp5.6.log to LNMP Forum."
     fi
 }
@@ -679,6 +684,7 @@ EOF
         Echo_Green "You have successfully install ${Php_Ver} "
         echo "==========================================="
     else
+        rm -rf ${MPHP_Path}
         Echo_Red "Failed to install ${Php_Ver}, you can download /root/install-mphp7.0.log from your server, and upload install-mphp7.0.log to LNMP Forum."
     fi
 }
@@ -772,6 +778,7 @@ EOF
         Echo_Green "You have successfully install ${Php_Ver} "
         echo "==========================================="
     else
+        rm -rf ${MPHP_Path}
         Echo_Red "Failed to install ${Php_Ver}, you can download /root/install-mphp7.1.log from your server, and upload install-mphp7.1.log to LNMP Forum."
     fi
 }
