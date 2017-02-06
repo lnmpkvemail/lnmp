@@ -24,7 +24,6 @@ action=$1
 . include/main.sh
 . include/init.sh
 
-Get_OS_Bit
 Get_Dist_Name
 
 Install_Pureftpd()
@@ -41,6 +40,11 @@ Install_Pureftpd()
     Echo_Blue "Download files..."
     cd ${cur_dir}/src
     Download_Files ${Download_Mirror}/ftp/pure-ftpd/${Pureftpd_Ver}.tar.bz2 ${Pureftpd_Ver}.tar.bz2
+    if [ $? -eq 0 ]; then
+        echo "Download ${Pureftpd_Ver}.tar.bz2 successfully!"
+    else
+        Download_Files https://download.pureftpd.org/pub/pure-ftpd/releases/${Pureftpd_Ver}.tar.bz2 ${Pureftpd_Ver}.tar.bz2
+    fi
 
     Echo_Blue "Installing pure-ftpd..."
     Tarj_Cd ${Pureftpd_Ver}.tar.bz2 ${Pureftpd_Ver}
@@ -65,9 +69,15 @@ Install_Pureftpd()
     rm -rf ${cur_dir}/src/${Pureftpd_Ver}
 
     if [ -s /sbin/iptables ]; then
-        /sbin/iptables -I INPUT 7 -p tcp --dport 20 -j ACCEPT
-        /sbin/iptables -I INPUT 8 -p tcp --dport 21 -j ACCEPT
-        /sbin/iptables -I INPUT 9 -p tcp --dport 20000:30000 -j ACCEPT
+        if [ -s /bin/lnmp ]; then
+            /sbin/iptables -I INPUT 7 -p tcp --dport 20 -j ACCEPT
+            /sbin/iptables -I INPUT 8 -p tcp --dport 21 -j ACCEPT
+            /sbin/iptables -I INPUT 9 -p tcp --dport 20000:30000 -j ACCEPT
+        else
+            /sbin/iptables -I INPUT -p tcp --dport 20 -j ACCEPT
+            /sbin/iptables -I INPUT -p tcp --dport 21 -j ACCEPT
+            /sbin/iptables -I INPUT -p tcp --dport 20000:30000 -j ACCEPT
+        fi
         if [ "${PM}" = "yum" ]; then
             service iptables save
         elif [ "${PM}" = "apt" ]; then

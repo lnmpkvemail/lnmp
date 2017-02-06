@@ -60,77 +60,77 @@ lnmpa_status()
 Function_Vhost()
 {
     case "$1" in
-    [aA][dD][dD])
-        Add_VHost
-    ;;
-    [lL][iI][sS][tT])
-        List_VHost
-    ;;
-    [dD][eE][lL])
-        Del_VHost
-    ;;
-    [eE][xX][iI][tT])
-        exit 1
-    ;;
-    *)
-        echo "Usage: lnmp vhost {add|list|del}"
-        exit 1
-    ;;
+        [aA][dD][dD])
+            Add_VHost
+            ;;
+        [lL][iI][sS][tT])
+            List_VHost
+            ;;
+        [dD][eE][lL])
+            Del_VHost
+            ;;
+        [eE][xX][iI][tT])
+            exit 1
+            ;;
+        *)
+            echo "Usage: lnmp vhost {add|list|del}"
+            exit 1
+            ;;
 esac
 }
 
 Function_Database()
 {
     case "$1" in
-    [aA][dD][dD])
-        Add_Database_Menu
-        Add_Database
-        ;;
-    [lL][iI][sS][tT])
-        List_Database
-        ;;
-    [dD][eE][lL])
-        Del_Database
-        ;;
-    [eE][dD][iI][tT])
-        Edit_Database
-        ;;
-    [eE][xX][iI][tT])
-        exit 1
-        ;;
-    *)
-        echo "Usage: lnmp mysql {add|list|del}"
-        exit 1
-        ;;
+        [aA][dD][dD])
+            Add_Database_Menu
+            Add_Database
+            ;;
+        [lL][iI][sS][tT])
+            List_Database
+            ;;
+        [dD][eE][lL])
+            Del_Database
+            ;;
+        [eE][dD][iI][tT])
+            Edit_Database
+            ;;
+        [eE][xX][iI][tT])
+            exit 1
+            ;;
+        *)
+            echo "Usage: lnmp mysql {add|list|del}"
+            exit 1
+            ;;
 esac
 }
 
 Function_Ftp()
 {
     case "$1" in
-    [aA][dD][dD])
-        Add_Ftp_Menu
-        Add_Ftp
-        ;;
-    [lL][iI][sS][tT])
-        List_Ftp
-        ;;
-    [dD][eE][lL])
-        Del_Ftp
-        ;;
-    [eE][dD][iI][tT])
-        Edit_Ftp
-        ;;
-    [eE][xX][iI][tT])
-        exit 1
-        ;;
-    [sS][hH][oO][wW])
-        Show_Ftp
-        ;;
-    *)
-        echo "Usage: lnmp ftp {add|list|del}"
-        exit 1
-        ;;
+        [aA][dD][dD])
+            Add_Ftp_Menu
+            Add_Ftp
+            ;;
+        [lL][iI][sS][tT])
+            List_Ftp
+            ;;
+        [dD][eE][lL])
+            Del_Ftp
+            ;;
+        [eE][dD][iI][tT])
+            Edit_Ftp
+            ;;
+        [eE][xX][iI][tT])
+            exit 1
+            ;;
+        [sS][hH][oO][wW])
+            Show_Ftp
+            ;;
+        *)
+            echo "Usage: lnmp ftp {add|list|del}"
+            exit 1
+            ;;
 esac
 }
 

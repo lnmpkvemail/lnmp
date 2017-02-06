@@ -67,78 +67,78 @@ lnmp_status()
 Function_Vhost()
 {
     case "$1" in
-    [aA][dD][dD])
-        Add_VHost
-        ;;
-    [lL][iI][sS][tT])
-        List_VHost
-        ;;
-    [dD][eE][lL])
-        Del_VHost
-        ;;
-    [eE][xX][iI][tT])
-        exit 1
-        ;;
-    *)
-        echo "Usage: lnmp vhost {add|list|del}"
-        exit 1
-    ;;
-esac
+        [aA][dD][dD])
+            Add_VHost
+            ;;
+        [lL][iI][sS][tT])
+            List_VHost
+            ;;
+        [dD][eE][lL])
+            Del_VHost
+            ;;
+        [eE][xX][iI][tT])
+            exit 1
+            ;;
+        *)
+            echo "Usage: lnmp vhost {add|list|del}"
+            exit 1
+            ;;
+    esac
 }
 
 Function_Database()
 {
     case "$1" in
-    [aA][dD][dD])
-        Add_Database_Menu
-        Add_Database
-        ;;
-    [lL][iI][sS][tT])
-        List_Database
-        ;;
-    [dD][eE][lL])
-        Del_Database
-        ;;
-    [eE][dD][iI][tT])
-        Edit_Database
-        ;;
-    [eE][xX][iI][tT])
-        exit 1
-        ;;
-    *)
-        echo "Usage: lnmp database {add|list|del}"
-        exit 1
-        ;;
-esac
+        [aA][dD][dD])
+            Add_Database_Menu
+            Add_Database
+            ;;
+        [lL][iI][sS][tT])
+            List_Database
+            ;;
+        [dD][eE][lL])
+            Del_Database
+            ;;
+        [eE][dD][iI][tT])
+            Edit_Database
+            ;;
+        [eE][xX][iI][tT])
+            exit 1
+            ;;
+        *)
+            echo "Usage: lnmp database {add|list|del}"
+            exit 1
+            ;;
+    esac
 }
 
 Function_Ftp()
 {
     case "$1" in
-    [aA][dD][dD])
-        Add_Ftp_Menu
-        Add_Ftp
-        ;;
-    [lL][iI][sS][tT])
-        List_Ftp
-        ;;
-    [dD][eE][lL])
-        Del_Ftp
-        ;;
-    [eE][dD][iI][tT])
-        Edit_Ftp
-        ;;
-    [eE][xX][iI][tT])
-        exit 1
-        ;;
-    [sS][hH][oO][wW])
-        Show_Ftp
-        ;;
-    *)
-        echo "Usage: lnmp ftp {add|list|del}"
-        exit 1
-        ;;
-esac
+        [aA][dD][dD])
+            Add_Ftp_Menu
+            Add_Ftp
+            ;;
+        [lL][iI][sS][tT])
+            List_Ftp
+            ;;
+        [dD][eE][lL])
+            Del_Ftp
+            ;;
+        [eE][dD][iI][tT])
+            Edit_Ftp
+            ;;
+        [eE][xX][iI][tT])
+            exit 1
+            ;;
+        [sS][hH][oO][wW])
+            Show_Ftp
+            ;;
+        *)
+            echo "Usage: lnmp ftp {add|list|del}"
+            exit 1
+            ;;
+    esac
 }
 
 Add_VHost_Config()
@@ -204,7 +204,7 @@ Multiple_PHP_Select()
     else
         echo "Please select the PHP version of current virtual host."
         echo "Scanning..."
-        Cur_PHP_Version=`/usr/local/php/bin/php -r 'echo PHP_VERSION;'`
+        Cur_PHP_Version="`/usr/local/php/bin/php-config --version`"
         Echo_Green "1: Default Main PHP ${Cur_PHP_Version}"
         if [[ -s /usr/local/php5.2/sbin/php-fpm && -s /usr/local/nginx/conf/enable-php5.2.conf && -s /etc/init.d/php-fpm5.2 ]]; then
             Echo_Green "2: PHP 5.2 [found]"
@@ -230,42 +230,43 @@ Multiple_PHP_Select()
         Echo_Yellow "Enter your choice (1, 2, 3, 4, 5, 6 ,7 or 8): "
         read php_select
         case "${php_select}" in
-        1)
-            echo "Current selection: PHP ${Cur_PHP_Version}"
-            include_enable_php="include enable-php.conf;"
-            ;;
-        2)
-            echo "Current selection: PHP 5.2.17"
-            include_enable_php="include enable-php5.2.conf;"
-            ;;
-        3)
-            echo "Current selection: PHP 5.3.27"
-            include_enable_php="include enable-php5.3.conf;"
-            ;;
-        4)
-            echo "Current selection: PHP 5.4.45"
-            include_enable_php="include enable-php5.4.conf;"
-            ;;
-        5)
-            echo "Current selection: PHP 5.5.38"
-            include_enable_php="include enable-php5.5.conf;"
-            ;;
-        6)
-            echo "Current selection: PHP 5.6.28"
-            include_enable_php="include enable-php5.6.conf;"
-            ;;
-        7)
-            echo "Current selection:: PHP 7.0.12"
-            include_enable_php="include enable-php7.0.conf;"
-            ;;
-        8)
-            echo "Current selection:: PHP 7.1.0"
-            include_enable_php="include enable-php7.1.conf;"
-            ;;
-        *)
-            echo "Default,Current selection: PHP ${Cur_PHP_Version}"
-            php_select="1"
-            include_enable_php="include enable-php.conf;"
+            1)
+                echo "Current selection: PHP ${Cur_PHP_Version}"
+                include_enable_php="include enable-php.conf;"
+                ;;
+            2)
+                echo "Current selection: PHP 5.2.17"
+                include_enable_php="include enable-php5.2.conf;"
+                ;;
+            3)
+                echo "Current selection: PHP 5.3.27"
+                include_enable_php="include enable-php5.3.conf;"
+                ;;
+            4)
+                echo "Current selection: PHP 5.4.45"
+                include_enable_php="include enable-php5.4.conf;"
+                ;;
+            5)
+                echo "Current selection: PHP 5.5.38"
+                include_enable_php="include enable-php5.5.conf;"
+                ;;
+            6)
+                echo "Current selection: PHP 5.6.28"
+                include_enable_php="include enable-php5.6.conf;"
+                ;;
+            7)
+                echo "Current selection:: PHP 7.0.12"
+                include_enable_php="include enable-php7.0.conf;"
+                ;;
+            8)
+                echo "Current selection:: PHP 7.1.0"
+                include_enable_php="include enable-php7.1.conf;"
+                ;;
+            *)
+                echo "Default,Current selection: PHP ${Cur_PHP_Version}"
+                php_select="1"
+                include_enable_php="include enable-php.conf;"
+                ;;
         esac
     fi
 }
@@ -1081,5 +1082,6 @@ case "${arg1}" in
         echo "Usage: lnmp database {add|list|edit|del}"
         echo "Usage: lnmp ftp {add|list|edit|del|show}"
         echo "Usage: lnmp ssl add"
+        ;;
 esac
 exit

@@ -3,7 +3,6 @@
 Install_Nginx_Openssl()
 {
     if [ "${Enable_Nginx_Openssl}" = 'y' ]; then
-        cd ${cur_dir}/src
         Download_Files ${Download_Mirror}/lib/openssl/${Openssl_Ver}.tar.gz ${Openssl_Ver}.tar.gz
         [[ -d "${Openssl_Ver}" ]] && rm -rf ${Openssl_Ver}
         tar zxf ${Openssl_Ver}.tar.gz
@@ -17,6 +16,7 @@ Install_Nginx()
     groupadd www
     useradd -s /sbin/nologin -g www www
 
+    cd ${cur_dir}/src
     Install_Nginx_Openssl
     Tar_Cd ${Nginx_Ver}.tar.gz ${Nginx_Ver}
     if echo ${Nginx_Ver} | grep -Eqi 'nginx-[0-1].[5-8].[0-9]' || echo ${Nginx_Ver} | grep -Eqi 'nginx-1.9.[1-4]$'; then
