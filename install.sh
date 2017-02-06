@@ -225,3 +225,5 @@ case "${Stack}" in
         Echo_Red "Usage: $0 {lnmp|lnmpa|lamp}"
         ;;
 esac
+
+exit

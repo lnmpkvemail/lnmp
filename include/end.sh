@@ -218,8 +218,6 @@ Print_Sucess_Info()
     lnmp status
     netstat -ntl
     Echo_Green "Install lnmp V${LNMP_Ver} completed! enjoy it."
-    exit 0
-    exit 0
 }
 
 Print_Failed_Info()
@@ -227,8 +225,6 @@ Print_Failed_Info()
     Echo_Red "Sorry, Failed to install LNMP!"
     Echo_Red "Please visit https://bbs.vpser.net/forum-25-1.html feedback errors and logs."
     Echo_Red "You can download /root/lnmp-install.log from your server,and upload lnmp-install.log to LNMP Forum."
-    exit 1
-    exit 1
 }
 
 Check_LNMP_Install()

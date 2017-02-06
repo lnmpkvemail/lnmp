@@ -14,7 +14,7 @@ Libunwind_Ver='libunwind-1.1'
 Libicu4c_Ver='icu4c-58_1'
 Boost_Ver='boost_1_59_0'
 Openssl_Ver='openssl-1.0.2j'
-Nginx_Ver='nginx-1.10.2'
+Nginx_Ver='nginx-1.10.3'
 if [ "${DBSelect}" = "1" ]; then
     Mysql_Ver='mysql-5.1.73'
 elif [ "${DBSelect}" = "2" ]; then
@@ -39,31 +39,31 @@ elif [ "${PHPSelect}" = "3" ]; then
 elif [ "${PHPSelect}" = "4" ]; then
     Php_Ver='php-5.5.38'
 elif [ "${PHPSelect}" = "5" ]; then
-    Php_Ver='php-5.6.29'
+    Php_Ver='php-5.6.30'
 elif [ "${PHPSelect}" = "6" ]; then
-    Php_Ver='php-7.0.14'
+    Php_Ver='php-7.0.15'
 elif [ "${PHPSelect}" = "7" ]; then
-    Php_Ver='php-7.1.0'
+    Php_Ver='php-7.1.1'
 fi
 if [ "${PHPSelect}" = "1" ]; then
-    PhpMyAdmin_Ver='phpMyAdmin-4.0.10.18-all-languages'
+    PhpMyAdmin_Ver='phpMyAdmin-4.0.10.19-all-languages'
 elif [[ "${PHPSelect}" = "2" || "${PHPSelect}" = "3" ]]; then
-    PhpMyAdmin_Ver='phpMyAdmin-4.4.15.9-all-languages'
+    PhpMyAdmin_Ver='phpMyAdmin-4.4.15.10-all-languages'
     if [ "${DBSelect}" = "1" ]; then
-        PhpMyAdmin_Ver='phpMyAdmin-4.0.10.18-all-languages'
+        PhpMyAdmin_Ver='phpMyAdmin-4.0.10.19-all-languages'
     fi
 else
-    PhpMyAdmin_Ver='phpMyAdmin-4.6.5.1-all-languages'
+    PhpMyAdmin_Ver='phpMyAdmin-4.6.6-all-languages'
 fi
 APR_Ver='apr-1.5.2'
 APR_Util_Ver='apr-util-1.5.4'
 if [ "${ApacheSelect}" = "1" ]; then
-    Apache_Ver='httpd-2.2.31'
+    Apache_Ver='httpd-2.2.32'
 elif [ "${ApacheSelect}" = "2" ]; then
     Apache_Ver='httpd-2.4.25'
 fi
 
-Pureftpd_Ver='pure-ftpd-1.0.44'
+Pureftpd_Ver='pure-ftpd-1.0.45'
 
 XCache_Ver='xcache-3.2.0'
 ImageMagick_Ver='ImageMagick-7.0.4-3'

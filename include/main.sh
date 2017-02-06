@@ -1,8 +1,8 @@
 #!/bin/bash
 
 DB_Info=('MySQL 5.1.73' 'MySQL 5.5.53' 'MySQL 5.6.34' 'MySQL 5.7.16' 'MariaDB 5.5.53' 'MariaDB 10.0.28' 'MariaDB 10.1.19')
-PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.38' 'PHP 5.6.29' 'PHP 7.0.14' 'PHP 7.1.0')
-Apache_Info=('Apache 2.2.31' 'Apache 2.4.25')
+PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.38' 'PHP 5.6.30' 'PHP 7.0.15' 'PHP 7.1.1')
+Apache_Info=('Apache 2.2.32' 'Apache 2.4.25')
 
 Database_Selection()
 {
@@ -411,7 +411,7 @@ Print_APP_Ver()
         echo "${Mysql_Ver}"
     elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
         echo "${Mariadb_Ver}"
-    elif [[ "${DBSelect}" = "0" ]]; then
+    elif [ "${DBSelect}" = "0" ]; then
         echo "Do not install MySQL/MariaDB!"
     fi
 
@@ -435,7 +435,7 @@ Print_APP_Ver()
         echo "Database Directory: ${MySQL_Data_Dir}"
     elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
         echo "Database Directory: ${MariaDB_Data_Dir}"
-    elif [[ "${DBSelect}" = "0" ]]; then
+    elif [ "${DBSelect}" = "0" ]; then
         echo "Do not install MySQL/MariaDB!"
     fi
     echo "Default Website Directory: ${Default_Website_Dir}"
@@ -479,20 +479,10 @@ Check_Mirror()
 {
     country=`curl -sS --connect-timeout 10 -m 60 http://ip.vpser.net/country`
     if [[ "${country}" = "CN" && "${Download_Mirror}" = "http://soft.vpser.net" ]]; then
-        random=`date '+%s'`
-        lastnum=${random:(-1)}
-        if [ "$((lastnum % 2))" = 0 ]; then
-            mirror_code=`curl -o /dev/null -m 10 --connect-timeout 10 -s -w %{http_code} http://soft6.vpser.net`
-            if [ "${mirror_code}" = "200" ]; then
-                echo "Change to mirror http://soft6.vpser.net"
-                Download_Mirror='http://soft6.vpser.net'
-            fi
-        else
-            mirror_code=`curl -o /dev/null -m 10 --connect-timeout 10 -s -w %{http_code} http://soft9.vpser.net`
-            if [ "${mirror_code}" = "200" ]; then
-                echo "Change to mirror http://soft9.vpser.net"
-                Download_Mirror='http://soft9.vpser.net'
-            fi
+        mirror_code=`curl -o /dev/null -m 10 --connect-timeout 10 -s -w %{http_code} http://soft.vpser.net`
+        if [ "${mirror_code}" != "200" ]; then
+            echo "Change to mirror ftp://soft.vpser.net"
+            Download_Mirror='ftp://soft.vpser.net'
         fi
     fi
 }
@@ -530,7 +520,7 @@ Get_PHP_Ext_Dir()
 
 Check_Stack()
 {
-    if [[ -s /usr/local/php/bin/php-cgi || -s /usr/local/php/sbin/php-fpm ]] && [[ -s /usr/local/php/etc/php-fpm.conf && -s /etc/init.d/php-fpm && -s /usr/local/nginx/sbin/nginx ]]; then
+    if [[ -s /usr/local/php/sbin/php-fpm && -s /usr/local/php/etc/php-fpm.conf && -s /etc/init.d/php-fpm && -s /usr/local/nginx/sbin/nginx ]]; then
         Get_Stack="lnmp"
     elif [[ -s /usr/local/nginx/sbin/nginx && -s /usr/local/apache/bin/httpd && -s /usr/local/apache/conf/httpd.conf && -s /etc/init.d/httpd && ! -s /usr/local/php/sbin/php-fpm ]]; then
         Get_Stack="lnmpa"

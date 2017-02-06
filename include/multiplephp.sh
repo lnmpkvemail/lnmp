@@ -7,10 +7,10 @@ Install_Multiplephp()
     Check_DB
     Check_Stack
 
-if [ ${Get_Stack} != "lnmp" ]; then
-    echo "Multiple PHP Versions ONLY for LNMP Stack!"
-    exit 1
-fi
+    if [ ${Get_Stack} != "lnmp" ]; then
+        echo "Multiple PHP Versions ONLY for LNMP Stack!"
+        exit 1
+    fi
 
 #which PHP Version do you want to install?
     echo "==========================="
@@ -64,13 +64,30 @@ fi
         exit 1
     esac
 
-Press_Install
-if [[ -d "${MPHP_Path}" ]]; then
-    echo "${Php_Ver} already exists!"
-    exit 1
-fi
-PHP_with_curl
-Check_Curl
+    Press_Install
+    if [[ -d "${MPHP_Path}" ]]; then
+        echo "${Php_Ver} already exists!"
+        exit 1
+    fi
+    PHP_with_curl
+    Check_Curl
+
+    if [ "${PHPSelect}" = "1" ]; then
+        Install_MPHP5.2 2>&1 | tee /root/install-mphp5.2.log
+    elif [ "${PHPSelect}" = "2" ]; then
+        Install_MPHP5.3 2>&1 | tee /root/install-mphp5.3.log
+    elif [ "${PHPSelect}" = "3" ]; then
+        Install_MPHP5.4 2>&1 | tee /root/install-mphp5.4.log
+    elif [ "${PHPSelect}" = "4" ]; then
+        Install_MPHP5.5 2>&1 | tee /root/install-mphp5.5.log
+    elif [ "${PHPSelect}" = "5" ]; then
+        Install_MPHP5.6 2>&1 | tee /root/install-mphp5.6.log
+    elif [ "${PHPSelect}" = "6" ]; then
+        Install_MPHP7.0 2>&1 | tee /root/install-mphp7.0.log
+    elif [ "${PHPSelect}" = "7" ]; then
+        Install_MPHP7.1 2>&1 | tee /root/install-mphp7.1.log
+    fi
+}
 
 Install_MPHP5.2()
 {
@@ -84,12 +101,6 @@ Install_MPHP5.2()
         Echo_Green "Autconf 2.13...ok"
     else
         Install_Autoconf
-    fi
-
-    if [[ -s /usr/local/curl/bin/curl ]]; then
-        Echo_Green "Curl...ok"
-    else
-        Install_Curl
     fi
 
     ln -s /usr/lib/libevent-1.4.so.2 /usr/local/lib/libevent-1.4.so.2
@@ -781,21 +792,4 @@ EOF
         rm -rf ${MPHP_Path}
         Echo_Red "Failed to install ${Php_Ver}, you can download /root/install-mphp7.1.log from your server, and upload install-mphp7.1.log to LNMP Forum."
     fi
-}
-
-if [ "${PHPSelect}" = "1" ]; then
-    Install_MPHP5.2 2>&1 | tee /root/install-mphp5.2.log
-elif [ "${PHPSelect}" = "2" ]; then
-    Install_MPHP5.3 2>&1 | tee /root/install-mphp5.3.log
-elif [ "${PHPSelect}" = "3" ]; then
-    Install_MPHP5.4 2>&1 | tee /root/install-mphp5.4.log
-elif [ "${PHPSelect}" = "4" ]; then
-    Install_MPHP5.5 2>&1 | tee /root/install-mphp5.5.log
-elif [ "${PHPSelect}" = "5" ]; then
-    Install_MPHP5.6 2>&1 | tee /root/install-mphp5.6.log
-elif [ "${PHPSelect}" = "6" ]; then
-    Install_MPHP7.0 2>&1 | tee /root/install-mphp7.0.log
-elif [ "${PHPSelect}" = "7" ]; then
-    Install_MPHP7.1 2>&1 | tee /root/install-mphp7.1.log
-fi
 }
