@@ -28,11 +28,11 @@ CentOS_RemoveAMP()
 {
     Echo_Blue "[-] Yum remove packages..."
     rpm -qa|grep httpd
-    rpm -e httpd httpd-tools
+    rpm -e httpd httpd-tools --nodeps
     rpm -qa|grep mysql
-    rpm -e mysql mysql-libs
+    rpm -e mysql mysql-libs --nodeps
     rpm -qa|grep php
-    rpm -e php-mysql php-cli php-gd php-common php
+    rpm -e php-mysql php-cli php-gd php-common php --nodeps
 
     Remove_Error_Libcurl
 
