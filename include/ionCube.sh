@@ -57,6 +57,9 @@ zend_extension="${zend_ext}"
 EOF
 
     if [ -s "${zend_ext}" ]; then
+        if echo ${zend_ext_dir} | grep -vEqi "non-zts"; then
+            sed -i 's/.so/_ts.so/g' /usr/local/php/conf.d/001-ioncube.ini
+        fi
         Restart_PHP
         Echo_Green "====== ionCube install completed ======"
         Echo_Green "ionCube installed successfully, enjoy it!"

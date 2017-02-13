@@ -7,7 +7,7 @@ Install_Multiplephp()
     Check_DB
     Check_Stack
 
-    if [ ${Get_Stack} != "lnmp" ]; then
+    if [ "${Get_Stack}" != "lnmp" ]; then
         echo "Multiple PHP Versions ONLY for LNMP Stack!"
         exit 1
     fi
@@ -30,7 +30,7 @@ Install_Multiplephp()
     1)
         echo "You will install ${PHP_Info[0]}"
         MPHP_Path='/usr/local/php5.2'
-        if [ ${DB_Name} == "None" ];then
+        if [ "${DB_Name}" == "None" ];then
             Echo_Red "MySQL or MariaDB not found,can't install PHP 5.2!"
             exit 1
         fi
