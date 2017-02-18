@@ -12,6 +12,16 @@ Install_ImageMagic()
         rm -f "${zend_ext}"
     fi
 
+    if [[ "${DISTRO}" = "CentOS" || "${DISTRO}" = "RHEL" || "${DISTRO}" = "Aliyun" || "${DISTRO}" = "Amazon" ]]; then
+        yum install -y epel-release
+    fi
+    if [ "$PM" = "yum" ]; then
+        yum install -y libwebp-devel
+    elif [ "$PM" = "apt" ]; then
+        apt-get update
+        apt-get install -y libwebp-dev
+    fi
+
     cd ${cur_dir}/src
     Download_Files ${Download_Mirror}/web/imagemagick/${ImageMagick_Ver}.tar.bz2 ${ImageMagick_Ver}.tar.bz2
 
