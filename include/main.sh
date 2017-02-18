@@ -484,6 +484,12 @@ Remove_StartUp()
 
 Check_Mirror()
 {
+    if [ "$PM" = "yum" ]; then
+        yum install -y curl
+    elif [ "$PM" = "apt" ]; then
+        apt-get update
+        apt-get install -y curl
+    fi
     country=`curl -sS --connect-timeout 10 -m 60 http://ip.vpser.net/country`
     if [[ "${country}" = "CN" && "${Download_Mirror}" = "http://soft.vpser.net" ]]; then
         mirror_code=`curl -o /dev/null -m 10 --connect-timeout 10 -s -w %{http_code} http://soft.vpser.net`
