@@ -158,6 +158,16 @@ MySQL_Opt()
     fi
 }
 
+Check_MySQL_Data_Dir()
+{
+    if [ -d "${MySQL_Data_Dir}" ]; then
+        \cp ${MySQL_Data_Dir}/* /root/mysql-data-dir-backup$(date +"%Y%m%d%H%M%S")/
+        rm -rf ${MySQL_Data_Dir}/*
+    else
+        mkdir -p ${MySQL_Data_Dir}
+    fi
+}
+
 Install_MySQL_51()
 {
     Echo_Blue "[+] Installing ${Mysql_Ver}..."
@@ -242,11 +252,7 @@ EOF
         sed -i 's#default_storage_engine.*#default_storage_engine = MyISAM#' /etc/my.cnf
     fi
     MySQL_Opt
-    if [ -d "${MySQL_Data_Dir}" ]; then
-        rm -rf ${MySQL_Data_Dir}/*
-    else
-        mkdir -p ${MySQL_Data_Dir}
-    fi
+    Check_MySQL_Data_Dir
     chown -R mysql:mysql ${MySQL_Data_Dir}
     /usr/local/mysql/bin/mysql_install_db --user=mysql --datadir=${MySQL_Data_Dir}
     chgrp -R mysql /usr/local/mysql/.
@@ -344,11 +350,7 @@ EOF
         sed -i '/skip-external-locking/i\default_storage_engine = MyISAM\nloose-skip-innodb' /etc/my.cnf
     fi
     MySQL_Opt
-    if [ -d "${MySQL_Data_Dir}" ]; then
-        rm -rf ${MySQL_Data_Dir}/*
-    else
-        mkdir -p ${MySQL_Data_Dir}
-    fi
+    Check_MySQL_Data_Dir
     chown -R mysql:mysql ${MySQL_Data_Dir}
     /usr/local/mysql/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
     chgrp -R mysql /usr/local/mysql/.
@@ -476,11 +478,7 @@ EOF
         sed -i 's/^#loose-innodb/loose-innodb/g' /etc/my.cnf
     fi
     MySQL_Opt
-    if [ -d "${MySQL_Data_Dir}" ]; then
-        rm -rf ${MySQL_Data_Dir}/*
-    else
-        mkdir -p ${MySQL_Data_Dir}
-    fi
+    Check_MySQL_Data_Dir
     chown -R mysql:mysql ${MySQL_Data_Dir}
     /usr/local/mysql/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
     chgrp -R mysql /usr/local/mysql/.
@@ -609,11 +607,7 @@ EOF
         sed -i 's/^#loose-innodb/loose-innodb/g' /etc/my.cnf
     fi
     MySQL_Opt
-    if [ -d "${MySQL_Data_Dir}" ]; then
-        rm -rf ${MySQL_Data_Dir}/*
-    else
-        mkdir -p ${MySQL_Data_Dir}
-    fi
+    Check_MySQL_Data_Dir
     chown -R mysql:mysql ${MySQL_Data_Dir}
     /usr/local/mysql/bin/mysqld --initialize-insecure --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
     chgrp -R mysql /usr/local/mysql/.

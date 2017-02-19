@@ -200,7 +200,7 @@ Ubuntu_Deadline()
 
 CentOS_Dependent()
 {
-    cp /etc/yum.conf /etc/yum.conf.lnmp
+    \cp /etc/yum.conf /etc/yum.conf.lnmp
     sed -i 's:exclude=.*:exclude=:g' /etc/yum.conf
 
     Echo_Blue "[+] Yum installing dependent packages..."

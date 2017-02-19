@@ -63,6 +63,16 @@ EOF
     /etc/init.d/mariadb stop
 }
 
+Check_MariaDB_Data_Dir()
+{
+    if [ -d "${MariaDB_Data_Dir}" ]; then
+        \cp ${MariaDB_Data_Dir}/* /root/mariadb-data-dir-backup$(date +"%Y%m%d%H%M%S")/
+        rm -rf ${MariaDB_Data_Dir}/*
+    else
+        mkdir -p ${MariaDB_Data_Dir}
+    fi
+}
+
 Install_MariaDB_5()
 {
     Echo_Blue "[+] Installing ${Mariadb_Ver}..."
@@ -147,11 +157,7 @@ EOF
         sed -i '/skip-external-locking/i\default_storage_engine = MyISAM\nloose-skip-innodb' /etc/my.cnf
     fi
     MySQL_Opt
-    if [ -d "${MariaDB_Data_Dir}" ]; then
-        rm -rf ${MariaDB_Data_Dir}/*
-    else
-        mkdir -p ${MariaDB_Data_Dir}
-    fi
+    Check_MariaDB_Data_Dir
     chown -R mariadb:mariadb ${MariaDB_Data_Dir}
     /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
     chgrp -R mariadb /usr/local/mariadb/.
@@ -244,11 +250,7 @@ EOF
         sed -i '/skip-external-locking/i\default_storage_engine = MyISAM\nloose-skip-innodb' /etc/my.cnf
     fi
     MySQL_Opt
-    if [ -d "${MariaDB_Data_Dir}" ]; then
-        rm -rf ${MariaDB_Data_Dir}/*
-    else
-        mkdir -p ${MariaDB_Data_Dir}
-    fi
+    Check_MariaDB_Data_Dir
     chown -R mariadb:mariadb ${MariaDB_Data_Dir}
     /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
     chgrp -R mariadb /usr/local/mariadb/.
@@ -341,11 +343,7 @@ EOF
         sed -i '/skip-external-locking/i\default_storage_engine = MyISAM\nloose-skip-innodb' /etc/my.cnf
     fi
     MySQL_Opt
-    if [ -d "${MariaDB_Data_Dir}" ]; then
-        rm -rf ${MariaDB_Data_Dir}/*
-    else
-        mkdir -p ${MariaDB_Data_Dir}
-    fi
+    Check_MariaDB_Data_Dir
     chown -R mariadb:mariadb ${MariaDB_Data_Dir}
     /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
     chgrp -R mariadb /usr/local/mariadb/.
