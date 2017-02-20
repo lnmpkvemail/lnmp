@@ -15,6 +15,7 @@ Ln_PHP_Bin()
     if [ "${Stack}" = "lnmp" ]; then
         ln -sf /usr/local/php/sbin/php-fpm /usr/bin/php-fpm
     fi
+    rm -f /usr/local/php/conf.d/*
 }
 
 Pear_Pecl_Set()
