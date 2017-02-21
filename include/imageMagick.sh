@@ -23,15 +23,20 @@ Install_ImageMagic()
     fi
 
     cd ${cur_dir}/src
-    Download_Files ${Download_Mirror}/web/imagemagick/${ImageMagick_Ver}.tar.bz2 ${ImageMagick_Ver}.tar.bz2
+    if echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.';then
+        Download_Files ${Download_Mirror}/web/imagemagick/ImageMagick-6.8.8-9.tar.gz ImageMagick-6.8.8-9.tar.gz
+        Tar_Cd ImageMagick-6.8.8-9.tar.gz ImageMagick-6.8.8-9
+    else
+        Download_Files ${Download_Mirror}/web/imagemagick/${ImageMagick_Ver}.tar.bz2 ${ImageMagick_Ver}.tar.bz2
+        Tarj_Cd ${ImageMagick_Ver}.tar.bz2 ${ImageMagick_Ver}
+    fi
 
-    Tarj_Cd ${ImageMagick_Ver}.tar.bz2 ${ImageMagick_Ver}
     ./configure --prefix=/usr/local/imagemagick
     make && make install
     cd ../
     rm -rf ${cur_dir}/src/${ImageMagick_Ver}
 
-    if  echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.';then
+    if echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.';then
         Download_Files ${Download_Mirror}/web/imagick/imagick-3.1.2.tgz imagick-3.1.2.tgz
         Tar_Cd imagick-3.1.2.tgz imagick-3.1.2
     else
