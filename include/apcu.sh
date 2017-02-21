@@ -28,13 +28,6 @@ Install_Apcu()
     cd ${cur_dir}/src
 
     if echo "${Cur_PHP_Version}" | grep -Eqi '^7.'; then
-        Download_Files ${Download_Mirror}/web/apcu_bc/${PHPApcu_Bc_Ver}.tgz ${PHPApcu_Bc_Ver}.tgz
-        Tar_Cd ${PHPApcu_Bc_Ver}.tgz ${PHPApcu_Bc_Ver}
-        /usr/local/php/bin/phpize
-        ./configure --with-php-config=/usr/local/php/bin/php-config
-        make
-        make install
-        cd ..
         Download_Files ${Download_Mirror}/web/apcu/${PHPNewApcu_Ver}.tgz ${PHPNewApcu_Ver}.tgz
         Tar_Cd ${PHPNewApcu_Ver}.tgz ${PHPNewApcu_Ver}
     else
@@ -47,6 +40,21 @@ Install_Apcu()
     make install
     \cp -a apc.php ${Default_Website_Dir}/apc.php
     sed -i "s/^defaults('ADMIN_PASSWORD','.*/defaults('ADMIN_PASSWORD','${apcu_pass}');/g" ${Default_Website_Dir}/apc.php
+    cd ..
+
+    if echo "${Cur_PHP_Version}" | grep -Eqi '^7.'; then
+        Download_Files ${Download_Mirror}/web/apcu_bc/${PHPApcu_Bc_Ver}.tgz ${PHPApcu_Bc_Ver}.tgz
+        Tar_Cd ${PHPApcu_Bc_Ver}.tgz ${PHPApcu_Bc_Ver}
+        /usr/local/php/bin/phpize
+        ./configure --with-php-config=/usr/local/php/bin/php-config
+        make
+        make install
+        cd ..
+        rm -rf ${cur_dir}/src/${PHPApcu_Bc_Ver}
+        rm -rf ${cur_dir}/src/${PHPNewApcu_Ver}
+    else
+        rm -rf ${cur_dir}/src/${PHPOldApcu_Ver}
+    fi
 
     cat >/usr/local/php/conf.d/009-apcu.ini<<EOF
 [apcu]
