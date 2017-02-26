@@ -269,6 +269,7 @@ Press_Start()
 
 Install_LSB()
 {
+    echo "[+] Installing lsb..."
     if [ "$PM" = "yum" ]; then
         yum -y install redhat-lsb
     elif [ "$PM" = "apt" ]; then
@@ -288,7 +289,6 @@ Get_Dist_Version()
         Install_LSB
         eval ${DISTRO}_Version=`lsb_release -rs`
     fi
-    eval echo "${DISTRO} \${${DISTRO}_Version}"
 }
 
 Get_Dist_Name()
@@ -450,6 +450,7 @@ Print_APP_Ver()
 
 Print_Sys_Info()
 {
+    eval echo "${DISTRO} \${${DISTRO}_Version}"
     cat /etc/issue
     cat /etc/*-release
     uname -a

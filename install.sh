@@ -36,6 +36,12 @@ if [ "${DISTRO}" = "unknow" ]; then
     exit 1
 fi
 
+if [ -f /bin/lnmp ]; then
+    Echo_Red "You have installed LNMP!"
+    echo -e "If you want to reinstall LNMP, please BACKUP your data.\nand run uninstall script: ./uninstall.sh before you install."
+    exit 1
+fi
+
 Check_LNMPConf
 
 clear
@@ -51,13 +57,13 @@ Init_Install()
 {
     Press_Install
     Print_APP_Ver
+    Get_Dist_Version
     Print_Sys_Info
     Check_Hosts
     Check_Mirror
     if [ "${DISTRO}" = "RHEL" ]; then
         RHEL_Modify_Source
     fi
-    Get_Dist_Version
     if [ "${DISTRO}" = "Ubuntu" ]; then
         Ubuntu_Modify_Source
     fi
