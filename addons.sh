@@ -67,7 +67,6 @@ if [[ "${action}" == "" || "${action2}" == "" ]]; then
     action='install'
     Display_Addons_Menu
 fi
-Get_OS_Bit
 Get_Dist_Name
 
     case "${action}" in

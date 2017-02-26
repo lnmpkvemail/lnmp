@@ -19,7 +19,6 @@ LNMP_Ver='1.4'
 shopt -s extglob
 
 Check_DB
-Get_OS_Bit
 Get_Dist_Name
 
 clear

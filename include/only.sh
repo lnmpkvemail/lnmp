@@ -105,7 +105,6 @@ Install_Only_Database()
     echo "|           For more information please visit https://lnmp.org          |"
     echo "+-----------------------------------------------------------------------+"
 
-    Get_OS_Bit
     Get_Dist_Name
     Check_DB
     if [ ${DB_Name} != "None" ]; then

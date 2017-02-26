@@ -2,7 +2,6 @@
 
 Install_Multiplephp()
 {
-    Get_OS_Bit
     Get_Dist_Name
     Check_DB
     Check_Stack
