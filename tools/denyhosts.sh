@@ -9,40 +9,72 @@ if [ $(id -u) != "0" ]; then
 fi
 
 . ../lnmp.conf
+. ../include/main.sh
 Get_Dist_Name
 
 Press_Start
 
-if [ "$PM" = "yum" ]; then
-    yum install python rsyslog -y
+if [ "${PM}" = "yum" ]; then
+    yum install python rsyslog python-ipaddr -y
     service rsyslog restart
-elif [ "$PM" = "apt" ]; then
+    cat /dev/null > /var/log/secure
+elif [ "${PM}" = "apt" ]; then
     apt-get update
-    apt-get install python rsyslog -y
+    apt-get install python rsyslog python-ipaddr -y
     /etc/init.d/rsyslog restart
-    /etc/init.d/rsyslog restart
+    cat /dev/null > /var/log/auth.log
 fi
 
 echo "Downloading..."
 cd ../src
-Download_Files ${Download_Mirror}/security/denyhosts/DenyHosts-2.6.tar.gz DenyHosts-2.6.tar.gz
-Tar_Cd DenyHosts-2.6.tar.gz DenyHosts-2.6
+Download_Files ${Download_Mirror}/security/denyhosts/denyhosts-3.1.tar.gz denyhosts-3.1.tar.gz
+Tar_Cd denyhosts-3.1.tar.gz denyhosts-3.1
 echo "Installing..."
 python setup.py install
 
 echo "Copy files..."
-cd /usr/share/denyhosts/
-cp denyhosts.cfg-dist denyhosts.cfg
-cp daemon-control-dist daemon-control
-chown root daemon-control
-chmod 700 daemon-control
-\cp /usr/share/denyhosts/daemon-control /etc/init.d/denyhosts
+\cp denyhosts.conf /etc
+
+if [ "${PM}" = "yum" ]; then
+    sed -i 's@^SECURE_LOG = /var/log/auth.log@#SECURE_LOG = /var/log/auth.log@g' /etc/denyhosts.conf
+    sed -i 's@^#SECURE_LOG = /var/log/secure@SECURE_LOG = /var/log/secure@g' /etc/denyhosts.conf
+    \cp /usr/bin/daemon-control-dist /usr/bin/daemon-control
+    chown root /usr/bin/daemon-control
+    chmod 700 /usr/bin/daemon-control
+    \cp /usr/bin/daemon-control /etc/init.d/denyhosts
+
+    ln -sf /usr/bin/denyhosts.py /usr/sbin/denyhosts
+elif [ "${PM}" = "apt" ]; then
+    \cp /usr/local/bin/daemon-control-dist /usr/local/bin/daemon-control
+    chown root /usr/local/bin/daemon-control
+    chmod 700 /usr/local/bin/daemon-control
+    \cp /usr/local/bin/daemon-control /etc/init.d/denyhosts
+
+    ln -sf /usr/local/bin/denyhosts.py /usr/sbin/denyhosts
+
+    cat >lsb.ini<<EOF
+### BEGIN INIT INFO
+# Provides:          denyhosts
+# Required-Start:    $syslog $local_fs $time
+# Required-Stop:     $syslog $local_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start denyhosts and watch .
+### END INIT INFO
+EOF
+    sed -i '9 r lsb.ini' /etc/init.d/denyhosts
+    rm -f lsb.ini
+fi
+
+sed -i 's#^PURGE_DENY =.*#PURGE_DENY =1d#g' /etc/denyhosts.conf
+sed -i 's@^#PURGE_THRESHOLD = 0@PURGE_THRESHOLD = 3@g' /etc/denyhosts.conf
+sed -i '/^IPTABLES/s/^/#/' /etc/denyhosts.conf
+sed -i '/^ADMIN_EMAIL/s/^/#/' /etc/denyhosts.conf
+sed -i 's#^DENY_THRESHOLD_ROOT =.*#DENY_THRESHOLD_ROOT = 3#g' /etc/denyhosts.conf
 
 sed -i '/STATE_LOCK_EXISTS\ \=\ \-2/aif not os.path.exists("/var/lock/subsys"): os.makedirs("/var/lock/subsys")' /etc/init.d/denyhosts
-if [ "$PM" = "apt" ]; then
-    sed -i 's#/var/log/secure#/var/log/auth.log#g' /usr/share/denyhosts/denyhosts.cfg
-    ln -sf /usr/local/bin/denyhosts.py /usr/bin/denyhosts.py
-fi
+cd ..
+rm -rf denyhosts-3.1
 
 StartUp denyhosts
 echo "Start DenyHosts..."
