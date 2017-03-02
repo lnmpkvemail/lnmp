@@ -866,7 +866,7 @@ Add_Letsencrypt()
         fi
     fi
 
-    country=`curl -sS --connect-timeout 10 -m 60 http://ip.vpser.net/country`
+    country=`curl -sSk --connect-timeout 10 -m 60 https://ip.vpser.net/country`
     if [ "${country}" = "CN" ]; then
         mkdir ~/.pip
         cat > ~/.pip/pip.conf <<EOF

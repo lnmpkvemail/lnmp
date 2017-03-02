@@ -367,7 +367,7 @@ Download_Files()
         echo "${FileName} [found]"
     else
         echo "Notice: ${FileName} not found!!!download now..."
-        wget -c --progress=bar:force --prefer-family=IPv4 ${URL}
+        wget -c --progress=bar:force --prefer-family=IPv4 --no-check-certificate ${URL}
     fi
 }
 
@@ -491,9 +491,9 @@ Check_Mirror()
         apt-get update
         apt-get install -y curl
     fi
-    country=`curl -sS --connect-timeout 10 -m 60 http://ip.vpser.net/country`
-    if [[ "${country}" = "CN" && "${Download_Mirror}" = "http://soft.vpser.net" ]]; then
-        mirror_code=`curl -o /dev/null -m 10 --connect-timeout 10 -s -w %{http_code} http://soft.vpser.net`
+    country=`curl -sSk --connect-timeout 10 -m 60 https://ip.vpser.net/country`
+    if [[ "${country}" = "CN" && "${Download_Mirror}" = "https://soft.vpser.net" ]]; then
+        mirror_code=`curl -o /dev/null -m 10 --connect-timeout 10 -sk -w %{http_code} https://soft.vpser.net`
         if [ "${mirror_code}" != "200" ]; then
             echo "Change to mirror ftp://soft.vpser.net"
             Download_Mirror='ftp://soft.vpser.net'
