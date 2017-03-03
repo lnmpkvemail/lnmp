@@ -36,10 +36,12 @@ if [ "${DISTRO}" = "unknow" ]; then
     exit 1
 fi
 
-if [ -f /bin/lnmp ]; then
-    Echo_Red "You have installed LNMP!"
-    echo -e "If you want to reinstall LNMP, please BACKUP your data.\nand run uninstall script: ./uninstall.sh before you install."
-    exit 1
+if [[ "${Stack}" = "lnmp" || "${Stack}" = "lnmpa" || "${Stack}" = "lamp" ]]; then
+    if [ -f /bin/lnmp ]; then
+        Echo_Red "You have installed LNMP!"
+        echo -e "If you want to reinstall LNMP, please BACKUP your data.\nand run uninstall script: ./uninstall.sh before you install."
+        exit 1
+    fi
 fi
 
 Check_LNMPConf
