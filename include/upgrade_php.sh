@@ -31,7 +31,7 @@ Start_Upgrade_PHP()
     else
         echo "Notice: php-$php_version.tar.bz2 not found!!!download now..."
         cd ${cur_dir}/src
-        country=`curl -sS --connect-timeout 10 -m 60 http://ip.vpser.net/country`
+        country=`curl -sSk --connect-timeout 10 -m 60 https://ip.vpser.net/country`
         if [ "${country}" = "CN" ]; then
             wget -c --progress=bar:force http://cn2.php.net/distributions/php-${php_version}.tar.bz2
             if [ $? -ne 0 ]; then
