@@ -161,7 +161,9 @@ MySQL_Opt()
 Check_MySQL_Data_Dir()
 {
     if [ -d "${MySQL_Data_Dir}" ]; then
-        \cp ${MySQL_Data_Dir}/* /root/mysql-data-dir-backup$(date +"%Y%m%d%H%M%S")/
+        datetime=$(date +"%Y%m%d%H%M%S")
+        mkdir -p /root/mysql-data-dir-backup${datetime}/
+        \cp ${MySQL_Data_Dir}/* /root/mysql-data-dir-backup${datetime}/
         rm -rf ${MySQL_Data_Dir}/*
     else
         mkdir -p ${MySQL_Data_Dir}

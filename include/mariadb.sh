@@ -66,7 +66,9 @@ EOF
 Check_MariaDB_Data_Dir()
 {
     if [ -d "${MariaDB_Data_Dir}" ]; then
-        \cp ${MariaDB_Data_Dir}/* /root/mariadb-data-dir-backup$(date +"%Y%m%d%H%M%S")/
+        datetime=$(date +"%Y%m%d%H%M%S")
+        mkdir /root/mariadb-data-dir-backup${datetime}/
+        \cp ${MariaDB_Data_Dir}/* /root/mariadb-data-dir-backup${datetime}/
         rm -rf ${MariaDB_Data_Dir}/*
     else
         mkdir -p ${MariaDB_Data_Dir}
