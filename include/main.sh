@@ -405,6 +405,10 @@ Check_LNMPConf()
         Echo_Red "Can't get values from lnmp.conf!"
         exit 1
     fi
+    if [[ "${MySQL_Data_Dir}" = "/" || "${MariaDB_Data_Dir}" = "/" || "${Default_Website_Dir}" = "/" ]]; then
+        Echo_Red "Can't set MySQL/MariaDB/Website Directory to / !"
+        exit 1
+    fi
 }
 
 Print_APP_Ver()
@@ -491,9 +495,9 @@ Check_Mirror()
         apt-get update
         apt-get install -y curl
     fi
-    country=`curl -sSk --connect-timeout 10 -m 60 https://ip.vpser.net/country`
+    country=`curl -sSk --connect-timeout 30 -m 60 https://ip.vpser.net/country`
     if [[ "${country}" = "CN" && "${Download_Mirror}" = "https://soft.vpser.net" ]]; then
-        mirror_code=`curl -o /dev/null -m 10 --connect-timeout 10 -sk -w %{http_code} https://soft.vpser.net`
+        mirror_code=`curl -o /dev/null -m 20 --connect-timeout 20 -sk -w %{http_code} https://soft.vpser.net`
         if [ "${mirror_code}" != "200" ]; then
             echo "Change to mirror ftp://soft.vpser.net"
             Download_Mirror='ftp://soft.vpser.net'
