@@ -808,10 +808,10 @@ EOF
 
 Create_SSL_Config()
 {
-    if [ ! -s /usr/local/nginx/ssl/dhparam.pem ]; then
+    if [ ! -s /usr/local/nginx/conf/ssl/dhparam.pem ]; then
         echo "Create dhparam.pem..."
-        mkdir -p /usr/local/nginx/ssl/
-        openssl dhparam -out /usr/local/nginx/ssl/dhparam.pem 2048
+        mkdir -p /usr/local/nginx/conf/ssl/
+        openssl dhparam -out /usr/local/nginx/conf/ssl/dhparam.pem 2048
     fi
 
     cat >>"/usr/local/nginx/conf/vhost/${domain}.conf"<<EOF
@@ -831,8 +831,8 @@ server
         ssl_prefer_server_ciphers on;
         ssl_ciphers "EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5";
         ssl_session_cache builtin:1000 shared:SSL:10m;
-        # openssl dhparam -out /usr/local/nginx/ssl/dhparam.pem 2048
-        ssl_dhparam /usr/local/nginx/ssl/dhparam.pem;
+        # openssl dhparam -out /usr/local/nginx/conf/ssl/dhparam.pem 2048
+        ssl_dhparam /usr/local/nginx/conf/ssl/dhparam.pem;
 
         #error_page   404   /404.html;
 
