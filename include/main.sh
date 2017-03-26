@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DB_Info=('MySQL 5.1.73' 'MySQL 5.5.53' 'MySQL 5.6.34' 'MySQL 5.7.16' 'MariaDB 5.5.53' 'MariaDB 10.0.28' 'MariaDB 10.1.19')
-PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.38' 'PHP 5.6.30' 'PHP 7.0.16' 'PHP 7.1.2')
+PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.38' 'PHP 5.6.30' 'PHP 7.0.17' 'PHP 7.1.3')
 Apache_Info=('Apache 2.2.32' 'Apache 2.4.25')
 
 Database_Selection()
@@ -497,7 +497,7 @@ Check_Mirror()
     fi
     country=`curl -sSk --connect-timeout 30 -m 60 https://ip.vpser.net/country`
     if [[ "${country}" = "CN" && "${Download_Mirror}" = "https://soft.vpser.net" ]]; then
-        mirror_code=`curl -o /dev/null -m 20 --connect-timeout 20 -sk -w %{http_code} https://soft.vpser.net`
+        mirror_code=`curl -o /dev/null -m 20 --connect-timeout 20 -sk -w %{http_code} http://soft.vpser.net`
         if [ "${mirror_code}" != "200" ]; then
             echo "Change to mirror ftp://soft.vpser.net"
             Download_Mirror='ftp://soft.vpser.net'
