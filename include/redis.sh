@@ -43,11 +43,9 @@ Install_Redis()
         rm -rf ${PHPRedis_Ver}
     fi
 
-    if echo "${Cur_PHP_Version}" | grep -Eqi '^7.';then
-        cd ${cur_dir}/src
-        rm -rf phpredis
-        git clone -b php7 https://github.com/phpredis/phpredis.git
-        cd phpredis
+    if echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.';then
+        Download_Files http://pecl.php.net/get/redis-2.2.7.tgz redis-2.2.7.tgz
+        Tar_Cd redis-2.2.7.tgz redis-2.2.7
     else
         Download_Files http://pecl.php.net/get/${PHPRedis_Ver}.tgz ${PHPRedis_Ver}.tgz
         Tar_Cd ${PHPRedis_Ver}.tgz ${PHPRedis_Ver}
@@ -63,7 +61,7 @@ EOF
 
     \cp ${cur_dir}/init.d/init.d.redis /etc/init.d/redis
     chmod +x /etc/init.d/redis
-    echo "Add to auto start..."
+    echo "Add to auto startup..."
     StartUp redis
     Restart_PHP
     /etc/init.d/redis start
