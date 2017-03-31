@@ -40,11 +40,10 @@ Install_PHPMemcached()
     make && make install
     cd ../
 
+    cd ${cur_dir}/src
     if echo "${Cur_PHP_Version}" | grep -Eqi '^7.';then
-        cd ${cur_dir}/src
-        rm -rf php-memcached
-        git clone -b php7 https://github.com/php-memcached-dev/php-memcached.git
-        cd php-memcached
+        Download_Files ${Download_Mirror}/web/php-memcached/${PHP7Memcached_Ver}.tgz ${PHP7Memcached_Ver}.tgz
+        Tar_Cd ${PHP7Memcached_Ver}.tgz ${PHP7Memcached_Ver}
     else
         Download_Files ${Download_Mirror}/web/php-memcached/${PHPMemcached_Ver}.tgz ${PHPMemcached_Ver}.tgz
         Tar_Cd ${PHPMemcached_Ver}.tgz ${PHPMemcached_Ver}
