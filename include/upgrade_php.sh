@@ -60,7 +60,7 @@ Start_Upgrade_PHP()
     lnmp stop
 
     if [ "${Stack}" = "lnmp" ]; then
-        mv /etc/init.d/php-fpm /etc/init.d/php-fpm.bak.${Upgrade_Date}
+        mv /etc/init.d/php-fpm /usr/local/oldphp${Upgrade_Date}/init.d.php-fpm.bak.${Upgrade_Date}
         mv /usr/local/php /usr/local/oldphp${Upgrade_Date}
     else
         if echo "${Cur_PHP_Version}" | grep -Eqi '^7.';then
