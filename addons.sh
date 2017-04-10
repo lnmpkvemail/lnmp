@@ -50,7 +50,7 @@ Restart_PHP()
         /etc/init.d/httpd restart
     else
         echo "Restarting php-fpm......"
-        /etc/init.d/php-fpm restart
+        ${PHPFPM_Initd} restart
     fi
 }
 
@@ -63,11 +63,101 @@ echo "+-----------------------------------------------------------------------+"
 echo "|           For more information please visit https://lnmp.org          |"
 echo "+-----------------------------------------------------------------------+"
 
+Select_PHP()
+{
+    if [[ ! -s /usr/local/php5.2/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.2.conf ]] && [[ ! -s /usr/local/php5.3/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.3.conf ]] && [[ ! -s /usr/local/php5.4/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.4.conf ]] && [[ ! -s /usr/local/php5.5/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.5.conf ]] && [[ ! -s /usr/local/php5.6/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.6.conf ]] && [[ ! -s /usr/local/php7.0/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.0.conf ]] && [[ ! -s /usr/local/php7.1/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.1.conf ]]; then
+        PHP_Path='/usr/local/php'
+        PHPFPM_Initd='/etc/init.d/php-fpm'
+    else
+        echo "Multiple PHP version found, Please select the PHP version."
+        Cur_PHP_Version="`/usr/local/php/bin/php-config --version`"
+        Echo_Green "1: Default Main PHP ${Cur_PHP_Version}"
+        if [[ -s /usr/local/php5.2/sbin/php-fpm && -s /usr/local/nginx/conf/enable-php5.2.conf && -s /etc/init.d/php-fpm5.2 ]]; then
+            Echo_Green "2: PHP 5.2 [found]"
+        fi
+        if [[ -s /usr/local/php5.3/sbin/php-fpm && -s /usr/local/nginx/conf/enable-php5.3.conf && -s /etc/init.d/php-fpm5.3 ]]; then
+            Echo_Green "3: PHP 5.3 [found]"
+        fi
+        if [[ -s /usr/local/php5.4/sbin/php-fpm && -s /usr/local/nginx/conf/enable-php5.4.conf && -s /etc/init.d/php-fpm5.4 ]]; then
+            Echo_Green "4: PHP 5.4 [found]"
+        fi
+        if [[ -s /usr/local/php5.5/sbin/php-fpm && -s /usr/local/nginx/conf/enable-php5.5.conf && -s /etc/init.d/php-fpm5.5 ]]; then
+            Echo_Green "5: PHP 5.5 [found]"
+        fi
+        if [[ -s /usr/local/php5.6/sbin/php-fpm && -s /usr/local/nginx/conf/enable-php5.6.conf && -s /etc/init.d/php-fpm5.6 ]]; then
+            Echo_Green "6: PHP 5.6 [found]"
+        fi
+        if [[ -s /usr/local/php7.0/sbin/php-fpm && -s /usr/local/nginx/conf/enable-php7.0.conf && -s /etc/init.d/php-fpm7.0 ]]; then
+            Echo_Green "7: PHP 7.0 [found]"
+        fi
+        if [[ -s /usr/local/php7.1/sbin/php-fpm && -s /usr/local/nginx/conf/enable-php7.1.conf && -s /etc/init.d/php-fpm7.1 ]]; then
+            Echo_Green "8: PHP 7.1 [found]"
+        fi
+        Echo_Yellow "Enter your choice (1, 2, 3, 4, 5, 6 ,7 or 8): "
+        read php_select
+        case "${php_select}" in
+            1)
+                echo "Current selection: PHP ${Cur_PHP_Version}"
+                PHP_Path='/usr/local/php'
+                PHPFPM_Initd='/etc/init.d/php-fpm'
+                ;;
+            2)
+                echo "Current selection: PHP `/usr/local/php5.2/bin/php-config --version`"
+                PHP_Path='/usr/local/php5.2'
+                PHPFPM_Initd='/etc/init.d/php-fpm5.2'
+                ;;
+            3)
+                echo "Current selection: PHP `/usr/local/php5.3/bin/php-config --version`"
+                PHP_Path='/usr/local/php5.3'
+                PHPFPM_Initd='/etc/init.d/php-fpm5.3'
+                ;;
+            4)
+                echo "Current selection: PHP `/usr/local/php5.4/bin/php-config --version`"
+                PHP_Path='/usr/local/php5.4'
+                PHPFPM_Initd='/etc/init.d/php-fpm5.4'
+                ;;
+            5)
+                echo "Current selection: PHP `/usr/local/php5.5/bin/php-config --version`"
+                PHP_Path='/usr/local/php5.5'
+                PHPFPM_Initd='/etc/init.d/php-fpm5.5'
+                ;;
+            6)
+                echo "Current selection: PHP `/usr/local/php5.6/bin/php-config --version`"
+                PHP_Path='/usr/local/php5.6'
+                PHPFPM_Initd='/etc/init.d/php-fpm5.6'
+                ;;
+            7)
+                echo "Current selection:: PHP `/usr/local/php7.0/bin/php-config --version`"
+                PHP_Path='/usr/local/php7.0'
+                PHPFPM_Initd='/etc/init.d/php-fpm7.0'
+                ;;
+            8)
+                echo "Current selection:: PHP `/usr/local/php7.1/bin/php-config --version`"
+                PHP_Path='/usr/local/php7.1'
+                PHPFPM_Initd='/etc/init.d/php-fpm7.1'
+                ;;
+            *)
+                echo "Default,Current selection: PHP ${Cur_PHP_Version}"
+                php_select="1"
+                PHP_Path='/usr/local/php'
+                PHPFPM_Initd='/etc/init.d/php-fpm'
+                ;;
+        esac
+    fi
+}
+
+Addons_Get_PHP_Ext_Dir()
+{
+    Cur_PHP_Version="`${PHP_Path}/bin/php-config --version`"
+    zend_ext_dir="`${PHP_Path}/bin/php-config --extension-dir`/"
+}
+
 if [[ "${action}" == "" || "${action2}" == "" ]]; then
     action='install'
     Display_Addons_Menu
 fi
 Get_Dist_Name
+Select_PHP
 
     case "${action}" in
     install)

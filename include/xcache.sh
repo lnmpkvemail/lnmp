@@ -20,8 +20,8 @@ Install_XCache()
     echo "====== Installing XCache ======"
     Press_Install
 
-    rm -f /usr/local/php/conf.d/006-xcache.ini
-    Get_PHP_Ext_Dir
+    rm -f ${PHP_Path}/conf.d/006-xcache.ini
+    Addons_Get_PHP_Ext_Dir
     zend_ext="${zend_ext_dir}xcache.so"
     if [ -s "${zend_ext}" ]; then
         rm -f "${zend_ext}"
@@ -32,13 +32,13 @@ Install_XCache()
     cd ${cur_dir}/src
     Download_Files ${Download_Mirror}/web/xcache/${XCache_Ver}.tar.gz ${XCache_Ver}.tar.gz
     Tar_Cd ${XCache_Ver}.tar.gz ${XCache_Ver}
-    /usr/local/php/bin/phpize
-    ./configure --enable-xcache --enable-xcache-coverager --enable-xcache-optimizer --with-php-config=/usr/local/php/bin/php-config
+    ${PHP_Path}/bin/phpize
+    ./configure --enable-xcache --enable-xcache-coverager --enable-xcache-optimizer --with-php-config=${PHP_Path}/bin/php-config
     make
     make install
     cd ../
 
-    cat >/usr/local/php/conf.d/006-xcache.ini<<EOF
+    cat >${PHP_Path}/conf.d/006-xcache.ini<<EOF
 [xcache-common]
 extension = ${zend_ext}
 
@@ -92,7 +92,7 @@ EOF
         Echo_Green "======== xcache install completed ======"
         Echo_Green "XCache installed successfully, enjoy it!"
     else
-        rm -f /usr/local/php/conf.d/006-xcache.ini
+        rm -f ${PHP_Path}/conf.d/006-xcache.ini
         Echo_Red "XCache install failed!"
     fi
 }
@@ -101,7 +101,7 @@ Uninstall_XCache()
 {
     echo "You will uninstall XCache..."
     Press_Start
-    rm -f /usr/local/php/conf.d/006-xcache.ini
+    rm -f ${PHP_Path}/conf.d/006-xcache.ini
     echo "Delete xcache files..."
     rm -rf ${Default_Website_Dir}/xcache
     Restart_PHP

@@ -8,9 +8,9 @@ Install_Opcache()
     Press_Install
 
     echo "Uninstall eAccelerator..."
-    rm -f /usr/local/php/conf.d/004-opcache.ini
+    rm -f ${PHP_Path}/conf.d/004-opcache.ini
 
-    Get_PHP_Ext_Dir
+    Addons_Get_PHP_Ext_Dir
     zend_ext="${zend_ext_dir}opcache.so"
     if echo "${Cur_PHP_Version}" | grep -Eqi '^5.[234].'; then
         if [ -s "${zend_ext}" ]; then
@@ -31,7 +31,7 @@ Install_Opcache()
     elif echo "${Cur_PHP_Version}" | grep -Eqi '^5.4.'; then
         echo "${Cur_PHP_Version}"
     elif echo "${Cur_PHP_Version}" | grep -Eqi '^5.[56].' || echo "${Cur_PHP_Version}" | grep -Eqi '^7.'; then
-        cat >/usr/local/php/conf.d/004-opcache.ini<<EOF
+        cat >${PHP_Path}/conf.d/004-opcache.ini<<EOF
 [Zend Opcache]
 zend_extension="opcache.so"
 opcache.memory_consumption=128
@@ -50,7 +50,7 @@ EOF
             Echo_Green "Opcache installed successfully, enjoy it!"
             exit 0
         else
-            rm -f /usr/local/php/conf.d/004-opcache.ini
+            rm -f ${PHP_Path}/conf.d/004-opcache.ini
             Echo_Red "OPcache install failed!"
             exit 1
         fi
@@ -69,13 +69,13 @@ EOF
 
     Download_Files ${Download_Mirror}/web/opcache/${ZendOpcache_Ver}.tgz ${ZendOpcache_Ver}.tgz
     Tar_Cd ${ZendOpcache_Ver}.tgz ${ZendOpcache_Ver}
-    /usr/local/php/bin/phpize
-    ./configure --with-php-config=/usr/local/php/bin/php-config
+    ${PHP_Path}/bin/phpize
+    ./configure --with-php-config=${PHP_Path}/bin/php-config
     make
     make install
     cd ../
 
-    cat >/usr/local/php/conf.d/004-opcache.ini<<EOF
+    cat >${PHP_Path}/conf.d/004-opcache.ini<<EOF
 [Zend Opcache]
 zend_extension="opcache.so"
 opcache.memory_consumption=128
@@ -95,7 +95,7 @@ EOF
         echo "====== Opcache install completed ======"
         echo "Opcache installed successfully, enjoy it!"
     else
-        rm -f /usr/local/php/conf.d/004-opcache.ini
+        rm -f ${PHP_Path}/conf.d/004-opcache.ini
         echo "OPcache install failed!"
     fi
 }
@@ -104,7 +104,7 @@ Uninstall_Opcache()
 {
     echo "You will uninstall opcache..."
     Press_Start
-    rm -f /usr/local/php/conf.d/004-opcache.ini
+    rm -f ${PHP_Path}/conf.d/004-opcache.ini
     Restart_PHP
     Echo_Green "Uninstall Opcache completed."
 }

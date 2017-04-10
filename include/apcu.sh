@@ -18,8 +18,8 @@ Install_Apcu()
     echo "====== Installing apcu ======"
     Press_Install
 
-    rm -f /usr/local/php/conf.d/009-apcu.ini
-    Get_PHP_Ext_Dir
+    rm -f ${PHP_Path}/conf.d/009-apcu.ini
+    Addons_Get_PHP_Ext_Dir
     zend_ext="${zend_ext_dir}apcu.so"
     if [ -s "${zend_ext}" ]; then
         rm -f "${zend_ext}"
@@ -34,8 +34,8 @@ Install_Apcu()
         Download_Files ${Download_Mirror}/web/apcu/${PHPOldApcu_Ver}.tgz ${PHPOldApcu_Ver}.tgz
         Tar_Cd ${PHPOldApcu_Ver}.tgz ${PHPOldApcu_Ver}
     fi
-    /usr/local/php/bin/phpize
-    ./configure --with-php-config=/usr/local/php/bin/php-config
+    ${PHP_Path}/bin/phpize
+    ./configure --with-php-config=${PHP_Path}/bin/php-config
     make
     make install
     \cp -a apc.php ${Default_Website_Dir}/apc.php
@@ -45,8 +45,8 @@ Install_Apcu()
     if echo "${Cur_PHP_Version}" | grep -Eqi '^7.'; then
         Download_Files ${Download_Mirror}/web/apcu_bc/${PHPApcu_Bc_Ver}.tgz ${PHPApcu_Bc_Ver}.tgz
         Tar_Cd ${PHPApcu_Bc_Ver}.tgz ${PHPApcu_Bc_Ver}
-        /usr/local/php/bin/phpize
-        ./configure --with-php-config=/usr/local/php/bin/php-config
+        ${PHP_Path}/bin/phpize
+        ./configure --with-php-config=${PHP_Path}/bin/php-config
         make
         make install
         cd ..
@@ -56,7 +56,7 @@ Install_Apcu()
         rm -rf ${cur_dir}/src/${PHPOldApcu_Ver}
     fi
 
-    cat >/usr/local/php/conf.d/009-apcu.ini<<EOF
+    cat >${PHP_Path}/conf.d/009-apcu.ini<<EOF
 [apcu]
 extension=apcu.so
 apc.enabled=1
@@ -66,7 +66,7 @@ apc.enable_cli=1
 EOF
 
     if echo "${Cur_PHP_Version}" | grep -Eqi '^7.'; then
-        sed -i '/apcu.so/a\extension=apc.so' /usr/local/php/conf.d/009-apcu.ini
+        sed -i '/apcu.so/a\extension=apc.so' ${PHP_Path}/conf.d/009-apcu.ini
     fi
 
     if [ -s "${zend_ext}" ]; then
@@ -74,7 +74,7 @@ EOF
         Echo_Green "======== apcu install completed ======"
         Echo_Green "apcu installed successfully, enjoy it!"
     else
-        rm -f /usr/local/php/conf.d/009-apcu.ini
+        rm -f ${PHP_Path}/conf.d/009-apcu.ini
         Echo_Red "apcu install failed!"
     fi
 }
@@ -83,7 +83,7 @@ Uninstall_Apcu()
 {
     echo "You will uninstall apcu..."
     Press_Start
-    rm -f /usr/local/php/conf.d/009-apcu.ini
+    rm -f ${PHP_Path}/conf.d/009-apcu.ini
     echo "Delete apcu files..."
     rm -f "${zend_ext}"
     Restart_PHP

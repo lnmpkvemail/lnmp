@@ -5,8 +5,8 @@ Install_ImageMagic()
     echo "====== Installing ImageMagic ======"
     Press_Install
 
-    rm -f /usr/local/php/conf.d/008-imagick.ini
-    Get_PHP_Ext_Dir
+    rm -f ${PHP_Path}/conf.d/008-imagick.ini
+    Addons_Get_PHP_Ext_Dir
     zend_ext="${zend_ext_dir}imagick.so"
     if [ -s "${zend_ext}" ]; then
         rm -f "${zend_ext}"
@@ -23,18 +23,22 @@ Install_ImageMagic()
     fi
 
     cd ${cur_dir}/src
-    if echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.';then
-        Download_Files ${Download_Mirror}/web/imagemagick/ImageMagick-6.8.8-9.tar.gz ImageMagick-6.8.8-9.tar.gz
-        Tar_Cd ImageMagick-6.8.8-9.tar.gz ImageMagick-6.8.8-9
+    if [ -s /usr/local/imagemagick/bin/convert ]; then
+        echo "ImageMagick already exists."
     else
-        Download_Files ${Download_Mirror}/web/imagemagick/${ImageMagick_Ver}.tar.bz2 ${ImageMagick_Ver}.tar.bz2
-        Tarj_Cd ${ImageMagick_Ver}.tar.bz2 ${ImageMagick_Ver}
-    fi
+        if echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.';then
+            Download_Files ${Download_Mirror}/web/imagemagick/ImageMagick-6.8.8-9.tar.gz ImageMagick-6.8.8-9.tar.gz
+            Tar_Cd ImageMagick-6.8.8-9.tar.gz ImageMagick-6.8.8-9
+        else
+            Download_Files ${Download_Mirror}/web/imagemagick/${ImageMagick_Ver}.tar.bz2 ${ImageMagick_Ver}.tar.bz2
+            Tarj_Cd ${ImageMagick_Ver}.tar.bz2 ${ImageMagick_Ver}
+        fi
 
-    ./configure --prefix=/usr/local/imagemagick
-    make && make install
-    cd ../
-    rm -rf ${cur_dir}/src/${ImageMagick_Ver}
+        ./configure --prefix=/usr/local/imagemagick
+        make && make install
+        cd ../
+        rm -rf ${cur_dir}/src/${ImageMagick_Ver}
+    fi
 
     if echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.';then
         Download_Files ${Download_Mirror}/web/imagick/imagick-3.1.2.tgz imagick-3.1.2.tgz
@@ -43,12 +47,12 @@ Install_ImageMagic()
         Download_Files ${Download_Mirror}/web/imagick/${Imagick_Ver}.tgz ${Imagick_Ver}.tgz
         Tar_Cd ${Imagick_Ver}.tgz ${Imagick_Ver}
     fi
-    /usr/local/php/bin/phpize
-    ./configure --with-php-config=/usr/local/php/bin/php-config --with-imagick=/usr/local/imagemagick
+    ${PHP_Path}/bin/phpize
+    ./configure --with-php-config=${PHP_Path}/bin/php-config --with-imagick=/usr/local/imagemagick
     make && make install
     cd ../
 
-    cat >/usr/local/php/conf.d/008-imagick.ini<<EOF
+    cat >${PHP_Path}/conf.d/008-imagick.ini<<EOF
 extension = "imagick.so"
 EOF
 
@@ -57,7 +61,7 @@ EOF
         Echo_Green "====== ImageMagick install completed ======"
         Echo_Green "ImageMagick installed successfully, enjoy it!"
     else
-        rm -f /usr/local/php/conf.d/008-imagick.ini
+        rm -f ${PHP_Path}/conf.d/008-imagick.ini
         Echo_Red "imagick install failed!"
     fi
 }
@@ -66,7 +70,7 @@ Uninstall_ImageMagick()
 {
     echo "You will uninstall ImageMagick..."
     Press_Start
-    rm -f /usr/local/php/conf.d/008-imagick.ini
+    rm -f ${PHP_Path}/conf.d/008-imagick.ini
     echo "Delete ImageMagick directory..."
     rm -rf /usr/local/imagemagick
     Restart_PHP
