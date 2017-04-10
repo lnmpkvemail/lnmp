@@ -547,6 +547,7 @@ Upgrade_MySQL()
     *)
         echo "No input, The InnoDB Storage Engine will enable."
         InstallInnodb="y"
+        ;;
     esac
 
     mysql_short_version=`echo ${mysql_version} | cut -d. -f1-2`
