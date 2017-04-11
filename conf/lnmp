@@ -25,6 +25,10 @@ lnmp_start()
     /etc/init.d/nginx start
     /etc/init.d/mysql start
     /etc/init.d/php-fpm start
+    for mphpfpm in /etc/init.d/php-fpm[0-9].[0-9]
+    do
+        ${mphpfpm} start
+    done
 }
 
 lnmp_stop()
@@ -33,6 +37,10 @@ lnmp_stop()
     /etc/init.d/nginx stop
     /etc/init.d/mysql stop
     /etc/init.d/php-fpm stop
+    for mphpfpm in /etc/init.d/php-fpm[0-9].[0-9]
+    do
+        ${mphpfpm} stop
+    done
 }
 
 lnmp_reload()
@@ -41,6 +49,10 @@ lnmp_reload()
     /etc/init.d/nginx reload
     /etc/init.d/mysql reload
     /etc/init.d/php-fpm reload
+    for mphpfpm in /etc/init.d/php-fpm[0-9].[0-9]
+    do
+        ${mphpfpm} reload
+    done
 }
 
 lnmp_kill()
