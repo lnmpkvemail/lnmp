@@ -30,7 +30,7 @@ Install_Composer()
     if [ $? -eq 0 ]; then
         echo "Composer install successfully."
     else
-        wget --prefer-family=IPv4 --no-check-certificate -t3 -O - https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+        wget --prefer-family=IPv4 --no-check-certificate -T 120 -t3 -O - https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
         if [ $? -eq 0 ]; then
             echo "Composer install successfully."
         else
