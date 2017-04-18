@@ -14,21 +14,21 @@ Libunwind_Ver='libunwind-1.1'
 Libicu4c_Ver='icu4c-58_1'
 Boost_Ver='boost_1_59_0'
 Openssl_Ver='openssl-1.0.2k'
-Nginx_Ver='nginx-1.10.3'
+Nginx_Ver='nginx-1.12.0'
 if [ "${DBSelect}" = "1" ]; then
     Mysql_Ver='mysql-5.1.73'
 elif [ "${DBSelect}" = "2" ]; then
-    Mysql_Ver='mysql-5.5.53'
+    Mysql_Ver='mysql-5.5.55'
 elif [ "${DBSelect}" = "3" ]; then
-    Mysql_Ver='mysql-5.6.34'
+    Mysql_Ver='mysql-5.6.36'
 elif [ "${DBSelect}" = "4" ]; then
-    Mysql_Ver='mysql-5.7.16'
+    Mysql_Ver='mysql-5.7.18'
 elif [ "${DBSelect}" = "5" ]; then
-    Mariadb_Ver='mariadb-5.5.53'
+    Mariadb_Ver='mariadb-5.5.55'
 elif [ "${DBSelect}" = "6" ]; then
-    Mariadb_Ver='mariadb-10.0.28'
+    Mariadb_Ver='mariadb-10.0.30'
 elif [ "${DBSelect}" = "7" ]; then
-    Mariadb_Ver='mariadb-10.1.19'
+    Mariadb_Ver='mariadb-10.1.22'
 fi
 if [ "${PHPSelect}" = "1" ]; then
     Php_Ver='php-5.2.17'
@@ -41,9 +41,9 @@ elif [ "${PHPSelect}" = "4" ]; then
 elif [ "${PHPSelect}" = "5" ]; then
     Php_Ver='php-5.6.30'
 elif [ "${PHPSelect}" = "6" ]; then
-    Php_Ver='php-7.0.17'
+    Php_Ver='php-7.0.18'
 elif [ "${PHPSelect}" = "7" ]; then
-    Php_Ver='php-7.1.3'
+    Php_Ver='php-7.1.4'
 fi
 if [[ "${PHPSelect}" = "1" || "${PHPSelect}" = "2" || "${PHPSelect}" = "3" ]]; then
     PhpMyAdmin_Ver='phpMyAdmin-4.0.10.20-all-languages'
@@ -61,12 +61,12 @@ fi
 Pureftpd_Ver='pure-ftpd-1.0.45'
 
 XCache_Ver='xcache-3.2.0'
-ImageMagick_Ver='ImageMagick-7.0.4-10'
+ImageMagick_Ver='ImageMagick-7.0.5-4'
 Imagick_Ver='imagick-3.4.3'
 ZendOpcache_Ver='zendopcache-7.0.5'
 Redis_Stable_Ver='redis-3.2.8'
 PHPRedis_Ver='redis-3.1.2'
-Memcached_Ver='memcached-1.4.34'
+Memcached_Ver='memcached-1.4.36'
 Libmemcached_Ver='libmemcached-1.0.18'
 PHPMemcached_Ver='memcached-2.2.0'
 PHP7Memcached_Ver='memcached-3.0.3'
