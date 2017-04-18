@@ -320,6 +320,9 @@ Get_Dist_Name()
     elif grep -Eqi "Deepin" /etc/issue || grep -Eq "Deepin" /etc/*-release; then
         DISTRO='Deepin'
         PM='apt'
+    elif grep -Eqi "Mint" /etc/issue || grep -Eq "Mint" /etc/*-release; then
+        DISTRO='Mint'
+        PM='apt'
     else
         DISTRO='unknow'
     fi
