@@ -37,6 +37,7 @@ Install_Composer()
             else
                 echo "Composer install failed!"
             fi
+            chmod +x /usr/local/bin/composer
         fi
     fi
 }
