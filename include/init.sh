@@ -463,12 +463,6 @@ CentOS_Lib_Opt()
         echo "/usr/local/lib" >> /etc/ld.so.conf
     fi
 
-    if [ -d /usr/include/x86_64-linux-gnu/curl ]; then
-        ln -sf /usr/include/x86_64-linux-gnu/curl /usr/include/
-    elif [ -d /usr/include/i386-linux-gnu/curl ]; then
-        ln -sf /usr/include/i386-linux-gnu/curl /usr/include/
-    fi
-
     ldconfig
 
     cat >>/etc/security/limits.conf<<eof
@@ -508,6 +502,12 @@ Deb_Lib_Opt()
 
     if [ `grep -L '/usr/local/lib'    '/etc/ld.so.conf'` ]; then
         echo "/usr/local/lib" >> /etc/ld.so.conf
+    fi
+
+    if [ -d /usr/include/x86_64-linux-gnu/curl ]; then
+        ln -sf /usr/include/x86_64-linux-gnu/curl /usr/include/
+    elif [ -d /usr/include/i386-linux-gnu/curl ]; then
+        ln -sf /usr/include/i386-linux-gnu/curl /usr/include/
     fi
 
     ldconfig

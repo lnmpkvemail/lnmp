@@ -216,7 +216,11 @@ Print_Sucess_Info()
     fi
     echo "+------------------------------------------------------------------------+"
     lnmp status
-    netstat -ntl
+    if [ -s /bin/ss ]; then
+        ss -ntl
+    else
+        netstat -ntl
+    fi
     Echo_Green "Install lnmp V${LNMP_Ver} completed! enjoy it."
 }
 
