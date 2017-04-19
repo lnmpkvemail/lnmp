@@ -129,6 +129,8 @@ Ubuntu_Modify_Source()
         Ubuntu_Deadline yakkety
     elif grep -Eqi "14.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^14.04'; then
         Ubuntu_Deadline trusty
+    elif grep -Eqi "17.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^17.04'; then
+        Ubuntu_Deadline zesty
     fi
     if [ "${CodeName}" != "" ]; then
         \cp /etc/apt/sources.list /etc/apt/sources.list.$(date +"%Y%m%d")
@@ -163,6 +165,7 @@ Ubuntu_Deadline()
     wily_deadline=`date -d "2016-7-22 00:00:00" +%s`
     yakkety_deadline=`date -d "2017-7-22 00:00:00" +%s`
     trusty_deadline=`date -d "2019-7-22 00:00:00" +%s`
+    zesty_deadline=`date -d "2018-1-31 00:00:00" +%s`
     cur_time=`date  +%s`
     case "$1" in
         vivid)
@@ -193,6 +196,12 @@ Ubuntu_Deadline()
             if [ ${cur_time} -gt ${trusty_deadline} ]; then
                 echo "${cur_time} > ${trusty_deadline}"
                 Check_Old_Releases_URL trusty
+            fi
+            ;;
+        zesty)
+            if [ ${cur_time} -gt ${zesty_deadline} ]; then
+                echo "${cur_time} > ${zesty_deadline}"
+                Check_Old_Releases_URL zesty
             fi
             ;;
     esac
@@ -452,6 +461,12 @@ CentOS_Lib_Opt()
 
     if [ `grep -L '/usr/local/lib'    '/etc/ld.so.conf'` ]; then
         echo "/usr/local/lib" >> /etc/ld.so.conf
+    fi
+
+    if [ -d /usr/include/x86_64-linux-gnu/curl ]; then
+        ln -sf /usr/include/x86_64-linux-gnu/curl /usr/include/
+    elif [ -d /usr/include/i386-linux-gnu/curl ]; then
+        ln -sf /usr/include/i386-linux-gnu/curl /usr/include/
     fi
 
     ldconfig
