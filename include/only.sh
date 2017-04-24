@@ -1,5 +1,22 @@
 #!/bin/bash
 
+Nginx_Dependent()
+{
+    if [ "$PM" = "yum" ]; then
+        rpm -e httpd httpd-tools --nodeps
+        yum -y remove httpd*
+        for packages in make gcc gcc-c++ gcc-g77 wget crontabs zlib zlib-devel openssl openssl-devel;
+        do yum -y install $packages; done
+    elif [ "$PM" = "apt" ]; then
+        apt-get update -y
+        dpkg -P apache2 apache2-doc apache2-mpm-prefork apache2-utils apache2.2-common
+        for removepackages in apache2 apache2-doc apache2-utils apache2.2-common apache2.2-bin apache2-mpm-prefork apache2-doc apache2-mpm-worker;
+        do apt-get purge -y $removepackages; done
+        for packages in debian-keyring debian-archive-keyring build-essential gcc g++ make autoconf automake wget cron openssl libssl-dev zlib1g zlib1g-dev ;
+        do apt-get --no-install-recommends install -y $packages --force-yes; done
+    fi
+}
+
 Install_Only_Nginx()
 {
     clear
@@ -13,11 +30,7 @@ Install_Only_Nginx()
     Press_Install
     Echo_Blue "Install dependent packages..."
     cd ${cur_dir}/src
-    if [ "$PM" = "yum" ]; then
-        CentOS_Dependent
-    elif [ "$PM" = "apt" ]; then
-        Deb_Dependent
-    fi
+    Nginx_Dependent
     cd ${cur_dir}/src
     Download_Files ${Download_Mirror}/web/pcre/${Pcre_Ver}.tar.bz2 ${Pcre_Ver}.tar.bz2
     Install_Pcre

@@ -274,7 +274,7 @@ Install_LSB()
         yum -y install redhat-lsb
     elif [ "$PM" = "apt" ]; then
         apt-get update
-        apt-get install -y lsb-release
+        apt-get --no-install-recommends install -y lsb-release
     fi
 }
 
