@@ -171,8 +171,6 @@ EOF
     sleep 2
 
     lnmp start
-    echo "Starting ${Php_Ver} PHP-FPM..."
-    /etc/init.d/php-fpm5.2 start
 
     rm -rf ${cur_dir}/src/${Php_Ver}
 
@@ -278,8 +276,6 @@ EOF
     sleep 2
 
     lnmp start
-    echo "Starting ${Php_Ver} PHP-FPM..."
-    /etc/init.d/php-fpm5.3 start
 
     rm -rf ${cur_dir}/src/${Php_Ver}
 
@@ -382,8 +378,6 @@ EOF
     sleep 2
 
     lnmp start
-    echo "Starting ${Php_Ver} PHP-FPM..."
-    /etc/init.d/php-fpm5.4 start
 
     rm -rf ${cur_dir}/src/${Php_Ver}
 
@@ -486,8 +480,6 @@ EOF
     sleep 2
 
     lnmp start
-    echo "Starting ${Php_Ver} PHP-FPM..."
-    /etc/init.d/php-fpm5.5 start
 
     rm -rf ${cur_dir}/src/${Php_Ver}
 
@@ -590,8 +582,6 @@ EOF
     sleep 2
 
     lnmp start
-    echo "Starting ${Php_Ver} PHP-FPM..."
-    /etc/init.d/php-fpm5.6 start
 
     rm -rf ${cur_dir}/src/${Php_Ver}
 
@@ -684,8 +674,6 @@ EOF
     sleep 2
 
     lnmp start
-    echo "Starting ${Php_Ver} PHP-FPM..."
-    /etc/init.d/php-fpm7.0 start
 
     rm -rf ${cur_dir}/src/${Php_Ver}
 
@@ -778,8 +766,6 @@ EOF
     sleep 2
 
     lnmp start
-    echo "Starting ${Php_Ver} PHP-FPM..."
-    /etc/init.d/php-fpm7.1 start
 
     rm -rf ${cur_dir}/src/${Php_Ver}
 
