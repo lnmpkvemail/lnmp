@@ -26,7 +26,7 @@ CONF="/usr/local/redis/etc/redis.conf"
    
 case "$1" in
     start)
-        if [ -f $PIDFILE ]; then
+        if [ -f "$PIDFILE" ]; then
             echo "$PIDFILE exists, process is already running or crashed"
         else
             echo -n "Starting Redis server..."
@@ -39,7 +39,7 @@ case "$1" in
         fi
         ;;
     stop)
-        if [ ! -f $PIDFILE ]; then
+        if [ ! -f "$PIDFILE" ]; then
             echo "$PIDFILE does not exist, process is not running"
         else
             PID=$(cat $PIDFILE)
@@ -65,7 +65,14 @@ case "$1" in
             echo " failed"
         fi
         ;;
+    status)
+        if [ -f "$PIDFILE" ]; then
+            echo "Redis server is running."
+        else
+            echo "Redis server is stopped."
+        fi
+        ;;
   *)
-    echo "Usage: /etc/init.d/redis {start|stop|restart|kill}" >&2
+    echo "Usage: /etc/init.d/redis {start|stop|restart|status|kill}" >&2
         exit 1
 esac

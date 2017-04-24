@@ -27,8 +27,8 @@ OPTIONS=""
 RETVAL=0
 prog="memcached"
 
-start () {
-    echo -n $"Starting $prog: "
+start() {
+    echo -n "Starting $prog: "
     /usr/local/memcached/bin/memcached -d -l $IP -p $PORT -u $USER -m $CACHESIZE -c $MAXCONN -P /var/run/memcached.pid $OPTIONS
     if [ "$?" != 0 ] ; then
         echo " failed"
@@ -38,10 +38,10 @@ start () {
         echo " done"
     fi
 }
-stop () {
-    echo -n $"Stopping $prog: "
-    if [ ! -e /var/run/$prog.pid ]; then
-        echo -n $"$prog is not running."
+stop() {
+    echo -n "Stopping $prog: "
+    if [ ! -f "/var/run/$prog.pid" ]; then
+        echo "$prog is not running."
         exit 1
     fi
     kill `cat /var/run/memcached.pid`
@@ -55,13 +55,20 @@ stop () {
     fi
 }
 
-restart () {
+restart() {
     $0 stop
     sleep 2
     $0 start
 }
 
-# See how we were called.
+status() {
+    if [ -f "/var/run/$prog.pid" ]; then
+        echo "$prog is running."
+    else
+        echo "$prog is stopped."
+    fi
+}
+
 case "$1" in
     start)
         start
@@ -72,8 +79,11 @@ case "$1" in
     restart|reload)
         restart
         ;;
+    status)
+        status
+        ;;
     *)
-        echo $"Usage: $0 {start|stop|status|restart|reload}"
+        echo "Usage: $0 {start|stop|status|restart|reload}"
         exit 1
         ;;
 esac

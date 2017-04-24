@@ -27,7 +27,7 @@ case "$1" in
     start)
         echo -n "Starting $NAME... "
 
-        if netstat -tnpl | grep -q nginx;then
+        if [ -f "$PIDFILE" ]; then
             echo "$NAME (pid `pidof $NAME`) already running."
             exit 1
         fi
@@ -45,8 +45,8 @@ case "$1" in
     stop)
         echo -n "Stoping $NAME... "
 
-        if ! netstat -tnpl | grep -q nginx; then
-            echo "$NAME is not running."
+        if [ ! -f "$PIDFILE" ]; then
+            echo "$NAME is stopped."
             exit 1
         fi
 
@@ -61,24 +61,18 @@ case "$1" in
         ;;
 
     status)
-        if netstat -tnpl | grep -q nginx; then
-            PID=`pidof nginx`
-            echo "$NAME (pid $PID) is running..."
+        if [ -f "$PIDFILE" ]; then
+            echo "$NAME (pid `pidof $NAME`) is running..."
         else
-            echo "$NAME is stopped"
+            echo "$NAME is stopped."
             exit 0
         fi
         ;;
 
-    force-quit)
+    force-quit|kill)
         echo -n "Terminating $NAME... "
 
-        if ! netstat -tnpl | grep -q nginx; then
-            echo "$NAME is not running."
-            exit 1
-        fi
-
-        kill `pidof $NAME`
+        killall $NAME
 
         if [ "$?" != 0 ] ; then
             echo " failed"
@@ -97,7 +91,7 @@ case "$1" in
     reload)
         echo -n "Reload service $NAME... "
 
-        if netstat -tnpl | grep -q nginx; then
+        if [ -f "$PIDFILE" ]; then
             $NGINX_BIN -s reload
             echo " done"
         else
@@ -113,7 +107,7 @@ case "$1" in
         ;;
 
     *)
-        echo "Usage: $0 {start|stop|force-quit|restart|reload|status|configtest}"
+        echo "Usage: $0 {start|stop|restart|reload|status|configtest|force-quit|kill}"
         exit 1
         ;;
 

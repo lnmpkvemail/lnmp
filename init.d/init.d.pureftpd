@@ -36,7 +36,7 @@ start() {
 
 stop() {
     echo -n $"Stopping $prog...  "
-    if [ ! -e $PURE_PID ]; then
+    if [ ! -f "$PURE_PID" ]; then
         echo -n $"$prog is not running."
         exit 1
     fi
@@ -56,7 +56,7 @@ restart(){
 }
 
 status(){
-    if [ -e $PURE_PID ]; then
+    if [ -f "$PURE_PID" ]; then
         echo $"$prog is running."
     else
         echo $"$prog is not running."
