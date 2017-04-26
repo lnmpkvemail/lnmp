@@ -221,6 +221,7 @@ server-id	= 1
 expire_logs_days = 10
 
 default_storage_engine = InnoDB
+#innodb_file_per_table = 1
 #innodb_data_home_dir = ${MySQL_Data_Dir}
 #innodb_data_file_path = ibdata1:10M:autoextend
 #innodb_log_group_home_dir = ${MySQL_Data_Dir}
@@ -319,6 +320,7 @@ server-id	= 1
 expire_logs_days = 10
 
 default_storage_engine = InnoDB
+#innodb_file_per_table = 1
 #innodb_data_home_dir = ${MySQL_Data_Dir}
 #innodb_data_file_path = ibdata1:10M:autoextend
 #innodb_log_group_home_dir = ${MySQL_Data_Dir}
@@ -446,6 +448,7 @@ expire_logs_days = 10
 #loose-innodb-sys-foreign-cols=0
 
 default_storage_engine = InnoDB
+#innodb_file_per_table = 1
 #innodb_data_home_dir = ${MySQL_Data_Dir}
 #innodb_data_file_path = ibdata1:10M:autoextend
 #innodb_log_group_home_dir = ${MySQL_Data_Dir}
