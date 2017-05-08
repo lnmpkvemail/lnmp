@@ -499,11 +499,29 @@ Check_Mirror()
         apt-get install -y curl
     fi
     country=`curl -sSk --connect-timeout 30 -m 60 https://ip.vpser.net/country`
-    if [[ "${country}" = "CN" && "${Download_Mirror}" = "https://soft.vpser.net" ]]; then
+    echo "Server Location: ${country}"
+    if [ "${Download_Mirror}" = "https://soft.vpser.net" ]; then
         mirror_code=`curl -o /dev/null -m 20 --connect-timeout 20 -sk -w %{http_code} http://soft.vpser.net`
         if [ "${mirror_code}" != "200" ]; then
-            echo "Change to mirror ftp://soft.vpser.net"
-            Download_Mirror='ftp://soft.vpser.net'
+            if [ "${country}" = "CN" ]; then
+                mirror_code=`curl -o /dev/null -m 20 --connect-timeout 20 -sk -w %{http_code} http://soft1.vpser.net`
+                if [ "${mirror_code}" = "200" ]; then
+                    echo "Change to mirror http://soft1.vpser.net"
+                    Download_Mirror='http://soft1.vpser.net'
+                else
+                    echo "Change to mirror fttp://soft.vpser.net"
+                    Download_Mirror='ftp://soft.vpser.net'
+                fi
+            else
+                mirror_code=`curl -o /dev/null -m 20 --connect-timeout 20 -sk -w %{http_code} http://soft2.vpser.net`
+                if [ "${mirror_code}" = "200" ]; then
+                    echo "Change to mirror http://soft2.vpser.net"
+                    Download_Mirror='http://soft2.vpser.net'
+                else
+                    echo "Change to mirror ftp://soft.vpser.net"
+                    Download_Mirror='ftp://soft.vpser.net'
+                fi
+            fi
         fi
     fi
 }
