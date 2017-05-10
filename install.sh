@@ -58,6 +58,7 @@ echo "+------------------------------------------------------------------------+
 Init_Install()
 {
     Press_Install
+    start_time=$(date +%s)
     Print_APP_Ver
     Get_Dist_Version
     Print_Sys_Info
