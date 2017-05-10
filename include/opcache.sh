@@ -5,7 +5,7 @@ Install_Opcache()
 
     Echo_Red "Install Opcache will auto uninstall eAccelerator if exists..."
     echo "====== Installing zend opcache ======"
-    Press_Install
+    Press_Start
 
     echo "Uninstall eAccelerator..."
     rm -f ${PHP_Path}/conf.d/004-opcache.ini

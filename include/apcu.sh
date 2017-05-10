@@ -16,7 +16,7 @@ Install_Apcu()
         fi
     done
     echo "====== Installing apcu ======"
-    Press_Install
+    Press_Start
 
     rm -f ${PHP_Path}/conf.d/009-apcu.ini
     Addons_Get_PHP_Ext_Dir

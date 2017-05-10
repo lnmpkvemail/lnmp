@@ -3,7 +3,7 @@
 Install_ImageMagic()
 {
     echo "====== Installing ImageMagic ======"
-    Press_Install
+    Press_Start
 
     rm -f ${PHP_Path}/conf.d/008-imagick.ini
     Addons_Get_PHP_Ext_Dir

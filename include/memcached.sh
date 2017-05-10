@@ -75,7 +75,7 @@ Install_Memcached()
     fi
 
     echo "====== Installing memcached ======"
-    Press_Install
+    Press_Start
 
     rm -f ${PHP_Path}/conf.d/005-memcached.ini
     Addons_Get_PHP_Ext_Dir

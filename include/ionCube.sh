@@ -3,7 +3,7 @@
 Install_ionCube()
 {
     echo "====== Installing ionCube ======"
-    Press_Install
+    Press_Start
 
     rm -f ${PHP_Path}/conf.d/001-ioncube.ini
     Addons_Get_PHP_Ext_Dir

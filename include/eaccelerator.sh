@@ -90,7 +90,7 @@ Install_eAccelerator()
     fi
 
     echo "====== Installing eAccelerator ======"
-    Press_Install
+    Press_Start
 
     rm -f ${PHP_Path}/conf.d/003-eaccelerator.ini
     Addons_Get_PHP_Ext_Dir

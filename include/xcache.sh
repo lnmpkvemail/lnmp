@@ -18,7 +18,7 @@ Install_XCache()
     done
     xmd5pass=`echo -n "${xadmin_pass}" |md5sum |awk '{print $1}'`
     echo "====== Installing XCache ======"
-    Press_Install
+    Press_Start
 
     rm -f ${PHP_Path}/conf.d/006-xcache.ini
     Addons_Get_PHP_Ext_Dir

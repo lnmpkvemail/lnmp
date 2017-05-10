@@ -4,7 +4,7 @@ Install_Redis()
 {
     echo "====== Installing Redis ======"
     echo "Install ${Redis_Stable_Ver} Stable Version..."
-    Press_Install
+    Press_Start
 
     rm -f ${PHP_Path}/conf.d/007-redis.ini
     Addons_Get_PHP_Ext_Dir

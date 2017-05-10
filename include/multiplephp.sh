@@ -61,10 +61,11 @@ Install_Multiplephp()
     *)
         echo "No enter,You Must enter one option."
         exit 1
+        ;;
     esac
 
     Press_Install
-    if [[ -d "${MPHP_Path}" ]]; then
+    if [ -d "${MPHP_Path}" ]; then
         echo "${Php_Ver} already exists!"
         exit 1
     fi
