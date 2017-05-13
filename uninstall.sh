@@ -172,7 +172,7 @@ Uninstall_LAMP()
     echo "Enter 1 to uninstall LNMP"
     echo "Enter 2 to uninstall LNMPA"
     echo "Enter 3 to uninstall LAMP"
-    read -p "(Please input 1, 2 or 3):" action
+    read -p "(Please input 1, 2 or 3): " action
 
     case "$action" in
     1|[lL][nN][nM][pP])
