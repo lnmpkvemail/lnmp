@@ -100,7 +100,7 @@ Install_Pureftpd()
         /etc/init.d/pureftpd start
         Echo_Green "+----------------------------------------------------------------------+"
         Echo_Green "| Install Pure-FTPd completed,enjoy it!"
-        Echo_Green "| =>use command: lnmp ftp {add|list|del} to manage FTP users."
+        Echo_Green "| =>use command: lnmp ftp {add|list|del|show} to manage FTP users."
         Echo_Green "+----------------------------------------------------------------------+"
         Echo_Green "| For more information please visit https://lnmp.org"
         Echo_Green "+----------------------------------------------------------------------+"
