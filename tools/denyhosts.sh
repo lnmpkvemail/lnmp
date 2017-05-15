@@ -55,8 +55,8 @@ elif [ "${PM}" = "apt" ]; then
     cat >lsb.ini<<EOF
 ### BEGIN INIT INFO
 # Provides:          denyhosts
-# Required-Start:    $syslog $local_fs $time
-# Required-Stop:     $syslog $local_fs
+# Required-Start:    \$syslog \$local_fs \$time
+# Required-Stop:     \$syslog \$local_fs
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: Start denyhosts and watch .
