@@ -885,14 +885,20 @@ Add_Letsencrypt()
 
     country=`curl -sSk --connect-timeout 10 -m 60 https://ip.vpser.net/country`
     if [ "${country}" = "CN" ]; then
-        mkdir ~/.pip
-        cat > ~/.pip/pip.conf <<EOF
+        if [ -s ~/.pip/pip.conf ]; then
+            grep "index-url" ~/.pip/pip.conf
+            echo "pip.conf exist."
+        else
+            echo "Create pip.conf..."
+            mkdir ~/.pip
+            cat > ~/.pip/pip.conf <<EOF
 [global]
 index-url = https://pypi.doubanio.com/simple/
 
 [install]
 trusted-host=pypi.doubanio.com
 EOF
+        fi
     fi
 
     echo "Starting create SSL Certificate use Let's Encrypt..."
