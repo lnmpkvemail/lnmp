@@ -22,16 +22,32 @@ echo "+--------------------------------------------------+"
 echo "|For more information please visit https://lnmp.org|"
 echo "+--------------------------------------------------+"
 
-if [ "${Get_Stack}" == "unknow" ];then
+if [ "${Get_Stack}" == "unknow" ]; then
     Echo_Red "Can't get stack info."
     exit
-elif [ "${Get_Stack}" == "lnmp" ];then
+elif [ "${Get_Stack}" == "lnmp" ]; then
     \cp ${cur_dir}/conf/lnmp /bin/lnmp
     chmod +x /bin/lnmp
-elif [ "${Get_Stack}" == "lnmpa" ];then
+    if [ ! -s /usr/local/nginx/conf/enable-php.conf ]; then
+        \cp conf/enable-php.conf /usr/local/nginx/conf/enable-php.conf
+    fi
+    if [ ! -s /usr/local/nginx/conf/pathinfo.conf ]; then
+        \cp conf/pathinfo.conf /usr/local/nginx/conf/pathinfo.conf
+    fi
+    if [ ! -s /usr/local/nginx/conf/enable-php-pathinfo.conf ]; then
+        \cp conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php-pathinfo.conf
+    fi
+    if [ ! -f /usr/local/nginx/conf/none.conf ]; then
+        \cp conf/rewrite/none.conf /usr/local/nginx/conf/none.conf
+    fi
+elif [ "${Get_Stack}" == "lnmpa" ]; then
     \cp ${cur_dir}/conf/lnmpa /bin/lnmp
     chmod +x /bin/lnmp
-elif [ "${Get_Stack}" == "lamp" ];then
+    \cp conf/proxy.conf /usr/local/nginx/conf/proxy.conf
+    if [ ! -s /usr/local/nginx/conf/proxy-pass-php.conf ]; then
+        \cp conf/proxy-pass-php.conf /usr/local/nginx/conf/proxy-pass-php.conf
+    fi
+elif [ "${Get_Stack}" == "lamp" ]; then
     \cp ${cur_dir}/conf/lamp /bin/lnmp
     chmod +x /bin/lnmp
 fi

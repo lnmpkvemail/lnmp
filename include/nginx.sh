@@ -34,6 +34,7 @@ Install_Nginx()
     if [ "${Stack}" = "lnmpa" ]; then
         \cp conf/nginx_a.conf /usr/local/nginx/conf/nginx.conf
         \cp conf/proxy.conf /usr/local/nginx/conf/proxy.conf
+        \cp conf/proxy-pass-php.conf /usr/local/nginx/conf/proxy-pass-php.conf
     else
         \cp conf/nginx.conf /usr/local/nginx/conf/nginx.conf
     fi
@@ -54,7 +55,6 @@ Install_Nginx()
     \cp conf/pathinfo.conf /usr/local/nginx/conf/pathinfo.conf
     \cp conf/enable-php.conf /usr/local/nginx/conf/enable-php.conf
     \cp conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php-pathinfo.conf
-    \cp conf/proxy-pass-php.conf /usr/local/nginx/conf/proxy-pass-php.conf
     \cp conf/enable-ssl-example.conf /usr/local/nginx/conf/enable-ssl-example.conf
 
     mkdir -p ${Default_Website_Dir}
