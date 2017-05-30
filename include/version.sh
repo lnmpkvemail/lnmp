@@ -13,7 +13,7 @@ TCMalloc_Ver='gperftools-2.5'
 Libunwind_Ver='libunwind-1.1'
 Libicu4c_Ver='icu4c-58_1'
 Boost_Ver='boost_1_59_0'
-Openssl_Ver='openssl-1.0.2k'
+Openssl_Ver='openssl-1.0.2l'
 Nginx_Ver='nginx-1.12.0'
 if [ "${DBSelect}" = "1" ]; then
     Mysql_Ver='mysql-5.1.73'
@@ -48,7 +48,7 @@ fi
 if [[ "${PHPSelect}" = "1" || "${PHPSelect}" = "2" || "${PHPSelect}" = "3" ]]; then
     PhpMyAdmin_Ver='phpMyAdmin-4.0.10.20-all-languages'
 else
-    PhpMyAdmin_Ver='phpMyAdmin-4.7.0-all-languages'
+    PhpMyAdmin_Ver='phpMyAdmin-4.7.1-all-languages'
 fi
 APR_Ver='apr-1.5.2'
 APR_Util_Ver='apr-util-1.5.4'
