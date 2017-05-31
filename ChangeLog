@@ -1,5 +1,62 @@
 更新记录
 
+LNMP 1.4
+
+增加LNMP模式下多PHP版本安装，安装包目录下运行：./install.sh mphp 进行安装；
+增加单独nginx安装，安装包目录下运行：./install.sh nginx 进行安装；
+增加单独数据库安装，安装包目录下运行：./install.sh db 进行安装；
+增加Let's Encrypt自动生成证书和自备SSL证书支持；
+增加不安装数据库选项；
+增加多PHP版本下扩展安装支持；
+增加ioncube php7的支持；
+增加apcu php扩展；
+增加PHP7.1支持；
+增加lnmp管理脚本升级脚本，安装包目录下运行：./upgrade1.x-1.4.sh；
+增加对中国用户的识别，使用国内源；
+增加Amazon Linux、Linux Mint支持；
+增加计算显示LNMP安装使用时间；
+增加是否已安装LNMP判断，防止重复安装覆盖数据；
+增加在已存在目录下安装数据库时先进行备份；
+增加防跨目录配置文件移除脚本，安装包目录里tools目录下运行 ./remove_open_basedir_restriction.sh ；
+lnmp管理脚本增加SSL选项，可以选择Let's Encrypt或自定义证书和key文件，Letsencrypt每7天自动尝试续期；
+lnmp管理脚本增加ftp账号信息显示；
+lnmp管理脚本增加LNMP模式下添加虚拟主机时多PHP版本选择选项；
+lnmp管理脚本去除add more domain name提示，添加直接输入域名，不添加直接回车；
+lnmp管理脚本添加虚拟主机处理流程上的优化；
+lnmp管理脚本增加多PHP状态管理支持；
+lnmp管理脚本增加 lnmp ftp show 显示ftp账号信息；
+lnmp管理脚本已存在虚拟主机SSL时可以直接lnmp ssl add 进行添加；
+nginx默认使用openssl 1.0.2进行安装，以便更好的支持http2；
+修复完善国内composer安装问题，国内能正常流畅的安装；
+修复lnmpa/lamp模式下https问题；
+修复arm下centos不存在libcurl依赖包的问题；
+调整部分软件源码包格式为tar.bz2；
+调整apache日志LogLevel为crit；
+调整php模块的引入方式,使用with-config-file-scan-dir引入；
+调整默认PHP版本调整为PHP 5.5；
+调整国内外节点顺序，1,3,5 为国内节点(soft1.vpser.net 可调整数字)，2,4,6,8 为国外节点(soft2.vpser.net 可调整数字)。
+调整默认虚拟主机不在使用www.lnmp.org域名，使用_代替；
+增加lnmp.conf配置文件中nginx是否使用新版openssl编译安装选项；
+增加LNMP模式下上传目录或不需php解析目录php禁止访问的实例代码，去掉注释修改其中目录重启nginx即可使用；
+增加LNMP模式下的https实例配置文件：/usr/local/nginx/conf/enable-ssl-example.conf；
+增加LNMPA模式下的https实例配置文件：/usr/local/nginx/conf/enable-lnmpa-ssl-vhost-example.conf；
+增加LAMP模式下的https实例配置文件：/usr/local/apache/conf/enable-apache-ssl-vhost-example.conf；
+增加PHP模块zts和non-zts自动识别；
+添加Ubuntu 17.04支持；
+php探针在php7下优化；
+fastcgi.conf增加防跨目录的二次设置，移除参考：https://lnmp.org/faq/lnmp-vhost-add-howto.html#user.ini ；
+imagemagick增加webp格式支持；
+去掉pureftp配置文件匿名模式下匿名用户上传权限；
+防止误卸载，卸载脚本增加备份数据库目录；
+优化pureftpd安装脚本，可单独在服务器进行安装；
+优化nginx虚拟主机配置文件，增加对let'sencrypt目录的允许规则；
+优化卸载脚本；
+优化组件模块安装脚本；
+优化部分启动脚本；
+调整升级MySQL/MariaDB时my.cnf和启动脚本的位置到MySQL/MariaDB备份目录下；
+调整优化fail2ban、denyhosts安装脚本；
+诸多小的优化及调整......
+
 LNMP 1.3
 
 优化安装脚本、升级脚本及组件安装脚本；

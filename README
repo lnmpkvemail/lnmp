@@ -12,7 +12,7 @@ LNMP官网：https://lnmp.org
 
 安装前建议使用screen，执行：screen -S lnmp 后
 执行
-wget -c http://soft.vpser.net/lnmp/lnmp1.4beta.tar.gz && tar zxf lnmp1.4beta.tar.gz && cd lnmp1.4 && ./install.sh {lnmp|lnmpa|lamp}
+wget -c http://soft.vpser.net/lnmp/lnmp1.4.tar.gz && tar zxf lnmp1.4.tar.gz && cd lnmp1.4 && ./install.sh {lnmp|lnmpa|lamp}
 
 如断线可使用screen -r lnmp 恢复。详细安装教程参考：https://lnmp.org/install.html
 注意:1.3版增加了lnmp.conf配置文件，可以自定义下载服务器地址、数据库目录及nginx和php编译参数，不论安装升级都会调用该文件里的设置，安装或升级时可跟进需求自己更改。
