@@ -40,7 +40,7 @@ Install_XCache()
 
     cat >${PHP_Path}/conf.d/006-xcache.ini<<EOF
 [xcache-common]
-extension = ${zend_ext}
+extension = xcache.so
 
 [xcache.admin]
 xcache.admin.enable_auth = On
