@@ -2,7 +2,7 @@
 
 #Funciont: Backup website and mysql database
 #Author: licess
-#Website: http://lnmp.org
+#Website: https://lnmp.org
 
 #IMPORTANT!!!Please Setting the following Values!
 
@@ -55,7 +55,9 @@ if [ ! -d ${Backup_Home} ]; then
     mkdir -p ${Backup_Home}
 fi
 
-type lftp >/dev/null 2>&1 || { echo >&2 "lftp command not found. Install: centos:yum install lftp,debian/ubuntu:apt-get install lftp."; }
+if [ ${Enable_FTP} = 0 ]; then
+    type lftp >/dev/null 2>&1 || { echo >&2 "lftp command not found. Install: centos:yum install lftp,debian/ubuntu:apt-get install lftp."; }
+fi
 
 echo "Backup website files..."
 for dd in ${Backup_Dir[@]};do

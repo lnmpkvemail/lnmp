@@ -38,7 +38,7 @@ MySQL_Sec_Setting()
 user=root
 password=''
 EOF
-        if [ "${DBSelect}" = "6" ] || echo "${mysql_version}" | grep -Eqi '^5.7.'; then
+        if [ "${DBSelect}" = "4" ] || echo "${mysql_version}" | grep -Eqi '^5.7.'; then
             /usr/local/mysql/bin/mysql --defaults-file=~/.emptymy.cnf -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('${DB_Root_Password}');"
             [ $? -eq 0 ] && echo "Set password Sucessfully." || echo "Set password failed!"
         else
@@ -57,7 +57,7 @@ EOF
         echo "OK, MySQL root password correct."
     fi
     echo "Update root password..."
-    if [ "${DBSelect}" = "6" ] || echo "${mysql_version}" | grep -Eqi '^5.7.'; then
+    if [ "${DBSelect}" = "4" ] || echo "${mysql_version}" | grep -Eqi '^5.7.'; then
         Do_Query "UPDATE mysql.user SET authentication_string=PASSWORD('${DB_Root_Password}') WHERE User='root';"
     else
         Do_Query "UPDATE mysql.user SET Password=PASSWORD('${DB_Root_Password}') WHERE User='root';"
@@ -94,6 +94,7 @@ MySQL_Opt()
         sed -i "s#^tmp_table_size.*#tmp_table_size = 32M#" /etc/my.cnf
         sed -i "s#^innodb_buffer_pool_size.*#innodb_buffer_pool_size = 128M#" /etc/my.cnf
         sed -i "s#^innodb_log_file_size.*#innodb_log_file_size = 32M#" /etc/my.cnf
+        sed -i "s#^performance_schema_max_table_instances.*#performance_schema_max_table_instances = 1000" /etc/my.cnf
     elif [[ ${MemTotal} -ge 2048 && ${MemTotal} -lt 4096 ]]; then
         sed -i "s#^key_buffer_size.*#key_buffer_size = 64M#" /etc/my.cnf
         sed -i "s#^table_open_cache.*#table_open_cache = 256#" /etc/my.cnf
@@ -105,6 +106,7 @@ MySQL_Opt()
         sed -i "s#^tmp_table_size.*#tmp_table_size = 64M#" /etc/my.cnf
         sed -i "s#^innodb_buffer_pool_size.*#innodb_buffer_pool_size = 256M#" /etc/my.cnf
         sed -i "s#^innodb_log_file_size.*#innodb_log_file_size = 64M#" /etc/my.cnf
+        sed -i "s#^performance_schema_max_table_instances.*#performance_schema_max_table_instances = 2000" /etc/my.cnf
     elif [[ ${MemTotal} -ge 4096 && ${MemTotal} -lt 8192 ]]; then
         sed -i "s#^key_buffer_size.*#key_buffer_size = 128M#" /etc/my.cnf
         sed -i "s#^table_open_cache.*#table_open_cache = 512#" /etc/my.cnf
@@ -116,6 +118,7 @@ MySQL_Opt()
         sed -i "s#^tmp_table_size.*#tmp_table_size = 64M#" /etc/my.cnf
         sed -i "s#^innodb_buffer_pool_size.*#innodb_buffer_pool_size = 512M#" /etc/my.cnf
         sed -i "s#^innodb_log_file_size.*#innodb_log_file_size = 128M#" /etc/my.cnf
+        sed -i "s#^performance_schema_max_table_instances.*#performance_schema_max_table_instances = 4000" /etc/my.cnf
     elif [[ ${MemTotal} -ge 8192 && ${MemTotal} -lt 16384 ]]; then
         sed -i "s#^key_buffer_size.*#key_buffer_size = 256M#" /etc/my.cnf
         sed -i "s#^table_open_cache.*#table_open_cache = 1024#" /etc/my.cnf
@@ -127,6 +130,7 @@ MySQL_Opt()
         sed -i "s#^tmp_table_size.*#tmp_table_size = 128M#" /etc/my.cnf
         sed -i "s#^innodb_buffer_pool_size.*#innodb_buffer_pool_size = 1024M#" /etc/my.cnf
         sed -i "s#^innodb_log_file_size.*#innodb_log_file_size = 256M#" /etc/my.cnf
+        sed -i "s#^performance_schema_max_table_instances.*#performance_schema_max_table_instances = 6000" /etc/my.cnf
     elif [[ ${MemTotal} -ge 16384 && ${MemTotal} -lt 32768 ]]; then
         sed -i "s#^key_buffer_size.*#key_buffer_size = 512M#" /etc/my.cnf
         sed -i "s#^table_open_cache.*#table_open_cache = 2048#" /etc/my.cnf
@@ -138,6 +142,7 @@ MySQL_Opt()
         sed -i "s#^tmp_table_size.*#tmp_table_size = 256M#" /etc/my.cnf
         sed -i "s#^innodb_buffer_pool_size.*#innodb_buffer_pool_size = 2048M#" /etc/my.cnf
         sed -i "s#^innodb_log_file_size.*#innodb_log_file_size = 512M#" /etc/my.cnf
+        sed -i "s#^performance_schema_max_table_instances.*#performance_schema_max_table_instances = 8000" /etc/my.cnf
     elif [[ ${MemTotal} -ge 32768 ]]; then
         sed -i "s#^key_buffer_size.*#key_buffer_size = 1024M#" /etc/my.cnf
         sed -i "s#^table_open_cache.*#table_open_cache = 4096#" /etc/my.cnf
@@ -149,6 +154,19 @@ MySQL_Opt()
         sed -i "s#^tmp_table_size.*#tmp_table_size = 512M#" /etc/my.cnf
         sed -i "s#^innodb_buffer_pool_size.*#innodb_buffer_pool_size = 4096M#" /etc/my.cnf
         sed -i "s#^innodb_log_file_size.*#innodb_log_file_size = 1024M#" /etc/my.cnf
+        sed -i "s#^performance_schema_max_table_instances.*#performance_schema_max_table_instances = 10000" /etc/my.cnf
+    fi
+}
+
+Check_MySQL_Data_Dir()
+{
+    if [ -d "${MySQL_Data_Dir}" ]; then
+        datetime=$(date +"%Y%m%d%H%M%S")
+        mkdir -p /root/mysql-data-dir-backup${datetime}/
+        \cp ${MySQL_Data_Dir}/* /root/mysql-data-dir-backup${datetime}/
+        rm -rf ${MySQL_Data_Dir}/*
+    else
+        mkdir -p ${MySQL_Data_Dir}
     fi
 }
 
@@ -203,6 +221,7 @@ server-id	= 1
 expire_logs_days = 10
 
 default_storage_engine = InnoDB
+#innodb_file_per_table = 1
 #innodb_data_home_dir = ${MySQL_Data_Dir}
 #innodb_data_file_path = ibdata1:10M:autoextend
 #innodb_log_group_home_dir = ${MySQL_Data_Dir}
@@ -236,11 +255,7 @@ EOF
         sed -i 's#default_storage_engine.*#default_storage_engine = MyISAM#' /etc/my.cnf
     fi
     MySQL_Opt
-    if [ -d "${MySQL_Data_Dir}" ]; then
-        rm -rf ${MySQL_Data_Dir}/*
-    else
-        mkdir -p ${MySQL_Data_Dir}
-    fi
+    Check_MySQL_Data_Dir
     chown -R mysql:mysql ${MySQL_Data_Dir}
     /usr/local/mysql/bin/mysql_install_db --user=mysql --datadir=${MySQL_Data_Dir}
     chgrp -R mysql /usr/local/mysql/.
@@ -264,7 +279,6 @@ Install_MySQL_55()
     Echo_Blue "[+] Installing ${Mysql_Ver}..."
     rm -f /etc/my.cnf
     Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}
-    patch -p1 < ${cur_dir}/src/patch/mysql-openssl.patch
     MySQL_ARM_Patch
     cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL55MAOpt}
     make && make install
@@ -306,6 +320,7 @@ server-id	= 1
 expire_logs_days = 10
 
 default_storage_engine = InnoDB
+#innodb_file_per_table = 1
 #innodb_data_home_dir = ${MySQL_Data_Dir}
 #innodb_data_file_path = ibdata1:10M:autoextend
 #innodb_log_group_home_dir = ${MySQL_Data_Dir}
@@ -339,11 +354,7 @@ EOF
         sed -i '/skip-external-locking/i\default_storage_engine = MyISAM\nloose-skip-innodb' /etc/my.cnf
     fi
     MySQL_Opt
-    if [ -d "${MySQL_Data_Dir}" ]; then
-        rm -rf ${MySQL_Data_Dir}/*
-    else
-        mkdir -p ${MySQL_Data_Dir}
-    fi
+    Check_MySQL_Data_Dir
     chown -R mysql:mysql ${MySQL_Data_Dir}
     /usr/local/mysql/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
     chgrp -R mysql /usr/local/mysql/.
@@ -366,7 +377,6 @@ Install_MySQL_56()
     Echo_Blue "[+] Installing ${Mysql_Ver}..."
     rm -f /etc/my.cnf
     Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}
-    patch -p1 < ${cur_dir}/src/patch/mysql-openssl.patch
     cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL55MAOpt}
     make && make install
 
@@ -395,6 +405,7 @@ myisam_sort_buffer_size = 8M
 thread_cache_size = 8
 query_cache_size = 8M
 tmp_table_size = 16M
+performance_schema_max_table_instances = 500
 
 explicit_defaults_for_timestamp = true
 #skip-networking
@@ -436,6 +447,7 @@ expire_logs_days = 10
 #loose-innodb-sys-foreign-cols=0
 
 default_storage_engine = InnoDB
+#innodb_file_per_table = 1
 #innodb_data_home_dir = ${MySQL_Data_Dir}
 #innodb_data_file_path = ibdata1:10M:autoextend
 #innodb_log_group_home_dir = ${MySQL_Data_Dir}
@@ -470,11 +482,7 @@ EOF
         sed -i 's/^#loose-innodb/loose-innodb/g' /etc/my.cnf
     fi
     MySQL_Opt
-    if [ -d "${MySQL_Data_Dir}" ]; then
-        rm -rf ${MySQL_Data_Dir}/*
-    else
-        mkdir -p ${MySQL_Data_Dir}
-    fi
+    Check_MySQL_Data_Dir
     chown -R mysql:mysql ${MySQL_Data_Dir}
     /usr/local/mysql/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
     chgrp -R mysql /usr/local/mysql/.
@@ -526,6 +534,7 @@ myisam_sort_buffer_size = 8M
 thread_cache_size = 8
 query_cache_size = 8M
 tmp_table_size = 16M
+performance_schema_max_table_instances = 500
 
 explicit_defaults_for_timestamp = true
 #skip-networking
@@ -568,6 +577,7 @@ early-plugin-load = ""
 #loose-innodb-sys-foreign-cols=0
 
 default_storage_engine = InnoDB
+#innodb_file_per_table = 1
 #innodb_data_home_dir = ${MySQL_Data_Dir}
 #innodb_data_file_path = ibdata1:10M:autoextend
 #innodb_log_group_home_dir = ${MySQL_Data_Dir}
@@ -602,11 +612,7 @@ EOF
         sed -i 's/^#loose-innodb/loose-innodb/g' /etc/my.cnf
     fi
     MySQL_Opt
-    if [ -d "${MySQL_Data_Dir}" ]; then
-        rm -rf ${MySQL_Data_Dir}/*
-    else
-        mkdir -p ${MySQL_Data_Dir}
-    fi
+    Check_MySQL_Data_Dir
     chown -R mysql:mysql ${MySQL_Data_Dir}
     /usr/local/mysql/bin/mysqld --initialize-insecure --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
     chgrp -R mysql /usr/local/mysql/.

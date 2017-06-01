@@ -15,10 +15,10 @@
 ### END INIT INFO
 
 # Author:   licess
-# website:  http://lnmp.org
+# website:  https://lnmp.org
 
 # Pure-FTPd Settings
-PURE_PERL="/usr/local/pureftpd/sbin/pure-config.pl"
+PURE_FTPD="/usr/local/pureftpd/sbin/pure-ftpd"
 PURE_CONF="/usr/local/pureftpd/etc/pure-ftpd.conf"
 PURE_PID="/var/run/pure-ftpd.pid"
 RETVAL=0
@@ -26,7 +26,7 @@ prog="Pure-FTPd"
 
 start() {
     echo -n $"Starting $prog... "
-    $PURE_PERL $PURE_CONF --daemonize
+    $PURE_FTPD $PURE_CONF
     if [ "$?" = 0 ] ; then
         echo " done"
     else
@@ -36,7 +36,7 @@ start() {
 
 stop() {
     echo -n $"Stopping $prog...  "
-    if [ ! -e $PURE_PID ]; then
+    if [ ! -f "$PURE_PID" ]; then
         echo -n $"$prog is not running."
         exit 1
     fi
@@ -56,7 +56,7 @@ restart(){
 }
 
 status(){
-    if [ -e $PURE_PID ]; then
+    if [ -f "$PURE_PID" ]; then
         echo $"$prog is running."
     else
         echo $"$prog is not running."

@@ -5,11 +5,9 @@ Check_Stack_Choose()
     Check_Stack
     if [[ "${Get_Stack}" = "lnmp" && "${Stack}" = "" ]]; then
         echo "Current Stack: ${Get_Stack}, please run: ./upgrade.sh php"
-        sleep 3
         exit 1
     elif [[ "${Get_Stack}" = "lnmpa" || "${Get_Stack}" = "lamp" ]] && [[ "${Stack}" = "lnmp" ]]; then
         echo "Current Stack: ${Get_Stack}, please run: ./upgrade.sh phpa"
-        sleep 3
         exit 1
     fi
 }
@@ -28,22 +26,29 @@ Start_Upgrade_PHP()
         exit 1
     fi
     Press_Start
-    if [ -s php-${php_version}.tar.gz ]; then
-        echo "php-${php_version}.tar.gz [found]"
+    if [ -s php-${php_version}.tar.bz2 ]; then
+        echo "php-${php_version}.tar.bz2 [found]"
     else
-        echo "Notice: php-$php_version.tar.gz not found!!!download now..."
+        echo "Notice: php-$php_version.tar.bz2 not found!!!download now..."
         cd ${cur_dir}/src
-        wget -c --progress=bar:force http://php.net/distributions/php-${php_version}.tar.gz
-        if [ $? -eq 0 ]; then
-            echo "Download php-${php_version}.tar.gz successfully!"
+        country=`curl -sSk --connect-timeout 10 -m 60 https://ip.vpser.net/country`
+        if [ "${country}" = "CN" ]; then
+            wget -c --progress=bar:force http://cn2.php.net/distributions/php-${php_version}.tar.bz2
+            if [ $? -ne 0 ]; then
+                wget -c --progress=bar:force http://php.net/distributions/php-${php_version}.tar.bz2
+            fi
         else
-            wget -c --progress=bar:force http://museum.php.net/php5/php-${php_version}.tar.gz
+            wget -c --progress=bar:force http://php.net/distributions/php-${php_version}.tar.bz2
+        fi
+        if [ $? -eq 0 ]; then
+            echo "Download php-${php_version}.tar.bz2 successfully!"
+        else
+            wget -c --progress=bar:force http://museum.php.net/php5/php-${php_version}.tar.bz2
             if [ $? -eq 0 ]; then
-                echo "Download php-${php_version}.tar.gz successfully!"
+                echo "Download php-${php_version}.tar.bz2 successfully!"
             else
                 echo "You enter PHP Version was:"${php_version}
                 Echo_Red "Error! You entered a wrong version number, please check!"
-                sleep 5
                 exit 1
             fi
         fi
@@ -55,35 +60,21 @@ Start_Upgrade_PHP()
     lnmp stop
 
     if [ "${Stack}" = "lnmp" ]; then
-        mv /etc/init.d/php-fpm /etc/init.d/php-fpm.bak.${Upgrade_Date}
         mv /usr/local/php /usr/local/oldphp${Upgrade_Date}
+        mv /etc/init.d/php-fpm /usr/local/oldphp${Upgrade_Date}/init.d.php-fpm.bak.${Upgrade_Date}
     else
-        mv /usr/local/apache/modules/libphp5.so /usr/local/apache/modules/libphp5.so.bak.${Upgrade_Date}
+        if echo "${Cur_PHP_Version}" | grep -Eqi '^7.';then
+            mv /usr/local/apache/modules/libphp7.so /usr/local/apache/modules/libphp7.so.bak.${Upgrade_Date}
+        else
+            mv /usr/local/apache/modules/libphp5.so /usr/local/apache/modules/libphp5.so.bak.${Upgrade_Date}
+        fi
         mv /usr/local/php /usr/local/oldphp${Upgrade_Date}
+        \cp /usr/local/apache/conf/httpd.conf /usr/local/apache/conf/httpd.conf.bak.${Upgrade_Date}
+        if echo "${Cur_PHP_Version}" | grep -Eqi '^7.' && echo "${php_version}" | grep -Eqi '^5.';then
+            sed -i '/libphp7.so/d' /usr/local/apache/conf/httpd.conf
+        fi
     fi
 
-}
-
-Check_Curl()
-{
-    if [ -s /usr/local/curl/bin/curl ]; then
-        Echo_Green "Curl ...ok"
-    else
-        Install_Curl
-    fi
-}
-
-Check_PHP53_Curl()
-{
-    if [ "${DISTRO}" = "Fedora" ];then
-        PHP53_With_Curl='y'
-    elif echo "${Ubuntu_Version}" | grep -Eqi '^14.1';then
-        PHP53_With_Curl='y'
-    elif echo "${Ubuntu_Version}" | grep -Eqi '^15.';then
-        PHP53_With_Curl='y'
-    elif echo "${Debian_Version}" | grep -Eqi '^8.';then
-        PHP53_With_Curl='y'
-    fi
 }
 
 Check_Autoconf()
@@ -148,10 +139,14 @@ Check_PHP_Upgrade_Files()
 
 Upgrade_PHP_52()
 {
+    if [ ${DB_Name} == "None" ]; then
+        echo "MySQL or MariaDB not found!"
+        exit 1
+    fi
     Check_Curl
     Check_Autoconf
     cd ${cur_dir}/src && rm -rf php-${php_version}
-    tar zxf php-${php_version}.tar.gz
+    tar jxf php-${php_version}.tar.bz2
     if [ "${Stack}" = "lnmp" ]; then
         gzip -cd php-${php_version}-fpm-0.5.14.diff.gz | patch -d php-${php_version} -p1
     fi
@@ -162,14 +157,14 @@ Upgrade_PHP_52()
     patch -p1 < ${cur_dir}/src/patch/php-5.2-multipart-form-data.patch
     ./buildconf --force
     if [ "${Stack}" = "lnmp" ]; then
-        ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-mysql=${MySQL_Dir} --with-mysqli=${MySQL_Config} --with-pdo-mysql=${MySQL_Dir} --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --enable-discard-path --enable-magic-quotes --enable-safe-mode --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl=/usr/local/curl --enable-mbregex --enable-fastcgi --enable-fpm --enable-force-cgi-redirect --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --with-mime-magic ${PHP_Modules_Options}
+        ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-config-file-scan-dir=/usr/local/php/conf.d --with-mysql=${MySQL_Dir} --with-mysqli=${MySQL_Config} --with-pdo-mysql=${MySQL_Dir} --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --enable-discard-path --enable-magic-quotes --enable-safe-mode --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl=/usr/local/curl --enable-mbregex --enable-fastcgi --enable-fpm --enable-force-cgi-redirect --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --with-mime-magic ${PHP_Modules_Options}
     else
-        ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-apxs2=/usr/local/apache/bin/apxs --with-mysql=${MySQL_Dir} --with-mysqli=${MySQL_Config} --with-pdo-mysql=${MySQL_Dir} --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --enable-discard-path --enable-magic-quotes --enable-safe-mode --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl=/usr/local/curl --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --with-mime-magic ${PHP_Modules_Options}
+        ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-config-file-scan-dir=/usr/local/php/conf.d --with-apxs2=/usr/local/apache/bin/apxs --with-mysql=${MySQL_Dir} --with-mysqli=${MySQL_Config} --with-pdo-mysql=${MySQL_Dir} --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --enable-discard-path --enable-magic-quotes --enable-safe-mode --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl=/usr/local/curl --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --with-mime-magic ${PHP_Modules_Options}
     fi
     make ZEND_EXTRA_LIBS='-liconv'
     make install
 
-    mkdir -p /usr/local/php/etc
+    mkdir -p /usr/local/php/{etc,conf.d}
     \cp php.ini-dist /usr/local/php/etc/php.ini
     cd ../
 
@@ -200,18 +195,10 @@ Upgrade_PHP_52()
         \cp ZendOptimizer-3.3.9-linux-glibc23-i386/data/5_2_x_comp/ZendOptimizer.so /usr/local/zend/
     fi
 
-    cat >>/usr/local/php/etc/php.ini<<EOF
-
-;eaccelerator
-
-;ionCube
-
+    cat >/usr/local/php/conf.d/002-zendoptimizer.ini<<EOF
 [Zend Optimizer]
 zend_optimizer.optimization_level=1
 zend_extension="/usr/local/zend/ZendOptimizer.so"
-
-;xcache
-
 EOF
 
     if [ "${Stack}" = "lnmp" ]; then
@@ -228,21 +215,12 @@ EOF
 Upgrade_PHP_53()
 {
     Echo_Blue "Start install php-${php_version}"
-    Tar_Cd php-${php_version}.tar.gz php-${php_version}
-    Check_PHP53_Curl
+    Tarj_Cd php-${php_version}.tar.bz2 php-${php_version}
     patch -p1 < ${cur_dir}/src/patch/php-5.3-multipart-form-data.patch
-    if [ "${PHP53_With_Curl}" = "y" ]; then
-        if [ "${Stack}" = "lnmp" ]; then
-            ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-magic-quotes --enable-safe-mode --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl=/usr/local/curl --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo ${PHP_Modules_Options}
-        else
-            ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-apxs2=/usr/local/apache/bin/apxs --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-magic-quotes --enable-safe-mode --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl=/usr/local/curl --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo ${PHP_Modules_Options}
-        fi
+    if [ "${Stack}" = "lnmp" ]; then
+        ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-config-file-scan-dir=/usr/local/php/conf.d --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-magic-quotes --enable-safe-mode --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl=/usr/local/curl --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo ${PHP_Modules_Options}
     else
-        if [ "${Stack}" = "lnmp" ]; then
-        ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-magic-quotes --enable-safe-mode --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo ${PHP_Modules_Options}
-        else
-            ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-apxs2=/usr/local/apache/bin/apxs --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-magic-quotes --enable-safe-mode --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo ${PHP_Modules_Options}
-        fi
+        ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-config-file-scan-dir=/usr/local/php/conf.d --with-apxs2=/usr/local/apache/bin/apxs --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-magic-quotes --enable-safe-mode --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl=/usr/local/curl --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo ${PHP_Modules_Options}
     fi
 
     make ZEND_EXTRA_LIBS='-liconv'
@@ -251,7 +229,7 @@ Upgrade_PHP_53()
     Ln_PHP_Bin
 
     echo "Copy new php configure file."
-    mkdir -p /usr/local/php/etc
+    mkdir -p /usr/local/php/{etc,conf.d}
     \cp php.ini-production /usr/local/php/etc/php.ini
 
     cd ${cur_dir}
@@ -282,21 +260,13 @@ Upgrade_PHP_53()
     fi
 
     echo "Write ZendGuardLoader to php.ini......"
-    cat >>/usr/local/php/etc/php.ini<<EOF
-
-;eaccelerator
-
-;ionCube
-
+    cat >/usr/local/php/conf.d/002-zendguardloader.ini<<EOF
 [Zend Optimizer]
 zend_extension=/usr/local/zend/ZendGuardLoader.so
 zend_loader.enable=1
 zend_loader.disable_licensing=0
 zend_loader.obfuscation_level_support=3
 zend_loader.license_path=
-
-;xcache
-
 EOF
 
 if [ "${Stack}" = "lnmp" ]; then
@@ -339,11 +309,11 @@ fi
 Upgrade_PHP_54()
 {
     Echo_Blue "Start install php-${php_version}"
-    Tar_Cd php-${php_version}.tar.gz php-${php_version}
+    Tarj_Cd php-${php_version}.tar.bz2 php-${php_version}
     if [ "${Stack}" = "lnmp" ]; then
-        ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo ${PHP_Modules_Options}
+        ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-config-file-scan-dir=/usr/local/php/conf.d --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization ${with_curl} --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-intl --with-xsl ${PHP_Modules_Options}
     else
-        ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-apxs2=/usr/local/apache/bin/apxs --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo ${PHP_Modules_Options}
+        ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-config-file-scan-dir=/usr/local/php/conf.d --with-apxs2=/usr/local/apache/bin/apxs --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization ${with_curl} --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-intl --with-xsl ${PHP_Modules_Options}
     fi
 
     make ZEND_EXTRA_LIBS='-liconv'
@@ -352,7 +322,7 @@ Upgrade_PHP_54()
     Ln_PHP_Bin
 
     echo "Copy new php configure file."
-    mkdir -p /usr/local/php/etc
+    mkdir -p /usr/local/php/{etc,conf.d}
     \cp php.ini-production /usr/local/php/etc/php.ini
 
     cd ${cur_dir}
@@ -383,23 +353,13 @@ Upgrade_PHP_54()
     fi
 
     echo "Write ZendGuardLoader to php.ini......"
-    cat >>/usr/local/php/etc/php.ini<<EOF
-
-;eaccelerator
-
-;ionCube
-
-;opcache
-
+    cat >/usr/local/php/conf.d/002-zendguardloader.ini<<EOF
 [Zend ZendGuard Loader]
 zend_extension=/usr/local/zend/ZendGuardLoader.so
 zend_loader.enable=1
 zend_loader.disable_licensing=0
 zend_loader.obfuscation_level_support=3
 zend_loader.license_path=
-
-;xcache
-
 EOF
 
 if [ "${Stack}" = "lnmp" ]; then
@@ -442,11 +402,11 @@ fi
 Upgrade_PHP_556()
 {
     Echo_Blue "Start install php-${php_version}"
-    Tar_Cd php-${php_version}.tar.gz php-${php_version}
+    Tarj_Cd php-${php_version}.tar.bz2 php-${php_version}
     if [ "${Stack}" = "lnmp" ]; then
-        ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-opcache ${PHP_Modules_Options}
+        ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-config-file-scan-dir=/usr/local/php/conf.d --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization ${with_curl} --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-opcache --enable-intl --with-xsl ${PHP_Modules_Options}
     else
-       ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-apxs2=/usr/local/apache/bin/apxs --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-opcache ${PHP_Modules_Options}
+        ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-config-file-scan-dir=/usr/local/php/conf.d --with-apxs2=/usr/local/apache/bin/apxs --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization ${with_curl} --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-opcache --enable-intl --with-xsl ${PHP_Modules_Options}
     fi
 
     make ZEND_EXTRA_LIBS='-liconv'
@@ -455,7 +415,7 @@ Upgrade_PHP_556()
     Ln_PHP_Bin
 
     echo "Copy new php configure file."
-    mkdir -p /usr/local/php/etc
+    mkdir -p /usr/local/php/{etc,conf.d}
     \cp php.ini-production /usr/local/php/etc/php.ini
 
     cd ${cur_dir}
@@ -502,23 +462,13 @@ Upgrade_PHP_556()
     fi
 
     echo "Write ZendGuardLoader to php.ini......"
-    cat >>/usr/local/php/etc/php.ini<<EOF
-
-;eaccelerator
-
-;ionCube
-
-;opcache
-
+    cat >/usr/local/php/conf.d/002-zendguardloader.ini<<EOF
 [Zend ZendGuard Loader]
 zend_extension=/usr/local/zend/ZendGuardLoader.so
 zend_loader.enable=1
 zend_loader.disable_licensing=0
 zend_loader.obfuscation_level_support=3
 zend_loader.license_path=
-
-;xcache
-
 EOF
 
     echo "Download Opcache Control Panel..."
@@ -571,11 +521,11 @@ Upgrade_PHP_7()
         apt-get install -y libicu-dev
     fi
     Install_Icu4c
-    Tar_Cd php-${php_version}.tar.gz php-${php_version}
+    Tarj_Cd php-${php_version}.tar.bz2 php-${php_version}
     if [ "${Stack}" = "lnmp" ]; then
-        ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --enable-fpm --with-fpm-user=www --with-fpm-group=www --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl --enable-mbregex --enable-mbstring --enable-intl --enable-pcntl --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-opcache ${PHP_Modules_Options}
+        ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-config-file-scan-dir=/usr/local/php/conf.d --enable-fpm --with-fpm-user=www --with-fpm-group=www --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization ${with_curl} --enable-mbregex --enable-mbstring --enable-intl --enable-pcntl --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-opcache --with-xsl ${PHP_Modules_Options}
     else
-        ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-apxs2=/usr/local/apache/bin/apxs --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl --enable-mbregex --enable-mbstring --enable-intl --enable-pcntl --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-opcache ${PHP_Modules_Options}
+        ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-config-file-scan-dir=/usr/local/php/conf.d --with-apxs2=/usr/local/apache/bin/apxs --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization ${with_curl} --enable-mbregex --enable-mbstring --enable-intl --enable-pcntl --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-opcache --with-xsl ${PHP_Modules_Options}
     fi
 
     make ZEND_EXTRA_LIBS='-liconv'
@@ -584,7 +534,7 @@ Upgrade_PHP_7()
     Ln_PHP_Bin
 
     echo "Copy new php configure file..."
-    mkdir -p /usr/local/php/etc
+    mkdir -p /usr/local/php/{etc,conf.d}
     \cp php.ini-production /usr/local/php/etc/php.ini
 
     cd ${cur_dir}
@@ -604,24 +554,14 @@ Upgrade_PHP_7()
     echo "unavailable now."
 
     echo "Write ZendGuardLoader to php.ini..."
-    cat >>/usr/local/php/etc/php.ini<<EOF
-
-;eaccelerator
-
-;ionCube
-
-;opcache
-
+    cat >/usr/local/php/conf.d/002-zendguardloader.ini<<EOF
 [Zend ZendGuard Loader]
-;php7 do not support zendguardloader @Sep.2015,after support you can uncomment the following line.
+;php7 do not support zendguardloader,after support you can uncomment the following line.
 ;zend_extension=/usr/local/zend/ZendGuardLoader.so
 ;zend_loader.enable=1
 ;zend_loader.disable_licensing=0
 ;zend_loader.obfuscation_level_support=3
 ;zend_loader.license_path=
-
-;xcache
-
 EOF
 
 if [ "${Stack}" = "lnmp" ]; then
@@ -666,6 +606,7 @@ fi
 Upgrade_PHP()
 {
     Start_Upgrade_PHP
+    PHP_with_curl
     if echo "${php_version}" | grep -Eqi '^5.2.';then
         Upgrade_PHP_52
     elif echo "${php_version}" | grep -Eqi '^5.3.';then
@@ -674,7 +615,7 @@ Upgrade_PHP()
         Upgrade_PHP_54
     elif echo "${php_version}" | grep -Eqi '^5.[56].';then
         Upgrade_PHP_556
-    elif echo "${php_version}" | grep -Eqi '^7.';then
+    elif echo "${php_version}" | grep -Eqi '^7.[01].';then
         Upgrade_PHP_7
     fi
 }

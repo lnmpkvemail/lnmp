@@ -5,23 +5,23 @@ Install_XCache()
     echo "You will install ${XCache_Ver}..."
 
     xadmin_pass=""
-    read -p "Please enter admin password of XCache Administration Page: " xadmin_pass
-    if [ "${xadmin_pass}" = "" ]; then
-        echo "password can't be NULL!"
-        exit 1
-    else
-    echo "================================================="
-    echo "Your admin password of XCache was:${xadmin_pass}"
-    echo "================================================="
-    fi
+    while :;do
+        read -p "Please enter admin password of XCache Administration Page: " xadmin_pass
+        if [ "${xadmin_pass}" != "" ]; then
+            echo "================================================="
+            echo "Your admin password of XCache was: ${xadmin_pass}"
+            echo "================================================="
+            break
+        else
+            Echo_Red "Password cannot be empty!"
+        fi
+    done
     xmd5pass=`echo -n "${xadmin_pass}" |md5sum |awk '{print $1}'`
-
-
     echo "====== Installing XCache ======"
-    Press_Install
+    Press_Start
 
-    sed -i '/\[xcache-common\]/,/xcache.coveragedump_directory/d' /usr/local/php/etc/php.ini
-    Get_PHP_Ext_Dir
+    rm -f ${PHP_Path}/conf.d/006-xcache.ini
+    Addons_Get_PHP_Ext_Dir
     zend_ext="${zend_ext_dir}xcache.so"
     if [ -s "${zend_ext}" ]; then
         rm -f "${zend_ext}"
@@ -32,15 +32,15 @@ Install_XCache()
     cd ${cur_dir}/src
     Download_Files ${Download_Mirror}/web/xcache/${XCache_Ver}.tar.gz ${XCache_Ver}.tar.gz
     Tar_Cd ${XCache_Ver}.tar.gz ${XCache_Ver}
-    /usr/local/php/bin/phpize
-    ./configure --enable-xcache --enable-xcache-coverager --enable-xcache-optimizer --with-php-config=/usr/local/php/bin/php-config
+    ${PHP_Path}/bin/phpize
+    ./configure --enable-xcache --enable-xcache-coverager --enable-xcache-optimizer --with-php-config=${PHP_Path}/bin/php-config
     make
     make install
     cd ../
 
-    cat >xcache.ini<<EOF
+    cat >${PHP_Path}/conf.d/006-xcache.ini<<EOF
 [xcache-common]
-extension = ${zend_ext}
+extension = xcache.so
 
 [xcache.admin]
 xcache.admin.enable_auth = On
@@ -81,8 +81,6 @@ xcache.coverager =          Off
 xcache.coveragedump_directory = ""
 
 EOF
-    sed -i '/;xcache/r xcache.ini' /usr/local/php/etc/php.ini
-    rm -f xcache.ini
 
     touch /tmp/xcache && chown www:www /tmp/xcache
 
@@ -91,11 +89,11 @@ EOF
 
     if [ -s "${zend_ext}" ]; then
         Restart_PHP
-        echo "======== xcache install completed ======"
-        echo "XCache installed successfully, enjoy it!"
+        Echo_Green "======== xcache install completed ======"
+        Echo_Green "XCache installed successfully, enjoy it!"
     else
-        sed -i '/\[xcache-common\]/,/xcache.coveragedump_directory/d' /usr/local/php/etc/php.ini
-        echo "XCache install failed!"
+        rm -f ${PHP_Path}/conf.d/006-xcache.ini
+        Echo_Red "XCache install failed!"
     fi
 }
 
@@ -103,9 +101,9 @@ Uninstall_XCache()
 {
     echo "You will uninstall XCache..."
     Press_Start
-    sed -i '/\[xcache-common\]/,/xcache.coveragedump_directory/d' /usr/local/php/etc/php.ini
+    rm -f ${PHP_Path}/conf.d/006-xcache.ini
     echo "Delete xcache files..."
     rm -rf ${Default_Website_Dir}/xcache
     Restart_PHP
-    echo "Uninstall XCache completed."
+    Echo_Green "Uninstall XCache completed."
 }

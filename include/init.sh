@@ -28,11 +28,13 @@ CentOS_RemoveAMP()
 {
     Echo_Blue "[-] Yum remove packages..."
     rpm -qa|grep httpd
-    rpm -e httpd httpd-tools
+    rpm -e httpd httpd-tools --nodeps
     rpm -qa|grep mysql
-    rpm -e mysql mysql-libs
+    rpm -e mysql mysql-libs --nodeps
     rpm -qa|grep php
-    rpm -e php-mysql php-cli php-gd php-common php
+    rpm -e php-mysql php-cli php-gd php-common php --nodeps
+
+    Remove_Error_Libcurl
 
     yum -y remove httpd*
     yum -y remove mysql-server mysql mysql-libs
@@ -77,12 +79,14 @@ Check_Hosts()
     else
         echo "127.0.0.1 localhost.localdomain localhost" >> /etc/hosts
     fi
-    ping -c1 lnmp.org
-    if [ $? -eq 0 ] ; then
-        echo "DNS...ok"
-    else
+    pingresult=`ping -c1 lnmp.org 2>&1`
+    echo "${pingresult}"
+    if echo "${pingresult}" | grep -q "unknown host"; then
         echo "DNS...fail"
+        echo "Writing nameserver to /etc/resolv.conf ..."
         echo -e "nameserver 208.67.220.220\nnameserver 114.114.114.114" > /etc/resolv.conf
+    else
+        echo "DNS...ok"
     fi
 }
 
@@ -114,13 +118,19 @@ Ubuntu_Modify_Source()
     elif grep -Eqi "10.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^10.04'; then
         CodeName='lucid'
     elif grep -Eqi "14.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^14.10'; then
-        Ubuntu_Deadline utopic
+        CodeName='utopic'
     elif grep -Eqi "15.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^15.04'; then
         Ubuntu_Deadline vivid
     elif grep -Eqi "12.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^12.04'; then
         Ubuntu_Deadline precise
     elif grep -Eqi "15.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^15.10'; then
         Ubuntu_Deadline wily
+    elif grep -Eqi "16.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^16.10'; then
+        Ubuntu_Deadline yakkety
+    elif grep -Eqi "14.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^14.04'; then
+        Ubuntu_Deadline trusty
+    elif grep -Eqi "17.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^17.04'; then
+        Ubuntu_Deadline zesty
     fi
     if [ "${CodeName}" != "" ]; then
         \cp /etc/apt/sources.list /etc/apt/sources.list.$(date +"%Y%m%d")
@@ -150,18 +160,14 @@ Check_Old_Releases_URL()
 
 Ubuntu_Deadline()
 {
-    utopic_deadline=`date -d "2015-10-1 00:00:00" +%s`
     vivid_deadline=`date -d "2016-2-24 00:00:00" +%s`
     precise_deadline=`date -d "2017-5-27 00:00:00" +%s`
     wily_deadline=`date -d "2016-7-22 00:00:00" +%s`
+    yakkety_deadline=`date -d "2017-7-22 00:00:00" +%s`
+    trusty_deadline=`date -d "2019-7-22 00:00:00" +%s`
+    zesty_deadline=`date -d "2018-1-31 00:00:00" +%s`
     cur_time=`date  +%s`
     case "$1" in
-        utopic)
-            if [ ${cur_time} -gt ${utopic_deadline} ]; then
-                echo "${cur_time} > ${utopic_deadline}"
-                Check_Old_Releases_URL utopic
-            fi
-            ;;
         vivid)
             if [ ${cur_time} -gt ${vivid_deadline} ]; then
                 echo "${cur_time} > ${vivid_deadline}"
@@ -180,16 +186,34 @@ Ubuntu_Deadline()
                 Check_Old_Releases_URL wily
             fi
             ;;
+        yakkety)
+            if [ ${cur_time} -gt ${yakkety_deadline} ]; then
+                echo "${cur_time} > ${yakkety_deadline}"
+                Check_Old_Releases_URL yakkety
+            fi
+            ;;
+        trusty)
+            if [ ${cur_time} -gt ${trusty_deadline} ]; then
+                echo "${cur_time} > ${trusty_deadline}"
+                Check_Old_Releases_URL trusty
+            fi
+            ;;
+        zesty)
+            if [ ${cur_time} -gt ${zesty_deadline} ]; then
+                echo "${cur_time} > ${zesty_deadline}"
+                Check_Old_Releases_URL zesty
+            fi
+            ;;
     esac
 }
 
 CentOS_Dependent()
 {
-    cp /etc/yum.conf /etc/yum.conf.lnmp
+    \cp /etc/yum.conf /etc/yum.conf.lnmp
     sed -i 's:exclude=.*:exclude=:g' /etc/yum.conf
 
     Echo_Blue "[+] Yum installing dependent packages..."
-    for packages in make cmake gcc gcc-c++ gcc-g77 flex bison file libtool libtool-libs autoconf kernel-devel patch wget libjpeg libjpeg-devel libpng libpng-devel libpng10 libpng10-devel gd gd-devel libxml2 libxml2-devel zlib zlib-devel glib2 glib2-devel unzip tar bzip2 bzip2-devel libevent libevent-devel ncurses ncurses-devel curl curl-devel libcurl libcurl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel libidn libidn-devel openssl openssl-devel vim-minimal gettext gettext-devel ncurses-devel gmp-devel pspell-devel unzip libcap diffutils ca-certificates net-tools libc-client-devel psmisc libXpm-devel git-core c-ares-devel libicu-devel libxslt libxslt-devel;
+    for packages in make cmake gcc gcc-c++ gcc-g77 flex bison file libtool libtool-libs autoconf kernel-devel patch wget crontabs libjpeg libjpeg-devel libpng libpng-devel libpng10 libpng10-devel gd gd-devel libxml2 libxml2-devel zlib zlib-devel glib2 glib2-devel unzip tar bzip2 bzip2-devel libevent libevent-devel ncurses ncurses-devel curl curl-devel libcurl libcurl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel libidn libidn-devel openssl openssl-devel vim-minimal gettext gettext-devel ncurses-devel gmp-devel pspell-devel unzip libcap diffutils ca-certificates net-tools libc-client-devel psmisc libXpm-devel git-core c-ares-devel libicu-devel libxslt libxslt-devel xz;
     do yum -y install $packages; done
 
     mv -f /etc/yum.conf.lnmp /etc/yum.conf
@@ -202,9 +226,9 @@ Deb_Dependent()
     apt-get autoremove -y
     apt-get -fy install
     export DEBIAN_FRONTEND=noninteractive
-    apt-get install -y build-essential gcc g++ make
-    for packages in build-essential gcc g++ make cmake autoconf automake re2c wget cron bzip2 libzip-dev libc6-dev file rcconf flex vim bison m4 gawk less cpp binutils diffutils unzip tar bzip2 libbz2-dev libncurses5 libncurses5-dev libtool libevent-dev openssl libssl-dev zlibc libsasl2-dev libltdl3-dev libltdl-dev zlib1g zlib1g-dev libbz2-1.0 libbz2-dev libglib2.0-0 libglib2.0-dev libpng3 libjpeg62 libjpeg62-dev libjpeg-dev libpng-dev libpng12-0 libpng12-dev libkrb5-dev curl libcurl3 libcurl3-gnutls libcurl4-gnutls-dev libcurl4-openssl-dev libpq-dev libpq5 gettext libjpeg-dev libpng12-dev libxml2-dev libcap-dev ca-certificates debian-keyring debian-archive-keyring libc-client2007e-dev psmisc patch git libc-ares-dev libicu-dev e2fsprogs libxslt libxslt1-dev libc-client-dev;
-    do apt-get install -y $packages --force-yes; done
+    apt-get --no-install-recommends install -y build-essential gcc g++ make
+    for packages in debian-keyring debian-archive-keyring build-essential gcc g++ make cmake autoconf automake re2c wget cron bzip2 libzip-dev libc6-dev bison file rcconf flex vim bison m4 gawk less cpp binutils diffutils unzip tar bzip2 libbz2-dev libncurses5 libncurses5-dev libtool libevent-dev openssl libssl-dev zlibc libsasl2-dev libltdl3-dev libltdl-dev zlib1g zlib1g-dev libbz2-1.0 libbz2-dev libglib2.0-0 libglib2.0-dev libpng3 libjpeg62 libjpeg62-dev libjpeg-dev libpng-dev libpng12-0 libpng12-dev libkrb5-dev curl libcurl3 libcurl3-gnutls libcurl4-gnutls-dev libcurl4-openssl-dev libpq-dev libpq5 gettext libjpeg-dev libpng12-dev libxml2-dev libcap-dev ca-certificates libc-client2007e-dev psmisc patch git libc-ares-dev libicu-dev e2fsprogs libxslt libxslt1-dev libc-client-dev xz-utils;
+    do apt-get --no-install-recommends install -y $packages --force-yes; done
 }
 
 Check_Download()
@@ -215,10 +239,10 @@ Check_Download()
     Download_Files ${Download_Mirror}/web/libiconv/${Libiconv_Ver}.tar.gz ${Libiconv_Ver}.tar.gz
     Download_Files ${Download_Mirror}/web/libmcrypt/${LibMcrypt_Ver}.tar.gz ${LibMcrypt_Ver}.tar.gz
     Download_Files ${Download_Mirror}/web/mcrypt/${Mcypt_Ver}.tar.gz ${Mcypt_Ver}.tar.gz
-    Download_Files ${Download_Mirror}/web/mhash/${Mash_Ver}.tar.gz ${Mash_Ver}.tar.gz
-    Download_Files ${Download_Mirror}/lib/freetype/${Freetype_Ver}.tar.gz ${Freetype_Ver}.tar.gz
-    Download_Files ${Download_Mirror}/lib/curl/${Curl_Ver}.tar.gz ${Curl_Ver}.tar.gz
-    Download_Files ${Download_Mirror}/web/pcre/${Pcre_Ver}.tar.gz ${Pcre_Ver}.tar.gz
+    Download_Files ${Download_Mirror}/web/mhash/${Mhash_Ver}.tar.bz2 ${Mhash_Ver}.tar.bz2
+    Download_Files ${Download_Mirror}/lib/freetype/${Freetype_Ver}.tar.bz2 ${Freetype_Ver}.tar.bz2
+    Download_Files ${Download_Mirror}/lib/curl/${Curl_Ver}.tar.bz2 ${Curl_Ver}.tar.bz2
+    Download_Files ${Download_Mirror}/web/pcre/${Pcre_Ver}.tar.bz2 ${Pcre_Ver}.tar.bz2
     if [ "${SelectMalloc}" = "2" ]; then
         Download_Files ${Download_Mirror}/lib/jemalloc/${Jemalloc_Ver}.tar.bz2 ${Jemalloc_Ver}.tar.bz2
     elif [ "${SelectMalloc}" = "3" ]; then
@@ -226,21 +250,21 @@ Check_Download()
         Download_Files ${Download_Mirror}/lib/libunwind/${Libunwind_Ver}.tar.gz ${Libunwind_Ver}.tar.gz
     fi
     Download_Files ${Download_Mirror}/web/nginx/${Nginx_Ver}.tar.gz ${Nginx_Ver}.tar.gz
-    if [[ "${DBSelect}" = "4" || "${DBSelect}" = "5" ]]; then
-        Download_Files ${Download_Mirror}/datebase/mariadb/${Mariadb_Ver}.tar.gz ${Mariadb_Ver}.tar.gz
-    else
+    if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
         Download_Files ${Download_Mirror}/datebase/mysql/${Mysql_Ver}.tar.gz ${Mysql_Ver}.tar.gz
+    elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
+        Download_Files ${Download_Mirror}/datebase/mariadb/${Mariadb_Ver}.tar.gz ${Mariadb_Ver}.tar.gz
     fi
-    Download_Files ${Download_Mirror}/web/php/${Php_Ver}.tar.gz ${Php_Ver}.tar.gz
+    Download_Files ${Download_Mirror}/web/php/${Php_Ver}.tar.bz2 ${Php_Ver}.tar.bz2
     if [ ${PHPSelect} = "1" ]; then
         Download_Files ${Download_Mirror}/web/phpfpm/${Php_Ver}-fpm-0.5.14.diff.gz ${Php_Ver}-fpm-0.5.14.diff.gz
     fi
-    Download_Files ${Download_Mirror}/datebase/phpmyadmin/${PhpMyAdmin_Ver}.tar.gz ${PhpMyAdmin_Ver}.tar.gz
+    Download_Files ${Download_Mirror}/datebase/phpmyadmin/${PhpMyAdmin_Ver}.tar.xz ${PhpMyAdmin_Ver}.tar.xz
     Download_Files ${Download_Mirror}/prober/p.tar.gz p.tar.gz
     if [ "${Stack}" != "lnmp" ]; then
-        Download_Files ${Download_Mirror}/web/apache/${Apache_Ver}.tar.gz ${Apache_Ver}.tar.gz
-        Download_Files ${Download_Mirror}/web/apache/${APR_Ver}.tar.gz ${APR_Ver}.tar.gz
-        Download_Files ${Download_Mirror}/web/apache/${APR_Util_Ver}.tar.gz ${APR_Util_Ver}.tar.gz
+        Download_Files ${Download_Mirror}/web/apache/${Apache_Ver}.tar.bz2 ${Apache_Ver}.tar.bz2
+        Download_Files ${Download_Mirror}/web/apache/${APR_Ver}.tar.bz2 ${APR_Ver}.tar.bz2
+        Download_Files ${Download_Mirror}/web/apache/${APR_Util_Ver}.tar.bz2 ${APR_Util_Ver}.tar.bz2
     fi
 }
 
@@ -296,8 +320,8 @@ Install_Mcrypt()
 
 Install_Mhash()
 {
-    Echo_Blue "[+] Installing ${Mash_Ver}"
-    Tar_Cd ${Mash_Ver}.tar.gz ${Mash_Ver}
+    Echo_Blue "[+] Installing ${Mhash_Ver}"
+    Tarj_Cd ${Mhash_Ver}.tar.bz2 ${Mhash_Ver}
     ./configure
     make && make install
     ln -sf /usr/local/lib/libmhash.a /usr/lib/libmhash.a
@@ -307,13 +331,13 @@ Install_Mhash()
     ln -sf /usr/local/lib/libmhash.so.2.0.1 /usr/lib/libmhash.so.2.0.1
     ldconfig
     cd ${cur_dir}/src/
-    rm -rf ${cur_dir}/src/${Mash_Ver}
+    rm -rf ${cur_dir}/src/${Mhash_Ver}
 }
 
 Install_Freetype()
 {
     Echo_Blue "[+] Installing ${Freetype_Ver}"
-    Tar_Cd ${Freetype_Ver}.tar.gz ${Freetype_Ver}
+    Tarj_Cd ${Freetype_Ver}.tar.bz2 ${Freetype_Ver}
     ./configure --prefix=/usr/local/freetype
     make && make install
 
@@ -330,11 +354,12 @@ EOF
 Install_Curl()
 {
     Echo_Blue "[+] Installing ${Curl_Ver}"
-    Tar_Cd ${Curl_Ver}.tar.gz ${Curl_Ver}
+    Tarj_Cd ${Curl_Ver}.tar.bz2 ${Curl_Ver}
     ./configure --prefix=/usr/local/curl --enable-ares --without-nss --with-ssl
     make && make install
     cd ${cur_dir}/src/
     rm -rf ${cur_dir}/src/${Curl_Ver}
+    Remove_Error_Libcurl
 }
 
 Install_Pcre()
@@ -342,7 +367,7 @@ Install_Pcre()
     Cur_Pcre_Ver=`pcre-config --version`
     if echo "${Cur_Pcre_Ver}" | grep -vEqi '^8.';then
         Echo_Blue "[+] Installing ${Pcre_Ver}"
-        Tar_Cd ${Pcre_Ver}.tar.gz ${Pcre_Ver}
+        Tarj_Cd ${Pcre_Ver}.tar.bz2 ${Pcre_Ver}
         ./configure
         make && make install
         cd ${cur_dir}/src/
@@ -354,8 +379,7 @@ Install_Jemalloc()
 {
     Echo_Blue "[+] Installing ${Jemalloc_Ver}"
     cd ${cur_dir}/src
-    tar jxf ${Jemalloc_Ver}.tar.bz2
-    cd ${Jemalloc_Ver}
+    Tarj_Cd ${Jemalloc_Ver}.tar.bz2 ${Jemalloc_Ver}
     ./configure
     make && make install
     ldconfig
@@ -403,8 +427,8 @@ Install_Boost()
 {
     Echo_Blue "[+] Installing ${Boost_Ver}"
     cd ${cur_dir}/src
-    Download_Files ${Download_Mirror}/lib/boost/${Boost_Ver}.tar.gz ${Boost_Ver}.tar.gz
-    Tar_Cd ${Boost_Ver}.tar.gz ${Boost_Ver}
+    Download_Files ${Download_Mirror}/lib/boost/${Boost_Ver}.tar.bz2 ${Boost_Ver}.tar.bz2
+    Tarj_Cd ${Boost_Ver}.tar.bz2 ${Boost_Ver}
     ./bootstrap.sh
     ./b2
     ./b2 install
@@ -480,6 +504,12 @@ Deb_Lib_Opt()
         echo "/usr/local/lib" >> /etc/ld.so.conf
     fi
 
+    if [ -d /usr/include/x86_64-linux-gnu/curl ]; then
+        ln -sf /usr/include/x86_64-linux-gnu/curl /usr/include/
+    elif [ -d /usr/include/i386-linux-gnu/curl ]; then
+        ln -sf /usr/include/i386-linux-gnu/curl /usr/include/
+    fi
+
     ldconfig
 
     cat >>/etc/security/limits.conf<<eof
@@ -490,4 +520,11 @@ Deb_Lib_Opt()
 eof
 
     echo "fs.file-max=65535" >> /etc/sysctl.conf
+}
+
+Remove_Error_Libcurl()
+{
+    if [ -s /usr/local/lib/libcurl.so ]; then
+        rm -f /usr/local/lib/libcurl*
+    fi
 }

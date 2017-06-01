@@ -12,7 +12,7 @@ Install_Apache_22()
         chmod 777 /home/wwwlogs
         chown -R www:www ${Default_Website_Dir}
     fi
-    Tar_Cd ${Apache_Ver}.tar.gz ${Apache_Ver}
+    Tarj_Cd ${Apache_Ver}.tar.bz2 ${Apache_Ver}
     ./configure --prefix=/usr/local/apache --enable-mods-shared=most --enable-headers --enable-mime-magic --enable-proxy --enable-so --enable-rewrite --with-ssl --enable-ssl --enable-deflate --enable-suexec --with-included-apr --with-mpm=prefork --with-expat=builtin
     make && make install
 
@@ -20,6 +20,8 @@ Install_Apache_22()
     if [ "${Stack}" = "lamp" ]; then
         \cp ${cur_dir}/conf/httpd22-lamp.conf /usr/local/apache/conf/httpd.conf
         \cp ${cur_dir}/conf/httpd-vhosts-lamp.conf /usr/local/apache/conf/extra/httpd-vhosts.conf
+        \cp ${cur_dir}/conf/httpd22-ssl.conf /usr/local/apache/conf/extra/httpd-ssl.conf
+        \cp ${cur_dir}/conf/enable-apache-ssl-vhost-example.conf /usr/local/apache/conf/enable-apache-ssl-vhost-example.conf
     elif [ "${Stack}" = "lnmpa" ]; then
         \cp ${cur_dir}/conf/httpd22-lnmpa.conf /usr/local/apache/conf/httpd.conf
         \cp ${cur_dir}/conf/httpd-vhosts-lnmpa.conf /usr/local/apache/conf/extra/httpd-vhosts.conf
@@ -45,7 +47,7 @@ Install_Apache_22()
         sed -i "s#/home/wwwroot/default#${Default_Website_Dir}#g" /usr/local/apache/conf/extra/httpd-vhosts.conf
     fi
 
-    if [ "${PHPSelect}" = "6" ]; then
+    if [[ "${PHPSelect}" = "6" || "${PHPSelect}" = "7" ]]; then
         sed -i '/^LoadModule php5_module/d' /usr/local/apache/conf/httpd.conf
     fi
 
@@ -65,22 +67,22 @@ Install_Apache_24()
         chmod 777 /home/wwwlogs
         chown -R www:www ${Default_Website_Dir}
     fi
-    Tar_Cd ${Apache_Ver}.tar.gz ${Apache_Ver}
+    Tarj_Cd ${Apache_Ver}.tar.bz2 ${Apache_Ver}
     cd srclib
-    if [ -s "${cur_dir}/src/${APR_Ver}.tar.gz" ]; then
-        echo "${APR_Ver}.tar.gz [found]"
-        cp ${cur_dir}/src/${APR_Ver}.tar.gz .
+    if [ -s "${cur_dir}/src/${APR_Ver}.tar.bz2" ]; then
+        echo "${APR_Ver}.tar.bz2 [found]"
+        cp ${cur_dir}/src/${APR_Ver}.tar.bz2 .
     else
-        Download_Files ${Download_Mirror}/web/apache/${APR_Ver}.tar.gz ${APR_Ver}.tar.gz
+        Download_Files ${Download_Mirror}/web/apache/${APR_Ver}.tar.bz2 ${APR_Ver}.tar.bz2
     fi
-    if [ -s "${cur_dir}/src/${APR_Util_Ver}.tar.gz" ]; then
-        echo "${APR_Util_Ver}.tar.gz [found]"
-        cp ${cur_dir}/src/${APR_Util_Ver}.tar.gz .
+    if [ -s "${cur_dir}/src/${APR_Util_Ver}.tar.bz2" ]; then
+        echo "${APR_Util_Ver}.tar.bz2 [found]"
+        cp ${cur_dir}/src/${APR_Util_Ver}.tar.bz2 .
     else
-        Download_Files ${Download_Mirror}/web/apache/${APR_Util_Ver}.tar.gz ${APR_Util_Ver}.tar.gz
+        Download_Files ${Download_Mirror}/web/apache/${APR_Util_Ver}.tar.bz2 ${APR_Util_Ver}.tar.bz2
     fi
-    tar zxf ${APR_Ver}.tar.gz
-    tar zxf ${APR_Util_Ver}.tar.gz
+    tar jxf ${APR_Ver}.tar.bz2
+    tar jxf ${APR_Util_Ver}.tar.bz2
     mv ${APR_Ver} apr
     mv ${APR_Util_Ver} apr-util
     cd ..
@@ -91,6 +93,8 @@ Install_Apache_24()
     if [ "${Stack}" = "lamp" ]; then
         \cp ${cur_dir}/conf/httpd24-lamp.conf /usr/local/apache/conf/httpd.conf
         \cp ${cur_dir}/conf/httpd-vhosts-lamp.conf /usr/local/apache/conf/extra/httpd-vhosts.conf
+        \cp ${cur_dir}/conf/httpd24-ssl.conf /usr/local/apache/conf/extra/httpd-ssl.conf
+        \cp ${cur_dir}/conf/enable-apache-ssl-vhost-example.conf /usr/local/apache/conf/enable-apache-ssl-vhost-example.conf
     elif [ "${Stack}" = "lnmpa" ]; then
         \cp ${cur_dir}/conf/httpd24-lnmpa.conf /usr/local/apache/conf/httpd.conf
         \cp ${cur_dir}/conf/httpd-vhosts-lnmpa.conf /usr/local/apache/conf/extra/httpd-vhosts.conf
@@ -105,7 +109,7 @@ Install_Apache_24()
         sed -i "s#/home/wwwroot/default#${Default_Website_Dir}#g" /usr/local/apache/conf/extra/httpd-vhosts.conf
     fi
 
-    if [ "${PHPSelect}" = "6" ]; then
+    if [[ "${PHPSelect}" = "6" || "${PHPSelect}" = "7" ]]; then
         sed -i '/^LoadModule php5_module/d' /usr/local/apache/conf/httpd.conf
     fi
 

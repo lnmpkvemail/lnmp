@@ -12,9 +12,9 @@ Backup_MySQL()
         exit 1
     fi
     lnmp stop
-    mv /etc/init.d/mysql /etc/init.d/mysql.bak.${Upgrade_Date}
-    mv /etc/my.cnf /etc/my.conf.bak.${Upgrade_Date}
     mv /usr/local/mysql /usr/local/oldmysql${Upgrade_Date}
+    mv /etc/init.d/mysql /usr/local/oldmysql${Upgrade_Date}/init.d.mysql.bak.${Upgrade_Date}
+    mv /etc/my.cnf /usr/local/oldmysql${Upgrade_Date}/my.cnf.bak.${Upgrade_Date}
     if [ "${MySQL_Data_Dir}" != "/usr/local/mysql/var" ]; then
         mv ${MySQL_Data_Dir} ${MySQL_Data_Dir}${Upgrade_Date}
     fi
@@ -127,7 +127,6 @@ Upgrade_MySQL55()
     echo "Starting upgrade MySQL..."
 
     Tar_Cd mysql-${mysql_version}.tar.gz mysql-${mysql_version}
-    patch -p1 < ${cur_dir}/src/patch/mysql-openssl.patch
     MySQL_ARM_Patch
     cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL55MAOpt}
     make && make install
@@ -251,6 +250,7 @@ myisam_sort_buffer_size = 8M
 thread_cache_size = 8
 query_cache_size = 8M
 tmp_table_size = 16M
+performance_schema_max_table_instances = 500
 
 explicit_defaults_for_timestamp = true
 #skip-networking
@@ -377,6 +377,7 @@ myisam_sort_buffer_size = 8M
 thread_cache_size = 8
 query_cache_size = 8M
 tmp_table_size = 16M
+performance_schema_max_table_instances = 500
 
 explicit_defaults_for_timestamp = true
 #skip-networking
@@ -546,6 +547,7 @@ Upgrade_MySQL()
     *)
         echo "No input, The InnoDB Storage Engine will enable."
         InstallInnodb="y"
+        ;;
     esac
 
     mysql_short_version=`echo ${mysql_version} | cut -d. -f1-2`
@@ -573,7 +575,15 @@ Upgrade_MySQL()
         echo "mysql-${mysql_version}.tar.gz [found]"
     else
         echo "Notice: mysql-${mysql_version}.tar.gz not found!!!download now......"
-        wget -c --progress=bar:force http://cdn.mysql.com/Downloads/MySQL-${mysql_short_version}/mysql-${mysql_version}.tar.gz
+        country=`curl -sSk --connect-timeout 10 -m 60 https://ip.vpser.net/country`
+        if [ "${country}" = "CN" ]; then
+            wget -c --progress=bar:force http://mirrors.sohu.com/mysql/MySQL-${mysql_short_version}/mysql-${mysql_version}.tar.gz
+            if [ $? -eq 0 ]; then
+                wget -c --progress=bar:force http://cdn.mysql.com/Downloads/MySQL-${mysql_short_version}/mysql-${mysql_version}.tar.gz
+            fi
+        else
+            wget -c --progress=bar:force http://cdn.mysql.com/Downloads/MySQL-${mysql_short_version}/mysql-${mysql_version}.tar.gz
+        fi
         if [ $? -eq 0 ]; then
             echo "Download mysql-${mysql_version}.tar.gz successfully!"
         else

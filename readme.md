@@ -4,7 +4,7 @@
 
 LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora、Debian/Ubuntu/Raspbian VPS(VDS)或独立主机安装LNMP(Nginx/MySQL/PHP)、LNMPA(Nginx/MySQL/PHP/Apache)、LAMP(Apache/MySQL/PHP)生产环境的Shell程序。同时提供一些实用的辅助工具如：虚拟主机管理、FTP用户管理、Nginx、MySQL/MariaDB、PHP的升级、常用缓存组件的安装、重置MySQL root密码、502自动重启、日志切割、SSH防护DenyHosts/Fail2Ban、备份等许多实用脚本。
 
-* LNMP官网：<http://lnmp.org>
+* LNMP官网：<https://lnmp.org>
 * 作者: licess <admin@lnmp.org>
 
 
@@ -12,13 +12,16 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora
 
 安装前建议使用screen，执行：screen -S lnmp 后
 执行
-> wget -c http://soft.vpser.net/lnmp/lnmp1.3-full.tar.gz && tar zxf lnmp1.3-full.tar.gz && cd lnmp1.3-full && ./install.sh {lnmp|lnmpa|lamp}
+> wget -c http://soft.vpser.net/lnmp/lnmp1.4.tar.gz && tar zxf lnmp1.4.tar.gz && cd lnmp1.4 && ./install.sh {lnmp|lnmpa|lamp}
 
-如断线可使用screen -r lnmp 恢复。**详细安装教程参考：<http://lnmp.org/install.html>**
+如断线可使用screen -r lnmp 恢复。**详细安装教程参考：<https://lnmp.org/install.html>**
 
 ##常用功能
 
-**以下操作需lnmp目录下执行，如lnmp1.3-full、lnmp1.3**
+**以下操作需lnmp目录下执行，如lnmp1.4-full、lnmp1.4**
+
+##自定义参数
+* lnmp.conf配置文件，可以修改lnmp.conf自定义下载服务器地址、网站/数据库目录及添加nginx模块和php编译参数；不论安装升级都会调用该文件里的设置(如果修改了默认的参数建议备份此文件)；
 
 ##FTP服务器
 * 执行：./pureftpd.sh 安装，可使用lnmp ftp {add|list|del}进行管理。
@@ -35,13 +38,14 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora
 * 参数: phpmyadmin    可升级phpMyadmin。
 
 ##扩展插件
-**执行: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|imagemagick|ioncube}**
+**执行: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube}**
 ###缓存加速：
 * 参数: xcache 安装时需选择版本和设置密码，http://yourIP/xcache/ 进行管理，用户名 admin，密码为安装xcache时设置的。
-* 参数: redis
+* 参数: redis  安装redis
 * 参数: memcached 可选择php-memcache或php-memcached扩展。
-* 参数: opcache http://yourIP/ocp.php 进行管理。
-* 参数: eaccelerator 安装。  
+* 参数: opcache 可访问 http://yourIP/ocp.php 进行管理。
+* 参数: eaccelerator 安装。
+* 参数: apcu 安装apcu php扩展，支持php7，可访问 http://yourIP/apc.php 进行管理。 
 **请勿安装多个缓存类扩展模块，多个可能导致网站出现问题 ！**
 
 ###图像处理：
@@ -51,12 +55,14 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora
 * IonCube，执行：./addons.sh {install|uninstall} ionCube 。
 
 ###其他：
-* 可选1，执行：./php5.2.17.sh 可安装一个不与LNMP冲突的PHP 5.2.17单独存在，目录在/usr/local/php52/，使用时需要将nginx虚拟主机配置文件里的 php-cgi.sock 修改为 php-cgi52.sock即可调用PHP5.2.17。
+* 可选1，执行：./install.sh mphp 可以安装多个PHP版本，只支持LNMP模式，lnmp vhost add时进行选择或使用时需要将nginx虚拟主机配置文件里的include enable-php.conf替换为 include enable-php5.6.conf 即可前面的5.6换成你刚才安装的PHP的大版本号5.* 或7.0之类的。
+* 可选2，执行：./install.sh db 可以直接单独安装MySQL或MariaDB数据库。
+* 可选3，执行：./install.sh nginx 可以直接单独安装Nginx。
 **以下工具在lnmp安装包tools目录下**
-* 可选2，执行：./reset_mysql_root_password.sh 可重置MySQL/MariaDB的root密码。
-* 可选3，执行：./check502.sh  可检测php-fpm是否挂掉,502报错时重启，配合crontab使用。
-* 可选4，执行：./cut_nginx_logs.sh 日志切割脚本。
-* 可选5，执行：./remove_disable_function.sh 运行此脚本可删掉禁用函数。
+* 可选4，执行：./reset_mysql_root_password.sh 可重置MySQL/MariaDB的root密码。
+* 可选5，执行：./check502.sh  可检测php-fpm是否挂掉,502报错时重启，配合crontab使用。
+* 可选6，执行：./cut_nginx_logs.sh 日志切割脚本。
+* 可选7，执行：./remove_disable_function.sh 运行此脚本可删掉禁用函数。
 
 ###卸载
 * 卸载LNMP、LNMPA或LAMP可执行：./uninstall.sh 按提示选择即可卸载。
@@ -74,6 +80,9 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora
 * 添加：lnmp vhost add
 * 删除：lnmp vhost del
 * 列出：lnmp vhost list
+* 数据库管理：lnmp database {add|list|edit|del}
+* FTP用户管理：lnmp ftp {add|list|edit|del|show}
+* SSL添加：lnmp ssl add
 
 ##相关图形界面
 * PHPMyAdmin：http://yourIP/phpmyadmin/
@@ -81,6 +90,7 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora
 * PHP探针：http://yourIP/p.php
 * Xcache管理界面：http://yourIP/xcache/
 * Zend Opcache管理界面：http://yourIP/ocp.php
+* apcu管理界面：http://yourIP/apc.php
 
 ##LNMP相关目录文件
 
@@ -104,4 +114,4 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RadHat/Fedora
 
 ##技术支持
 
-**技术支持论坛：<http://bbs.vpser.net/forum-25-1.html>**
+**技术支持论坛：<https://bbs.vpser.net/forum-25-1.html>**

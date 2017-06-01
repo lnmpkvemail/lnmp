@@ -1,16 +1,28 @@
 #!/bin/bash
 
+Install_Nginx_Openssl()
+{
+    if [ "${Enable_Nginx_Openssl}" = 'y' ]; then
+        Download_Files ${Download_Mirror}/lib/openssl/${Openssl_Ver}.tar.gz ${Openssl_Ver}.tar.gz
+        [[ -d "${Openssl_Ver}" ]] && rm -rf ${Openssl_Ver}
+        tar zxf ${Openssl_Ver}.tar.gz
+        Nginx_With_Openssl="--with-openssl=${cur_dir}/src/${Openssl_Ver}"
+    fi
+}
+
 Install_Nginx()
 {
     Echo_Blue "[+] Installing ${Nginx_Ver}... "
     groupadd www
     useradd -s /sbin/nologin -g www www
 
+    cd ${cur_dir}/src
+    Install_Nginx_Openssl
     Tar_Cd ${Nginx_Ver}.tar.gz ${Nginx_Ver}
     if echo ${Nginx_Ver} | grep -Eqi 'nginx-[0-1].[5-8].[0-9]' || echo ${Nginx_Ver} | grep -Eqi 'nginx-1.9.[1-4]$'; then
-        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_spdy_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${NginxMAOpt} ${Nginx_Modules_Options}
+        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_spdy_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${Nginx_With_Openssl} ${NginxMAOpt} ${Nginx_Modules_Options}
     else
-        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_v2_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${NginxMAOpt} ${Nginx_Modules_Options}
+        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_v2_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${Nginx_With_Openssl} ${NginxMAOpt} ${Nginx_Modules_Options}
     fi
     make && make install
     cd ../
@@ -22,6 +34,7 @@ Install_Nginx()
     if [ "${Stack}" = "lnmpa" ]; then
         \cp conf/nginx_a.conf /usr/local/nginx/conf/nginx.conf
         \cp conf/proxy.conf /usr/local/nginx/conf/proxy.conf
+        \cp conf/proxy-pass-php.conf /usr/local/nginx/conf/proxy-pass-php.conf
     else
         \cp conf/nginx.conf /usr/local/nginx/conf/nginx.conf
     fi
@@ -42,9 +55,7 @@ Install_Nginx()
     \cp conf/pathinfo.conf /usr/local/nginx/conf/pathinfo.conf
     \cp conf/enable-php.conf /usr/local/nginx/conf/enable-php.conf
     \cp conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php-pathinfo.conf
-    \cp conf/proxy-pass-php.conf /usr/local/nginx/conf/proxy-pass-php.conf
     \cp conf/enable-ssl-example.conf /usr/local/nginx/conf/enable-ssl-example.conf
-    \cp conf/enable-php5.2.17.conf /usr/local/nginx/conf/enable-php5.2.17.conf
 
     mkdir -p ${Default_Website_Dir}
     chmod +w ${Default_Website_Dir}
@@ -60,11 +71,14 @@ Install_Nginx()
     fi
 
     if [ "${Stack}" = "lnmp" ]; then
-    cat >${Default_Website_Dir}/.user.ini<<EOF
+        cat >${Default_Website_Dir}/.user.ini<<EOF
 open_basedir=${Default_Website_Dir}:/tmp/:/proc/
 EOF
-    chmod 644 ${Default_Website_Dir}/.user.ini
-    chattr +i ${Default_Website_Dir}/.user.ini
+        chmod 644 ${Default_Website_Dir}/.user.ini
+        chattr +i ${Default_Website_Dir}/.user.ini
+        cat >>/usr/local/nginx/conf/fastcgi.conf<<EOF
+fastcgi_param PHP_ADMIN_VALUE "open_basedir=\$document_root/:/tmp/:/proc/";
+EOF
     fi
 
     \cp init.d/init.d.nginx /etc/init.d/nginx

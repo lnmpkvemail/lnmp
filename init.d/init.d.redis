@@ -26,37 +26,53 @@ CONF="/usr/local/redis/etc/redis.conf"
    
 case "$1" in
     start)
-        if [ -f $PIDFILE ]; then
-                echo "$PIDFILE exists, process is already running or crashed"
+        if [ -f "$PIDFILE" ]; then
+            echo "$PIDFILE exists, process is already running or crashed"
         else
-                echo -n "Starting Redis server..."
-                $EXEC $CONF
-                if [ "$?"="0" ]; then
-                    echo " done"
-                else
-                    echo " failed"
-                fi
+            echo -n "Starting Redis server..."
+            $EXEC $CONF
+            if [ "$?"="0" ]; then
+                echo " done"
+            else
+                echo " failed"
+            fi
         fi
         ;;
     stop)
-        if [ ! -f $PIDFILE ]; then
-                echo "$PIDFILE does not exist, process is not running"
+        if [ ! -f "$PIDFILE" ]; then
+            echo "$PIDFILE does not exist, process is not running"
         else
-                PID=$(cat $PIDFILE)
-                echo "Stopping  Redis server..."
-                $REDIS_CLI -p $REDISPORT shutdown
-                if [ "$?"="0" ]; then
-                    echo " done"
-                else
-                    echo " failed"
-                fi
+            PID=$(cat $PIDFILE)
+            echo "Stopping  Redis server..."
+            $REDIS_CLI -p $REDISPORT shutdown
+            if [ "$?"="0" ]; then
+                echo " done"
+            else
+                echo " failed"
+            fi
         fi
         ;;
-   restart)
+    restart)
         ${0} stop
         ${0} start
         ;;
+    kill)
+        echo "force kill redis server..."
+        killall redis-server
+        if [ "$?"="0" ]; then
+            echo " done"
+        else
+            echo " failed"
+        fi
+        ;;
+    status)
+        if [ -f "$PIDFILE" ]; then
+            echo "Redis server is running."
+        else
+            echo "Redis server is stopped."
+        fi
+        ;;
   *)
-    echo "Usage: /etc/init.d/redis {start|stop|restart}" >&2
+    echo "Usage: /etc/init.d/redis {start|stop|restart|status|kill}" >&2
         exit 1
 esac

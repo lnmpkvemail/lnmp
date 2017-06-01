@@ -16,7 +16,7 @@ else
     Stack=$1
 fi
 
-LNMP_Ver='1.3'
+LNMP_Ver='1.4'
 . lnmp.conf
 . include/main.sh
 . include/init.sh
@@ -26,6 +26,8 @@ LNMP_Ver='1.3'
 . include/nginx.sh
 . include/apache.sh
 . include/end.sh
+. include/only.sh
+. include/multiplephp.sh
 
 Get_Dist_Name
 
@@ -34,25 +36,37 @@ if [ "${DISTRO}" = "unknow" ]; then
     exit 1
 fi
 
+if [[ "${Stack}" = "lnmp" || "${Stack}" = "lnmpa" || "${Stack}" = "lamp" ]]; then
+    if [ -f /bin/lnmp ]; then
+        Echo_Red "You have installed LNMP!"
+        echo -e "If you want to reinstall LNMP, please BACKUP your data.\nand run uninstall script: ./uninstall.sh before you install."
+        exit 1
+    fi
+fi
+
+Check_LNMPConf
+
 clear
 echo "+------------------------------------------------------------------------+"
 echo "|          LNMP V${LNMP_Ver} for ${DISTRO} Linux Server, Written by Licess          |"
 echo "+------------------------------------------------------------------------+"
 echo "|        A tool to auto-compile & install LNMP/LNMPA/LAMP on Linux       |"
 echo "+------------------------------------------------------------------------+"
-echo "|          For more information please visit http://www.lnmp.org         |"
+echo "|           For more information please visit https://lnmp.org           |"
 echo "+------------------------------------------------------------------------+"
 
 Init_Install()
 {
     Press_Install
+    start_time=$(date +%s)
     Print_APP_Ver
+    Get_Dist_Version
     Print_Sys_Info
     Check_Hosts
+    Check_Mirror
     if [ "${DISTRO}" = "RHEL" ]; then
         RHEL_Modify_Source
     fi
-    Get_Dist_Version
     if [ "${DISTRO}" = "Ubuntu" ]; then
         Ubuntu_Modify_Source
     fi
@@ -96,11 +110,13 @@ Init_Install()
     elif [ "${DBSelect}" = "3" ]; then
         Install_MySQL_56
     elif [ "${DBSelect}" = "4" ]; then
-        Install_MariaDB_5
-    elif [ "${DBSelect}" = "5" ]; then
-        Install_MariaDB_10
-    elif [ "${DBSelect}" = "6" ]; then
         Install_MySQL_57
+    elif [ "${DBSelect}" = "5" ]; then
+        Install_MariaDB_5
+    elif [ "${DBSelect}" = "6" ]; then
+        Install_MariaDB_10
+    elif [ "${DBSelect}" = "7" ]; then
+        Install_MariaDB_101
     fi
     TempMycnf_Clean
 }
@@ -120,10 +136,13 @@ LNMP_Stack()
         Install_PHP_56
     elif [ "${PHPSelect}" = "6" ]; then
         Install_PHP_7
+    elif [ "${PHPSelect}" = "7" ]; then
+        Install_PHP_71
     fi
     LNMP_PHP_Opt
     Install_Nginx
     Creat_PHP_Tools
+    Add_Iptables_Rules
     Add_LNMP_Startup
     Check_LNMP_Install
 }
@@ -149,9 +168,12 @@ LNMPA_Stack()
         Install_PHP_56
     elif [ "${PHPSelect}" = "6" ]; then
         Install_PHP_7
+    elif [ "${PHPSelect}" = "7" ]; then
+        Install_PHP_71
     fi
     Install_Nginx
     Creat_PHP_Tools
+    Add_Iptables_Rules
     Add_LNMPA_Startup
     Check_LNMPA_Install
 }
@@ -177,8 +199,11 @@ LAMP_Stack()
         Install_PHP_56
     elif [ "${PHPSelect}" = "6" ]; then
         Install_PHP_7
+    elif [ "${PHPSelect}" = "7" ]; then
+        Install_PHP_71
     fi
     Creat_PHP_Tools
+    Add_Iptables_Rules
     Add_LAMP_Startup
     Check_LAMP_Install
 }
@@ -196,7 +221,18 @@ case "${Stack}" in
         Dispaly_Selection
         LAMP_Stack 2>&1 | tee /root/lnmp-install.log
         ;;
+    nginx)
+        Install_Only_Nginx 2>&1 | tee /root/nginx-install.log
+        ;;
+    db)
+        Install_Only_Database
+        ;;
+    mphp)
+        Install_Multiplephp
+        ;;
     *)
         Echo_Red "Usage: $0 {lnmp|lnmpa|lamp}"
         ;;
 esac
+
+exit

@@ -12,8 +12,8 @@ Install_PHPMemcache()
         Download_Files ${Download_Mirror}/web/memcache/${PHPMemcache_Ver}.tgz ${PHPMemcache_Ver}.tgz
         Tar_Cd ${PHPMemcache_Ver}.tgz ${PHPMemcache_Ver}
     fi
-    /usr/local/php/bin/phpize
-    ./configure --with-php-config=/usr/local/php/bin/php-config
+    ${PHP_Path}/bin/phpize
+    ./configure --with-php-config=${PHP_Path}/bin/php-config
     make && make install
     cd ../
 }
@@ -40,17 +40,16 @@ Install_PHPMemcached()
     make && make install
     cd ../
 
+    cd ${cur_dir}/src
     if echo "${Cur_PHP_Version}" | grep -Eqi '^7.';then
-        cd ${cur_dir}/src
-        rm -rf php-memcached
-        git clone -b php7 https://github.com/php-memcached-dev/php-memcached.git
-        cd php-memcached
+        Download_Files ${Download_Mirror}/web/php-memcached/${PHP7Memcached_Ver}.tgz ${PHP7Memcached_Ver}.tgz
+        Tar_Cd ${PHP7Memcached_Ver}.tgz ${PHP7Memcached_Ver}
     else
         Download_Files ${Download_Mirror}/web/php-memcached/${PHPMemcached_Ver}.tgz ${PHPMemcached_Ver}.tgz
         Tar_Cd ${PHPMemcached_Ver}.tgz ${PHPMemcached_Ver}
     fi
-    /usr/local/php/bin/phpize
-    ./configure --with-php-config=/usr/local/php/bin/php-config --enable-memcached --with-libmemcached-dir=/usr/local/libmemcached
+    ${PHP_Path}/bin/phpize
+    ./configure --with-php-config=${PHP_Path}/bin/php-config --enable-memcached --with-libmemcached-dir=/usr/local/libmemcached
     make && make install
     cd ../
 }
@@ -76,43 +75,37 @@ Install_Memcached()
     fi
 
     echo "====== Installing memcached ======"
-    Press_Install
+    Press_Start
 
-    sed -i '/memcache.so/d' /usr/local/php/etc/php.ini
-    sed -i '/memcached.so/d' /usr/local/php/etc/php.ini
-    Get_PHP_Ext_Dir
+    rm -f ${PHP_Path}/conf.d/005-memcached.ini
+    Addons_Get_PHP_Ext_Dir
     zend_ext=${zend_ext_dir}${PHP_ZTS}
     if [ -s "${zend_ext}" ]; then
         rm -f "${zend_ext}"
     fi
 
-    if echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.';then
-        sed -i "/extension_dir =/a\
-extension = \"${PHP_ZTS}\"" /usr/local/php/etc/php.ini
-    elif echo "${Cur_PHP_Version}" | grep -Eqi '^5.[3456].' || echo "${Cur_PHP_Version}" | grep -Eqi '^7.';then
-        sed -i "/the dl()/i\
-extension = \"${PHP_ZTS}\"" /usr/local/php/etc/php.ini
-    else
-        echo "Error: can't get php version!"
-        echo "Maybe php was didn't install or php configuration file has errors.Please check."
-        sleep 3
-        exit 1
-    fi
+    cat >${PHP_Path}/conf.d/005-memcached.ini<<EOF
+extension = ${PHP_ZTS}
+EOF
 
     echo "Install memcached..."
     cd ${cur_dir}/src
-    Download_Files ${Download_Mirror}/web/memcached/${Memcached_Ver}.tar.gz ${Memcached_Ver}.tar.gz
-    Tar_Cd ${Memcached_Ver}.tar.gz ${Memcached_Ver}
-    ./configure --prefix=/usr/local/memcached
-    make &&make install
-    cd ../
-    rm -rf ${cur_dir}/src/${Memcached_Ver}
+    if [ -s /usr/local/memcached/bin/memcached ]; then
+        echo "Memcached already exists."
+    else
+        Download_Files ${Download_Mirror}/web/memcached/${Memcached_Ver}.tar.gz ${Memcached_Ver}.tar.gz
+        Tar_Cd ${Memcached_Ver}.tar.gz ${Memcached_Ver}
+        ./configure --prefix=/usr/local/memcached
+        make &&make install
+        cd ../
+        rm -rf ${cur_dir}/src/${Memcached_Ver}
 
-    ln -sf /usr/local/memcached/bin/memcached /usr/bin/memcached
+        ln -sf /usr/local/memcached/bin/memcached /usr/bin/memcached
 
-    \cp ${cur_dir}/init.d/init.d.memcached /etc/init.d/memcached
-    chmod +x /etc/init.d/memcached
-    useradd -s /sbin/nologin nobody
+        \cp ${cur_dir}/init.d/init.d.memcached /etc/init.d/memcached
+        chmod +x /etc/init.d/memcached
+        useradd -s /sbin/nologin nobody
+    fi
 
     if [ ! -d /var/lock/subsys ]; then
       mkdir -p /var/lock/subsys
@@ -145,11 +138,11 @@ extension = \"${PHP_ZTS}\"" /usr/local/php/etc/php.ini
     /etc/init.d/memcached start
 
     if [ -s "${zend_ext}" ] && [ -s /usr/local/memcached/bin/memcached ]; then
-        echo "====== Memcached install completed ======"
-        echo "Memcached installed successfully, enjoy it!"
+        Echo_Green "====== Memcached install completed ======"
+        Echo_Green "Memcached installed successfully, enjoy it!"
     else
-        sed -i "/${PHP_ZTS}/d" /usr/local/php/etc/php.ini
-        echo "Memcached install failed!"
+        rm -f ${PHP_Path}/conf.d/005-memcached.ini
+        Echo_Red "Memcached install failed!"
     fi
 }
 
@@ -157,8 +150,7 @@ Uninstall_Memcached()
 {
     echo "You will uninstall Memcached..."
     Press_Start
-    sed -i '/memcache.so/d' /usr/local/php/etc/php.ini
-    sed -i '/memcached.so/d' /usr/local/php/etc/php.ini
+    rm -f ${PHP_Path}/conf.d/005-memcached.ini
     Restart_PHP
     Remove_StartUp memcached
     echo "Delete Memcached files..."
@@ -175,5 +167,5 @@ Uninstall_Memcached()
             iptables-save > /etc/iptables.rules
         fi
     fi
-    echo "Uninstall Memcached completed."
+    Echo_Green "Uninstall Memcached completed."
 }

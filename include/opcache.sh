@@ -5,13 +5,12 @@ Install_Opcache()
 
     Echo_Red "Install Opcache will auto uninstall eAccelerator if exists..."
     echo "====== Installing zend opcache ======"
-    Press_Install
+    Press_Start
 
     echo "Uninstall eAccelerator..."
-    sed -i '/\[eaccelerator\]/,/eaccelerator.content/d' /usr/local/php/etc/php.ini
-    sed -i '/\[Zend Opcache\]/,/opcache.enable_cli/d' /usr/local/php/etc/php.ini
+    rm -f ${PHP_Path}/conf.d/004-opcache.ini
 
-    Get_PHP_Ext_Dir
+    Addons_Get_PHP_Ext_Dir
     zend_ext="${zend_ext_dir}opcache.so"
     if echo "${Cur_PHP_Version}" | grep -Eqi '^5.[234].'; then
         if [ -s "${zend_ext}" ]; then
@@ -32,7 +31,7 @@ Install_Opcache()
     elif echo "${Cur_PHP_Version}" | grep -Eqi '^5.4.'; then
         echo "${Cur_PHP_Version}"
     elif echo "${Cur_PHP_Version}" | grep -Eqi '^5.[56].' || echo "${Cur_PHP_Version}" | grep -Eqi '^7.'; then
-        cat >opcache.ini<<EOF
+        cat >${PHP_Path}/conf.d/004-opcache.ini<<EOF
 [Zend Opcache]
 zend_extension="opcache.so"
 opcache.memory_consumption=128
@@ -42,19 +41,17 @@ opcache.revalidate_freq=60
 opcache.fast_shutdown=1
 opcache.enable_cli=1
 EOF
-        sed -i '/^;opcache$/r opcache.ini' /usr/local/php/etc/php.ini
-        rm -rf opcache.ini
 
         echo "Copy Opcache Control Panel..."
         \cp ${cur_dir}/conf/ocp.php ${Default_Website_Dir}/ocp.php
         Restart_PHP
         if [ -s "${zend_ext}" ]; then
-            echo "====== Opcache install completed ======"
-            echo "Opcache installed successfully, enjoy it!"
+            Echo_Green "====== Opcache install completed ======"
+            Echo_Green "Opcache installed successfully, enjoy it!"
             exit 0
         else
-            sed -i '/\[Zend Opcache\]/,/opcache.enable_cli/d' /usr/local/php/etc/php.ini
-            echo "OPcache install failed!"
+            rm -f ${PHP_Path}/conf.d/004-opcache.ini
+            Echo_Red "OPcache install failed!"
             exit 1
         fi
     else
@@ -72,15 +69,15 @@ EOF
 
     Download_Files ${Download_Mirror}/web/opcache/${ZendOpcache_Ver}.tgz ${ZendOpcache_Ver}.tgz
     Tar_Cd ${ZendOpcache_Ver}.tgz ${ZendOpcache_Ver}
-    /usr/local/php/bin/phpize
-    ./configure --with-php-config=/usr/local/php/bin/php-config
+    ${PHP_Path}/bin/phpize
+    ./configure --with-php-config=${PHP_Path}/bin/php-config
     make
     make install
     cd ../
 
-    cat >opcache.ini<<EOF
+    cat >${PHP_Path}/conf.d/004-opcache.ini<<EOF
 [Zend Opcache]
-zend_extension="${zend_ext}"
+zend_extension="opcache.so"
 opcache.memory_consumption=128
 opcache.interned_strings_buffer=8
 opcache.max_accelerated_files=4000
@@ -88,8 +85,6 @@ opcache.revalidate_freq=60
 opcache.fast_shutdown=1
 opcache.enable_cli=1
 EOF
-    sed -i '/^;opcache$/r opcache.ini' /usr/local/php/etc/php.ini
-    rm -rf opcache.ini
 
     echo "Copy Opcache Control Panel..."
     \cp $cur_dir/conf/ocp.php ${Default_Website_Dir}/ocp.php
@@ -100,7 +95,7 @@ EOF
         echo "====== Opcache install completed ======"
         echo "Opcache installed successfully, enjoy it!"
     else
-        sed -i '/\[Zend Opcache\]/,/opcache.enable_cli/d' /usr/local/php/etc/php.ini
+        rm -f ${PHP_Path}/conf.d/004-opcache.ini
         echo "OPcache install failed!"
     fi
 }
@@ -109,7 +104,7 @@ Uninstall_Opcache()
 {
     echo "You will uninstall opcache..."
     Press_Start
-    sed -i '/\[Zend Opcache\]/,/opcache.enable_cli/d' /usr/local/php/etc/php.ini
+    rm -f ${PHP_Path}/conf.d/004-opcache.ini
     Restart_PHP
-    echo "Uninstall Opcache completed."
+    Echo_Green "Uninstall Opcache completed."
 }

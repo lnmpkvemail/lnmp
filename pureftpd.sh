@@ -13,7 +13,7 @@ echo "|          Pureftpd for LNMP,  Written by Licess           |"
 echo "+----------------------------------------------------------+"
 echo "|This script is a tool to install pureftpd for LNMP        |"
 echo "+----------------------------------------------------------+"
-echo "|For more information please visit http://www.lnmp.org     |"
+echo "|For more information please visit https://lnmp.org        |"
 echo "+----------------------------------------------------------+"
 echo "|Usage: ./pureftpd.sh                                      |"
 echo "+----------------------------------------------------------+"
@@ -24,28 +24,40 @@ action=$1
 . include/main.sh
 . include/init.sh
 
-Get_OS_Bit
 Get_Dist_Name
 
 Install_Pureftpd()
 {
     Press_Install
 
-    echo "Download files..."
+    Echo_Blue "Installing dependent packages..."
+    if [ "$PM" = "yum" ]; then
+        yum -y install make gcc gcc-c++ gcc-g77 openssl openssl-devel
+    elif [ "$PM" = "apt" ]; then
+        apt-get update -y
+        apt-get install -y build-essential gcc g++ make openssl libssl-dev
+    fi
+    Echo_Blue "Download files..."
     cd ${cur_dir}/src
-    Download_Files ${Download_Mirror}/ftp/pure-ftpd/${Pureftpd_Ver}.tar.gz ${Pureftpd_Ver}.tar.gz
+    Download_Files ${Download_Mirror}/ftp/pure-ftpd/${Pureftpd_Ver}.tar.bz2 ${Pureftpd_Ver}.tar.bz2
+    if [ $? -eq 0 ]; then
+        echo "Download ${Pureftpd_Ver}.tar.bz2 successfully!"
+    else
+        Download_Files https://download.pureftpd.org/pub/pure-ftpd/releases/${Pureftpd_Ver}.tar.bz2 ${Pureftpd_Ver}.tar.bz2
+    fi
 
-    echo "Installing pure-ftpd..."
-    Tar_Cd ${Pureftpd_Ver}.tar.gz ${Pureftpd_Ver}
+    Echo_Blue "Installing pure-ftpd..."
+    Tarj_Cd ${Pureftpd_Ver}.tar.bz2 ${Pureftpd_Ver}
     ./configure --prefix=/usr/local/pureftpd CFLAGS=-O2 --with-puredb --with-quotas --with-cookie --with-virtualhosts --with-diraliases --with-sysquotas --with-ratios --with-altlog --with-paranoidmsg --with-shadow --with-welcomemsg --with-throttling --with-uploadscript --with-language=english --with-rfc2640 --with-ftpwho --with-tls
 
     make && make install
 
-    echo "Copy configure files..."
-    \cp configuration-file/pure-config.pl /usr/local/pureftpd/sbin/
-    chmod 755 /usr/local/pureftpd/sbin/pure-config.pl
+    Echo_Blue "Copy configure files..."
     mkdir /usr/local/pureftpd/etc
     \cp ${cur_dir}/conf/pure-ftpd.conf /usr/local/pureftpd/etc/pure-ftpd.conf
+    if [ -L /etc/init.d/pureftpd ]; then
+        rm -f /etc/init.d/pureftpd
+    fi
     \cp ${cur_dir}/init.d/init.d.pureftpd /etc/init.d/pureftpd
     chmod +x /etc/init.d/pureftpd
     touch /usr/local/pureftpd/etc/pureftpd.passwd
@@ -57,9 +69,15 @@ Install_Pureftpd()
     rm -rf ${cur_dir}/src/${Pureftpd_Ver}
 
     if [ -s /sbin/iptables ]; then
-        /sbin/iptables -I INPUT 7 -p tcp --dport 20 -j ACCEPT
-        /sbin/iptables -I INPUT 8 -p tcp --dport 21 -j ACCEPT
-        /sbin/iptables -I INPUT 9 -p tcp --dport 20000:30000 -j ACCEPT
+        if [ -s /bin/lnmp ]; then
+            /sbin/iptables -I INPUT 7 -p tcp --dport 20 -j ACCEPT
+            /sbin/iptables -I INPUT 8 -p tcp --dport 21 -j ACCEPT
+            /sbin/iptables -I INPUT 9 -p tcp --dport 20000:30000 -j ACCEPT
+        else
+            /sbin/iptables -I INPUT -p tcp --dport 20 -j ACCEPT
+            /sbin/iptables -I INPUT -p tcp --dport 21 -j ACCEPT
+            /sbin/iptables -I INPUT -p tcp --dport 20000:30000 -j ACCEPT
+        fi
         if [ "${PM}" = "yum" ]; then
             service iptables save
         elif [ "${PM}" = "apt" ]; then
@@ -67,15 +85,25 @@ Install_Pureftpd()
         fi
     fi
 
-    if [[ -s /usr/local/pureftpd/sbin/pure-config.pl && -s /usr/local/pureftpd/etc/pure-ftpd.conf && -s /etc/init.d/pureftpd ]]; then
-        echo "Starting pureftpd..."
+    if [ ! -s /bin/lnmp ]; then
+        \cp ${cur_dir}/conf/lnmp /bin/lnmp
+        chmod +x /bin/lnmp
+    fi
+    id -u www
+    if [ $? -ne 0 ]; then
+        groupadd www
+        useradd -s /sbin/nologin -g www www
+    fi
+
+    if [[ -s /usr/local/pureftpd/sbin/pure-ftpd && -s /usr/local/pureftpd/etc/pure-ftpd.conf && -s /etc/init.d/pureftpd ]]; then
+        Echo_Blue "Starting pureftpd..."
         /etc/init.d/pureftpd start
-        echo "+----------------------------------------------------------------------+"
-        echo "| Install Pure-FTPd completed,enjoy it!"
-        echo "| =>use command: lnmp ftp {add|list|del} to manage FTP users."
-        echo "+----------------------------------------------------------------------+"
-        echo "| For more information please visit http://www.lnmp.org"
-        echo "+----------------------------------------------------------------------+"
+        Echo_Green "+----------------------------------------------------------------------+"
+        Echo_Green "| Install Pure-FTPd completed,enjoy it!"
+        Echo_Green "| =>use command: lnmp ftp {add|list|del|show} to manage FTP users."
+        Echo_Green "+----------------------------------------------------------------------+"
+        Echo_Green "| For more information please visit https://lnmp.org"
+        Echo_Green "+----------------------------------------------------------------------+"
     else
         Echo_Red "Pureftpd install failed!"
     fi
@@ -83,8 +111,8 @@ Install_Pureftpd()
 
 Uninstall_Pureftpd()
 {
-    if [ ! -f /usr/local/pureftpd/sbin/pure-config.pl ]; then
-        echo "Pureftpd was not installed!"
+    if [ ! -f /usr/local/pureftpd/sbin/pure-ftpd ]; then
+        Echo_Red "Pureftpd was not installed!"
         exit 1
     fi
     echo "Stop pureftpd..."

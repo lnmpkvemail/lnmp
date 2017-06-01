@@ -15,10 +15,9 @@ Install_Old_eA()
     fi
 
     Download_Files ${Download_Mirror}/web/eaccelerator/eaccelerator-0.9.5.3.tar.bz2 eaccelerator-0.9.5.3.tar.bz2
-    tar jxvf eaccelerator-0.9.5.3.tar.bz2
-    cd eaccelerator-0.9.5.3/
-    /usr/local/php/bin/phpize
-    ./configure --enable-eaccelerator=shared --with-php-config=/usr/local/php/bin/php-config --with-eaccelerator-shared-memory
+    Tarj_Cd eaccelerator-0.9.5.3.tar.bz2 eaccelerator-0.9.5.3
+    ${PHP_Path}/bin/phpize
+    ./configure --enable-eaccelerator=shared --with-php-config=${PHP_Path}/bin/php-config --with-eaccelerator-shared-memory
     make
     make install
     cd ../
@@ -37,10 +36,9 @@ Install_New_eA()
     fi
 
     Download_Files ${Download_Mirror}/web/eaccelerator/eaccelerator-0.9.6.1.tar.bz2 eaccelerator-0.9.6.1.tar.bz2
-    tar jxvf eaccelerator-0.9.6.1.tar.bz2
-    cd eaccelerator-0.9.6.1/
-    /usr/local/php/bin/phpize
-    ./configure --enable-eaccelerator=shared --with-php-config=/usr/local/php/bin/php-config
+    Tarj_Cd eaccelerator-0.9.6.1.tar.bz2 eaccelerator-0.9.6.1
+    ${PHP_Path}/bin/phpize
+    ./configure --enable-eaccelerator=shared --with-php-config=${PHP_Path}/bin/php-config
     make
     make install
     cd ../
@@ -59,10 +57,9 @@ Install_Dev_eA()
     fi
 
     Download_Files ${Download_Mirror}/web/eaccelerator/eaccelerator-eaccelerator-42067ac.tar.gz eaccelerator-eaccelerator-42067ac.tar.gz
-    tar zxvf eaccelerator-eaccelerator-42067ac.tar.gz
-    cd eaccelerator-eaccelerator-42067ac/
-    /usr/local/php/bin/phpize
-    ./configure --enable-eaccelerator=shared --with-php-config=/usr/local/php/bin/php-config
+    Tar_Cd eaccelerator-eaccelerator-42067ac.tar.gz eaccelerator-eaccelerator-42067ac
+    ${PHP_Path}/bin/phpize
+    ./configure --enable-eaccelerator=shared --with-php-config=${PHP_Path}/bin/php-config
     make
     make install
     cd ../
@@ -93,17 +90,17 @@ Install_eAccelerator()
     fi
 
     echo "====== Installing eAccelerator ======"
-    Press_Install
+    Press_Start
 
-    sed -i '/\[eaccelerator\]/,/eaccelerator.content/d' /usr/local/php/etc/php.ini
-    Get_PHP_Ext_Dir
+    rm -f ${PHP_Path}/conf.d/003-eaccelerator.ini
+    Addons_Get_PHP_Ext_Dir
     zend_ext="${zend_ext_dir}eaccelerator.so"
     if [ -s "${zend_ext}" ]; then
         rm -f "${zend_ext}"
     fi
     if echo "${Cur_PHP_Version}" | grep -vEqi '^5.[2345].';then
-        echo "Error: Current PHP Version can't install eAccelerator."
-        echo "Maybe php was didn't install or php configuration file has errors.Please check."
+        Echo_Red "Error: Current PHP Version can't install eAccelerator."
+        Echo_Red "Maybe php was didn't install or php configuration file has errors.Please check."
         sleep 3
         exit 1
     fi
@@ -120,7 +117,7 @@ Install_eAccelerator()
     mkdir -p /usr/local/eaccelerator_cache
     rm -rf /usr/local/eaccelerator_cache/*
 
-    cat >ea.ini<<EOF
+    cat >${PHP_Path}/conf.d/003-eaccelerator.ini<<EOF
 [eaccelerator]
 zend_extension="${zend_ext}"
 eaccelerator.shm_size="1"
@@ -141,16 +138,13 @@ eaccelerator.sessions = "disk_only"
 eaccelerator.content = "disk_only"
 EOF
 
-    sed -i '/^;eaccelerator$/r ea.ini' /usr/local/php/etc/php.ini
-    rm -f ea.ini
-
     if [ -s "${zend_ext}" ]; then
         Restart_PHP
-        echo "====== eAccelerator install completed ======"
-        echo "eAccelerator installed successfully, enjoy it!"
+        Echo_Green "====== eAccelerator install completed ======"
+        Echo_Green "eAccelerator installed successfully, enjoy it!"
     else
-        sed -i '/\[eaccelerator\]/,/eaccelerator.content/d' /usr/local/php/etc/php.ini
-        echo "eAccelerator install failed!"
+        rm -f ${PHP_Path}/conf.d/003-eaccelerator.ini
+        Echo_Red "eAccelerator install failed!"
     fi
 }
 
@@ -158,9 +152,9 @@ Uninstall_eAccelerator()
 {
     echo "You will uninstall eAccelerator..."
     Press_Start
-    sed -i '/\[eaccelerator\]/,/eaccelerator.content/d' /usr/local/php/etc/php.ini
+    rm -f ${PHP_Path}/conf.d/003-eaccelerator.ini
     echo "Delete eaccelerator_cache directory..."
     rm -rf /usr/local/eaccelerator_cache
     Restart_PHP
-    echo "Uninstall eAccelerator completed."
+    Echo_Green "Uninstall eAccelerator completed."
 }
