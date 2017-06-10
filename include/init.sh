@@ -13,6 +13,7 @@ CentOS_InstallNTP()
     yum install -y ntp
     ntpdate -u pool.ntp.org
     date
+    start_time=$(date +%s)
 }
 
 Deb_InstallNTP()
@@ -22,6 +23,7 @@ Deb_InstallNTP()
     apt-get install -y ntpdate
     ntpdate -u pool.ntp.org
     date
+    start_time=$(date +%s)
 }
 
 CentOS_RemoveAMP()
