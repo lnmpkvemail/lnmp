@@ -181,7 +181,7 @@ EOF
         echo "==========================================="
     else
         rm -rf ${MPHP_Path}
-        Echo_Red "Failed to install {Php_Ver}, you can download /root/install-mphp5.2.log from your server, and upload install-mphp5.2.log to LNMP Forum."
+        Echo_Red "Failed to install ${Php_Ver}, you can download /root/install-mphp5.2.log from your server, and upload install-mphp5.2.log to LNMP Forum."
     fi
 }
 
