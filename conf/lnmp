@@ -609,7 +609,12 @@ Edit_Database()
             break
         fi
     done
-    Do_Query "UPDATE mysql.user SET Password=PASSWORD('${database_username_passwd}') WHERE User='${database_username}' AND Host IN ('localhost', '127.0.0.1', '::1');"
+    db_ver=`${MySQL_Bin} -V | awk '{print $5}' | tr -d ","`
+    if echo ${db_ver} | grep -Eqi '^5.7.';then
+        Do_Query "UPDATE mysql.user SET authentication_string=PASSWORD('${database_username_passwd}') WHERE User='${database_username}' AND Host IN ('localhost', '127.0.0.1', '::1');"
+    else
+        Do_Query "UPDATE mysql.user SET Password=PASSWORD('${database_username_passwd}') WHERE User='${database_username}' AND Host IN ('localhost', '127.0.0.1', '::1');"
+    fi
     [ $? -eq 0 ] && echo "Edit user password Sucessfully." || echo "Edit user password databases failed!"
     Do_Query "FLUSH PRIVILEGES;"
 }
