@@ -50,6 +50,13 @@ elif [ "${Get_Stack}" == "lnmpa" ]; then
 elif [ "${Get_Stack}" == "lamp" ]; then
     \cp ${cur_dir}/conf/lamp /bin/lnmp
     chmod +x /bin/lnmp
+    if /usr/local/apache/bin/httpd -v|grep -Eqi "Apache/2.2."; then
+        \cp ${cur_dir}/conf/httpd22-ssl.conf  /usr/local/apache/conf/extra/httpd-ssl.conf
+    elif /usr/local/apache/bin/httpd -v|grep -Eqi "Apache/2.4."; then
+        \cp ${cur_dir}/conf/httpd24-ssl.conf  /usr/local/apache/conf/extra/httpd-ssl.conf
+        sed -i 's/^#LoadModule socache_shmcb_module/LoadModule socache_shmcb_module/g' /usr/local/apache/conf/httpd.conf
+        sed -i 's/^LoadModule lbmethod_heartbeat_module/#LoadModule lbmethod_heartbeat_module/g' /usr/local/apache/conf/httpd.conf
+    fi
 fi
 
 if [ "${DB_Name}" = "mariadb" ]; then
