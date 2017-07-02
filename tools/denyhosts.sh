@@ -66,6 +66,7 @@ EOF
     rm -f lsb.ini
 fi
 
+sed -i 's#/run/denyhosts.pid#/var/run/denyhosts.pid#g' /etc/init.d/denyhosts
 sed -i 's#^PURGE_DENY =.*#PURGE_DENY =1d#g' /etc/denyhosts.conf
 sed -i 's@^#PURGE_THRESHOLD = 0@PURGE_THRESHOLD = 3@g' /etc/denyhosts.conf
 sed -i '/^IPTABLES/s/^/#/' /etc/denyhosts.conf
