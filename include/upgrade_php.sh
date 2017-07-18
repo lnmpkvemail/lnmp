@@ -88,6 +88,18 @@ Check_Autoconf()
     fi
 }
 
+Check_ICU()
+{
+    echo "Check icu..."
+    if [ "$PM" = "yum" ]; then
+        yum -y install libicu-devel
+    elif [ "$PM" = "apt" ]; then
+        apt-get update
+        apt-get install -y libicu-dev
+    fi
+    Install_Icu4c
+}
+
 Ln_PHP_Bin()
 {
     ln -sf /usr/local/php/bin/php /usr/bin/php
@@ -309,6 +321,7 @@ fi
 Upgrade_PHP_54()
 {
     Echo_Blue "Start install php-${php_version}"
+    Check_ICU
     Tarj_Cd php-${php_version}.tar.bz2 php-${php_version}
     if [ "${Stack}" = "lnmp" ]; then
         ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-config-file-scan-dir=/usr/local/php/conf.d --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization ${with_curl} --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-intl --with-xsl ${PHP_Modules_Options}
@@ -402,6 +415,7 @@ fi
 Upgrade_PHP_556()
 {
     Echo_Blue "Start install php-${php_version}"
+    Check_ICU
     Tarj_Cd php-${php_version}.tar.bz2 php-${php_version}
     if [ "${Stack}" = "lnmp" ]; then
         ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-config-file-scan-dir=/usr/local/php/conf.d --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization ${with_curl} --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-opcache --enable-intl --with-xsl ${PHP_Modules_Options}
@@ -514,13 +528,7 @@ fi
 Upgrade_PHP_7()
 {
     Echo_Blue "[+] Installing ${php_version}"
-    if [ "$PM" = "yum" ]; then
-        yum -y install libicu-devel
-    elif [ "$PM" = "apt" ]; then
-        apt-get update
-        apt-get install -y libicu-dev
-    fi
-    Install_Icu4c
+    Check_ICU
     Tarj_Cd php-${php_version}.tar.bz2 php-${php_version}
     if [ "${Stack}" = "lnmp" ]; then
         ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-config-file-scan-dir=/usr/local/php/conf.d --enable-fpm --with-fpm-user=www --with-fpm-group=www --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization ${with_curl} --enable-mbregex --enable-mbstring --enable-intl --enable-pcntl --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext --disable-fileinfo --enable-opcache --with-xsl ${PHP_Modules_Options}
