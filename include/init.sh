@@ -428,6 +428,12 @@ Install_Icu4c()
 Install_Boost()
 {
     Echo_Blue "[+] Installing ${Boost_Ver}"
+    if [ "$PM" = "yum" ]; then
+        yum -y install python-devel
+    elif [ "$PM" = "apt" ]; then
+        apt-get update
+        apt-get install -y python-dev
+    fi
     cd ${cur_dir}/src
     Download_Files ${Download_Mirror}/lib/boost/${Boost_Ver}.tar.bz2 ${Boost_Ver}.tar.bz2
     Tarj_Cd ${Boost_Ver}.tar.bz2 ${Boost_Ver}
