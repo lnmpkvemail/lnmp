@@ -413,7 +413,7 @@ Install_TCMalloc()
 
 Install_Icu4c()
 {
-    if /usr/bin/icu-config --version | grep '^3.'; then
+    if [ ! -s /usr/bin/icu-config ] || /usr/bin/icu-config --version | grep '^3.'; then
         Echo_Blue "[+] Installing ${Libicu4c_Ver}"
         cd ${cur_dir}/src
         Download_Files ${Download_Mirror}/lib/icu4c/${Libicu4c_Ver}-src.tgz ${Libicu4c_Ver}-src.tgz
