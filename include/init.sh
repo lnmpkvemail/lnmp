@@ -355,19 +355,20 @@ EOF
 
 Install_Curl()
 {
-    Echo_Blue "[+] Installing ${Curl_Ver}"
-    Tarj_Cd ${Curl_Ver}.tar.bz2 ${Curl_Ver}
-    ./configure --prefix=/usr/local/curl --enable-ares --without-nss --with-ssl
-    make && make install
-    cd ${cur_dir}/src/
-    rm -rf ${cur_dir}/src/${Curl_Ver}
+    if [[ ! -s /usr/local/curl/bin/curl && ! -s /usr/local/curl/lib/libcurl.so && ! -s /usr/local/curl/include/curl/curl.h ]];then
+        Echo_Blue "[+] Installing ${Curl_Ver}"
+        Tarj_Cd ${Curl_Ver}.tar.bz2 ${Curl_Ver}
+        ./configure --prefix=/usr/local/curl --enable-ares --without-nss --with-ssl
+        make && make install
+        cd ${cur_dir}/src/
+        rm -rf ${cur_dir}/src/${Curl_Ver}
+    fi
     Remove_Error_Libcurl
 }
 
 Install_Pcre()
 {
-    Cur_Pcre_Ver=`pcre-config --version`
-    if echo "${Cur_Pcre_Ver}" | grep -vEqi '^8.';then
+    if [ ! -s /usr/bin/pcre-config ] || /usr/bin/pcre-config --version | grep -vEqi '^8.';then
         Echo_Blue "[+] Installing ${Pcre_Ver}"
         Tarj_Cd ${Pcre_Ver}.tar.bz2 ${Pcre_Ver}
         ./configure
