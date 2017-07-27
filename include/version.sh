@@ -50,12 +50,12 @@ if [[ "${PHPSelect}" = "1" || "${PHPSelect}" = "2" || "${PHPSelect}" = "3" ]]; t
 else
     PhpMyAdmin_Ver='phpMyAdmin-4.7.1-all-languages'
 fi
-APR_Ver='apr-1.5.2'
-APR_Util_Ver='apr-util-1.5.4'
+APR_Ver='apr-1.6.2'
+APR_Util_Ver='apr-util-1.6.0'
 if [ "${ApacheSelect}" = "1" ]; then
-    Apache_Ver='httpd-2.2.32'
+    Apache_Ver='httpd-2.2.34'
 elif [ "${ApacheSelect}" = "2" ]; then
-    Apache_Ver='httpd-2.4.26'
+    Apache_Ver='httpd-2.4.27'
 fi
 
 Pureftpd_Ver='pure-ftpd-1.0.45'
@@ -65,7 +65,7 @@ ImageMagick_Ver='ImageMagick-7.0.5-7'
 Imagick_Ver='imagick-3.4.3'
 ZendOpcache_Ver='zendopcache-7.0.5'
 Redis_Stable_Ver='redis-3.2.8'
-PHPRedis_Ver='redis-3.1.2'
+PHPRedis_Ver='redis-3.1.3'
 Memcached_Ver='memcached-1.4.36'
 Libmemcached_Ver='libmemcached-1.0.18'
 PHPMemcached_Ver='memcached-2.2.0'
