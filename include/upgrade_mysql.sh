@@ -578,7 +578,7 @@ Upgrade_MySQL()
         country=`curl -sSk --connect-timeout 10 -m 60 https://ip.vpser.net/country`
         if [ "${country}" = "CN" ]; then
             wget -c --progress=bar:force http://mirrors.sohu.com/mysql/MySQL-${mysql_short_version}/mysql-${mysql_version}.tar.gz
-            if [ $? -eq 0 ]; then
+            if [ $? -ne 0 ]; then
                 wget -c --progress=bar:force http://cdn.mysql.com/Downloads/MySQL-${mysql_short_version}/mysql-${mysql_version}.tar.gz
             fi
         else
