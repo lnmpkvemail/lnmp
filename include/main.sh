@@ -492,11 +492,13 @@ Remove_StartUp()
 
 Check_Mirror()
 {
-    if [ "$PM" = "yum" ]; then
-        yum install -y curl
-    elif [ "$PM" = "apt" ]; then
-        apt-get update
-        apt-get install -y curl
+    if [ ! -s /usr/bin/curl ]; then
+        if [ "$PM" = "yum" ]; then
+            yum install -y curl
+        elif [ "$PM" = "apt" ]; then
+            apt-get update
+            apt-get install -y curl
+        fi
     fi
     country=`curl -sSk --connect-timeout 30 -m 60 https://ip.vpser.net/country`
     echo "Server Location: ${country}"

@@ -88,7 +88,6 @@ Init_Install()
     Install_Mhash
     Install_Mcrypt
     Install_Freetype
-    Install_Curl
     Install_Pcre
     Install_Icu4c
     if [ "${SelectMalloc}" = "2" ]; then
@@ -118,6 +117,8 @@ Init_Install()
         Install_MariaDB_101
     fi
     TempMycnf_Clean
+    PHP_with_curl
+    PHP_with_openssl
 }
 
 LNMP_Stack()
