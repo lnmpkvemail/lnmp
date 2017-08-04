@@ -63,7 +63,7 @@ EOF
 
     cd ${cur_dir}/src
 
-    if [ -s "${ZendOpcache_Ver}" ]; then
+    if [ -d "${ZendOpcache_Ver}" ]; then
         rm -rf "${ZendOpcache_Ver}"
     fi
 
