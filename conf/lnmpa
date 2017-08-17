@@ -916,7 +916,7 @@ Check_Lets_Cron()
         echo "Let's encrypt crontab renew rule is exist."
     else
         echo "Add Let's encrypt crontab renew rule..."
-        (crontab -l ; echo '0 3 */7 * * /bin/certbot renew --renew-hook "/etc/init.d/nginx reload"') | crontab -
+        (crontab -l ; echo '0 3 */7 * * /bin/certbot renew --renew-hook --disable-hook-validation "/etc/init.d/nginx reload"') | crontab -
     fi
 }
 
