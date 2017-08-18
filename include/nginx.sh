@@ -52,6 +52,8 @@ Install_Nginx()
     \cp conf/rewrite/dedecms.conf /usr/local/nginx/conf/dedecms.conf
     \cp conf/rewrite/drupal.conf /usr/local/nginx/conf/drupal.conf
     \cp conf/rewrite/ecshop.conf /usr/local/nginx/conf/ecshop.conf
+    \cp conf/rewrite/codeigniter.conf /usr/local/nginx/conf/codeigniter.conf
+    \cp conf/rewrite/laravel.conf /usr/local/nginx/conf/laravel.conf
     \cp conf/pathinfo.conf /usr/local/nginx/conf/pathinfo.conf
     \cp conf/enable-php.conf /usr/local/nginx/conf/enable-php.conf
     \cp conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php-pathinfo.conf
