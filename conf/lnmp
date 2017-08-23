@@ -1013,7 +1013,7 @@ Add_SSL()
 
 Check_Lets_Cron()
 {
-    if crontab -l|grep -q "/bin/certbot renew";then
+    if crontab -l|grep -q "/bin/certbot renew --disable-hook-validation";then
         echo "Let's encrypt crontab renew rule is exist."
     else
         echo "Add Let's encrypt crontab renew rule..."
