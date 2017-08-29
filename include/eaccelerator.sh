@@ -92,7 +92,7 @@ Install_eAccelerator()
     echo "====== Installing eAccelerator ======"
     Press_Start
 
-    rm -f ${PHP_Path}/conf.d/003-eaccelerator.ini
+    rm -f ${PHP_Path}/conf.d/001-eaccelerator.ini
     Addons_Get_PHP_Ext_Dir
     zend_ext="${zend_ext_dir}eaccelerator.so"
     if [ -s "${zend_ext}" ]; then
@@ -117,7 +117,7 @@ Install_eAccelerator()
     mkdir -p /usr/local/eaccelerator_cache
     rm -rf /usr/local/eaccelerator_cache/*
 
-    cat >${PHP_Path}/conf.d/003-eaccelerator.ini<<EOF
+    cat >${PHP_Path}/conf.d/001-eaccelerator.ini<<EOF
 [eaccelerator]
 zend_extension="${zend_ext}"
 eaccelerator.shm_size="1"
@@ -143,7 +143,7 @@ EOF
         Echo_Green "====== eAccelerator install completed ======"
         Echo_Green "eAccelerator installed successfully, enjoy it!"
     else
-        rm -f ${PHP_Path}/conf.d/003-eaccelerator.ini
+        rm -f ${PHP_Path}/conf.d/001-eaccelerator.ini
         Echo_Red "eAccelerator install failed!"
     fi
 }
@@ -152,7 +152,7 @@ Uninstall_eAccelerator()
 {
     echo "You will uninstall eAccelerator..."
     Press_Start
-    rm -f ${PHP_Path}/conf.d/003-eaccelerator.ini
+    rm -f ${PHP_Path}/conf.d/001-eaccelerator.ini
     echo "Delete eaccelerator_cache directory..."
     rm -rf /usr/local/eaccelerator_cache
     Restart_PHP
