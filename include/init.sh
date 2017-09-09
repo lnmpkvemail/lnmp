@@ -538,6 +538,10 @@ Deb_Lib_Opt()
         ln -sf /usr/include/i386-linux-gnu/curl /usr/include/
     fi
 
+    if [ -d /usr/include/arm-linux-gnueabihf/curl ]; then
+        ln -sf /usr/include/arm-linux-gnueabihf/curl /usr/include/
+    fi
+
     ldconfig
 
     cat >>/etc/security/limits.conf<<eof
