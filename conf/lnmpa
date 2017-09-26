@@ -804,6 +804,7 @@ index-url = https://pypi.doubanio.com/simple/
 trusted-host=pypi.doubanio.com
 EOF
         fi
+        sed -i 's#pypi.python.org/packages#pypi.doubanio.com/packages#g' /bin/certbot
     fi
 
     echo "Starting create SSL Certificate use Let's Encrypt..."
