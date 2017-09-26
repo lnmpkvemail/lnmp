@@ -19,6 +19,8 @@ Install_ionCube()
        zend_ext="/usr/local/ioncube/ioncube_loader_lin_5.6.so"
     elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.0.'; then
        zend_ext="/usr/local/ioncube/ioncube_loader_lin_7.0.so"
+    elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.1.'; then
+       zend_ext="/usr/local/ioncube/ioncube_loader_lin_7.1.so"
     else
         Echo_Red "Do not support current PHP version or PHP error!"
         exit 1
@@ -28,7 +30,7 @@ Install_ionCube()
     cd ${cur_dir}/src
     rm -rf ioncube
     rm -rf ioncube_loaders_lin_x8*.tar.gz
-    if grep -Eqi "xcache.so" ${PHP_Path}/etc/php.ini; then
+    if grep -Eqi "xcache.so" ${PHP_Path}/conf.d/006-xcache.ini; then
         if [ "${Is_64bit}" = "y" ] ; then
             Download_Files ${Download_Mirror}/web/ioncube/4.7.5/ioncube_loaders_lin_x86-64.tar.gz ioncube_loaders_lin_x86-64.tar.gz
             tar zxf ioncube_loaders_lin_x86-64.tar.gz
