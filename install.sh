@@ -117,8 +117,7 @@ Init_Install()
         Install_MariaDB_101
     fi
     TempMycnf_Clean
-    PHP_with_curl
-    PHP_with_openssl
+    Check_PHP_Option
 }
 
 LNMP_Stack()
