@@ -2,6 +2,11 @@
 
 Export_PHP_Autoconf()
 {
+    if [[ -s /usr/local/autoconf-2.13/bin/autoconf && -s /usr/local/autoconf-2.13/bin/autoheader ]]; then
+        Echo_Green "Autconf 2.13...ok"
+    else
+        Install_Autoconf
+    fi
     export PHP_AUTOCONF=/usr/local/autoconf-2.13/bin/autoconf
     export PHP_AUTOHEADER=/usr/local/autoconf-2.13/bin/autoheader
 }

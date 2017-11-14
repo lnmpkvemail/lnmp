@@ -75,46 +75,19 @@ Start_Upgrade_PHP()
         fi
     fi
     Check_PHP_Option
+    Install_PHP_Dependent
 }
 
-Check_Autoconf()
+Install_PHP_Dependent()
 {
-    if [[ -s /usr/local/autoconf-2.13/bin/autoconf && -s /usr/local/autoconf-2.13/bin/autoheader ]]; then
-        Echo_Green "Autconf 2.13...ok"
-        export PHP_AUTOCONF=/usr/local/autoconf-2.13/bin/autoconf
-        export PHP_AUTOHEADER=/usr/local/autoconf-2.13/bin/autoheader
-    else
-        Install_Autoconf
-    fi
-}
-
-Check_ICU()
-{
-    echo "Check icu..."
+    echo "Installing Dependent for PHP..."
     if [ "$PM" = "yum" ]; then
-        yum -y install libicu-devel
+        yum -y install c-ares-devel libicu-devel libxslt libxslt-devel xz expat-devel
     elif [ "$PM" = "apt" ]; then
         apt-get update
-        apt-get install -y libicu-dev
+        apt-get install -y libc-ares-dev libicu-dev e2fsprogs libxslt libxslt1-dev libc-client-dev xz-utils libexpat1-dev
     fi
     Install_Icu4c
-}
-
-Ln_PHP_Bin()
-{
-    ln -sf /usr/local/php/bin/php /usr/bin/php
-    ln -sf /usr/local/php/bin/phpize /usr/bin/phpize
-    ln -sf /usr/local/php/bin/pear /usr/bin/pear
-    ln -sf /usr/local/php/bin/pecl /usr/bin/pecl
-    if [ "${Stack}" = "lnmp" ]; then
-        ln -sf /usr/local/php/sbin/php-fpm /usr/bin/php-fpm
-    fi
-}
-
-Pear_Pecl_Set()
-{
-    pear config-set php_ini /usr/local/php/etc/php.ini
-    pecl config-set php_ini /usr/local/php/etc/php.ini
 }
 
 Check_PHP_Upgrade_Files()
@@ -156,7 +129,7 @@ Upgrade_PHP_52()
         exit 1
     fi
     Check_Curl
-    Check_Autoconf
+    Export_PHP_Autoconf
     cd ${cur_dir}/src && rm -rf php-${php_version}
     tar jxf php-${php_version}.tar.bz2
     if [ "${Stack}" = "lnmp" ]; then

@@ -82,7 +82,6 @@ Init_Install()
     fi
     Disable_Selinux
     Check_Download
-    Install_Autoconf
     Install_Libiconv
     Install_Libmcrypt
     Install_Mhash
