@@ -480,6 +480,10 @@ Del_VHost()
         echo "=========================================="
         exit 1
     else
+        if [ -f "${vhostdir}/.user.ini" ]; then
+            chattr -i "${vhostdir}/.user.ini"
+            rm -f "${vhostdir}/.user.ini"
+        fi
         rm -f /usr/local/nginx/conf/vhost/${domain}.conf
         echo "========================================================"
         echo "Domain: ${domain} has been deleted."
