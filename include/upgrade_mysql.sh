@@ -577,7 +577,7 @@ Upgrade_MySQL()
         echo "Notice: mysql-${mysql_version}.tar.gz not found!!!download now......"
         country=`curl -sSk --connect-timeout 10 -m 60 https://ip.vpser.net/country`
         if [ "${country}" = "CN" ]; then
-            wget -c --progress=bar:force http://mirrors.sohu.com/mysql/MySQL-${mysql_short_version}/mysql-${mysql_version}.tar.gz
+            wget -c --progress=bar:force http://mirrors.ustc.edu.cn/mysql-ftp/Downloads/MySQL-${mysql_short_version}/mysql-${mysql_version}.tar.gz
             if [ $? -ne 0 ]; then
                 wget -c --progress=bar:force http://cdn.mysql.com/Downloads/MySQL-${mysql_short_version}/mysql-${mysql_version}.tar.gz
             fi
