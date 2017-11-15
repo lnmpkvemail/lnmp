@@ -750,6 +750,11 @@ EOF
         sed -i 's#pypi.python.org/packages#pypi.doubanio.com/packages#g' /bin/certbot
     fi
 
+    if [ -s /etc/letsencrypt/archive/${domain}/fullchain.pem ]; then
+        echo "Removing exist domain certificate..."
+        rm -rf /etc/letsencrypt/archive/${domain}
+    fi
+
     echo "Starting create SSL Certificate use Let's Encrypt..."
     /bin/certbot certonly --email ${email} --agree-tos -n --webroot -w ${vhostdir} ${letsdomain}
     lets_status=$?
