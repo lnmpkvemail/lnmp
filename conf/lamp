@@ -781,6 +781,7 @@ CustomLog "/home/wwwlogs/${al_name}-access_log" combined
 SSLEngine on
 SSLCertificateFile ${ssl_certificate}
 SSLCertificateKeyFile ${ssl_certificate_key}
+Protocols h2 h2c http/1.1
 <Directory "${vhostdir}">
     SetOutputFilter DEFLATE
     Options FollowSymLinks

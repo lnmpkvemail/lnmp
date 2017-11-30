@@ -464,6 +464,21 @@ Install_Openssl()
     fi
 }
 
+Install_Nghttp2()
+{
+    if [[ ! -s /usr/local/nghttp2/lib/libnghttp2.so || ! -s /usr/local/nghttp2/include/nghttp2/nghttp2.h ]]; then
+        Echo_Blue "[+] Installing ${Nghttp2_Ver}"
+        cd ${cur_dir}/src
+        Download_Files ${Download_Mirror}/lib/nghttp2/${Nghttp2_Ver}.tar.bz2 ${Nghttp2_Ver}.tar.bz2
+        [[ -d "${Nghttp2_Ver}" ]] && rm -rf ${Nghttp2_Ver}
+        Tarj_Cd ${Nghttp2_Ver}.tar.bz2 ${Nghttp2_Ver}
+        ./configure --prefix=/usr/local/nghttp2
+        make && make install
+        cd ${cur_dir}/src/
+        rm -rf ${cur_dir}/src/${Nghttp2_Ver}
+    fi
+}
+
 CentOS_Lib_Opt()
 {
     if [ "${Is_64bit}" = "y" ] ; then

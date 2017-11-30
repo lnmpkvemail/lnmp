@@ -14,6 +14,7 @@ Libunwind_Ver='libunwind-1.1'
 Libicu4c_Ver='icu4c-58_1'
 Boost_Ver='boost_1_59_0'
 Openssl_Ver='openssl-1.0.2l'
+Nghttp2_Ver='nghttp2-1.27.0'
 Nginx_Ver='nginx-1.12.1'
 if [ "${DBSelect}" = "1" ]; then
     Mysql_Ver='mysql-5.1.73'
