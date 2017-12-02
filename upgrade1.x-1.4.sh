@@ -13,6 +13,7 @@ cur_dir=$(pwd)
 . lnmp.conf
 . include/main.sh
 
+Get_Dist_Name
 Check_Stack
 Check_DB
 
@@ -26,6 +27,15 @@ if [ "${Get_Stack}" == "unknow" ]; then
     Echo_Red "Can't get stack info."
     exit
 elif [ "${Get_Stack}" == "lnmp" ]; then
+    if [ "$PM" = "yum" ]; then
+        Echo_Blue "[+] Yum installing dependent packages..."
+        for packages in patch wget crontabs unzip tar ca-certificates net-tools libc-client-devel psmisc libXpm-devel git-core c-ares-devel libicu-devel libxslt libxslt-devel xz expat-devel;
+        do yum -y install $packages; done
+    elif [ "$PM" = "apt" ]; then
+        apt-get update -y
+        for packages in debian-keyring debian-archive-keyring build-essential bison libkrb5-dev libcurl3-gnutls libcurl4-gnutls-dev libcurl4-openssl-dev libcap-dev ca-certificates libc-client2007e-dev psmisc patch git libc-ares-dev libicu-dev e2fsprogs libxslt libxslt1-dev libc-client-dev xz-utils libexpat1-dev;
+        do apt-get --no-install-recommends install -y $packages; done
+    fi
     \cp ${cur_dir}/conf/lnmp /bin/lnmp
     chmod +x /bin/lnmp
     if [ ! -s /usr/local/nginx/conf/enable-php.conf ]; then
