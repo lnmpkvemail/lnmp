@@ -104,6 +104,11 @@ RHEL_Modify_Source()
 
 Ubuntu_Modify_Source()
 {
+    if [ "${country}" = "CN" ]; then
+        OldReleasesURL='http://mirrors.ustc.edu.cn/ubuntu-old-releases/ubuntu/dists/'
+    else
+        OldReleasesURL='http://old-releases.ubuntu.com/ubuntu/'
+    fi
     CodeName=''
     if grep -Eqi "10.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^10.10'; then
         CodeName='maverick'
@@ -122,31 +127,33 @@ Ubuntu_Modify_Source()
     elif grep -Eqi "14.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^14.10'; then
         CodeName='utopic'
     elif grep -Eqi "15.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^15.04'; then
-        Ubuntu_Deadline vivid
+        CodeName='vivid'
     elif grep -Eqi "12.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^12.04'; then
-        Ubuntu_Deadline precise
+        CodeName='precise'
     elif grep -Eqi "15.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^15.10'; then
-        Ubuntu_Deadline wily
+        CodeName='wily'
     elif grep -Eqi "16.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^16.10'; then
         Ubuntu_Deadline yakkety
     elif grep -Eqi "14.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^14.04'; then
         Ubuntu_Deadline trusty
     elif grep -Eqi "17.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^17.04'; then
         Ubuntu_Deadline zesty
+    elif grep -Eqi "17.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^17.04'; then
+        Ubuntu_Deadline artful
     fi
     if [ "${CodeName}" != "" ]; then
         \cp /etc/apt/sources.list /etc/apt/sources.list.$(date +"%Y%m%d")
         cat > /etc/apt/sources.list<<EOF
-deb http://old-releases.ubuntu.com/ubuntu/ ${CodeName} main restricted universe multiverse
-deb http://old-releases.ubuntu.com/ubuntu/ ${CodeName}-security main restricted universe multiverse
-deb http://old-releases.ubuntu.com/ubuntu/ ${CodeName}-updates main restricted universe multiverse
-deb http://old-releases.ubuntu.com/ubuntu/ ${CodeName}-proposed main restricted universe multiverse
-deb http://old-releases.ubuntu.com/ubuntu/ ${CodeName}-backports main restricted universe multiverse
-deb-src http://old-releases.ubuntu.com/ubuntu/ ${CodeName} main restricted universe multiverse
-deb-src http://old-releases.ubuntu.com/ubuntu/ ${CodeName}-security main restricted universe multiverse
-deb-src http://old-releases.ubuntu.com/ubuntu/ ${CodeName}-updates main restricted universe multiverse
-deb-src http://old-releases.ubuntu.com/ubuntu/ ${CodeName}-proposed main restricted universe multiverse
-deb-src http://old-releases.ubuntu.com/ubuntu/ ${CodeName}-backports main restricted universe multiverse
+deb ${OldReleasesURL} ${CodeName} main restricted universe multiverse
+deb ${OldReleasesURL} ${CodeName}-security main restricted universe multiverse
+deb ${OldReleasesURL} ${CodeName}-updates main restricted universe multiverse
+deb ${OldReleasesURL} ${CodeName}-proposed main restricted universe multiverse
+deb ${OldReleasesURL} ${CodeName}-backports main restricted universe multiverse
+deb-src ${OldReleasesURL} ${CodeName} main restricted universe multiverse
+deb-src ${OldReleasesURL} ${CodeName}-security main restricted universe multiverse
+deb-src ${OldReleasesURL} ${CodeName}-updates main restricted universe multiverse
+deb-src ${OldReleasesURL} ${CodeName}-proposed main restricted universe multiverse
+deb-src ${OldReleasesURL} ${CodeName}-backports main restricted universe multiverse
 EOF
     fi
 }
@@ -162,32 +169,12 @@ Check_Old_Releases_URL()
 
 Ubuntu_Deadline()
 {
-    vivid_deadline=`date -d "2016-2-24 00:00:00" +%s`
-    precise_deadline=`date -d "2017-5-27 00:00:00" +%s`
-    wily_deadline=`date -d "2016-7-22 00:00:00" +%s`
     yakkety_deadline=`date -d "2017-7-22 00:00:00" +%s`
     trusty_deadline=`date -d "2019-7-22 00:00:00" +%s`
     zesty_deadline=`date -d "2018-1-31 00:00:00" +%s`
+    artful_deadline=`date -d "2018-7-31 00:00:00" +%s`
     cur_time=`date  +%s`
     case "$1" in
-        vivid)
-            if [ ${cur_time} -gt ${vivid_deadline} ]; then
-                echo "${cur_time} > ${vivid_deadline}"
-                Check_Old_Releases_URL vivid
-            fi
-            ;;
-        precise)
-            if [ ${cur_time} -gt ${precise_deadline} ]; then
-                echo "${cur_time} > ${precise_deadline}"
-                Check_Old_Releases_URL precise
-            fi
-            ;;
-        wily)
-            if [ ${cur_time} -gt ${wily_deadline} ]; then
-                echo "${cur_time} > ${wily_deadline}"
-                Check_Old_Releases_URL wily
-            fi
-            ;;
         yakkety)
             if [ ${cur_time} -gt ${yakkety_deadline} ]; then
                 echo "${cur_time} > ${yakkety_deadline}"
@@ -204,6 +191,12 @@ Ubuntu_Deadline()
             if [ ${cur_time} -gt ${zesty_deadline} ]; then
                 echo "${cur_time} > ${zesty_deadline}"
                 Check_Old_Releases_URL zesty
+            fi
+            ;;
+        artful)
+            if [ ${cur_time} -gt ${artful_deadline} ]; then
+                echo "${cur_time} > ${artful_deadline}"
+                Check_Old_Releases_URL artful
             fi
             ;;
     esac
