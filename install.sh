@@ -119,9 +119,8 @@ Init_Install()
     Check_PHP_Option
 }
 
-LNMP_Stack()
+Install_PHP()
 {
-    Init_Install
     if [ "${PHPSelect}" = "1" ]; then
         Install_PHP_52
     elif [ "${PHPSelect}" = "2" ]; then
@@ -136,7 +135,15 @@ LNMP_Stack()
         Install_PHP_7
     elif [ "${PHPSelect}" = "7" ]; then
         Install_PHP_71
+    elif [ "${PHPSelect}" = "8" ]; then
+        Install_PHP_72
     fi
+}
+
+LNMP_Stack()
+{
+    Init_Install
+    Install_PHP
     LNMP_PHP_Opt
     Install_Nginx
     Creat_PHP_Tools
@@ -154,21 +161,7 @@ LNMPA_Stack()
     else
         Install_Apache_24
     fi
-    if [ "${PHPSelect}" = "1" ]; then
-        Install_PHP_52
-    elif [ "${PHPSelect}" = "2" ]; then
-        Install_PHP_53
-    elif [ "${PHPSelect}" = "3" ]; then
-        Install_PHP_54
-    elif [ "${PHPSelect}" = "4" ]; then
-        Install_PHP_55
-    elif [ "${PHPSelect}" = "5" ]; then
-        Install_PHP_56
-    elif [ "${PHPSelect}" = "6" ]; then
-        Install_PHP_7
-    elif [ "${PHPSelect}" = "7" ]; then
-        Install_PHP_71
-    fi
+    Install_PHP
     Install_Nginx
     Creat_PHP_Tools
     Add_Iptables_Rules
@@ -185,21 +178,7 @@ LAMP_Stack()
     else
         Install_Apache_24
     fi
-    if [ "${PHPSelect}" = "1" ]; then
-        Install_PHP_52
-    elif [ "${PHPSelect}" = "2" ]; then
-        Install_PHP_53
-    elif [ "${PHPSelect}" = "3" ]; then
-        Install_PHP_54
-    elif [ "${PHPSelect}" = "4" ]; then
-        Install_PHP_55
-    elif [ "${PHPSelect}" = "5" ]; then
-        Install_PHP_56
-    elif [ "${PHPSelect}" = "6" ]; then
-        Install_PHP_7
-    elif [ "${PHPSelect}" = "7" ]; then
-        Install_PHP_71
-    fi
+    Install_PHP
     Creat_PHP_Tools
     Add_Iptables_Rules
     Add_LAMP_Startup
