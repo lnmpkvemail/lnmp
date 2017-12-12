@@ -40,7 +40,7 @@ Add_LNMP_Startup()
     chmod +x /bin/lnmp
     StartUp nginx
     /etc/init.d/nginx start
-    if [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
+    if [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" || "${DBSelect}" = "8" ]]; then
         StartUp mariadb
         /etc/init.d/mariadb start
         sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#' /bin/lnmp
@@ -64,7 +64,7 @@ Add_LNMPA_Startup()
     chmod +x /bin/lnmp
     StartUp nginx
     /etc/init.d/nginx start
-    if [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
+    if [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" || "${DBSelect}" = "8" ]]; then
         StartUp mariadb
         /etc/init.d/mariadb start
         sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#' /bin/lnmp
@@ -85,7 +85,7 @@ Add_LAMP_Startup()
     chmod +x /bin/lnmp
     StartUp httpd
     /etc/init.d/httpd start
-    if [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
+    if [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" || "${DBSelect}" = "8" ]]; then
         StartUp mariadb
         /etc/init.d/mariadb start
         sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#' /bin/lnmp
@@ -113,7 +113,7 @@ Check_Nginx_Files()
 Check_DB_Files()
 {
     isDB=""
-    if [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
+    if [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" || "${DBSelect}" = "8" ]]; then
         if [[ -s /usr/local/mariadb/bin/mysql && -s /usr/local/mariadb/bin/mysqld_safe && -s /etc/my.cnf ]]; then
             Echo_Green "MariaDB: OK"
             isDB="ok"
@@ -179,7 +179,7 @@ Clean_Src_Dir()
     echo "Clean src directory..."
     if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
         rm -rf ${cur_dir}/src/${Mysql_Ver}
-    elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
+    elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" || "${DBSelect}" = "8" ]]; then
         rm -rf ${cur_dir}/src/${Mariadb_Ver}
     fi
     rm -rf ${cur_dir}/src/${Php_Ver}

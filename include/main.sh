@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DB_Info=('MySQL 5.1.73' 'MySQL 5.5.56' 'MySQL 5.6.36' 'MySQL 5.7.18' 'MariaDB 5.5.56' 'MariaDB 10.0.30' 'MariaDB 10.1.23')
+DB_Info=('MySQL 5.1.73' 'MySQL 5.5.56' 'MySQL 5.6.36' 'MySQL 5.7.18' 'MariaDB 5.5.56' 'MariaDB 10.0.30' 'MariaDB 10.2.11')
 PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.38' 'PHP 5.6.31' 'PHP 7.0.21' 'PHP 7.1.7' 'PHP 7.2.0')
 Apache_Info=('Apache 2.2.34' 'Apache 2.4.27')
 
@@ -16,8 +16,9 @@ Database_Selection()
     echo "5: Install ${DB_Info[4]}"
     echo "6: Install ${DB_Info[5]}"
     echo "7: Install ${DB_Info[6]}"
+    echo "8: Install ${DB_Info[7]}"
     echo "0: DO NOT Install MySQL/MariaDB"
-    read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7 or 0): " DBSelect
+    read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8 or 0): " DBSelect
 
     case "${DBSelect}" in
     1)
@@ -41,6 +42,9 @@ Database_Selection()
     7)
         echo "You will install ${DB_Info[6]}"
         ;;
+    8)
+        echo "You will install ${DB_Info[7]}"
+        ;;
     0)
         echo "Do not install MySQL/MariaDB!"
         ;;
@@ -49,12 +53,12 @@ Database_Selection()
         DBSelect="2"
     esac
 
-    if [[ "${DBSelect}" = "3" || "${DBSelect}" = "4" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]] && [ `free -m | grep Mem | awk '{print  $2}'` -le 1024 ]; then
+    if [[ "${DBSelect}" = "3" || "${DBSelect}" = "4" || "${DBSelect}" = "6" || "${DBSelect}" = "7" || "${DBSelect}" = "8" ]] && [ `free -m | grep Mem | awk '{print  $2}'` -le 1024 ]; then
         echo "Memory less than 1GB, can't install MySQL 5.6, 5.7 or MairaDB 10!"
         exit 1
     fi
 
-    if [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
+    if [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" || "${DBSelect}" = "8" ]]; then
         MySQL_Bin="/usr/local/mariadb/bin/mysql"
         MySQL_Config="/usr/local/mariadb/bin/mysql_config"
         MySQL_Dir="/usr/local/mariadb"
@@ -427,7 +431,7 @@ Print_APP_Ver()
 
     if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
         echo "${Mysql_Ver}"
-    elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
+    elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" || "${DBSelect}" = "8" ]]; then
         echo "${Mariadb_Ver}"
     elif [ "${DBSelect}" = "0" ]; then
         echo "Do not install MySQL/MariaDB!"
@@ -451,7 +455,7 @@ Print_APP_Ver()
     echo "PHP Additional Modules: ${PHP_Modules_Options}"
     if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
         echo "Database Directory: ${MySQL_Data_Dir}"
-    elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
+    elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" || "${DBSelect}" = "8" ]]; then
         echo "Database Directory: ${MariaDB_Data_Dir}"
     elif [ "${DBSelect}" = "0" ]; then
         echo "Do not install MySQL/MariaDB!"

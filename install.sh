@@ -114,6 +114,8 @@ Init_Install()
         Install_MariaDB_10
     elif [ "${DBSelect}" = "7" ]; then
         Install_MariaDB_101
+    elif [ "${DBSelect}" = "8" ]; then
+        Install_MariaDB_102
     fi
     TempMycnf_Clean
     Check_PHP_Option
