@@ -797,7 +797,7 @@ Add_SSL_Info_Menu()
     elif [ "${allow_rewrite}" == "y" ]; then
         rewrite="other"
         echo "Please enter the rewrite of programme, "
-        echo "wordpress,discuz,typecho,sablog,typecho rewrite was exist."
+        echo "wordpress,discuzx,typecho,thinkphp,laravel,codeigniter,yii2 rewrite was exist."
         Echo_Yellow "(Default rewrite: other): "
         read rewrite
         if [ "${rewrite}" == "" ]; then
