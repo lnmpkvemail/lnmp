@@ -768,6 +768,12 @@ EOF
 
 Create_SSL_Config()
 {
+    if /usr/local/apache/bin/httpd -v|grep -Eqi "Apache/2.4.*"; then
+        Conf_H2='Protocols h2 h2c http/1.1'
+    else
+        Conf_H2=''
+    fi
+
     sed -i 's@#Include conf/extra/httpd-ssl.conf@Include conf/extra/httpd-ssl.conf@g' /usr/local/apache/conf/httpd.conf
     cat >>"/usr/local/apache/conf/vhost/${domain}.conf"<<EOF
 
@@ -781,7 +787,7 @@ CustomLog "/home/wwwlogs/${al_name}-access_log" combined
 SSLEngine on
 SSLCertificateFile ${ssl_certificate}
 SSLCertificateKeyFile ${ssl_certificate_key}
-Protocols h2 h2c http/1.1
+${Conf_H2}
 <Directory "${vhostdir}">
     SetOutputFilter DEFLATE
     Options FollowSymLinks
