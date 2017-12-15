@@ -245,9 +245,9 @@ Check_Download()
         Download_Files ${Download_Mirror}/lib/libunwind/${Libunwind_Ver}.tar.gz ${Libunwind_Ver}.tar.gz
     fi
     Download_Files ${Download_Mirror}/web/nginx/${Nginx_Ver}.tar.gz ${Nginx_Ver}.tar.gz
-    if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
+    if [[ "${DBSelect}" =~ ^[1234]$ ]]; then
         Download_Files ${Download_Mirror}/datebase/mysql/${Mysql_Ver}.tar.gz ${Mysql_Ver}.tar.gz
-    elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" || "${DBSelect}" = "8" ]]; then
+    elif [[ "${DBSelect}" =~ ^[5678]$ ]]; then
         Download_Files ${Download_Mirror}/datebase/mariadb/${Mariadb_Ver}.tar.gz ${Mariadb_Ver}.tar.gz
     fi
     Download_Files ${Download_Mirror}/web/php/${Php_Ver}.tar.bz2 ${Php_Ver}.tar.bz2
@@ -351,7 +351,7 @@ EOF
 
 Install_Curl()
 {
-    if [[ ! -s /usr/local/curl/bin/curl || ! -s /usr/local/curl/lib/libcurl.so || ! -s /usr/local/curl/include/curl/curl.h ]];then
+    if [[ ! -s /usr/local/curl/bin/curl || ! -s /usr/local/curl/lib/libcurl.so || ! -s /usr/local/curl/include/curl/curl.h ]]; then
         Echo_Blue "[+] Installing ${Curl_Ver}"
         Tarj_Cd ${Curl_Ver}.tar.bz2 ${Curl_Ver}
         ./configure --prefix=/usr/local/curl --enable-ares --without-nss --with-ssl
@@ -364,7 +364,7 @@ Install_Curl()
 
 Install_Pcre()
 {
-    if [ ! -s /usr/bin/pcre-config ] || /usr/bin/pcre-config --version | grep -vEqi '^8.';then
+    if [ ! -s /usr/bin/pcre-config ] || /usr/bin/pcre-config --version | grep -vEqi '^8.'; then
         Echo_Blue "[+] Installing ${Pcre_Ver}"
         Tarj_Cd ${Pcre_Ver}.tar.bz2 ${Pcre_Ver}
         ./configure
@@ -389,7 +389,7 @@ Install_Jemalloc()
 Install_TCMalloc()
 {
     Echo_Blue "[+] Installing ${TCMalloc_Ver}"
-    if [ "${Is_64bit}" = "y" ] ; then
+    if [ "${Is_64bit}" = "y" ]; then
         Tar_Cd ${Libunwind_Ver}.tar.gz ${Libunwind_Ver}
         CFLAGS=-fPIC ./configure
         make CFLAGS=-fPIC
@@ -397,7 +397,7 @@ Install_TCMalloc()
         rm -rf ${cur_dir}/src/${Libunwind_Ver}
     fi
     Tar_Cd ${TCMalloc_Ver}.tar.gz ${TCMalloc_Ver}
-    if [ "${Is_64bit}" = "y" ] ; then
+    if [ "${Is_64bit}" = "y" ]; then
         ./configure
     else
         ./configure --enable-frame-pointers
@@ -513,7 +513,7 @@ eof
 
 Deb_Lib_Opt()
 {
-    if [ "${Is_64bit}" = "y" ] ; then
+    if [ "${Is_64bit}" = "y" ]; then
         ln -sf /usr/lib/x86_64-linux-gnu/libpng* /usr/lib/
         ln -sf /usr/lib/x86_64-linux-gnu/libjpeg* /usr/lib/
     else

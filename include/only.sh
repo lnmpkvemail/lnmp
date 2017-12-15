@@ -45,8 +45,6 @@ Install_Only_Nginx()
     Add_Iptables_Rules
     \cp ${cur_dir}/conf/index.html ${Default_Website_Dir}/index.html
     Check_Nginx_Files
-    exit 0
-    exit 0
 }
 
 Install_Database()
@@ -85,26 +83,22 @@ Install_Database()
     fi
     TempMycnf_Clean
 
-    if [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" || "${DBSelect}" = "8" ]]; then
+    if [[ "${DBSelect}" =~ ^[5678]$ ]]; then
         StartUp mariadb
         /etc/init.d/mariadb start
-    elif [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
+    elif [[ "${DBSelect}" =~ ^[1234]$ ]]; then
         StartUp mysql
         /etc/init.d/mysql start
     fi
 
     Check_DB_Files
     if [[ "${isDB}" = "ok" ]]; then
-        if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
+        if [[ "${DBSelect}" =~ ^[1234]$ ]]; then
             Echo_Green "MySQL root password: ${DB_Root_Password}"
             Echo_Green "Install ${Mysql_Ver} completed! enjoy it."
-            exit 0
-            exit 0
-        elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" || "${DBSelect}" = "8" ]]; then
+        elif [[ "${DBSelect}" =~ ^[5678]$ ]]; then
             Echo_Green "MariaDB root password: ${DB_Root_Password}"
             Echo_Green "Install ${Mariadb_Ver} completed! enjoy it."
-            exit 0
-            exit 0
         fi
     fi
 }

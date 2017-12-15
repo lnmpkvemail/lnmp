@@ -8,7 +8,7 @@ Database_Selection()
 {
 #which MySQL Version do you want to install?
     DBSelect="2"
-    Echo_Yellow "You have 5 options for your DataBase install."
+    Echo_Yellow "You have 9 options for your DataBase install."
     echo "1: Install ${DB_Info[0]}"
     echo "2: Install ${DB_Info[1]} (Default)"
     echo "3: Install ${DB_Info[2]}"
@@ -53,16 +53,16 @@ Database_Selection()
         DBSelect="2"
     esac
 
-    if [[ "${DBSelect}" = "3" || "${DBSelect}" = "4" || "${DBSelect}" = "6" || "${DBSelect}" = "7" || "${DBSelect}" = "8" ]] && [ `free -m | grep Mem | awk '{print  $2}'` -le 1024 ]; then
-        echo "Memory less than 1GB, can't install MySQL 5.6, 5.7 or MairaDB 10!"
+    if [[ "${DBSelect}" =~ ^[34678]$ ]] && [ `free -m | grep Mem | awk '{print  $2}'` -le 1024 ]; then
+        echo "Memory less than 1GB, can't install MySQL 5.6, 5.7 or MairaDB 10+!"
         exit 1
     fi
 
-    if [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" || "${DBSelect}" = "8" ]]; then
+    if [[ "${DBSelect}" =~ ^[5678]$ ]]; then
         MySQL_Bin="/usr/local/mariadb/bin/mysql"
         MySQL_Config="/usr/local/mariadb/bin/mysql_config"
         MySQL_Dir="/usr/local/mariadb"
-    elif [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
+    elif [[ "${DBSelect}" =~ ^[1234]$ ]]; then
         MySQL_Bin="/usr/local/mysql/bin/mysql"
         MySQL_Config="/usr/local/mysql/bin/mysql_config"
         MySQL_Dir="/usr/local/mysql"
@@ -108,7 +108,7 @@ PHP_Selection()
     echo "==========================="
 
     PHPSelect="3"
-    Echo_Yellow "You have 6 options for your PHP install."
+    Echo_Yellow "You have 8 options for your PHP install."
     echo "1: Install ${PHP_Info[0]}"
     echo "2: Install ${PHP_Info[1]}"
     echo "3: Install ${PHP_Info[2]}"
@@ -429,9 +429,9 @@ Print_APP_Ver()
         echo ${Nginx_Ver}
     fi
 
-    if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
+    if [[ "${DBSelect}" =~ ^[1234]$ ]]; then
         echo "${Mysql_Ver}"
-    elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" || "${DBSelect}" = "8" ]]; then
+    elif [[ "${DBSelect}" =~ ^[5678]$ ]]; then
         echo "${Mariadb_Ver}"
     elif [ "${DBSelect}" = "0" ]; then
         echo "Do not install MySQL/MariaDB!"
@@ -453,9 +453,9 @@ Print_APP_Ver()
     echo "Download Mirror: ${Download_Mirror}"
     echo "Nginx Additional Modules: ${Nginx_Modules_Options}"
     echo "PHP Additional Modules: ${PHP_Modules_Options}"
-    if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
+    if [[ "${DBSelect}" =~ ^[1234]$ ]]; then
         echo "Database Directory: ${MySQL_Data_Dir}"
-    elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" || "${DBSelect}" = "8" ]]; then
+    elif [[ "${DBSelect}" =~ ^[5678]$ ]]; then
         echo "Database Directory: ${MariaDB_Data_Dir}"
     elif [ "${DBSelect}" = "0" ]; then
         echo "Do not install MySQL/MariaDB!"
