@@ -701,6 +701,15 @@ Add_SSL_Menu()
                     break
                 fi
             done
+            while :;do
+                Echo_Yellow "Please enter full path to SSL Chain file: "
+                read ssl_certificate_key
+                if [ "${ssl_chain}" == "" ]; then
+                    Echo_Yellow "SSL Chain file will not set."
+                    Conf_SSLChain="#SSLCertificateChainFile /path/to/your/chain.pem"
+                    break
+                fi
+            done
             break
         elif [ "${ssl_choice}" == "2" ]; then
             echo "It will be processed automatically."
@@ -750,7 +759,7 @@ EOF
         sed -i 's#pypi.python.org/packages#pypi.doubanio.com/packages#g' /bin/certbot
     fi
 
-    if [ -s /etc/letsencrypt/archive/${domain}/fullchain.pem ]; then
+    if [ -s /etc/letsencrypt/archive/${domain}/chain.pem ]; then
         echo "Removing exist domain certificate..."
         rm -rf /etc/letsencrypt/archive/${domain}
     fi
@@ -773,6 +782,9 @@ Create_SSL_Config()
     else
         Conf_H2=''
     fi
+    if [ "${ssl_choice}" == "2" ]; then
+        Conf_SSLChain="SSLCertificateChainFile /etc/letsencrypt/archive/${domain}/chain.pem"
+    fi
 
     sed -i 's@#Include conf/extra/httpd-ssl.conf@Include conf/extra/httpd-ssl.conf@g' /usr/local/apache/conf/httpd.conf
     cat >>"/usr/local/apache/conf/vhost/${domain}.conf"<<EOF
@@ -787,6 +799,7 @@ CustomLog "/home/wwwlogs/${al_name}-access_log" combined
 SSLEngine on
 SSLCertificateFile ${ssl_certificate}
 SSLCertificateKeyFile ${ssl_certificate_key}
+${Conf_SSLChain}
 ${Conf_H2}
 <Directory "${vhostdir}">
     SetOutputFilter DEFLATE
@@ -836,7 +849,7 @@ Add_SSL()
             mkdir -p "${vhostdir}"
         fi
         Add_Letsencrypt
-        ssl_certificate="/etc/letsencrypt/live/${domain}/fullchain.pem"
+        ssl_certificate="/etc/letsencrypt/live/${domain}/chain.pem"
         ssl_certificate_key="/etc/letsencrypt/live/${domain}/privkey.pem"
         if [ "${lets_status}" = 0 ]; then
             Create_SSL_Config
