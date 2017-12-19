@@ -17,7 +17,7 @@ MySQL_ARM_Patch()
 
 MySQL_Sec_Setting()
 {
-    if [ -d "/proc/vz" ];then
+    if [ -d "/proc/vz" ]; then
         ulimit -s unlimited
     fi
 
