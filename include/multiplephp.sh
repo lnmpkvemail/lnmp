@@ -5,6 +5,7 @@ Install_Multiplephp()
     Get_Dist_Name
     Check_DB
     Check_Stack
+    . include/upgrade_php.sh
 
     if [ "${Get_Stack}" != "lnmp" ]; then
         echo "Multiple PHP Versions ONLY for LNMP Stack!"
