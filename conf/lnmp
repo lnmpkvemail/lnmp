@@ -877,13 +877,15 @@ Add_Letsencrypt()
         echo "/usr/local/acme.sh/acme.sh [found]"
     else
         cd /tmp
-        [[ -d latest.tar.gz ]] && rm -f latest.tar.gz
+        [[ -f latest.tar.gz ]] && rm -f latest.tar.gz
         wget https://soft.vpser.net/lib/acme.sh/latest.tar.gz --no-check-certificate
         tar zxf latest.tar.gz
         cd acme.sh-*
-        /usr/local/acme.sh/acme.sh --install --home /usr/local/acme.sh --certhome /usr/local/nginx/conf/ssl
+        ./acme.sh --install --home /usr/local/acme.sh --certhome /usr/local/nginx/conf/ssl
         cd ..
+        rm -f latest.tar.gz
         rm -rf acme.sh-*
+        source ~/.bashrc
     fi
 
     if [ -s /usr/local/nginx/conf/ssl/${domain}/fullchain.cer ]; then
@@ -892,7 +894,7 @@ Add_Letsencrypt()
     fi
 
     echo "Starting create SSL Certificate use Let's Encrypt..."
-    /usr/local/acme.sh/acme.sh --issue ${letsdomain} -w ${vhostdir} "/etc/init.d/nginx reload"
+    /usr/local/acme.sh/acme.sh --issue ${letsdomain} -w ${vhostdir} --reloadcmd "/etc/init.d/nginx reload"
     lets_status=$?
     if [ "${lets_status}" = 0 ]; then
         Echo_Green "Let's Encrypt SSL Certificate create successfully."
