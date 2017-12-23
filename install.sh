@@ -16,7 +16,7 @@ else
     Stack=$1
 fi
 
-LNMP_Ver='1.4'
+LNMP_Ver='1.5'
 . lnmp.conf
 . include/main.sh
 . include/init.sh
