@@ -112,8 +112,8 @@ PHP_Selection()
     echo "1: Install ${PHP_Info[0]}"
     echo "2: Install ${PHP_Info[1]}"
     echo "3: Install ${PHP_Info[2]}"
-    echo "4: Install ${PHP_Info[3]} (Default)"
-    echo "5: Install ${PHP_Info[4]}"
+    echo "4: Install ${PHP_Info[3]}"
+    echo "5: Install ${PHP_Info[4]} (Default)"
     echo "6: Install ${PHP_Info[5]}"
     echo "7: Install ${PHP_Info[6]}"
     echo "8: Install ${PHP_Info[7]}"
@@ -149,8 +149,8 @@ PHP_Selection()
         echo "You will install ${PHP_Info[7]}"
         ;;
     *)
-        echo "No input,You will install ${PHP_Info[3]}"
-        PHPSelect="4"
+        echo "No input,You will install ${PHP_Info[4]}"
+        PHPSelect="5"
     esac
 }
 
