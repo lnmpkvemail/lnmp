@@ -18,7 +18,7 @@ Check_Stack
 Check_DB
 
 echo "+--------------------------------------------------+"
-echo "|  A tool to upgrade lnmp manager from 1.x to 1.4  |"
+echo "|  A tool to upgrade lnmp manager from 1.x to 1.5  |"
 echo "+--------------------------------------------------+"
 echo "|For more information please visit https://lnmp.org|"
 echo "+--------------------------------------------------+"
