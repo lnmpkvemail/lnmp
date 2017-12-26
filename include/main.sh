@@ -225,8 +225,8 @@ Apache_Selection()
 
     ApacheSelect="1"
     Echo_Yellow "You have 2 options for your Apache install."
-    echo "1: Install ${Apache_Info[0]} (Default)"
-    echo "2: Install ${Apache_Info[1]}"
+    echo "1: Install ${Apache_Info[0]}"
+    echo "2: Install ${Apache_Info[1]} (Default)"
     read -p "Enter your choice (1 or 2): " ApacheSelect
 
     if [ "${ApacheSelect}" = "1" ]; then
@@ -234,8 +234,8 @@ Apache_Selection()
     elif [ "${ApacheSelect}" = "2" ]; then
         echo "You will install ${Apache_Info[1]}"
     else
-        echo "No input,You will install ${Apache_Info[0]}"
-        ApacheSelect="1"
+        echo "No input,You will install ${Apache_Info[1]}"
+        ApacheSelect="2"
     fi
     if [[ "${PHPSelect}" = "1" && "${ApacheSelect}" = "2" ]]; then
         Echo_Red "PHP 5.2.17 is not compatible with Apache 2.4.*."
