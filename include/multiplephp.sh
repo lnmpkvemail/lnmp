@@ -76,6 +76,8 @@ Install_Multiplephp()
         exit 1
     fi
     Check_PHP_Option
+    cat /etc/issue
+    cat /etc/*-release
     Install_PHP_Dependent
 
     if [ "${PHPSelect}" = "1" ]; then
