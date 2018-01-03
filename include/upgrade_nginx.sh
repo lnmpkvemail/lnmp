@@ -62,6 +62,11 @@ Upgrade_Nginx()
     make upgrade
 
     cd ${cur_dir} && rm -rf ${cur_dir}/src/nginx-${Nginx_Version}
+    if [ "${Enable_Nginx_Lua}" = 'y' ]; then
+        if ! grep -q "content_by_lua 'ngx.say(\"hello world\")';" /usr/local/nginx/conf/nginx.conf; then
+            sed -i "/location \/nginx_status/i\        location /lua\n        {\n            default_type text/html;\n            content_by_lua 'ngx.say\(\"hello world\"\)';\n        }\n" /usr/local/nginx/conf/nginx.conf
+        fi
+    fi
 
     echo "Checking ..."
     if [[ -s /usr/local/nginx/conf/nginx.conf && -s /usr/local/nginx/sbin/nginx ]]; then
