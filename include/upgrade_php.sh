@@ -88,6 +88,16 @@ Install_PHP_Dependent()
         apt-get install -y libc-ares-dev libicu-dev e2fsprogs libxslt libxslt1-dev libc-client-dev xz-utils libexpat1-dev
     fi
     Install_Icu4c
+
+    if [ -d /usr/include/x86_64-linux-gnu/curl ]; then
+        ln -sf /usr/include/x86_64-linux-gnu/curl /usr/include/
+    elif [ -d /usr/include/i386-linux-gnu/curl ]; then
+        ln -sf /usr/include/i386-linux-gnu/curl /usr/include/
+    fi
+
+    if [ -d /usr/include/arm-linux-gnueabihf/curl ]; then
+        ln -sf /usr/include/arm-linux-gnueabihf/curl /usr/include/
+    fi
 }
 
 Check_PHP_Upgrade_Files()
