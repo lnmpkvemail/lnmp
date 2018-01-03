@@ -22,17 +22,17 @@ Nginx_Ver='nginx-1.12.2'
 if [ "${DBSelect}" = "1" ]; then
     Mysql_Ver='mysql-5.1.73'
 elif [ "${DBSelect}" = "2" ]; then
-    Mysql_Ver='mysql-5.5.56'
+    Mysql_Ver='mysql-5.5.58'
 elif [ "${DBSelect}" = "3" ]; then
-    Mysql_Ver='mysql-5.6.36'
+    Mysql_Ver='mysql-5.6.38'
 elif [ "${DBSelect}" = "4" ]; then
-    Mysql_Ver='mysql-5.7.18'
+    Mysql_Ver='mysql-5.7.20'
 elif [ "${DBSelect}" = "5" ]; then
-    Mariadb_Ver='mariadb-5.5.56'
+    Mariadb_Ver='mariadb-5.5.58'
 elif [ "${DBSelect}" = "6" ]; then
-    Mariadb_Ver='mariadb-10.0.30'
+    Mariadb_Ver='mariadb-10.0.33'
 elif [ "${DBSelect}" = "7" ]; then
-    Mariadb_Ver='mariadb-10.1.23'
+    Mariadb_Ver='mariadb-10.1.30'
 elif [ "${DBSelect}" = "8" ]; then
     Mariadb_Ver='mariadb-10.2.11'
 fi
@@ -56,7 +56,7 @@ fi
 if [[ "${PHPSelect}" =~ ^[123]$ ]]; then
     PhpMyAdmin_Ver='phpMyAdmin-4.0.10.20-all-languages'
 else
-    PhpMyAdmin_Ver='phpMyAdmin-4.7.3-all-languages'
+    PhpMyAdmin_Ver='phpMyAdmin-4.7.7-all-languages'
 fi
 APR_Ver='apr-1.6.3'
 APR_Util_Ver='apr-util-1.6.1'
