@@ -265,17 +265,14 @@ Add_VHost()
     fi
 
     email=""
-    while :;do
-        Echo_Yellow "Please enter Administrator Email Address: "
-        read email
-        if [ "${email}" == "" ]; then
-            echo "Administrator Email Address will set to webmaster@example.com!"
-            email='webmaster@example.com'
-        else
-            echo "Server Administrator Email:${email}"
-            break
-        fi
-    done
+    Echo_Yellow "Please enter Administrator Email Address: "
+    read email
+    if [ "${email}" == "" ]; then
+        echo "Administrator Email Address will set to webmaster@example.com!"
+        email='webmaster@example.com'
+    else
+        echo "Server Administrator Email:${email}"
+    fi
 
     if [[ -s /usr/local/mysql/bin/mysql || -s /usr/local/mariadb/bin/mysql ]]; then
         Echo_Yellow "Create database and MySQL user with same name (y/n) "
