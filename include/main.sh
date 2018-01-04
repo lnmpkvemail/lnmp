@@ -72,10 +72,11 @@ Database_Selection()
         #set mysql root password
         echo "==========================="
         DB_Root_Password="root"
-        Echo_Yellow "Please setup root password of MySQL.(Default password: root)"
+        Echo_Yellow "Please setup root password of MySQL."
         read -p "Please enter: " DB_Root_Password
         if [ "${DB_Root_Password}" = "" ]; then
-            DB_Root_Password="root"
+            echo "NO input,password will be generated randomly."
+            DB_Root_Password="lnmp.org#$RANDOM"
         fi
         echo "MySQL root password: ${DB_Root_Password}"
 
