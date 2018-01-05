@@ -776,8 +776,9 @@ Add_Letsencrypt()
         cd ..
         rm -f latest.tar.gz
         rm -rf acme.sh-*
-        . "/usr/local/acme.sh/acme.sh.env"
     fi
+
+    . "/usr/local/acme.sh/acme.sh.env"
 
     if [ -s /usr/local/nginx/conf/ssl/${domain}/fullchain.cer ]; then
         echo "Removing exist domain certificate..."
