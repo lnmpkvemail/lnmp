@@ -721,14 +721,14 @@ Add_Letsencrypt()
     else
         cd /tmp
         [[ -s latest.tar.gz ]] && rm -f latest.tar.gz
-        wget https://soft.vpser.net/lib/acme.sh/latest.tar.gz --no-check-certificate
+        wget https://soft.vpser.net/lib/acme.sh/latest.tar.gz --prefer-family=IPv4 --no-check-certificate
         tar zxf latest.tar.gz
         cd acme.sh-*
         ./acme.sh --install --home /usr/local/acme.sh --certhome /usr/local/apache/conf/ssl
         cd ..
         rm -f latest.tar.gz
         rm -rf acme.sh-*
-        source ~/.bashrc
+        . "/usr/local/acme.sh/acme.sh.env"
     fi
 
     if [ -s /usr/local/apache/conf/ssl/${domain}/fullchain.cer ]; then
