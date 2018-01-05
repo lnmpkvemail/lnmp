@@ -97,6 +97,7 @@ Install_Nginx()
     \cp conf/rewrite/codeigniter.conf /usr/local/nginx/conf/codeigniter.conf
     \cp conf/rewrite/laravel.conf /usr/local/nginx/conf/laravel.conf
     \cp conf/rewrite/thinkphp.conf /usr/local/nginx/conf/thinkphp.conf
+    \cp conf/rewrite/yii2.conf /usr/local/nginx/conf/yii2.conf
     \cp conf/pathinfo.conf /usr/local/nginx/conf/pathinfo.conf
     \cp conf/enable-php.conf /usr/local/nginx/conf/enable-php.conf
     \cp conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php-pathinfo.conf
