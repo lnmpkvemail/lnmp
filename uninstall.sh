@@ -85,6 +85,11 @@ Uninstall_LNMP()
         fi
     done
 
+    if [ -s /usr/local/acme.sh/acme.sh ]; then
+        /usr/local/acme.sh/acme.sh --uninstall
+        rm -rf /usr/local/acme.sh
+    fi
+
     rm -f /etc/init.d/nginx
     rm -f /etc/init.d/php-fpm
     rm -f /bin/lnmp
@@ -123,6 +128,11 @@ Uninstall_LNMPA()
         rm -f /etc/init.d/${DB_Name}
     fi
 
+    if [ -s /usr/local/acme.sh/acme.sh ]; then
+        /usr/local/acme.sh/acme.sh --uninstall
+        rm -rf /usr/local/acme.sh
+    fi
+
     rm -f /etc/init.d/nginx
     rm -f /etc/init.d/httpd
     rm -f /bin/lnmp
@@ -157,6 +167,11 @@ Uninstall_LAMP()
         rm -rf /usr/local/${DB_Name}
         rm -f /etc/my.cnf
         rm -f /etc/init.d/${DB_Name}
+    fi
+
+    if [ -s /usr/local/acme.sh/acme.sh ]; then
+        /usr/local/acme.sh/acme.sh --uninstall
+        rm -rf /usr/local/acme.sh
     fi
 
     rm -f /etc/my.cnf
