@@ -204,6 +204,7 @@ Add_VHost()
     read access_log
     if [[ "${access_log}" == "n" || "${access_log}" == "" ]]; then
         echo "Disable access log."
+        al_name="${domain}"
     else
         Echo_Yellow "Enter access log filename(Default:${domain}-access_log): "
         read al_name
@@ -647,6 +648,7 @@ Add_SSL_Info_Menu()
     if [[ "${access_log}" == "n" || "${access_log}" == "" ]]; then
         echo "Disable access log."
         al="access_log off;"
+        al_name="${domain}"
     else
         Echo_Yellow "Enter access log filename(Default:${domain}.log): "
         read al_name

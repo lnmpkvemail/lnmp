@@ -254,6 +254,7 @@ Add_VHost()
     if [[ "${access_log}" == "n" || "${access_log}" == "" ]]; then
         echo "Disable access log."
         al="access_log off;"
+        al_name="${domain}"
     else
         Echo_Yellow "Enter access log filename(Default:${domain}.log): "
         read al_name
@@ -308,8 +309,9 @@ Add_VHost()
 
     echo "Create Virtul Host directory......"
     mkdir -p ${vhostdir}
-    if [ "${access_log}" == "n" ]; then
+    if [ "${access_log}" == "y" ]; then
         touch /home/wwwlogs/${al_name}.log
+        touch /home/wwwlogs/${al_name}-access_log
     fi
     echo "set permissions of Virtual Host directory......"
     chmod -R 755 ${vhostdir}
@@ -704,6 +706,7 @@ Add_SSL_Info_Menu()
     if [[ "${access_log}" == "n" || "${access_log}" == "" ]]; then
         echo "Disable access log."
         al="access_log off;"
+        al_name="${domain}"
     else
         Echo_Yellow "Enter access log filename(Default:${domain}.log): "
         read al_name
