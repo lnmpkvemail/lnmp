@@ -656,6 +656,16 @@ Add_SSL_Info_Menu()
         al="access_log  /home/wwwlogs/${al_name}.log;"
         echo "You access log filename: ${al_name}.log"
     fi
+
+    email=""
+    Echo_Yellow "Please enter Administrator Email Address: "
+    read email
+    if [ "${email}" == "" ]; then
+        echo "Administrator Email Address will set to webmaster@example.com!"
+        email='webmaster@example.com'
+    else
+        echo "Server Administrator Email:${email}"
+    fi
 }
 
 Add_SSL_Menu()
