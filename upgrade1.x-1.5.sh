@@ -36,8 +36,12 @@ elif [ "${Get_Stack}" == "lnmp" ]; then
         for packages in debian-keyring debian-archive-keyring build-essential bison libkrb5-dev libcurl3-gnutls libcurl4-gnutls-dev libcurl4-openssl-dev libcap-dev ca-certificates libc-client2007e-dev psmisc patch git libc-ares-dev libicu-dev e2fsprogs libxslt libxslt1-dev libc-client-dev xz-utils libexpat1-dev;
         do apt-get --no-install-recommends install -y $packages; done
     fi
+    echo "Copy lnmp manager..."
+    sleep 1
     \cp ${cur_dir}/conf/lnmp /bin/lnmp
     chmod +x /bin/lnmp
+    echo "Copy configure files..."
+    sleep 1
     if [ ! -s /usr/local/nginx/conf/enable-php.conf ]; then
         \cp conf/enable-php.conf /usr/local/nginx/conf/enable-php.conf
     fi
@@ -50,22 +54,39 @@ elif [ "${Get_Stack}" == "lnmp" ]; then
     if [ ! -f /usr/local/nginx/conf/none.conf ]; then
         \cp conf/rewrite/none.conf /usr/local/nginx/conf/none.conf
     fi
+    if [ ! -d /usr/local/nginx/conf/vhost ]; then
+        mkdir /usr/local/nginx/conf/vhost
+    fi
 elif [ "${Get_Stack}" == "lnmpa" ]; then
+    echo "Copy lnmp manager..."
+    sleep 1
     \cp ${cur_dir}/conf/lnmpa /bin/lnmp
     chmod +x /bin/lnmp
+    echo "Copy configure files..."
+    sleep 1
     \cp conf/proxy.conf /usr/local/nginx/conf/proxy.conf
     if [ ! -s /usr/local/nginx/conf/proxy-pass-php.conf ]; then
         \cp conf/proxy-pass-php.conf /usr/local/nginx/conf/proxy-pass-php.conf
     fi
+    if [ ! -d /usr/local/nginx/conf/vhost ]; then
+        mkdir /usr/local/nginx/conf/vhost
+    fi
 elif [ "${Get_Stack}" == "lamp" ]; then
+    echo "Copy configure files..."
+    sleep 1
     \cp ${cur_dir}/conf/lamp /bin/lnmp
     chmod +x /bin/lnmp
+    echo "Copy configure files..."
+    sleep 1
     if /usr/local/apache/bin/httpd -v|grep -Eqi "Apache/2.2."; then
         \cp ${cur_dir}/conf/httpd22-ssl.conf  /usr/local/apache/conf/extra/httpd-ssl.conf
     elif /usr/local/apache/bin/httpd -v|grep -Eqi "Apache/2.4."; then
         \cp ${cur_dir}/conf/httpd24-ssl.conf  /usr/local/apache/conf/extra/httpd-ssl.conf
         sed -i 's/^#LoadModule socache_shmcb_module/LoadModule socache_shmcb_module/g' /usr/local/apache/conf/httpd.conf
         sed -i 's/^LoadModule lbmethod_heartbeat_module/#LoadModule lbmethod_heartbeat_module/g' /usr/local/apache/conf/httpd.conf
+    fi
+    if [ ! -d /usr/local/apache/conf/vhost ]; then
+        mkdir /usr/local/apache/conf/vhost
     fi
 fi
 
