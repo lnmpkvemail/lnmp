@@ -11,6 +11,7 @@ LNMP 1.5
 增加Nginx编译参数，默认开启stream；
 增加Apache 2.4支持http2；
 增加旧版本Ubuntu中国地区源；
+增加添加虚拟主机时pathinfo可选项；
 修复深度Deepin桌面版问题；
 移除PHP禁用函数scandir；
 调整默认PHP版本为5.6；
