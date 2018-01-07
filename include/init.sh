@@ -462,9 +462,9 @@ Install_Nghttp2()
     if [[ ! -s /usr/local/nghttp2/lib/libnghttp2.so || ! -s /usr/local/nghttp2/include/nghttp2/nghttp2.h ]]; then
         Echo_Blue "[+] Installing ${Nghttp2_Ver}"
         cd ${cur_dir}/src
-        Download_Files ${Download_Mirror}/lib/nghttp2/${Nghttp2_Ver}.tar.bz2 ${Nghttp2_Ver}.tar.bz2
+        Download_Files ${Download_Mirror}/lib/nghttp2/${Nghttp2_Ver}.tar.xz ${Nghttp2_Ver}.tar.xz
         [[ -d "${Nghttp2_Ver}" ]] && rm -rf ${Nghttp2_Ver}
-        Tarj_Cd ${Nghttp2_Ver}.tar.bz2 ${Nghttp2_Ver}
+        tar Jxf ${Nghttp2_Ver}.tar.xz && cd ${Nghttp2_Ver}
         ./configure --prefix=/usr/local/nghttp2
         make && make install
         cd ${cur_dir}/src/
