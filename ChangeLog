@@ -12,6 +12,7 @@ LNMP 1.5
 增加Apache 2.4支持http2；
 增加旧版本Ubuntu中国地区源；
 增加添加虚拟主机时pathinfo可选项；
+增加certbot升级到acme.sh的一键升级功能命令为 ./upgrade1.x-1.5.sh ssl 按提示输入和原来SSL虚拟主机一样配置的信息就可以；
 修复深度Deepin桌面版问题；
 移除PHP禁用函数scandir；
 调整默认PHP版本为5.6；
