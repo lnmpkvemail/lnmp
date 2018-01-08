@@ -779,6 +779,7 @@ Add_Letsencrypt()
         cd ..
         rm -f latest.tar.gz
         rm -rf acme.sh-*
+        sed -i 's/cat "\$CERT_PATH"$/#cat "\$CERT_PATH"/g' /usr/local/acme.sh/acme.sh
     fi
 
     . "/usr/local/acme.sh/acme.sh.env"
