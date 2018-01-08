@@ -19,6 +19,7 @@ LNMP 1.5
 调整默认Apache版本为2.4；
 调整MySQL/MariaDB安装时未输入密码由原来密码设为 root 调整为 lnmp.org#随机数字 ；
 调整MySQL国内下载源为科大的；
+调整LAMP模式下SSL添加过程增加中间证书可选项；
 其他一些功能优化及调整......
 
 LNMP 1.4
