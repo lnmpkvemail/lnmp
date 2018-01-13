@@ -82,10 +82,10 @@ Install_PHP_Dependent()
 {
     echo "Installing Dependent for PHP..."
     if [ "$PM" = "yum" ]; then
-        yum -y install c-ares-devel libicu-devel libxslt libxslt-devel xz expat-devel libzip-devel
+        yum -y install c-ares-devel libicu-devel libxslt libxslt-devel xz expat-devel libzip-devel bzip2 bzip2-devel
     elif [ "$PM" = "apt" ]; then
         apt-get update
-        apt-get install -y libc-ares-dev libicu-dev e2fsprogs libxslt libxslt1-dev libc-client-dev xz-utils libexpat1-dev
+        apt-get install -y libc-ares-dev libicu-dev e2fsprogs libxslt libxslt1-dev libc-client-dev xz-utils libexpat1-dev bzip2 libbz2-dev
     fi
     Install_Icu4c
 

@@ -32,10 +32,10 @@ Install_Pureftpd()
 
     Echo_Blue "Installing dependent packages..."
     if [ "$PM" = "yum" ]; then
-        yum -y install make gcc gcc-c++ gcc-g77 openssl openssl-devel
+        yum -y install make gcc gcc-c++ gcc-g77 openssl openssl-devel bzip2
     elif [ "$PM" = "apt" ]; then
         apt-get update -y
-        apt-get install -y build-essential gcc g++ make openssl libssl-dev
+        apt-get install -y build-essential gcc g++ make openssl libssl-dev bzip2
     fi
     Echo_Blue "Download files..."
     cd ${cur_dir}/src

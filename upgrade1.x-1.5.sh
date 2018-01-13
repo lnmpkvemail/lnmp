@@ -232,11 +232,11 @@ else
     elif [ "${Get_Stack}" == "lnmp" ]; then
         if [ "$PM" = "yum" ]; then
             Echo_Blue "[+] Yum installing dependent packages..."
-            for packages in patch wget crontabs unzip tar ca-certificates net-tools libc-client-devel psmisc libXpm-devel git-core c-ares-devel libicu-devel libxslt libxslt-devel xz expat-devel;
+            for packages in patch wget crontabs unzip tar ca-certificates net-tools libc-client-devel psmisc libXpm-devel git-core c-ares-devel libicu-devel libxslt libxslt-devel xz expat-devel bzip2 bzip2-devel;
             do yum -y install $packages; done
         elif [ "$PM" = "apt" ]; then
             apt-get update -y
-            for packages in debian-keyring debian-archive-keyring build-essential bison libkrb5-dev libcurl3-gnutls libcurl4-gnutls-dev libcurl4-openssl-dev libcap-dev ca-certificates libc-client2007e-dev psmisc patch git libc-ares-dev libicu-dev e2fsprogs libxslt libxslt1-dev libc-client-dev xz-utils libexpat1-dev;
+            for packages in debian-keyring debian-archive-keyring build-essential bison libkrb5-dev libcurl3-gnutls libcurl4-gnutls-dev libcurl4-openssl-dev libcap-dev ca-certificates libc-client2007e-dev psmisc patch git libc-ares-dev libicu-dev e2fsprogs libxslt libxslt1-dev libc-client-dev xz-utils libexpat1-dev bzip2 libbz2-dev;
             do apt-get --no-install-recommends install -y $packages; done
         fi
         echo "Copy lnmp manager..."
