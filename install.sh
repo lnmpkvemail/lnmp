@@ -211,6 +211,7 @@ case "${Stack}" in
         ;;
     *)
         Echo_Red "Usage: $0 {lnmp|lnmpa|lamp}"
+        Echo_Red "Usage: $0 {nginx|db|mphp}"
         ;;
 esac
 
