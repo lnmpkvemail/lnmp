@@ -55,7 +55,7 @@ lnmp.conf配置文件，可以修改lnmp.conf自定义下载服务器地址、�
 **请勿安装多个缓存类扩展模块，多个可能导致网站出现问题 ！**
 
 #### 图像处理：
-* imageMagick安装卸载执行：`./addons.sh {install|uninstall} imageMagick imageMagick路径：/usr/local/imagemagick/bin/`。
+* imageMagick安装卸载执行：`./addons.sh {install|uninstall} imageMagick` imageMagick路径：/usr/local/imagemagick/bin/。
 
 #### 解密：
 * IonCube安装执行：`./addons.sh {install|uninstall} ionCube`。
