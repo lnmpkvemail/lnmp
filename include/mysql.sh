@@ -248,7 +248,7 @@ write_buffer = 2M
 interactive-timeout
 EOF
     if [ "${InstallInnodb}" = "y" ]; then
-        sed -i 's:^#innodb:innodb:g' /etc/my.cnf
+        sed -i 's/^#innodb/innodb/g' /etc/my.cnf
     else
         sed -i '/^default_storage_engine/d' /etc/my.cnf
         sed -i 's#default_storage_engine.*#default_storage_engine = MyISAM#' /etc/my.cnf
@@ -347,7 +347,7 @@ write_buffer = 2M
 interactive-timeout
 EOF
     if [ "${InstallInnodb}" = "y" ]; then
-        sed -i 's:^#innodb:innodb:g' /etc/my.cnf
+        sed -i 's/^#innodb/innodb/g' /etc/my.cnf
     else
         sed -i '/^default_storage_engine/d' /etc/my.cnf
         sed -i '/skip-external-locking/i\default_storage_engine = MyISAM\nloose-skip-innodb' /etc/my.cnf
@@ -474,7 +474,7 @@ interactive-timeout
 EOF
 
     if [ "${InstallInnodb}" = "y" ]; then
-        sed -i 's:^#innodb:innodb:g' /etc/my.cnf
+        sed -i 's/^#innodb/innodb/g' /etc/my.cnf
     else
         sed -i '/^default_storage_engine/d' /etc/my.cnf
         sed -i '/skip-external-locking/i\innodb=OFF\nignore-builtin-innodb\nskip-innodb\ndefault_storage_engine = MyISAM\ndefault_tmp_storage_engine = MyISAM' /etc/my.cnf
@@ -604,7 +604,7 @@ interactive-timeout
 EOF
 
     if [ "${InstallInnodb}" = "y" ]; then
-        sed -i 's:^#innodb:innodb:g' /etc/my.cnf
+        sed -i 's/^#innodb/innodb/g' /etc/my.cnf
     else
         sed -i '/^default_storage_engine/d' /etc/my.cnf
         sed -i '/skip-external-locking/i\innodb=OFF\nignore-builtin-innodb\nskip-innodb\ndefault_storage_engine = MyISAM\ndefault_tmp_storage_engine = MyISAM' /etc/my.cnf

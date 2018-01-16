@@ -153,7 +153,7 @@ interactive-timeout
 EOF
 
     if [ "${InstallInnodb}" = "y" ]; then
-        sed -i 's:^#innodb:innodb:g' /etc/my.cnf
+        sed -i 's/^#innodb/innodb/g' /etc/my.cnf
     else
         sed -i '/^default_storage_engine/d' /etc/my.cnf
         sed -i 's/^#loose-innodb/loose-innodb/g' /etc/my.cnf
@@ -247,7 +247,7 @@ write_buffer = 2M
 interactive-timeout
 EOF
     if [ "${InstallInnodb}" = "y" ]; then
-        sed -i 's:^#innodb:innodb:g' /etc/my.cnf
+        sed -i 's/^#innodb/innodb/g' /etc/my.cnf
     else
         sed -i '/^default_storage_engine/d' /etc/my.cnf
         sed -i 's/^#loose-innodb/loose-innodb/g' /etc/my.cnf
@@ -341,7 +341,7 @@ write_buffer = 2M
 interactive-timeout
 EOF
     if [ "${InstallInnodb}" = "y" ]; then
-        sed -i 's:^#innodb:innodb:g' /etc/my.cnf
+        sed -i 's/^#innodb/innodb/g' /etc/my.cnf
     else
         sed -i '/^default_storage_engine/d' /etc/my.cnf
         sed -i 's/^#loose-innodb/loose-innodb/g' /etc/my.cnf
@@ -435,7 +435,7 @@ write_buffer = 2M
 interactive-timeout
 EOF
     if [ "${InstallInnodb}" = "y" ]; then
-        sed -i 's:^#innodb:innodb:g' /etc/my.cnf
+        sed -i 's/^#innodb/innodb/g' /etc/my.cnf
     else
         sed -i '/^default_storage_engine/d' /etc/my.cnf
         sed -i 's/^#loose-innodb/loose-innodb/g' /etc/my.cnf
