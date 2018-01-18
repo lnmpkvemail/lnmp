@@ -26,6 +26,7 @@ Backup_MySQL()
 Upgrade_MySQL51()
 {
     Tar_Cd mysql-${mysql_version}.tar.gz mysql-${mysql_version}
+    MySQL_Gcc7_Patch
     if [ $InstallInnodb = "y" ]; then
         ./configure --prefix=/usr/local/mysql --with-extra-charsets=complex --enable-thread-safe-client --enable-assembler --with-mysqld-ldflags=-all-static --with-charset=utf8 --enable-thread-safe-client --with-big-tables --with-readline --with-ssl --with-embedded-server --enable-local-infile --with-plugins=innobase ${MySQL51MAOpt}
     else
@@ -128,6 +129,7 @@ Upgrade_MySQL55()
 
     Tar_Cd mysql-${mysql_version}.tar.gz mysql-${mysql_version}
     MySQL_ARM_Patch
+    MySQL_Gcc7_Patch
     cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL55MAOpt}
     make && make install
 

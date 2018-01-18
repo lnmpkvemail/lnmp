@@ -15,6 +15,18 @@ MySQL_ARM_Patch()
     fi
 }
 
+MySQL_Gcc7_Patch()
+{
+    if gcc -dumpversion|grep -q "^7"; then
+        echo "gcc version: 7"
+        if [ "${DBSelect}" = "1" ] || echo "${mysql_version}" | grep -Eqi '^5.1.'; then
+            patch -p1 < ${cur_dir}/src/patch/mysql-5.1-mysql-gcc7.patch
+        elif [ "${DBSelect}" = "2" ] || echo "${mysql_version}" | grep -Eqi '^5.5.'; then
+            patch -p1 < ${cur_dir}/src/patch/mysql-5.5-mysql-gcc7.patch
+        fi
+    fi
+}
+
 MySQL_Sec_Setting()
 {
     if [ -d "/proc/vz" ]; then
@@ -174,6 +186,7 @@ Install_MySQL_51()
     Echo_Blue "[+] Installing ${Mysql_Ver}..."
     rm -f /etc/my.cnf
     Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}
+    MySQL_Gcc7_Patch
     if [ "${InstallInnodb}" = "y" ]; then
         ./configure --prefix=/usr/local/mysql --with-extra-charsets=complex --enable-thread-safe-client --enable-assembler --with-mysqld-ldflags=-all-static --with-charset=utf8 --enable-thread-safe-client --with-big-tables --with-readline --with-ssl --with-embedded-server --enable-local-infile --with-plugins=innobase ${MySQL51MAOpt}
     else
@@ -279,6 +292,7 @@ Install_MySQL_55()
     rm -f /etc/my.cnf
     Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}
     MySQL_ARM_Patch
+    MySQL_Gcc7_Patch
     cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL55MAOpt}
     make && make install
 
