@@ -218,7 +218,11 @@ EOF
 Multiple_PHP_Select()
 {
     if [[ ! -s /usr/local/php5.2/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.2.conf ]] && [[ ! -s /usr/local/php5.3/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.3.conf ]] && [[ ! -s /usr/local/php5.4/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.4.conf ]] && [[ ! -s /usr/local/php5.5/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.5.conf ]] && [[ ! -s /usr/local/php5.6/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.6.conf ]] && [[ ! -s /usr/local/php7.0/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.0.conf ]] && [[ ! -s /usr/local/php7.1/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.1.conf ]] && [[ ! -s /usr/local/php7.2/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.2.conf ]]; then
-        include_enable_php="include enable-php.conf;"
+        if [ "${enable_pathinfo}" == "y" ]; then
+            include_enable_php="include enable-php-pathinfo.conf;"
+        else
+            include_enable_php="include enable-php.conf;"
+        fi
     else
         echo "Multiple PHP version found, Please select the PHP version."
         Cur_PHP_Version="`/usr/local/php/bin/php-config --version`"
@@ -421,7 +425,8 @@ Add_VHost()
     read enable_pathinfo
     if [[ "${enable_pathinfo}" == "n" || "${enable_pathinfo}" == "" ]]; then
         echo "Disable pathinfo."
-    elif [ "${allow_rewrite}" == "y" ]; then
+        enable_pathinfo="n"
+    elif [ "${enable_pathinfo}" == "y" ]; then
         echo "Enable pathinfo."
         enable_pathinfo="y"
     fi
@@ -453,7 +458,7 @@ Add_VHost()
         fi
     fi
 
-    if [ -f /usr/local/pureftpd/sbin/pure-ftpd ]; then
+    if [ -s /usr/local/pureftpd/sbin/pure-ftpd ]; then
         Echo_Yellow "Create ftp account (y/n) "
         read create_ftp
 
