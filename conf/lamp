@@ -34,7 +34,7 @@ lamp_stop()
 lamp_reload()
 {
     echo "Reload LAMP..."
-    /etc/init.d/httpd reload
+    /etc/init.d/httpd graceful
     /etc/init.d/mysql reload
 }
 

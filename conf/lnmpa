@@ -38,7 +38,7 @@ lnmpa_reload()
     echo "Reload LNMPA..."
     /etc/init.d/nginx reload
     /etc/init.d/mysql reload
-    /etc/init.d/httpd reload
+    /etc/init.d/httpd graceful
 }
 
 lnmpa_kill()
@@ -212,7 +212,7 @@ EOF
     echo "Test Apache configure file..."
     /etc/init.d/httpd configtest
     echo "Restart Apache..."
-    /etc/init.d/httpd restart
+    /etc/init.d/httpd graceful
 }
 
 Add_VHost()
