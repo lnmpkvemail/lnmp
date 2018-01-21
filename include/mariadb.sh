@@ -1,5 +1,17 @@
 #!/bin/bash
 
+MariaDB_WITHSSL()
+{
+    if /usr/bin/openssl version | grep -Eqi "OpenSSL 1.1.*"; then
+        if [[ "${DBSelect}" =~ ^[67]$ ]] || echo "${mysql_version}" | grep -Eqi '^10.[01].'; then
+            Install_Openssl
+            MariaDBWITHSSL='-DWITH_SSL=/usr/local/openssl'
+        else
+            MariaDBWITHSSL=''
+        fi
+    fi
+}
+
 Mariadb_Sec_Setting()
 {
     cat > /etc/ld.so.conf.d/mariadb.conf<<EOF
@@ -29,11 +41,11 @@ EOF
 user=root
 password=''
 EOF
-    /usr/local/mariadb/bin/mysql --defaults-file=~/.emptymy.cnf -e "UPDATE mysql.user SET Password=PASSWORD('${DB_Root_Password}') WHERE User='root';"
-    [ $? -eq 0 ] && echo "Set password Sucessfully." || echo "Set password failed!"
-    /usr/local/mariadb/bin/mysql --defaults-file=~/.emptymy.cnf -e "FLUSH PRIVILEGES;"
-    [ $? -eq 0 ] && echo "FLUSH PRIVILEGES Sucessfully." || echo "FLUSH PRIVILEGES failed!"
-    rm -f ~/.emptymy.cnf
+        /usr/local/mariadb/bin/mysql --defaults-file=~/.emptymy.cnf -e "UPDATE mysql.user SET Password=PASSWORD('${DB_Root_Password}') WHERE User='root';"
+        [ $? -eq 0 ] && echo "Set password Sucessfully." || echo "Set password failed!"
+        /usr/local/mariadb/bin/mysql --defaults-file=~/.emptymy.cnf -e "FLUSH PRIVILEGES;"
+        [ $? -eq 0 ] && echo "FLUSH PRIVILEGES Sucessfully." || echo "FLUSH PRIVILEGES failed!"
+        rm -f ~/.emptymy.cnf
     fi
     /etc/init.d/mariadb restart
 
@@ -174,8 +186,9 @@ Install_MariaDB_10()
 {
     Echo_Blue "[+] Installing ${Mariadb_Ver}..."
     rm -f /etc/my.cnf
+    MariaDB_WITHSSL
     Tar_Cd ${Mariadb_Ver}.tar.gz ${Mariadb_Ver}
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MariaDBMAOpt}
+    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MariaDBWITHSSL} ${MariaDBMAOpt}
     make && make install
 
     groupadd mariadb
@@ -268,8 +281,9 @@ Install_MariaDB_101()
 {
     Echo_Blue "[+] Installing ${Mariadb_Ver}..."
     rm -f /etc/my.cnf
+    MariaDB_WITHSSL
     Tar_Cd ${Mariadb_Ver}.tar.gz ${Mariadb_Ver}
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1 ${MariaDBMAOpt}
+    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1 ${MariaDBWITHSSL} ${MariaDBMAOpt}
     make && make install
 
     groupadd mariadb
