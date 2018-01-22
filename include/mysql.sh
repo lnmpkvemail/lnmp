@@ -41,9 +41,13 @@ MySQL_Sec_Setting()
     ln -sf /usr/local/mysql/bin/mysqld_safe /usr/bin/mysqld_safe
     ln -sf /usr/local/mysql/bin/mysqlcheck /usr/bin/mysqlcheck
 
+    /etc/init.d/mysql restart
+    sleep 2
+
     /usr/local/mysql/bin/mysqladmin -u root password "${DB_Root_Password}"
     if [ $? -ne 0 ]; then
         echo "failed, try other way..."
+        /etc/init.d/mysql restart
         cat >~/.emptymy.cnf<<EOF
 [client]
 user=root

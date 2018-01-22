@@ -33,9 +33,13 @@ EOF
     ln -sf /usr/local/mariadb/bin/mysqld_safe /usr/bin/mysqld_safe
     ln -sf /usr/local/mariadb/bin/mysqlcheck /usr/bin/mysqlcheck
 
+    /etc/init.d/mariadb restart
+    sleep 2
+
     /usr/local/mariadb/bin/mysqladmin -u root password "${DB_Root_Password}"
     if [ $? -ne 0 ]; then
         echo "failed, try other way..."
+        /etc/init.d/mariadb restart
         cat >~/.emptymy.cnf<<EOF
 [client]
 user=root
