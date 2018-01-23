@@ -248,9 +248,17 @@ Apache_Selection()
 Kill_PM()
 {
     if ps aux | grep "yum" | grep -qv "grep"; then
-        killall yum
+        if [ -s /usr/bin/killall ]; then
+            killall yum
+        else
+            kill `pidof yum`
+        fi
     elif ps aux | grep "apt-get" | grep -qv "grep"; then
-        killall apt-get
+        if [ -s /usr/bin/killall ]; then
+            killall apt-get
+        else
+            kill `pidof apt-get`
+        fi
     fi
 }
 
