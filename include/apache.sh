@@ -15,7 +15,7 @@ Install_Apache_22()
     Tarj_Cd ${Apache_Ver}.tar.bz2 ${Apache_Ver}
     ./configure --prefix=/usr/local/apache --enable-mods-shared=most --enable-headers --enable-mime-magic --enable-proxy --enable-so --enable-rewrite --with-ssl --enable-ssl --enable-deflate --enable-suexec --with-included-apr --with-expat=builtin
     make && make install
-    cp ${cur_dir}/src
+    cd ${cur_dir}/src
     rm -rf ${cur_dir}/src/${Apache_Ver}
 
     mv /usr/local/apache/conf/httpd.conf /usr/local/apache/conf/httpd.conf.bak
