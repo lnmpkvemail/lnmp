@@ -435,7 +435,7 @@ Print_APP_Ver()
 {
     echo "You will install ${Stack} stack."
     if [ "${Stack}" != "lamp" ]; then
-        echo ${Nginx_Ver}
+        echo "${Nginx_Ver}"
     fi
 
     if [[ "${DBSelect}" =~ ^[1234]$ ]]; then
@@ -462,6 +462,12 @@ Print_APP_Ver()
     echo "Download Mirror: ${Download_Mirror}"
     echo "Nginx Additional Modules: ${Nginx_Modules_Options}"
     echo "PHP Additional Modules: ${PHP_Modules_Options}"
+    if [ "${Enable_PHP_Fileinfo}" = "y" ]; then
+        echo "enable PHP fileinfo."
+    fi
+    if [ "${Enable_Nginx_Lua}" = "y" ]; then
+        echo "enable Nginx Lua."
+    fi
     if [[ "${DBSelect}" =~ ^[1234]$ ]]; then
         echo "Database Directory: ${MySQL_Data_Dir}"
     elif [[ "${DBSelect}" =~ ^[5678]$ ]]; then
