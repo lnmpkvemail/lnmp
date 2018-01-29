@@ -534,7 +534,7 @@ Check_Mirror()
                     echo "Change to mirror http://soft1.vpser.net"
                     Download_Mirror='http://soft1.vpser.net'
                 else
-                    echo "Change to mirror fttp://soft.vpser.net"
+                    echo "Change to mirror ftp://soft.vpser.net"
                     Download_Mirror='ftp://soft.vpser.net'
                 fi
             else
