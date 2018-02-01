@@ -84,7 +84,7 @@ if [ "${isSSL}" == "ssl" ]; then
             wget https://soft.vpser.net/lib/acme.sh/latest.tar.gz --prefer-family=IPv4 --no-check-certificate
             tar zxf latest.tar.gz
             cd acme.sh-*
-            ./acme.sh --install --home /usr/local/acme.sh --certhome /usr/local/nginx/conf/ssl
+            ./acme.sh --install --log --home /usr/local/acme.sh --certhome /usr/local/nginx/conf/ssl
             cd ..
             rm -f latest.tar.gz
             rm -rf acme.sh-*
@@ -179,7 +179,7 @@ if [ "${isSSL}" == "ssl" ]; then
             wget https://soft.vpser.net/lib/acme.sh/latest.tar.gz --prefer-family=IPv4 --no-check-certificate
             tar zxf latest.tar.gz
             cd acme.sh-*
-            ./acme.sh --install --home /usr/local/acme.sh --certhome /usr/local/apache/conf/ssl
+            ./acme.sh --install --log --home /usr/local/acme.sh --certhome /usr/local/apache/conf/ssl
             cd ..
             rm -f latest.tar.gz
             rm -rf acme.sh-*
