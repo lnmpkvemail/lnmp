@@ -526,25 +526,30 @@ Check_Mirror()
     country=`curl -sSk --connect-timeout 30 -m 60 https://ip.vpser.net/country`
     echo "Server Location: ${country}"
     if [ "${Download_Mirror}" = "https://soft.vpser.net" ]; then
+        echo "Try http://soft.vpser.net ..."
         mirror_code=`curl -o /dev/null -m 20 --connect-timeout 20 -sk -w %{http_code} http://soft.vpser.net`
         if [ "${mirror_code}" != "200" ]; then
-            if [ "${country}" = "CN" ]; then
+            if [[ "${country}" = "CN" || "${country}" = "" ]]; then
+                echo "Try http://soft1.vpser.net ..."
                 mirror_code=`curl -o /dev/null -m 20 --connect-timeout 20 -sk -w %{http_code} http://soft1.vpser.net`
                 if [ "${mirror_code}" = "200" ]; then
                     echo "Change to mirror http://soft1.vpser.net"
                     Download_Mirror='http://soft1.vpser.net'
                 else
-                    echo "Change to mirror ftp://soft.vpser.net"
-                    Download_Mirror='ftp://soft.vpser.net'
+                    echo "Can not connect to download mirror,Please modify lnmp.conf manually."
+                    echo "More info,please visit https://lnmp.org/faq/download-url.html"
+                    exit 1
                 fi
             else
+                echo "Try http://soft2.vpser.net ..."
                 mirror_code=`curl -o /dev/null -m 20 --connect-timeout 20 -sk -w %{http_code} http://soft2.vpser.net`
                 if [ "${mirror_code}" = "200" ]; then
                     echo "Change to mirror http://soft2.vpser.net"
                     Download_Mirror='http://soft2.vpser.net'
                 else
-                    echo "Change to mirror ftp://soft.vpser.net"
-                    Download_Mirror='ftp://soft.vpser.net'
+                    echo "Can not connect to download mirror,Please modify lnmp.conf manually."
+                    echo "More info,please visit https://lnmp.org/faq/download-url.html"
+                    exit 1
                 fi
             fi
         fi
