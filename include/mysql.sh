@@ -15,13 +15,24 @@ MySQL_ARM_Patch()
     fi
 }
 
+MySQL_Gcc7_Patch()
+{
+    if gcc -dumpversion|grep -q "^7"; then
+        echo "gcc version: 7"
+        if [ "${DBSelect}" = "1" ] || echo "${mysql_version}" | grep -Eqi '^5.1.'; then
+            patch -p1 < ${cur_dir}/src/patch/mysql-5.1-mysql-gcc7.patch
+        elif [ "${DBSelect}" = "2" ] || echo "${mysql_version}" | grep -Eqi '^5.5.'; then
+            patch -p1 < ${cur_dir}/src/patch/mysql-5.5-mysql-gcc7.patch
+        fi
+    fi
+}
+
 MySQL_Sec_Setting()
 {
-    if [ -d "/proc/vz" ];then
+    if [ -d "/proc/vz" ]; then
         ulimit -s unlimited
     fi
 
-    StartUp mysql
     /etc/init.d/mysql start
 
     ln -sf /usr/local/mysql/bin/mysql /usr/bin/mysql
@@ -30,9 +41,13 @@ MySQL_Sec_Setting()
     ln -sf /usr/local/mysql/bin/mysqld_safe /usr/bin/mysqld_safe
     ln -sf /usr/local/mysql/bin/mysqlcheck /usr/bin/mysqlcheck
 
+    /etc/init.d/mysql restart
+    sleep 2
+
     /usr/local/mysql/bin/mysqladmin -u root password "${DB_Root_Password}"
     if [ $? -ne 0 ]; then
         echo "failed, try other way..."
+        /etc/init.d/mysql restart
         cat >~/.emptymy.cnf<<EOF
 [client]
 user=root
@@ -94,7 +109,7 @@ MySQL_Opt()
         sed -i "s#^tmp_table_size.*#tmp_table_size = 32M#" /etc/my.cnf
         sed -i "s#^innodb_buffer_pool_size.*#innodb_buffer_pool_size = 128M#" /etc/my.cnf
         sed -i "s#^innodb_log_file_size.*#innodb_log_file_size = 32M#" /etc/my.cnf
-        sed -i "s#^performance_schema_max_table_instances.*#performance_schema_max_table_instances = 1000" /etc/my.cnf
+        sed -i "s#^performance_schema_max_table_instances.*#performance_schema_max_table_instances = 1000#" /etc/my.cnf
     elif [[ ${MemTotal} -ge 2048 && ${MemTotal} -lt 4096 ]]; then
         sed -i "s#^key_buffer_size.*#key_buffer_size = 64M#" /etc/my.cnf
         sed -i "s#^table_open_cache.*#table_open_cache = 256#" /etc/my.cnf
@@ -106,7 +121,7 @@ MySQL_Opt()
         sed -i "s#^tmp_table_size.*#tmp_table_size = 64M#" /etc/my.cnf
         sed -i "s#^innodb_buffer_pool_size.*#innodb_buffer_pool_size = 256M#" /etc/my.cnf
         sed -i "s#^innodb_log_file_size.*#innodb_log_file_size = 64M#" /etc/my.cnf
-        sed -i "s#^performance_schema_max_table_instances.*#performance_schema_max_table_instances = 2000" /etc/my.cnf
+        sed -i "s#^performance_schema_max_table_instances.*#performance_schema_max_table_instances = 2000#" /etc/my.cnf
     elif [[ ${MemTotal} -ge 4096 && ${MemTotal} -lt 8192 ]]; then
         sed -i "s#^key_buffer_size.*#key_buffer_size = 128M#" /etc/my.cnf
         sed -i "s#^table_open_cache.*#table_open_cache = 512#" /etc/my.cnf
@@ -118,7 +133,7 @@ MySQL_Opt()
         sed -i "s#^tmp_table_size.*#tmp_table_size = 64M#" /etc/my.cnf
         sed -i "s#^innodb_buffer_pool_size.*#innodb_buffer_pool_size = 512M#" /etc/my.cnf
         sed -i "s#^innodb_log_file_size.*#innodb_log_file_size = 128M#" /etc/my.cnf
-        sed -i "s#^performance_schema_max_table_instances.*#performance_schema_max_table_instances = 4000" /etc/my.cnf
+        sed -i "s#^performance_schema_max_table_instances.*#performance_schema_max_table_instances = 4000#" /etc/my.cnf
     elif [[ ${MemTotal} -ge 8192 && ${MemTotal} -lt 16384 ]]; then
         sed -i "s#^key_buffer_size.*#key_buffer_size = 256M#" /etc/my.cnf
         sed -i "s#^table_open_cache.*#table_open_cache = 1024#" /etc/my.cnf
@@ -130,7 +145,7 @@ MySQL_Opt()
         sed -i "s#^tmp_table_size.*#tmp_table_size = 128M#" /etc/my.cnf
         sed -i "s#^innodb_buffer_pool_size.*#innodb_buffer_pool_size = 1024M#" /etc/my.cnf
         sed -i "s#^innodb_log_file_size.*#innodb_log_file_size = 256M#" /etc/my.cnf
-        sed -i "s#^performance_schema_max_table_instances.*#performance_schema_max_table_instances = 6000" /etc/my.cnf
+        sed -i "s#^performance_schema_max_table_instances.*#performance_schema_max_table_instances = 6000#" /etc/my.cnf
     elif [[ ${MemTotal} -ge 16384 && ${MemTotal} -lt 32768 ]]; then
         sed -i "s#^key_buffer_size.*#key_buffer_size = 512M#" /etc/my.cnf
         sed -i "s#^table_open_cache.*#table_open_cache = 2048#" /etc/my.cnf
@@ -142,7 +157,7 @@ MySQL_Opt()
         sed -i "s#^tmp_table_size.*#tmp_table_size = 256M#" /etc/my.cnf
         sed -i "s#^innodb_buffer_pool_size.*#innodb_buffer_pool_size = 2048M#" /etc/my.cnf
         sed -i "s#^innodb_log_file_size.*#innodb_log_file_size = 512M#" /etc/my.cnf
-        sed -i "s#^performance_schema_max_table_instances.*#performance_schema_max_table_instances = 8000" /etc/my.cnf
+        sed -i "s#^performance_schema_max_table_instances.*#performance_schema_max_table_instances = 8000#" /etc/my.cnf
     elif [[ ${MemTotal} -ge 32768 ]]; then
         sed -i "s#^key_buffer_size.*#key_buffer_size = 1024M#" /etc/my.cnf
         sed -i "s#^table_open_cache.*#table_open_cache = 4096#" /etc/my.cnf
@@ -154,7 +169,7 @@ MySQL_Opt()
         sed -i "s#^tmp_table_size.*#tmp_table_size = 512M#" /etc/my.cnf
         sed -i "s#^innodb_buffer_pool_size.*#innodb_buffer_pool_size = 4096M#" /etc/my.cnf
         sed -i "s#^innodb_log_file_size.*#innodb_log_file_size = 1024M#" /etc/my.cnf
-        sed -i "s#^performance_schema_max_table_instances.*#performance_schema_max_table_instances = 10000" /etc/my.cnf
+        sed -i "s#^performance_schema_max_table_instances.*#performance_schema_max_table_instances = 10000#" /etc/my.cnf
     fi
 }
 
@@ -175,6 +190,7 @@ Install_MySQL_51()
     Echo_Blue "[+] Installing ${Mysql_Ver}..."
     rm -f /etc/my.cnf
     Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}
+    MySQL_Gcc7_Patch
     if [ "${InstallInnodb}" = "y" ]; then
         ./configure --prefix=/usr/local/mysql --with-extra-charsets=complex --enable-thread-safe-client --enable-assembler --with-mysqld-ldflags=-all-static --with-charset=utf8 --enable-thread-safe-client --with-big-tables --with-readline --with-ssl --with-embedded-server --enable-local-infile --with-plugins=innobase ${MySQL51MAOpt}
     else
@@ -249,7 +265,7 @@ write_buffer = 2M
 interactive-timeout
 EOF
     if [ "${InstallInnodb}" = "y" ]; then
-        sed -i 's:^#innodb:innodb:g' /etc/my.cnf
+        sed -i 's/^#innodb/innodb/g' /etc/my.cnf
     else
         sed -i '/^default_storage_engine/d' /etc/my.cnf
         sed -i 's#default_storage_engine.*#default_storage_engine = MyISAM#' /etc/my.cnf
@@ -280,6 +296,7 @@ Install_MySQL_55()
     rm -f /etc/my.cnf
     Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}
     MySQL_ARM_Patch
+    MySQL_Gcc7_Patch
     cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL55MAOpt}
     make && make install
 
@@ -348,7 +365,7 @@ write_buffer = 2M
 interactive-timeout
 EOF
     if [ "${InstallInnodb}" = "y" ]; then
-        sed -i 's:^#innodb:innodb:g' /etc/my.cnf
+        sed -i 's/^#innodb/innodb/g' /etc/my.cnf
     else
         sed -i '/^default_storage_engine/d' /etc/my.cnf
         sed -i '/skip-external-locking/i\default_storage_engine = MyISAM\nloose-skip-innodb' /etc/my.cnf
@@ -475,7 +492,7 @@ interactive-timeout
 EOF
 
     if [ "${InstallInnodb}" = "y" ]; then
-        sed -i 's:^#innodb:innodb:g' /etc/my.cnf
+        sed -i 's/^#innodb/innodb/g' /etc/my.cnf
     else
         sed -i '/^default_storage_engine/d' /etc/my.cnf
         sed -i '/skip-external-locking/i\innodb=OFF\nignore-builtin-innodb\nskip-innodb\ndefault_storage_engine = MyISAM\ndefault_tmp_storage_engine = MyISAM' /etc/my.cnf
@@ -605,7 +622,7 @@ interactive-timeout
 EOF
 
     if [ "${InstallInnodb}" = "y" ]; then
-        sed -i 's:^#innodb:innodb:g' /etc/my.cnf
+        sed -i 's/^#innodb/innodb/g' /etc/my.cnf
     else
         sed -i '/^default_storage_engine/d' /etc/my.cnf
         sed -i '/skip-external-locking/i\innodb=OFF\nignore-builtin-innodb\nskip-innodb\ndefault_storage_engine = MyISAM\ndefault_tmp_storage_engine = MyISAM' /etc/my.cnf

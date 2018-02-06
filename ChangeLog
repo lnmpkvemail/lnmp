@@ -1,5 +1,27 @@
 更新记录
 
+LNMP 1.5
+
+增加PHP 7.2支持；
+增加MariaDB 10.2支持；
+增加PHP模块fileinfo选项，安装或升级时可以选择是否安装开启，选项在安装包目录下 lnmp.conf 中 Enable_PHP_Fileinfo 默认为 n 不开启，如有安装设置为 y ；
+增加Nginx lua模块选项，安装或升级时可以选择是否为nginx安装开启lua，选项在安装包目录下 lnmp.conf 中 Enable_Nginx_Lua 默认为 n 不开启，如有安装设置为 y ；
+增加thinkphp、yii2、codeigniter、laravel伪静态；
+增加使用acme.sh生成SSL证书，移除官方的certbot；
+增加Nginx编译参数，默认开启stream；
+增加Apache 2.4支持http2；
+增加旧版本Ubuntu中国地区源；
+增加添加虚拟主机时pathinfo可选项；
+增加certbot升级到acme.sh的一键升级功能命令为 ./upgrade1.x-1.5.sh ssl 按提示输入和原来SSL虚拟主机一样配置的信息就可以；
+修复深度Deepin桌面版问题；
+移除PHP禁用函数scandir；
+调整默认PHP版本为5.6；
+调整默认Apache版本为2.4；
+调整MySQL/MariaDB安装时未输入密码由原来密码设为 root 调整为 lnmp.org#随机数字 ；
+调整MySQL国内下载源为科大的；
+调整LAMP模式下SSL添加过程增加中间证书可选项；
+其他一些功能优化及调整......
+
 LNMP 1.4
 
 增加LNMP模式下多PHP版本安装，安装包目录下运行：./install.sh mphp 进行安装；

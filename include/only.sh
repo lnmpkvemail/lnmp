@@ -13,7 +13,7 @@ Nginx_Dependent()
         for removepackages in apache2 apache2-doc apache2-utils apache2.2-common apache2.2-bin apache2-mpm-prefork apache2-doc apache2-mpm-worker;
         do apt-get purge -y $removepackages; done
         for packages in debian-keyring debian-archive-keyring build-essential gcc g++ make autoconf automake wget cron openssl libssl-dev zlib1g zlib1g-dev ;
-        do apt-get --no-install-recommends install -y $packages --force-yes; done
+        do apt-get --no-install-recommends install -y $packages; done
     fi
 }
 
@@ -45,8 +45,25 @@ Install_Only_Nginx()
     Add_Iptables_Rules
     \cp ${cur_dir}/conf/index.html ${Default_Website_Dir}/index.html
     Check_Nginx_Files
-    exit 0
-    exit 0
+}
+
+DB_Dependent()
+{
+    if [ "$PM" = "yum" ]; then
+        rpm -qa|grep mysql
+        rpm -e mysql mysql-libs --nodeps
+        yum -y remove mysql-server mysql mysql-libs
+        for packages in make cmake gcc gcc-c++ gcc-g77 flex bison wget zlib zlib-devel openssl openssl-devel ncurses ncurses-devel libaio-devel;
+        do yum -y install $packages; done
+    elif [ "$PM" = "apt" ]; then
+        apt-get update -y
+        dpkg -l |grep mysql
+        dpkg -P mysql-server mysql-common libmysqlclient15off libmysqlclient15-dev
+        for removepackages in mysql-client mysql-server mysql-common mysql-server-core-5.5 mysql-client-5.5;
+        do apt-get purge -y $removepackages; done
+        for packages in debian-keyring debian-archive-keyring build-essential gcc g++ make cmake autoconf automake wget openssl libssl-dev zlib1g zlib1g-dev libncurses5 libncurses5-dev bison libaio-dev;
+        do apt-get --no-install-recommends install -y $packages; done
+    fi
 }
 
 Install_Database()
@@ -55,17 +72,13 @@ Install_Database()
     cd ${cur_dir}/src
     if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
         Download_Files ${Download_Mirror}/datebase/mysql/${Mysql_Ver}.tar.gz ${Mysql_Ver}.tar.gz
-    elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
+    elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" || "${DBSelect}" = "8" ]]; then
         Download_Files ${Download_Mirror}/datebase/mariadb/${Mariadb_Ver}.tar.gz ${Mariadb_Ver}.tar.gz
     fi
     echo "============================check files=================================="
 
     Echo_Blue "Install dependent packages..."
-    if [ "$PM" = "yum" ]; then
-        CentOS_Dependent
-    elif [ "$PM" = "apt" ]; then
-        Deb_Dependent
-    fi
+    DB_Dependent
     if [ "${DBSelect}" = "1" ]; then
         Install_MySQL_51
     elif [ "${DBSelect}" = "2" ]; then
@@ -80,29 +93,27 @@ Install_Database()
         Install_MariaDB_10
     elif [ "${DBSelect}" = "7" ]; then
         Install_MariaDB_101
+    elif [ "${DBSelect}" = "8" ]; then
+        Install_MariaDB_102
     fi
     TempMycnf_Clean
 
-    if [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
+    if [[ "${DBSelect}" =~ ^[5678]$ ]]; then
         StartUp mariadb
         /etc/init.d/mariadb start
-    elif [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
+    elif [[ "${DBSelect}" =~ ^[1234]$ ]]; then
         StartUp mysql
         /etc/init.d/mysql start
     fi
 
     Check_DB_Files
     if [[ "${isDB}" = "ok" ]]; then
-        if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
+        if [[ "${DBSelect}" =~ ^[1234]$ ]]; then
             Echo_Green "MySQL root password: ${DB_Root_Password}"
             Echo_Green "Install ${Mysql_Ver} completed! enjoy it."
-            exit 0
-            exit 0
-        elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
+        elif [[ "${DBSelect}" =~ ^[5678]$ ]]; then
             Echo_Green "MariaDB root password: ${DB_Root_Password}"
             Echo_Green "Install ${Mariadb_Ver} completed! enjoy it."
-            exit 0
-            exit 0
         fi
     fi
 }

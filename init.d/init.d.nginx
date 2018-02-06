@@ -60,7 +60,7 @@ case "$1" in
 
         if [ "$?" != 0 ] ; then
             echo " failed. Use force-quit"
-            exit 1
+            $0 force-quit
         else
             echo " done"
         fi

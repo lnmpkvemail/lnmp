@@ -1,5 +1,17 @@
 #!/bin/bash
 
+MariaDB_WITHSSL()
+{
+    if /usr/bin/openssl version | grep -Eqi "OpenSSL 1.1.*"; then
+        if [[ "${DBSelect}" =~ ^[67]$ ]] || echo "${mysql_version}" | grep -Eqi '^10.[01].'; then
+            Install_Openssl
+            MariaDBWITHSSL='-DWITH_SSL=/usr/local/openssl'
+        else
+            MariaDBWITHSSL=''
+        fi
+    fi
+}
+
 Mariadb_Sec_Setting()
 {
     cat > /etc/ld.so.conf.d/mariadb.conf<<EOF
@@ -21,19 +33,23 @@ EOF
     ln -sf /usr/local/mariadb/bin/mysqld_safe /usr/bin/mysqld_safe
     ln -sf /usr/local/mariadb/bin/mysqlcheck /usr/bin/mysqlcheck
 
+    /etc/init.d/mariadb restart
+    sleep 2
+
     /usr/local/mariadb/bin/mysqladmin -u root password "${DB_Root_Password}"
     if [ $? -ne 0 ]; then
         echo "failed, try other way..."
+        /etc/init.d/mariadb restart
         cat >~/.emptymy.cnf<<EOF
 [client]
 user=root
 password=''
 EOF
-    /usr/local/mariadb/bin/mysql --defaults-file=~/.emptymy.cnf -e "UPDATE mysql.user SET Password=PASSWORD('${DB_Root_Password}') WHERE User='root';"
-    [ $? -eq 0 ] && echo "Set password Sucessfully." || echo "Set password failed!"
-    /usr/local/mariadb/bin/mysql --defaults-file=~/.emptymy.cnf -e "FLUSH PRIVILEGES;"
-    [ $? -eq 0 ] && echo "FLUSH PRIVILEGES Sucessfully." || echo "FLUSH PRIVILEGES failed!"
-    rm -f ~/.emptymy.cnf
+        /usr/local/mariadb/bin/mysql --defaults-file=~/.emptymy.cnf -e "UPDATE mysql.user SET Password=PASSWORD('${DB_Root_Password}') WHERE User='root';"
+        [ $? -eq 0 ] && echo "Set password Sucessfully." || echo "Set password failed!"
+        /usr/local/mariadb/bin/mysql --defaults-file=~/.emptymy.cnf -e "FLUSH PRIVILEGES;"
+        [ $? -eq 0 ] && echo "FLUSH PRIVILEGES Sucessfully." || echo "FLUSH PRIVILEGES failed!"
+        rm -f ~/.emptymy.cnf
     fi
     /etc/init.d/mariadb restart
 
@@ -153,7 +169,7 @@ interactive-timeout
 EOF
 
     if [ "${InstallInnodb}" = "y" ]; then
-        sed -i 's:^#innodb:innodb:g' /etc/my.cnf
+        sed -i 's/^#innodb/innodb/g' /etc/my.cnf
     else
         sed -i '/^default_storage_engine/d' /etc/my.cnf
         sed -i 's/^#loose-innodb/loose-innodb/g' /etc/my.cnf
@@ -174,8 +190,9 @@ Install_MariaDB_10()
 {
     Echo_Blue "[+] Installing ${Mariadb_Ver}..."
     rm -f /etc/my.cnf
+    MariaDB_WITHSSL
     Tar_Cd ${Mariadb_Ver}.tar.gz ${Mariadb_Ver}
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MariaDBMAOpt}
+    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MariaDBWITHSSL} ${MariaDBMAOpt}
     make && make install
 
     groupadd mariadb
@@ -247,7 +264,7 @@ write_buffer = 2M
 interactive-timeout
 EOF
     if [ "${InstallInnodb}" = "y" ]; then
-        sed -i 's:^#innodb:innodb:g' /etc/my.cnf
+        sed -i 's/^#innodb/innodb/g' /etc/my.cnf
     else
         sed -i '/^default_storage_engine/d' /etc/my.cnf
         sed -i 's/^#loose-innodb/loose-innodb/g' /etc/my.cnf
@@ -265,6 +282,101 @@ EOF
 }
 
 Install_MariaDB_101()
+{
+    Echo_Blue "[+] Installing ${Mariadb_Ver}..."
+    rm -f /etc/my.cnf
+    MariaDB_WITHSSL
+    Tar_Cd ${Mariadb_Ver}.tar.gz ${Mariadb_Ver}
+    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1 ${MariaDBWITHSSL} ${MariaDBMAOpt}
+    make && make install
+
+    groupadd mariadb
+    useradd -s /sbin/nologin -M -g mariadb mariadb
+
+cat > /etc/my.cnf<<EOF
+[client]
+#password   = your_password
+port        = 3306
+socket      = /tmp/mysql.sock
+
+[mysqld]
+port        = 3306
+socket      = /tmp/mysql.sock
+user    = mariadb
+basedir = /usr/local/mariadb
+datadir = ${MariaDB_Data_Dir}
+log_error = ${MariaDB_Data_Dir}/mariadb.err
+pid-file = ${MariaDB_Data_Dir}/mariadb.pid
+skip-external-locking
+key_buffer_size = 16M
+max_allowed_packet = 1M
+table_open_cache = 64
+sort_buffer_size = 512K
+net_buffer_length = 8K
+read_buffer_size = 256K
+read_rnd_buffer_size = 512K
+myisam_sort_buffer_size = 8M
+thread_cache_size = 8
+query_cache_size = 8M
+tmp_table_size = 16M
+
+explicit_defaults_for_timestamp = true
+#skip-networking
+max_connections = 500
+max_connect_errors = 100
+open_files_limit = 65535
+
+log-bin=mysql-bin
+binlog_format=mixed
+server-id   = 1
+expire_logs_days = 10
+
+default_storage_engine = InnoDB
+#innodb_file_per_table = 1
+#innodb_data_home_dir = ${MariaDB_Data_Dir}
+#innodb_data_file_path = ibdata1:10M:autoextend
+#innodb_log_group_home_dir = ${MariaDB_Data_Dir}
+#innodb_buffer_pool_size = 16M
+#innodb_log_file_size = 5M
+#innodb_log_buffer_size = 8M
+#innodb_flush_log_at_trx_commit = 1
+#innodb_lock_wait_timeout = 50
+
+[mysqldump]
+quick
+max_allowed_packet = 16M
+
+[mysql]
+no-auto-rehash
+
+[myisamchk]
+key_buffer_size = 20M
+sort_buffer_size = 20M
+read_buffer = 2M
+write_buffer = 2M
+
+[mysqlhotcopy]
+interactive-timeout
+EOF
+    if [ "${InstallInnodb}" = "y" ]; then
+        sed -i 's/^#innodb/innodb/g' /etc/my.cnf
+    else
+        sed -i '/^default_storage_engine/d' /etc/my.cnf
+        sed -i 's/^#loose-innodb/loose-innodb/g' /etc/my.cnf
+        sed -i '/skip-external-locking/i\default_storage_engine = MyISAM\nloose-skip-innodb' /etc/my.cnf
+    fi
+    MySQL_Opt
+    Check_MariaDB_Data_Dir
+    chown -R mariadb:mariadb ${MariaDB_Data_Dir}
+    /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
+    chgrp -R mariadb /usr/local/mariadb/.
+    \cp support-files/mysql.server /etc/init.d/mariadb
+    chmod 755 /etc/init.d/mariadb
+
+    Mariadb_Sec_Setting
+}
+
+Install_MariaDB_102()
 {
     Echo_Blue "[+] Installing ${Mariadb_Ver}..."
     rm -f /etc/my.cnf
@@ -341,7 +453,7 @@ write_buffer = 2M
 interactive-timeout
 EOF
     if [ "${InstallInnodb}" = "y" ]; then
-        sed -i 's:^#innodb:innodb:g' /etc/my.cnf
+        sed -i 's/^#innodb/innodb/g' /etc/my.cnf
     else
         sed -i '/^default_storage_engine/d' /etc/my.cnf
         sed -i 's/^#loose-innodb/loose-innodb/g' /etc/my.cnf

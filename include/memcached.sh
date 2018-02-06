@@ -125,12 +125,14 @@ EOF
     Restart_PHP
 
     if [ -s /sbin/iptables ]; then
-        /sbin/iptables -A INPUT -p tcp --dport 11211 -j DROP
-        /sbin/iptables -A INPUT -p udp --dport 11211 -j DROP
-        if [ "$PM" = "yum" ]; then
-            service iptables save
-        elif [ "$PM" = "apt" ]; then
-            iptables-save > /etc/iptables.rules
+        if /sbin/iptables -C INPUT -i lo -j ACCEPT; then
+            /sbin/iptables -A INPUT -p tcp --dport 11211 -j DROP
+            /sbin/iptables -A INPUT -p udp --dport 11211 -j DROP
+            if [ "$PM" = "yum" ]; then
+                service iptables save
+            elif [ "$PM" = "apt" ]; then
+                iptables-save > /etc/iptables.rules
+            fi
         fi
     fi
 

@@ -34,7 +34,7 @@ lamp_stop()
 lamp_reload()
 {
     echo "Reload LAMP..."
-    /etc/init.d/httpd reload
+    /etc/init.d/httpd graceful
     /etc/init.d/mysql reload
 }
 
@@ -204,6 +204,7 @@ Add_VHost()
     read access_log
     if [[ "${access_log}" == "n" || "${access_log}" == "" ]]; then
         echo "Disable access log."
+        al_name="${domain}"
     else
         Echo_Yellow "Enter access log filename(Default:${domain}-access_log): "
         read al_name
@@ -214,16 +215,14 @@ Add_VHost()
     fi
 
     email=""
-    while :;do
-        Echo_Yellow "Please enter Administrator Email Address: "
-        read email
-        if [ "${email}" == "" ]; then
-            Echo_Red "Administrator Email Address cannot be empty!"
-        else
-            echo "Server Administrator Email:${email}"
-            break
-        fi
-    done
+    Echo_Yellow "Please enter Administrator Email Address: "
+    read email
+    if [ "${email}" == "" ]; then
+        echo "Administrator Email Address will set to webmaster@example.com!"
+        email='webmaster@example.com'
+    else
+        echo "Server Administrator Email:${email}"
+    fi
 
     if [[ -s /usr/local/mysql/bin/mysql || -s /usr/local/mariadb/bin/mysql ]]; then
         Echo_Yellow "Create database and MySQL user with same name (y/n) "
@@ -649,6 +648,7 @@ Add_SSL_Info_Menu()
     if [[ "${access_log}" == "n" || "${access_log}" == "" ]]; then
         echo "Disable access log."
         al="access_log off;"
+        al_name="${domain}"
     else
         Echo_Yellow "Enter access log filename(Default:${domain}.log): "
         read al_name
@@ -660,16 +660,14 @@ Add_SSL_Info_Menu()
     fi
 
     email=""
-    while :;do
-        Echo_Yellow "Please enter Administrator Email Address: "
-        read email
-        if [ "${email}" == "" ]; then
-            Echo_Red "Administrator Email Address cannot be empty!"
-        else
-            echo "Server Administrator Email:${email}"
-            break
-        fi
-    done
+    Echo_Yellow "Please enter Administrator Email Address: "
+    read email
+    if [ "${email}" == "" ]; then
+        echo "Administrator Email Address will set to webmaster@example.com!"
+        email='webmaster@example.com'
+    else
+        echo "Server Administrator Email:${email}"
+    fi
 }
 
 Add_SSL_Menu()
@@ -701,6 +699,15 @@ Add_SSL_Menu()
                     break
                 fi
             done
+            while :;do
+                Echo_Yellow "Please enter full path to SSL Chain file: "
+                read ssl_certificate_key
+                if [ "${ssl_chain}" == "" ]; then
+                    Echo_Yellow "SSL Chain file will not set."
+                    Conf_SSLChain="#SSLCertificateChainFile /path/to/your/chain.pem"
+                    break
+                fi
+            done
             break
         elif [ "${ssl_choice}" == "2" ]; then
             echo "It will be processed automatically."
@@ -713,49 +720,41 @@ Add_SSL_Menu()
 
 Add_Letsencrypt()
 {
-    if [[ "${email}" == "" || "${vhostdir}" == "" || "${letsdomain}" == "" ]]; then
-        Echo_Red "Three parameters are needed!"
+    if [[ "${vhostdir}" == "" || "${letsdomain}" == "" ]]; then
+        Echo_Red "Two parameters are needed!"
         exit 1
     fi
     if [ ! -d "${vhostdir}" ]; then
         Echo_Red "${vhostdir} does not exist or is not a directory!"
         exit
     fi
-    if [ -s /bin/certbot ]; then
-        echo "/bin/certbot [found]"
+    if [ -s /usr/local/acme.sh/acme.sh ]; then
+        echo "/usr/local/acme.sh/acme.sh [found]"
     else
-        wget https://dl.eff.org/certbot-auto --no-check-certificate -O /bin/certbot
-        chmod +x /bin/certbot
-        if grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
-            yum -y install epel-release
-        fi
+        cd /tmp
+        [[ -s latest.tar.gz ]] && rm -f latest.tar.gz
+        wget https://soft.vpser.net/lib/acme.sh/latest.tar.gz --prefer-family=IPv4 --no-check-certificate
+        tar zxf latest.tar.gz
+        cd acme.sh-*
+        ./acme.sh --install --log --home /usr/local/acme.sh --certhome /usr/local/apache/conf/ssl
+        cd ..
+        rm -f latest.tar.gz
+        rm -rf acme.sh-*
+        sed -i 's/cat "\$CERT_PATH"$/#cat "\$CERT_PATH"/g' /usr/local/acme.sh/acme.sh
     fi
 
-    country=`curl -sSk --connect-timeout 10 -m 60 https://ip.vpser.net/country`
-    if [ "${country}" = "CN" ]; then
-        if [ -s ~/.pip/pip.conf ]; then
-            grep "index-url" ~/.pip/pip.conf
-            echo "pip.conf exist."
-        else
-            echo "Create pip.conf..."
-            mkdir ~/.pip
-            cat > ~/.pip/pip.conf <<EOF
-[global]
-index-url = https://pypi.doubanio.com/simple/
+    . "/usr/local/acme.sh/acme.sh.env"
 
-[install]
-trusted-host=pypi.doubanio.com
-EOF
-        fi
-        sed -i 's#pypi.python.org/packages#pypi.doubanio.com/packages#g' /bin/certbot
+    if [ -s /usr/local/apache/conf/ssl/${domain}/fullchain.cer ]; then
+        echo "Removing exist domain certificate..."
+        rm -rf /usr/local/apache/conf/ssl/${domain}
     fi
 
     echo "Starting create SSL Certificate use Let's Encrypt..."
-    /bin/certbot certonly --email ${email} --agree-tos -n --webroot -w ${vhostdir} ${letsdomain}
+    /usr/local/acme.sh/acme.sh --issue ${letsdomain} -w ${vhostdir} --reloadcmd "/etc/init.d/httpd graceful"
     lets_status=$?
     if [ "${lets_status}" = 0 ]; then
-        Check_Lets_Cron
-        echo "Let's Encrypt SSL Certificate create successfully."
+        Echo_Green "Let's Encrypt SSL Certificate create successfully."
     else
         Echo_Red "Let's Encrypt SSL Certificate create failed!"
     fi
@@ -763,6 +762,15 @@ EOF
 
 Create_SSL_Config()
 {
+    if /usr/local/apache/bin/httpd -v|grep -Eqi "Apache/2.4.*"; then
+        Conf_H2='Protocols h2 h2c http/1.1'
+    else
+        Conf_H2=''
+    fi
+    if [ "${ssl_choice}" == "2" ]; then
+        Conf_SSLChain="SSLCertificateChainFile /usr/local/apache/conf/ssl/${domain}/ca.cer"
+    fi
+
     sed -i 's@#Include conf/extra/httpd-ssl.conf@Include conf/extra/httpd-ssl.conf@g' /usr/local/apache/conf/httpd.conf
     cat >>"/usr/local/apache/conf/vhost/${domain}.conf"<<EOF
 
@@ -776,6 +784,8 @@ CustomLog "/home/wwwlogs/${al_name}-access_log" combined
 SSLEngine on
 SSLCertificateFile ${ssl_certificate}
 SSLCertificateKeyFile ${ssl_certificate_key}
+${Conf_SSLChain}
+${Conf_H2}
 <Directory "${vhostdir}">
     SetOutputFilter DEFLATE
     Options FollowSymLinks
@@ -824,21 +834,11 @@ Add_SSL()
             mkdir -p "${vhostdir}"
         fi
         Add_Letsencrypt
-        ssl_certificate="/etc/letsencrypt/live/${domain}/fullchain.pem"
-        ssl_certificate_key="/etc/letsencrypt/live/${domain}/privkey.pem"
+        ssl_certificate="/usr/local/apache/conf/ssl/${domain}/${domain}.cer"
+        ssl_certificate_key="/usr/local/apache/conf/ssl/${domain}/${domain}.key"
         if [ "${lets_status}" = 0 ]; then
             Create_SSL_Config
         fi
-    fi
-}
-
-Check_Lets_Cron()
-{
-    if crontab -l|grep -q "/bin/certbot renew --disable-hook-validation";then
-        echo "Let's encrypt crontab renew rule is exist."
-    else
-        echo "Add Let's encrypt crontab renew rule..."
-        (crontab -l ; echo '0 3 */7 * * /bin/certbot renew --disable-hook-validation --renew-hook "/etc/init.d/httpd restart"') | crontab -
     fi
 }
 

@@ -217,8 +217,12 @@ EOF
 
 Multiple_PHP_Select()
 {
-    if [[ ! -s /usr/local/php5.2/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.2.conf ]] && [[ ! -s /usr/local/php5.3/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.3.conf ]] && [[ ! -s /usr/local/php5.4/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.4.conf ]] && [[ ! -s /usr/local/php5.5/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.5.conf ]] && [[ ! -s /usr/local/php5.6/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.6.conf ]] && [[ ! -s /usr/local/php7.0/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.0.conf ]] && [[ ! -s /usr/local/php7.1/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.1.conf ]]; then
-        include_enable_php="include enable-php.conf;"
+    if [[ ! -s /usr/local/php5.2/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.2.conf ]] && [[ ! -s /usr/local/php5.3/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.3.conf ]] && [[ ! -s /usr/local/php5.4/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.4.conf ]] && [[ ! -s /usr/local/php5.5/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.5.conf ]] && [[ ! -s /usr/local/php5.6/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.6.conf ]] && [[ ! -s /usr/local/php7.0/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.0.conf ]] && [[ ! -s /usr/local/php7.1/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.1.conf ]] && [[ ! -s /usr/local/php7.2/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.2.conf ]]; then
+        if [ "${enable_pathinfo}" == "y" ]; then
+            include_enable_php="include enable-php-pathinfo.conf;"
+        else
+            include_enable_php="include enable-php.conf;"
+        fi
     else
         echo "Multiple PHP version found, Please select the PHP version."
         Cur_PHP_Version="`/usr/local/php/bin/php-config --version`"
@@ -244,45 +248,124 @@ Multiple_PHP_Select()
         if [[ -s /usr/local/php7.1/sbin/php-fpm && -s /usr/local/nginx/conf/enable-php7.1.conf && -s /etc/init.d/php-fpm7.1 ]]; then
             Echo_Green "8: PHP 7.1 [found]"
         fi
-        Echo_Yellow "Enter your choice (1, 2, 3, 4, 5, 6 ,7 or 8): "
+        if [[ -s /usr/local/php7.2/sbin/php-fpm && -s /usr/local/nginx/conf/enable-php7.2.conf && -s /etc/init.d/php-fpm7.2 ]]; then
+            Echo_Green "9: PHP 7.2 [found]"
+        fi
+        Echo_Yellow "Enter your choice (1, 2, 3, 4, 5, 6 ,7, 8 or 9): "
         read php_select
         case "${php_select}" in
             1)
                 echo "Current selection: PHP ${Cur_PHP_Version}"
-                include_enable_php="include enable-php.conf;"
+                if [ "${enable_pathinfo}" == "y" ]; then
+                    include_enable_php="include enable-php-pathinfo.conf;"
+                else
+                    include_enable_php="include enable-php.conf;"
+                fi
                 ;;
             2)
                 echo "Current selection: PHP `/usr/local/php5.2/bin/php-config --version`"
-                include_enable_php="include enable-php5.2.conf;"
+                if [ "${enable_pathinfo}" == "y" ]; then
+                    include_enable_php="include enable-php5.2-pathinfo.conf;"
+                    if [ ! -s /usr/local/nginx/conf/enable-php5.2-pathinfo.conf ]; then
+                        \cp /usr/local/nginx/conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php5.2-pathinfo.conf
+                        sed -i 's/php-cgi.sock/php-cgi5.2.sock/g' /usr/local/nginx/conf/enable-php5.2-pathinfo.conf
+                    fi
+                else
+                    include_enable_php="include enable-php5.2.conf;"
+                fi
                 ;;
             3)
                 echo "Current selection: PHP `/usr/local/php5.3/bin/php-config --version`"
-                include_enable_php="include enable-php5.3.conf;"
+                if [ "${enable_pathinfo}" == "y" ]; then
+                    include_enable_php="include enable-php5.3-pathinfo.conf;"
+                    if [ ! -s /usr/local/nginx/conf/enable-php5.3-pathinfo.conf ]; then
+                        \cp /usr/local/nginx/conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php5.3-pathinfo.conf
+                        sed -i 's/php-cgi.sock/php-cgi5.3.sock/g' /usr/local/nginx/conf/enable-php5.3-pathinfo.conf
+                    fi
+                else
+                    include_enable_php="include enable-php5.3.conf;"
+                fi
                 ;;
             4)
                 echo "Current selection: PHP `/usr/local/php5.4/bin/php-config --version`"
-                include_enable_php="include enable-php5.4.conf;"
+                if [ "${enable_pathinfo}" == "y" ]; then
+                    include_enable_php="include enable-php5.4-pathinfo.conf;"
+                    if [ ! -s /usr/local/nginx/conf/enable-php5.4-pathinfo.conf ]; then
+                        \cp /usr/local/nginx/conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php5.4-pathinfo.conf
+                        sed -i 's/php-cgi.sock/php-cgi5.4.sock/g' /usr/local/nginx/conf/enable-php5.4-pathinfo.conf
+                    fi
+                else
+                    include_enable_php="include enable-php5.4.conf;"
+                fi
                 ;;
             5)
                 echo "Current selection: PHP `/usr/local/php5.5/bin/php-config --version`"
-                include_enable_php="include enable-php5.5.conf;"
+                if [ "${enable_pathinfo}" == "y" ]; then
+                    include_enable_php="include enable-php5.5-pathinfo.conf;"
+                    if [ ! -s /usr/local/nginx/conf/enable-php5.5-pathinfo.conf ]; then
+                        \cp /usr/local/nginx/conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php5.5-pathinfo.conf
+                        sed -i 's/php-cgi.sock/php-cgi5.5.sock/g' /usr/local/nginx/conf/enable-php5.5-pathinfo.conf
+                    fi
+                else
+                    include_enable_php="include enable-php5.5.conf;"
+                fi
                 ;;
             6)
                 echo "Current selection: PHP `/usr/local/php5.6/bin/php-config --version`"
-                include_enable_php="include enable-php5.6.conf;"
+                if [ "${enable_pathinfo}" == "y" ]; then
+                    include_enable_php="include enable-php5.6-pathinfo.conf;"
+                    if [ ! -s /usr/local/nginx/conf/enable-php5.6-pathinfo.conf ]; then
+                        \cp /usr/local/nginx/conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php5.6-pathinfo.conf
+                        sed -i 's/php-cgi.sock/php-cgi5.6.sock/g' /usr/local/nginx/conf/enable-php5.6-pathinfo.conf
+                    fi
+                else
+                    include_enable_php="include enable-php5.6.conf;"
+                fi
                 ;;
             7)
                 echo "Current selection:: PHP `/usr/local/php7.0/bin/php-config --version`"
-                include_enable_php="include enable-php7.0.conf;"
+                if [ "${enable_pathinfo}" == "y" ]; then
+                    include_enable_php="include enable-php7.0-pathinfo.conf;"
+                    if [ ! -s /usr/local/nginx/conf/enable-php7.0-pathinfo.conf ]; then
+                        \cp /usr/local/nginx/conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php7.0-pathinfo.conf
+                        sed -i 's/php-cgi.sock/php-cgi7.0.sock/g' /usr/local/nginx/conf/enable-php7.0-pathinfo.conf
+                    fi
+                else
+                    include_enable_php="include enable-php7.0.conf;"
+                fi
                 ;;
             8)
                 echo "Current selection:: PHP `/usr/local/php7.1/bin/php-config --version`"
-                include_enable_php="include enable-php7.1.conf;"
+                if [ "${enable_pathinfo}" == "y" ]; then
+                    include_enable_php="include enable-php7.1-pathinfo.conf;"
+                    if [ ! -s /usr/local/nginx/conf/enable-php7.1-pathinfo.conf ]; then
+                        \cp /usr/local/nginx/conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php7.1-pathinfo.conf
+                        sed -i 's/php-cgi.sock/php-cgi7.1.sock/g' /usr/local/nginx/conf/enable-php7.1-pathinfo.conf
+                    fi
+                else
+                    include_enable_php="include enable-php7.1.conf;"
+                fi
+                ;;
+            9)
+                echo "Current selection:: PHP `/usr/local/php7.2/bin/php-config --version`"
+                if [ "${enable_pathinfo}" == "y" ]; then
+                    include_enable_php="include enable-php7.2-pathinfo.conf;"
+                    if [ ! -s /usr/local/nginx/conf/enable-php7.2-pathinfo.conf ]; then
+                        \cp /usr/local/nginx/conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php7.2-pathinfo.conf
+                        sed -i 's/php-cgi.sock/php-cgi7.2.sock/g' /usr/local/nginx/conf/enable-php7.2-pathinfo.conf
+                    fi
+                else
+                    include_enable_php="include enable-php7.2.conf;"
+                fi
                 ;;
             *)
                 echo "Default,Current selection: PHP ${Cur_PHP_Version}"
                 php_select="1"
-                include_enable_php="include enable-php.conf;"
+                if [ "${enable_pathinfo}" == "y" ]; then
+                    include_enable_php="include enable-php-pathinfo.conf;"
+                else
+                    include_enable_php="include enable-php.conf;"
+                fi
                 ;;
         esac
     fi
@@ -338,6 +421,16 @@ Add_VHost()
     fi
     echo "You choose rewrite: ${rewrite}"
 
+    Echo_Yellow "Enable PHP Pathinfo? (y/n) "
+    read enable_pathinfo
+    if [[ "${enable_pathinfo}" == "n" || "${enable_pathinfo}" == "" ]]; then
+        echo "Disable pathinfo."
+        enable_pathinfo="n"
+    elif [ "${enable_pathinfo}" == "y" ]; then
+        echo "Enable pathinfo."
+        enable_pathinfo="y"
+    fi
+
     Echo_Yellow "Allow access log? (y/n) "
     read access_log
     if [[ "${access_log}" == "n" || "${access_log}" == "" ]]; then
@@ -365,7 +458,7 @@ Add_VHost()
         fi
     fi
 
-    if [ -f /usr/local/pureftpd/sbin/pure-ftpd ]; then
+    if [ -s /usr/local/pureftpd/sbin/pure-ftpd ]; then
         Echo_Yellow "Create ftp account (y/n) "
         read create_ftp
 
@@ -480,6 +573,10 @@ Del_VHost()
         echo "=========================================="
         exit 1
     else
+        if [ -f "${vhostdir}/.user.ini" ]; then
+            chattr -i "${vhostdir}/.user.ini"
+            rm -f "${vhostdir}/.user.ini"
+        fi
         rm -f /usr/local/nginx/conf/vhost/${domain}.conf
         echo "========================================================"
         echo "Domain: ${domain} has been deleted."
@@ -793,7 +890,7 @@ Add_SSL_Info_Menu()
     elif [ "${allow_rewrite}" == "y" ]; then
         rewrite="other"
         echo "Please enter the rewrite of programme, "
-        echo "wordpress,discuz,typecho,sablog,typecho rewrite was exist."
+        echo "wordpress,discuzx,typecho,thinkphp,laravel,codeigniter,yii2 rewrite was exist."
         Echo_Yellow "(Default rewrite: other): "
         read rewrite
         if [ "${rewrite}" == "" ]; then
@@ -815,6 +912,15 @@ Add_SSL_Info_Menu()
         fi
         al="access_log  /home/wwwlogs/${al_name}.log;"
         echo "You access log filename: ${al_name}.log"
+    fi
+
+    Echo_Yellow "Enable PHP Pathinfo? (y/n) "
+    read enable_pathinfo
+    if [[ "${enable_pathinfo}" == "n" || "${enable_pathinfo}" == "" ]]; then
+        echo "Disable pathinfo."
+    elif [ "${allow_rewrite}" == "y" ]; then
+        echo "Enable pathinfo."
+        enable_pathinfo="y"
     fi
 
     Multiple_PHP_Select
@@ -851,15 +957,6 @@ Add_SSL_Menu()
             done
             break
         elif [ "${ssl_choice}" == "2" ]; then
-            while :;do
-                Echo_Yellow "Please enter your email address: "
-                read email
-                if [ "${email}" == "" ]; then
-                    Echo_Red "Email address cannot be empty!"
-                else
-                    break
-                fi
-            done
             echo "It will be processed automatically."
             break
         else
@@ -870,49 +967,41 @@ Add_SSL_Menu()
 
 Add_Letsencrypt()
 {
-    if [[ "${email}" == "" || "${vhostdir}" == "" || "${letsdomain}" == "" ]]; then
-        Echo_Red "Three parameters are needed!"
+    if [[ "${vhostdir}" == "" || "${letsdomain}" == "" ]]; then
+        Echo_Red "Two parameters are needed!"
         exit 1
     fi
     if [ ! -d "${vhostdir}" ]; then
         Echo_Red "${vhostdir} does not exist or is not a directory!"
         exit
     fi
-    if [ -s /bin/certbot ]; then
-        echo "/bin/certbot [found]"
+    if [ -s /usr/local/acme.sh/acme.sh ]; then
+        echo "/usr/local/acme.sh/acme.sh [found]"
     else
-        wget https://dl.eff.org/certbot-auto --no-check-certificate -O /bin/certbot
-        chmod +x /bin/certbot
-        if grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
-            yum -y install epel-release
-        fi
+        cd /tmp
+        [[ -f latest.tar.gz ]] && rm -f latest.tar.gz
+        wget https://soft.vpser.net/lib/acme.sh/latest.tar.gz --prefer-family=IPv4 --no-check-certificate
+        tar zxf latest.tar.gz
+        cd acme.sh-*
+        ./acme.sh --install --log --home /usr/local/acme.sh --certhome /usr/local/nginx/conf/ssl
+        cd ..
+        rm -f latest.tar.gz
+        rm -rf acme.sh-*
+        sed -i 's/cat "\$CERT_PATH"$/#cat "\$CERT_PATH"/g' /usr/local/acme.sh/acme.sh
     fi
 
-    country=`curl -sSk --connect-timeout 10 -m 60 https://ip.vpser.net/country`
-    if [ "${country}" = "CN" ]; then
-        if [ -s ~/.pip/pip.conf ]; then
-            grep "index-url" ~/.pip/pip.conf
-            echo "pip.conf exist."
-        else
-            echo "Create pip.conf..."
-            mkdir ~/.pip
-            cat > ~/.pip/pip.conf <<EOF
-[global]
-index-url = https://pypi.doubanio.com/simple/
+    . "/usr/local/acme.sh/acme.sh.env"
 
-[install]
-trusted-host=pypi.doubanio.com
-EOF
-        fi
-        sed -i 's#pypi.python.org/packages#pypi.doubanio.com/packages#g' /bin/certbot
+    if [ -s /usr/local/nginx/conf/ssl/${domain}/fullchain.cer ]; then
+        echo "Removing exist domain certificate..."
+        rm -rf /usr/local/nginx/conf/ssl/${domain}
     fi
 
     echo "Starting create SSL Certificate use Let's Encrypt..."
-    /bin/certbot certonly --email ${email} --agree-tos -n --webroot -w ${vhostdir} ${letsdomain}
+    /usr/local/acme.sh/acme.sh --issue ${letsdomain} -w ${vhostdir} --reloadcmd "/etc/init.d/nginx reload"
     lets_status=$?
     if [ "${lets_status}" = 0 ]; then
-        Check_Lets_Cron
-        echo "Let's Encrypt SSL Certificate create successfully."
+        Echo_Green "Let's Encrypt SSL Certificate create successfully."
     else
         Echo_Red "Let's Encrypt SSL Certificate create failed!"
     fi
@@ -997,28 +1086,18 @@ Add_SSL()
         else
             letsdomain="-d ${domain}"
         fi
-        if [ ! -s "/usr/local/apache/conf/vhost/${domain}.conf" ]; then
+        if [ ! -s "/usr/local/nginx/conf/vhost/${domain}.conf" ]; then
             Add_VHost_Config
         fi
         if [ ! -d "${vhostdir}" ]; then
             mkdir -p "${vhostdir}"
         fi
         Add_Letsencrypt
-        ssl_certificate="/etc/letsencrypt/live/${domain}/fullchain.pem"
-        ssl_certificate_key="/etc/letsencrypt/live/${domain}/privkey.pem"
+        ssl_certificate="/usr/local/nginx/conf/ssl/${domain}/fullchain.cer"
+        ssl_certificate_key="/usr/local/nginx/conf/ssl/${domain}/${domain}.key"
         if [ "${lets_status}" = 0 ]; then
             Create_SSL_Config
         fi
-    fi
-}
-
-Check_Lets_Cron()
-{
-    if crontab -l|grep -q "/bin/certbot renew --disable-hook-validation";then
-        echo "Let's encrypt crontab renew rule is exist."
-    else
-        echo "Add Let's encrypt crontab renew rule..."
-        (crontab -l ; echo '0 3 */7 * * /bin/certbot renew --disable-hook-validation --renew-hook "/etc/init.d/nginx reload"') | crontab -
     fi
 }
 

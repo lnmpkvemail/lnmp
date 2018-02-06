@@ -34,11 +34,13 @@ Install_Redis()
         rm -rf ${cur_dir}/src/${Redis_Stable_Ver}
 
         if [ -s /sbin/iptables ]; then
-            /sbin/iptables -A INPUT -p tcp --dport 6379 -j DROP
-            if [ "$PM" = "yum" ]; then
-                service iptables save
-            elif [ "$PM" = "apt" ]; then
-                iptables-save > /etc/iptables.rules
+            if /sbin/iptables -C INPUT -i lo -j ACCEPT; then
+                /sbin/iptables -A INPUT -p tcp --dport 6379 -j DROP
+                if [ "$PM" = "yum" ]; then
+                    service iptables save
+                elif [ "$PM" = "apt" ]; then
+                    iptables-save > /etc/iptables.rules
+                fi
             fi
         fi
     fi

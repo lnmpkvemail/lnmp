@@ -26,6 +26,7 @@ Backup_MySQL()
 Upgrade_MySQL51()
 {
     Tar_Cd mysql-${mysql_version}.tar.gz mysql-${mysql_version}
+    MySQL_Gcc7_Patch
     if [ $InstallInnodb = "y" ]; then
         ./configure --prefix=/usr/local/mysql --with-extra-charsets=complex --enable-thread-safe-client --enable-assembler --with-mysqld-ldflags=-all-static --with-charset=utf8 --enable-thread-safe-client --with-big-tables --with-readline --with-ssl --with-embedded-server --enable-local-infile --with-plugins=innobase ${MySQL51MAOpt}
     else
@@ -99,7 +100,7 @@ write_buffer = 2M
 interactive-timeout
 EOF
     if [ "${InstallInnodb}" = "y" ]; then
-        sed -i 's:^#innodb:innodb:g' /etc/my.cnf
+        sed -i 's/^#innodb/innodb/g' /etc/my.cnf
     else
         sed -i '/^default_storage_engine/d' /etc/my.cnf
         sed -i '/skip-external-locking/i\default_storage_engine = MyISAM\nloose-skip-innodb' /etc/my.cnf
@@ -128,6 +129,7 @@ Upgrade_MySQL55()
 
     Tar_Cd mysql-${mysql_version}.tar.gz mysql-${mysql_version}
     MySQL_ARM_Patch
+    MySQL_Gcc7_Patch
     cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL55MAOpt}
     make && make install
 
@@ -195,7 +197,7 @@ write_buffer = 2M
 interactive-timeout
 EOF
     if [ "${InstallInnodb}" = "y" ]; then
-        sed -i 's:^#innodb:innodb:g' /etc/my.cnf
+        sed -i 's/^#innodb/innodb/g' /etc/my.cnf
     else
         sed -i '/^default_storage_engine/d' /etc/my.cnf
         sed -i '/skip-external-locking/i\default_storage_engine = MyISAM\nloose-skip-innodb' /etc/my.cnf
@@ -319,7 +321,7 @@ interactive-timeout
 EOF
 
     if [ "${InstallInnodb}" = "y" ]; then
-        sed -i 's:^#innodb:innodb:g' /etc/my.cnf
+        sed -i 's/^#innodb/innodb/g' /etc/my.cnf
     else
         sed -i '/^default_storage_engine/d' /etc/my.cnf
         sed -i '/skip-external-locking/i\innodb = OFF\nignore-builtin-innodb\nskip-innodb\ndefault_storage_engine = MyISAM\ndefault_tmp_storage_engine = MyISAM' /etc/my.cnf
@@ -447,7 +449,7 @@ interactive-timeout
 EOF
 
     if [ "${InstallInnodb}" = "y" ]; then
-        sed -i 's:^#innodb:innodb:g' /etc/my.cnf
+        sed -i 's/^#innodb/innodb/g' /etc/my.cnf
     else
         sed -i '/^default_storage_engine/d' /etc/my.cnf
         sed -i '/skip-external-locking/i\innodb = OFF\nignore-builtin-innodb\nskip-innodb\ndefault_storage_engine = MyISAM\ndefault_tmp_storage_engine = MyISAM' /etc/my.cnf
@@ -577,7 +579,7 @@ Upgrade_MySQL()
         echo "Notice: mysql-${mysql_version}.tar.gz not found!!!download now......"
         country=`curl -sSk --connect-timeout 10 -m 60 https://ip.vpser.net/country`
         if [ "${country}" = "CN" ]; then
-            wget -c --progress=bar:force http://mirrors.sohu.com/mysql/MySQL-${mysql_short_version}/mysql-${mysql_version}.tar.gz
+            wget -c --progress=bar:force http://mirrors.ustc.edu.cn/mysql-ftp/Downloads/MySQL-${mysql_short_version}/mysql-${mysql_version}.tar.gz
             if [ $? -ne 0 ]; then
                 wget -c --progress=bar:force http://cdn.mysql.com/Downloads/MySQL-${mysql_short_version}/mysql-${mysql_version}.tar.gz
             fi

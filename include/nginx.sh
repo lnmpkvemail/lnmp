@@ -10,6 +10,47 @@ Install_Nginx_Openssl()
     fi
 }
 
+Install_Nginx_Lua()
+{
+    if [ "${Enable_Nginx_Lua}" = 'y' ]; then
+        echo "Installing Lua for Nginx..."
+        cd ${cur_dir}/src
+        Download_Files ${Download_Mirror}/lib/lua/${Luajit_Ver}.tar.gz ${Luajit_Ver}.tar.gz
+        Download_Files ${Download_Mirror}/lib/lua/${LuaNginxModule}.tar.gz ${LuaNginxModule}.tar.gz
+        Download_Files ${Download_Mirror}/lib/lua/${NgxDevelKit}.tar.gz ${NgxDevelKit}.tar.gz
+
+        Echo_Blue "[+] Installing ${Luajit_Ver}... "
+        tar zxf ${LuaNginxModule}.tar.gz
+        tar zxf ${NgxDevelKit}.tar.gz
+        if [[ ! -s /usr/local/luajit/bin/luajit || ! -s /usr/local/luajit/include/luajit-2.0/luajit.h || ! -s /usr/local/luajit/lib/libluajit-5.1.so ]]; then
+            Tar_Cd ${Luajit_Ver}.tar.gz ${Luajit_Ver}
+            make
+            make install PREFIX=/usr/local/luajit
+            cd ${cur_dir}/src
+            rm -rf ${cur_dir}/src/${Luajit_Ver}
+        fi
+
+        cat > /etc/ld.so.conf.d/luajit.conf<<EOF
+/usr/local/luajit/lib
+EOF
+        if [ "${Is_64bit}" = "y" ]; then
+            ln -sf /usr/local/luajit/lib/libluajit-5.1.so.2 /lib64/libluajit-5.1.so.2
+        else
+            ln -sf /usr/local/luajit/lib/libluajit-5.1.so.2 /usr/lib/libluajit-5.1.so.2
+        fi
+        ldconfig
+
+        cat >/etc/profile.d/luajit.sh<<EOF
+export LUAJIT_LIB=/usr/local/luajit/lib
+export LUAJIT_INC=/usr/local/luajit/include/luajit-2.0
+EOF
+
+        source /etc/profile.d/luajit.sh
+
+        Nginx_Module_Lua="--with-ld-opt=-Wl,-rpath,/usr/local/luajit/lib --add-module=${cur_dir}/src/${LuaNginxModule} --add-module=${cur_dir}/src/${NgxDevelKit}"
+    fi
+}
+
 Install_Nginx()
 {
     Echo_Blue "[+] Installing ${Nginx_Ver}... "
@@ -18,11 +59,12 @@ Install_Nginx()
 
     cd ${cur_dir}/src
     Install_Nginx_Openssl
+    Install_Nginx_Lua
     Tar_Cd ${Nginx_Ver}.tar.gz ${Nginx_Ver}
     if echo ${Nginx_Ver} | grep -Eqi 'nginx-[0-1].[5-8].[0-9]' || echo ${Nginx_Ver} | grep -Eqi 'nginx-1.9.[1-4]$'; then
-        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_spdy_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${Nginx_With_Openssl} ${NginxMAOpt} ${Nginx_Modules_Options}
+        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_spdy_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${Nginx_With_Openssl} ${Nginx_Module_Lua} ${NginxMAOpt} ${Nginx_Modules_Options}
     else
-        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_v2_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${Nginx_With_Openssl} ${NginxMAOpt} ${Nginx_Modules_Options}
+        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_v2_module --with-http_gzip_static_module --with-http_sub_module --with-stream --with-stream_ssl_module ${Nginx_With_Openssl} ${Nginx_Module_Lua} ${NginxMAOpt} ${Nginx_Modules_Options}
     fi
     make && make install
     cd ../
@@ -55,10 +97,15 @@ Install_Nginx()
     \cp conf/rewrite/codeigniter.conf /usr/local/nginx/conf/codeigniter.conf
     \cp conf/rewrite/laravel.conf /usr/local/nginx/conf/laravel.conf
     \cp conf/rewrite/thinkphp.conf /usr/local/nginx/conf/thinkphp.conf
+    \cp conf/rewrite/yii2.conf /usr/local/nginx/conf/yii2.conf
     \cp conf/pathinfo.conf /usr/local/nginx/conf/pathinfo.conf
     \cp conf/enable-php.conf /usr/local/nginx/conf/enable-php.conf
     \cp conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php-pathinfo.conf
     \cp conf/enable-ssl-example.conf /usr/local/nginx/conf/enable-ssl-example.conf
+    \cp conf/magento2-example.conf /usr/local/nginx/conf/magento2-example.conf
+    if [ "${Enable_Nginx_Lua}" = 'y' ]; then
+        sed -i "/location \/nginx_status/i\        location /lua\n        {\n            default_type text/html;\n            content_by_lua 'ngx.say\(\"hello world\"\)';\n        }\n" /usr/local/nginx/conf/nginx.conf
+    fi
 
     mkdir -p ${Default_Website_Dir}
     chmod +w ${Default_Website_Dir}

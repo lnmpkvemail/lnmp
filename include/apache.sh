@@ -13,8 +13,10 @@ Install_Apache_22()
         chown -R www:www ${Default_Website_Dir}
     fi
     Tarj_Cd ${Apache_Ver}.tar.bz2 ${Apache_Ver}
-    ./configure --prefix=/usr/local/apache --enable-mods-shared=most --enable-headers --enable-mime-magic --enable-proxy --enable-so --enable-rewrite --with-ssl --enable-ssl --enable-deflate --enable-suexec --with-included-apr --with-mpm=prefork --with-expat=builtin
+    ./configure --prefix=/usr/local/apache --enable-mods-shared=most --enable-headers --enable-mime-magic --enable-proxy --enable-so --enable-rewrite --with-ssl --enable-ssl --enable-deflate --enable-suexec --with-included-apr --with-expat=builtin
     make && make install
+    cd ${cur_dir}/src
+    rm -rf ${cur_dir}/src/${Apache_Ver}
 
     mv /usr/local/apache/conf/httpd.conf /usr/local/apache/conf/httpd.conf.bak
     if [ "${Stack}" = "lamp" ]; then
@@ -47,7 +49,7 @@ Install_Apache_22()
         sed -i "s#/home/wwwroot/default#${Default_Website_Dir}#g" /usr/local/apache/conf/extra/httpd-vhosts.conf
     fi
 
-    if [[ "${PHPSelect}" = "6" || "${PHPSelect}" = "7" ]]; then
+    if [[ "${PHPSelect}" =~ ^[678]$ ]]; then
         sed -i '/^LoadModule php5_module/d' /usr/local/apache/conf/httpd.conf
     fi
 
@@ -66,6 +68,8 @@ Install_Apache_24()
         mkdir -p /home/wwwlogs
         chmod 777 /home/wwwlogs
         chown -R www:www ${Default_Website_Dir}
+        Install_Openssl
+        Install_Nghttp2
     fi
     Tarj_Cd ${Apache_Ver}.tar.bz2 ${Apache_Ver}
     cd srclib
@@ -86,8 +90,14 @@ Install_Apache_24()
     mv ${APR_Ver} apr
     mv ${APR_Util_Ver} apr-util
     cd ..
-    ./configure --prefix=/usr/local/apache --enable-mods-shared=most --enable-headers --enable-mime-magic --enable-proxy --enable-so --enable-rewrite --with-ssl --enable-ssl --enable-deflate --with-pcre --with-included-apr --with-apr-util --enable-mpms-shared=all --with-mpm=prefork --enable-remoteip
+    if [ "${Stack}" = "lamp" ]; then
+        ./configure --prefix=/usr/local/apache --enable-mods-shared=most --enable-headers --enable-mime-magic --enable-proxy --enable-so --enable-rewrite --enable-ssl --with-ssl=/usr/local/openssl --enable-deflate --with-pcre --with-included-apr --with-apr-util --enable-mpms-shared=all --enable-remoteip --enable-http2 --with-nghttp2=/usr/local/nghttp2
+    else
+        ./configure --prefix=/usr/local/apache --enable-mods-shared=most --enable-headers --enable-mime-magic --enable-proxy --enable-so --enable-rewrite --enable-ssl --with-ssl --enable-deflate --with-pcre --with-included-apr --with-apr-util --enable-mpms-shared=all --enable-remoteip
+    fi
     make && make install
+    cd ${cur_dir}/src
+    rm -rf ${cur_dir}/src/${Apache_Ver}
 
     mv /usr/local/apache/conf/httpd.conf /usr/local/apache/conf/httpd.conf.bak
     if [ "${Stack}" = "lamp" ]; then
@@ -109,7 +119,7 @@ Install_Apache_24()
         sed -i "s#/home/wwwroot/default#${Default_Website_Dir}#g" /usr/local/apache/conf/extra/httpd-vhosts.conf
     fi
 
-    if [[ "${PHPSelect}" = "6" || "${PHPSelect}" = "7" ]]; then
+    if [[ "${PHPSelect}" =~ ^[678]$ ]]; then
         sed -i '/^LoadModule php5_module/d' /usr/local/apache/conf/httpd.conf
     fi
 

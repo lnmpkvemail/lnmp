@@ -1,14 +1,14 @@
 #!/bin/bash
 
-DB_Info=('MySQL 5.1.73' 'MySQL 5.5.56' 'MySQL 5.6.36' 'MySQL 5.7.18' 'MariaDB 5.5.56' 'MariaDB 10.0.30' 'MariaDB 10.1.23')
-PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.38' 'PHP 5.6.31' 'PHP 7.0.21' 'PHP 7.1.7')
-Apache_Info=('Apache 2.2.34' 'Apache 2.4.27')
+DB_Info=('MySQL 5.1.73' 'MySQL 5.5.58' 'MySQL 5.6.38' 'MySQL 5.7.20' 'MariaDB 5.5.58' 'MariaDB 10.0.33' 'MariaDB 10.1.30' 'MariaDB 10.2.11')
+PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.38' 'PHP 5.6.33' 'PHP 7.0.27' 'PHP 7.1.13' 'PHP 7.2.1')
+Apache_Info=('Apache 2.2.34' 'Apache 2.4.29')
 
 Database_Selection()
 {
 #which MySQL Version do you want to install?
     DBSelect="2"
-    Echo_Yellow "You have 5 options for your DataBase install."
+    Echo_Yellow "You have 9 options for your DataBase install."
     echo "1: Install ${DB_Info[0]}"
     echo "2: Install ${DB_Info[1]} (Default)"
     echo "3: Install ${DB_Info[2]}"
@@ -16,8 +16,9 @@ Database_Selection()
     echo "5: Install ${DB_Info[4]}"
     echo "6: Install ${DB_Info[5]}"
     echo "7: Install ${DB_Info[6]}"
+    echo "8: Install ${DB_Info[7]}"
     echo "0: DO NOT Install MySQL/MariaDB"
-    read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7 or 0): " DBSelect
+    read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8 or 0): " DBSelect
 
     case "${DBSelect}" in
     1)
@@ -41,6 +42,9 @@ Database_Selection()
     7)
         echo "You will install ${DB_Info[6]}"
         ;;
+    8)
+        echo "You will install ${DB_Info[7]}"
+        ;;
     0)
         echo "Do not install MySQL/MariaDB!"
         ;;
@@ -49,16 +53,16 @@ Database_Selection()
         DBSelect="2"
     esac
 
-    if [[ "${DBSelect}" = "3" || "${DBSelect}" = "4" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]] && [ `free -m | grep Mem | awk '{print  $2}'` -le 1024 ]; then
-        echo "Memory less than 1GB, can't install MySQL 5.6, 5.7 or MairaDB 10!"
+    if [[ "${DBSelect}" =~ ^[34678]$ ]] && [ `free -m | grep Mem | awk '{print  $2}'` -le 1024 ]; then
+        echo "Memory less than 1GB, can't install MySQL 5.6, 5.7 or MairaDB 10+!"
         exit 1
     fi
 
-    if [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
+    if [[ "${DBSelect}" =~ ^[5678]$ ]]; then
         MySQL_Bin="/usr/local/mariadb/bin/mysql"
         MySQL_Config="/usr/local/mariadb/bin/mysql_config"
         MySQL_Dir="/usr/local/mariadb"
-    elif [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
+    elif [[ "${DBSelect}" =~ ^[1234]$ ]]; then
         MySQL_Bin="/usr/local/mysql/bin/mysql"
         MySQL_Config="/usr/local/mysql/bin/mysql_config"
         MySQL_Dir="/usr/local/mysql"
@@ -68,10 +72,11 @@ Database_Selection()
         #set mysql root password
         echo "==========================="
         DB_Root_Password="root"
-        Echo_Yellow "Please setup root password of MySQL.(Default password: root)"
+        Echo_Yellow "Please setup root password of MySQL."
         read -p "Please enter: " DB_Root_Password
         if [ "${DB_Root_Password}" = "" ]; then
-            DB_Root_Password="root"
+            echo "NO input,password will be generated randomly."
+            DB_Root_Password="lnmp.org#$RANDOM"
         fi
         echo "MySQL root password: ${DB_Root_Password}"
 
@@ -104,15 +109,16 @@ PHP_Selection()
     echo "==========================="
 
     PHPSelect="3"
-    Echo_Yellow "You have 6 options for your PHP install."
+    Echo_Yellow "You have 8 options for your PHP install."
     echo "1: Install ${PHP_Info[0]}"
     echo "2: Install ${PHP_Info[1]}"
     echo "3: Install ${PHP_Info[2]}"
-    echo "4: Install ${PHP_Info[3]} (Default)"
-    echo "5: Install ${PHP_Info[4]}"
+    echo "4: Install ${PHP_Info[3]}"
+    echo "5: Install ${PHP_Info[4]} (Default)"
     echo "6: Install ${PHP_Info[5]}"
     echo "7: Install ${PHP_Info[6]}"
-    read -p "Enter your choice (1, 2, 3, 4, 5, 6 or 7): " PHPSelect
+    echo "8: Install ${PHP_Info[7]}"
+    read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7 or 8): " PHPSelect
 
     case "${PHPSelect}" in
     1)
@@ -140,9 +146,12 @@ PHP_Selection()
     7)
         echo "You will install ${PHP_Info[6]}"
         ;;
+    8)
+        echo "You will install ${PHP_Info[7]}"
+        ;;
     *)
-        echo "No input,You will install ${PHP_Info[3]}"
-        PHPSelect="4"
+        echo "No input,You will install ${PHP_Info[4]}"
+        PHPSelect="5"
     esac
 }
 
@@ -217,8 +226,8 @@ Apache_Selection()
 
     ApacheSelect="1"
     Echo_Yellow "You have 2 options for your Apache install."
-    echo "1: Install ${Apache_Info[0]} (Default)"
-    echo "2: Install ${Apache_Info[1]}"
+    echo "1: Install ${Apache_Info[0]}"
+    echo "2: Install ${Apache_Info[1]} (Default)"
     read -p "Enter your choice (1 or 2): " ApacheSelect
 
     if [ "${ApacheSelect}" = "1" ]; then
@@ -226,8 +235,8 @@ Apache_Selection()
     elif [ "${ApacheSelect}" = "2" ]; then
         echo "You will install ${Apache_Info[1]}"
     else
-        echo "No input,You will install ${Apache_Info[0]}"
-        ApacheSelect="1"
+        echo "No input,You will install ${Apache_Info[1]}"
+        ApacheSelect="2"
     fi
     if [[ "${PHPSelect}" = "1" && "${ApacheSelect}" = "2" ]]; then
         Echo_Red "PHP 5.2.17 is not compatible with Apache 2.4.*."
@@ -239,9 +248,17 @@ Apache_Selection()
 Kill_PM()
 {
     if ps aux | grep "yum" | grep -qv "grep"; then
-        killall yum
+        if [ -s /usr/bin/killall ]; then
+            killall yum
+        else
+            kill `pidof yum`
+        fi
     elif ps aux | grep "apt-get" | grep -qv "grep"; then
-        killall apt-get
+        if [ -s /usr/bin/killall ]; then
+            killall apt-get
+        else
+            kill `pidof apt-get`
+        fi
     fi
 }
 
@@ -418,12 +435,12 @@ Print_APP_Ver()
 {
     echo "You will install ${Stack} stack."
     if [ "${Stack}" != "lamp" ]; then
-        echo ${Nginx_Ver}
+        echo "${Nginx_Ver}"
     fi
 
-    if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
+    if [[ "${DBSelect}" =~ ^[1234]$ ]]; then
         echo "${Mysql_Ver}"
-    elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
+    elif [[ "${DBSelect}" =~ ^[5678]$ ]]; then
         echo "${Mariadb_Ver}"
     elif [ "${DBSelect}" = "0" ]; then
         echo "Do not install MySQL/MariaDB!"
@@ -445,9 +462,15 @@ Print_APP_Ver()
     echo "Download Mirror: ${Download_Mirror}"
     echo "Nginx Additional Modules: ${Nginx_Modules_Options}"
     echo "PHP Additional Modules: ${PHP_Modules_Options}"
-    if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
+    if [ "${Enable_PHP_Fileinfo}" = "y" ]; then
+        echo "enable PHP fileinfo."
+    fi
+    if [ "${Enable_Nginx_Lua}" = "y" ]; then
+        echo "enable Nginx Lua."
+    fi
+    if [[ "${DBSelect}" =~ ^[1234]$ ]]; then
         echo "Database Directory: ${MySQL_Data_Dir}"
-    elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" ]]; then
+    elif [[ "${DBSelect}" =~ ^[5678]$ ]]; then
         echo "Database Directory: ${MariaDB_Data_Dir}"
     elif [ "${DBSelect}" = "0" ]; then
         echo "Do not install MySQL/MariaDB!"
@@ -503,25 +526,30 @@ Check_Mirror()
     country=`curl -sSk --connect-timeout 30 -m 60 https://ip.vpser.net/country`
     echo "Server Location: ${country}"
     if [ "${Download_Mirror}" = "https://soft.vpser.net" ]; then
+        echo "Try http://soft.vpser.net ..."
         mirror_code=`curl -o /dev/null -m 20 --connect-timeout 20 -sk -w %{http_code} http://soft.vpser.net`
         if [ "${mirror_code}" != "200" ]; then
-            if [ "${country}" = "CN" ]; then
+            if [[ "${country}" = "CN" || "${country}" = "" ]]; then
+                echo "Try http://soft1.vpser.net ..."
                 mirror_code=`curl -o /dev/null -m 20 --connect-timeout 20 -sk -w %{http_code} http://soft1.vpser.net`
                 if [ "${mirror_code}" = "200" ]; then
                     echo "Change to mirror http://soft1.vpser.net"
                     Download_Mirror='http://soft1.vpser.net'
                 else
-                    echo "Change to mirror fttp://soft.vpser.net"
-                    Download_Mirror='ftp://soft.vpser.net'
+                    echo "Can not connect to download mirror,Please modify lnmp.conf manually."
+                    echo "More info,please visit https://lnmp.org/faq/download-url.html"
+                    exit 1
                 fi
             else
+                echo "Try http://soft2.vpser.net ..."
                 mirror_code=`curl -o /dev/null -m 20 --connect-timeout 20 -sk -w %{http_code} http://soft2.vpser.net`
                 if [ "${mirror_code}" = "200" ]; then
                     echo "Change to mirror http://soft2.vpser.net"
                     Download_Mirror='http://soft2.vpser.net'
                 else
-                    echo "Change to mirror ftp://soft.vpser.net"
-                    Download_Mirror='ftp://soft.vpser.net'
+                    echo "Can not connect to download mirror,Please modify lnmp.conf manually."
+                    echo "More info,please visit https://lnmp.org/faq/download-url.html"
+                    exit 1
                 fi
             fi
         fi
