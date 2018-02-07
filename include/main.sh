@@ -322,7 +322,7 @@ Get_Dist_Name()
     elif grep -Eqi "Fedora" /etc/issue || grep -Eq "Fedora" /etc/*-release; then
         DISTRO='Fedora'
         PM='yum'
-    elif grep -Eqi "Amazon Linux AMI" /etc/issue || grep -Eq "Amazon Linux AMI" /etc/*-release; then
+    elif grep -Eqi "Amazon Linux" /etc/issue || grep -Eq "Amazon Linux" /etc/*-release; then
         DISTRO='Amazon'
         PM='yum'
     elif grep -Eqi "Debian" /etc/issue || grep -Eq "Debian" /etc/*-release; then
@@ -529,16 +529,23 @@ Check_Mirror()
         echo "Try http://soft.vpser.net ..."
         mirror_code=`curl -o /dev/null -m 20 --connect-timeout 20 -sk -w %{http_code} http://soft.vpser.net`
         if [ "${mirror_code}" != "200" ]; then
-            if [[ "${country}" = "CN" || "${country}" = "" ]]; then
+            if [ "${country}" = "CN" ]; then
                 echo "Try http://soft1.vpser.net ..."
                 mirror_code=`curl -o /dev/null -m 20 --connect-timeout 20 -sk -w %{http_code} http://soft1.vpser.net`
                 if [ "${mirror_code}" = "200" ]; then
                     echo "Change to mirror http://soft1.vpser.net"
                     Download_Mirror='http://soft1.vpser.net'
                 else
-                    echo "Can not connect to download mirror,Please modify lnmp.conf manually."
-                    echo "More info,please visit https://lnmp.org/faq/download-url.html"
-                    exit 1
+                    echo "Try http://soft2.vpser.net ..."
+                    mirror_code=`curl -o /dev/null -m 20 --connect-timeout 20 -sk -w %{http_code} http://soft2.vpser.net`
+                    if [ "${mirror_code}" = "200" ]; then
+                        echo "Change to mirror http://soft2.vpser.net"
+                        Download_Mirror='http://soft2.vpser.net'
+                    else
+                        echo "Can not connect to download mirror,Please modify lnmp.conf manually."
+                        echo "More info,please visit https://lnmp.org/faq/download-url.html"
+                        exit 1
+                    fi
                 fi
             else
                 echo "Try http://soft2.vpser.net ..."
@@ -547,11 +554,20 @@ Check_Mirror()
                     echo "Change to mirror http://soft2.vpser.net"
                     Download_Mirror='http://soft2.vpser.net'
                 else
-                    echo "Can not connect to download mirror,Please modify lnmp.conf manually."
-                    echo "More info,please visit https://lnmp.org/faq/download-url.html"
-                    exit 1
+                    echo "Try http://soft1.vpser.net ..."
+                    mirror_code=`curl -o /dev/null -m 20 --connect-timeout 20 -sk -w %{http_code} http://soft1.vpser.net`
+                    if [ "${mirror_code}" = "200" ]; then
+                        echo "Change to mirror http://soft1.vpser.net"
+                        Download_Mirror='http://soft1.vpser.net'
+                    else
+                        echo "Can not connect to download mirror,Please modify lnmp.conf manually."
+                        echo "More info,please visit https://lnmp.org/faq/download-url.html"
+                        exit 1
+                    fi
                 fi
             fi
+        else
+            echo "Http code: ${mirror_code}"
         fi
     fi
 }
