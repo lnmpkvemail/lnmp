@@ -11,8 +11,11 @@ LNMP 1.5
 增加Nginx编译参数，默认开启stream；
 增加Apache 2.4支持http2；
 增加旧版本Ubuntu中国地区源；
-增加添加虚拟主机时pathinfo可选项；
+增加虚拟主机添加时pathinfo可选项；
 增加certbot升级到acme.sh的一键升级功能命令为 ./upgrade1.x-1.5.sh ssl 按提示输入和原来SSL虚拟主机一样配置的信息就可以；
+增加对Amazone Linux 2支持；
+增加修复MySQL gcc7 bug；
+增加magento2实例配置文件 magento2-example.conf；
 修复深度Deepin桌面版问题；
 移除PHP禁用函数scandir；
 调整默认PHP版本为5.6；
@@ -20,6 +23,7 @@ LNMP 1.5
 调整MySQL/MariaDB安装时未输入密码由原来密码设为 root 调整为 lnmp.org#随机数字 ；
 调整MySQL国内下载源为科大的；
 调整LAMP模式下SSL添加过程增加中间证书可选项；
+调整默认虚拟主机页面字体显示等细节；
 其他一些功能优化及调整......
 
 LNMP 1.4
