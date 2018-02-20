@@ -100,6 +100,8 @@ Install_PHP_Dependent()
     if [ -d /usr/include/arm-linux-gnueabihf/curl ]; then
         ln -sf /usr/include/arm-linux-gnueabihf/curl /usr/include/
     fi
+
+    ldconfig
 }
 
 Check_PHP_Upgrade_Files()
