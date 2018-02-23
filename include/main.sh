@@ -528,7 +528,9 @@ Check_Mirror()
     if [ "${Download_Mirror}" = "https://soft.vpser.net" ]; then
         echo "Try http://soft.vpser.net ..."
         mirror_code=`curl -o /dev/null -m 20 --connect-timeout 20 -sk -w %{http_code} http://soft.vpser.net`
-        if [ "${mirror_code}" != "200" ]; then
+        echo "http://soft.vpser.net http code: ${mirror_code}"
+        if [[ "${mirror_code}" != "200" || "${mirror_code}" != "302" ]]; then
+            ping -c 3 soft.vpser.net
             if [ "${country}" = "CN" ]; then
                 echo "Try http://soft1.vpser.net ..."
                 mirror_code=`curl -o /dev/null -m 20 --connect-timeout 20 -sk -w %{http_code} http://soft1.vpser.net`
