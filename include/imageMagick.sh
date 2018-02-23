@@ -21,6 +21,7 @@ Install_ImageMagic()
         apt-get update
         apt-get install -y libwebp-dev
     fi
+    ldconfig
 
     cd ${cur_dir}/src
     if [ -s /usr/local/imagemagick/bin/convert ]; then
