@@ -29,8 +29,8 @@ fi
 
 echo "Downloading..."
 cd ../src
-Download_Files ${Download_Mirror}/security/fail2ban/fail2ban-0.9.6.tar.gz fail2ban-0.9.6.tar.gz
-tar zxf fail2ban-0.9.6.tar.gz && cd fail2ban-0.9.6
+Download_Files ${Download_Mirror}/security/fail2ban/fail2ban-0.10.2.tar.gz fail2ban-0.10.2.tar.gz
+tar zxf fail2ban-0.10.2.tar.gz && cd fail2ban-0.10.2
 echo "Installing..."
 python setup.py install
 
@@ -65,7 +65,7 @@ elif [ "${PM}" = "apt" ]; then
 fi
 chmod +x /etc/init.d/fail2ban
 cd ..
-rm -rf fail2ban-0.9.6
+rm -rf fail2ban-0.10.2
 
 StartUp fail2ban
 
