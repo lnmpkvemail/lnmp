@@ -7,18 +7,20 @@ Apache_Info=('Apache 2.2.34' 'Apache 2.4.29')
 Database_Selection()
 {
 #which MySQL Version do you want to install?
-    DBSelect="2"
-    Echo_Yellow "You have 9 options for your DataBase install."
-    echo "1: Install ${DB_Info[0]}"
-    echo "2: Install ${DB_Info[1]} (Default)"
-    echo "3: Install ${DB_Info[2]}"
-    echo "4: Install ${DB_Info[3]}"
-    echo "5: Install ${DB_Info[4]}"
-    echo "6: Install ${DB_Info[5]}"
-    echo "7: Install ${DB_Info[6]}"
-    echo "8: Install ${DB_Info[7]}"
-    echo "0: DO NOT Install MySQL/MariaDB"
-    read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8 or 0): " DBSelect
+    if [ -z ${DBSelect} ]; then
+        DBSelect="2"
+        Echo_Yellow "You have 9 options for your DataBase install."
+        echo "1: Install ${DB_Info[0]}"
+        echo "2: Install ${DB_Info[1]} (Default)"
+        echo "3: Install ${DB_Info[2]}"
+        echo "4: Install ${DB_Info[3]}"
+        echo "5: Install ${DB_Info[4]}"
+        echo "6: Install ${DB_Info[5]}"
+        echo "7: Install ${DB_Info[6]}"
+        echo "8: Install ${DB_Info[7]}"
+        echo "0: DO NOT Install MySQL/MariaDB"
+        read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8 or 0): " DBSelect
+    fi
 
     case "${DBSelect}" in
     1)
@@ -70,22 +72,26 @@ Database_Selection()
 
     if [[ "${DBSelect}" != "0" ]]; then
         #set mysql root password
-        echo "==========================="
-        DB_Root_Password="root"
-        Echo_Yellow "Please setup root password of MySQL."
-        read -p "Please enter: " DB_Root_Password
-        if [ "${DB_Root_Password}" = "" ]; then
-            echo "NO input,password will be generated randomly."
-            DB_Root_Password="lnmp.org#$RANDOM"
+        if [ -z ${DB_Root_Password} ]; then
+            echo "==========================="
+            DB_Root_Password="root"
+            Echo_Yellow "Please setup root password of MySQL."
+            read -p "Please enter: " DB_Root_Password
+            if [ "${DB_Root_Password}" = "" ]; then
+                echo "NO input,password will be generated randomly."
+                DB_Root_Password="lnmp.org#$RANDOM"
+            fi
         fi
         echo "MySQL root password: ${DB_Root_Password}"
 
         #do you want to enable or disable the InnoDB Storage Engine?
         echo "==========================="
 
-        InstallInnodb="y"
-        Echo_Yellow "Do you want to enable or disable the InnoDB Storage Engine?"
-        read -p "Default enable,Enter your choice [Y/n]: " InstallInnodb
+        if [ -z ${InstallInnodb} ]; then
+            InstallInnodb="y"
+            Echo_Yellow "Do you want to enable or disable the InnoDB Storage Engine?"
+            read -p "Default enable,Enter your choice [Y/n]: " InstallInnodb
+        fi
 
         case "${InstallInnodb}" in
         [yY][eE][sS]|[yY])
@@ -106,19 +112,21 @@ Database_Selection()
 PHP_Selection()
 {
 #which PHP Version do you want to install?
-    echo "==========================="
+    if [ -z ${PHPSelect} ]; then
+        echo "==========================="
 
-    PHPSelect="3"
-    Echo_Yellow "You have 8 options for your PHP install."
-    echo "1: Install ${PHP_Info[0]}"
-    echo "2: Install ${PHP_Info[1]}"
-    echo "3: Install ${PHP_Info[2]}"
-    echo "4: Install ${PHP_Info[3]}"
-    echo "5: Install ${PHP_Info[4]} (Default)"
-    echo "6: Install ${PHP_Info[5]}"
-    echo "7: Install ${PHP_Info[6]}"
-    echo "8: Install ${PHP_Info[7]}"
-    read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7 or 8): " PHPSelect
+        PHPSelect="3"
+        Echo_Yellow "You have 8 options for your PHP install."
+        echo "1: Install ${PHP_Info[0]}"
+        echo "2: Install ${PHP_Info[1]}"
+        echo "3: Install ${PHP_Info[2]}"
+        echo "4: Install ${PHP_Info[3]}"
+        echo "5: Install ${PHP_Info[4]} (Default)"
+        echo "6: Install ${PHP_Info[5]}"
+        echo "7: Install ${PHP_Info[6]}"
+        echo "8: Install ${PHP_Info[7]}"
+        read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7 or 8): " PHPSelect
+    fi
 
     case "${PHPSelect}" in
     1)
@@ -158,14 +166,16 @@ PHP_Selection()
 MemoryAllocator_Selection()
 {
 #which Memory Allocator do you want to install?
-    echo "==========================="
+    if [ -z ${SelectMalloc} ]; then
+        echo "==========================="
 
-    SelectMalloc="1"
-    Echo_Yellow "You have 3 options for your Memory Allocator install."
-    echo "1: Don't install Memory Allocator. (Default)"
-    echo "2: Install Jemalloc"
-    echo "3: Install TCMalloc"
-    read -p "Enter your choice (1, 2 or 3): " SelectMalloc
+        SelectMalloc="1"
+        Echo_Yellow "You have 3 options for your Memory Allocator install."
+        echo "1: Don't install Memory Allocator. (Default)"
+        echo "2: Install Jemalloc"
+        echo "3: Install TCMalloc"
+        read -p "Enter your choice (1, 2 or 3): " SelectMalloc
+    fi
 
     case "${SelectMalloc}" in
     1)
@@ -209,26 +219,29 @@ Dispaly_Selection()
 Apache_Selection()
 {
     echo "==========================="
-#set Server Administrator Email Address
-    ServerAdmin=""
-    read -p "Please enter Administrator Email Address: " ServerAdmin
+    #set Server Administrator Email Address
+    if [ -z ${ServerAdmin} ]; then
+        ServerAdmin=""
+        read -p "Please enter Administrator Email Address: " ServerAdmin
+    fi
     if [ "${ServerAdmin}" == "" ]; then
         echo "Administrator Email Address will set to webmaster@example.com!"
         ServerAdmin="webmaster@example.com"
     else
-    echo "==========================="
-    echo Server Administrator Email: "${ServerAdmin}"
-    echo "==========================="
+        echo "==========================="
+        echo Server Administrator Email: "${ServerAdmin}"
+        echo "==========================="
     fi
+    echo "==========================="
 
 #which Apache Version do you want to install?
-    echo "==========================="
-
-    ApacheSelect="1"
-    Echo_Yellow "You have 2 options for your Apache install."
-    echo "1: Install ${Apache_Info[0]}"
-    echo "2: Install ${Apache_Info[1]} (Default)"
-    read -p "Enter your choice (1 or 2): " ApacheSelect
+    if [ -z ${ApacheSelect} ]; then
+        ApacheSelect="1"
+        Echo_Yellow "You have 2 options for your Apache install."
+        echo "1: Install ${Apache_Info[0]}"
+        echo "2: Install ${Apache_Info[1]} (Default)"
+        read -p "Enter your choice (1 or 2): " ApacheSelect
+    fi
 
     if [ "${ApacheSelect}" = "1" ]; then
         echo "You will install ${Apache_Info[0]}"
@@ -264,12 +277,14 @@ Kill_PM()
 
 Press_Install()
 {
-    echo ""
-    Echo_Green "Press any key to install...or Press Ctrl+c to cancel"
-    OLDCONFIG=`stty -g`
-    stty -icanon -echo min 1 time 0
-    dd count=1 2>/dev/null
-    stty ${OLDCONFIG}
+    if [ -z ${LNMP_Auto} ]; then
+        echo ""
+        Echo_Green "Press any key to install...or Press Ctrl+c to cancel"
+        OLDCONFIG=`stty -g`
+        stty -icanon -echo min 1 time 0
+        dd count=1 2>/dev/null
+        stty ${OLDCONFIG}
+    fi
     . include/version.sh
     Kill_PM
 }

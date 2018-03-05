@@ -70,6 +70,21 @@ lnmp.conf配置文件，可以修改lnmp.conf自定义下载服务器地址、�
 * 可选6，执行：`./cut_nginx_logs.sh` 日志切割脚本。
 * 可选7，执行：`./remove_disable_function.sh` 运行此脚本可删掉禁用函数。
 
+### 无人值守安装
+* 设置如下环境变量即可完全无人值守安装
+
+变量名 | 变量值含义
+LNMP_Auto | y
+DBSelect | 数据库版本
+DB_Root_Password | 数据库root密码（不可为空）
+InstallInnodb | 是否安装Innodb引擎
+PHPSelect | PHP版本
+SelectMalloc | 内存分配器版本
+ApacheSelect | Apache版本
+ServerAdmin | 管理员邮箱
+
+* 例子`LNMP_Auto="y" DBSelect="3" DB_Root_Password="password" InstallInnodb="y" PHPSelect="5" SelectMalloc="1" ApacheSelect="2" ServerAdmin="user@test.com" ./install.sh lnmpa`
+
 ### 卸载
 * 卸载LNMP、LNMPA或LAMP可执行：`./uninstall.sh` 按提示选择即可卸载。
 
