@@ -161,12 +161,12 @@ Function_Ftp()
 
 Add_VHost_Config()
 {
-    if [ ! -f /usr/local/nginx/conf/${rewrite}.conf ]; then
+    if [ ! -f /usr/local/nginx/conf/rewrite/${rewrite}.conf ]; then
         echo "Create Virtul Host Rewrite file......"
-        touch /usr/local/nginx/conf/${rewrite}.conf
-        echo "Create rewirte file successful,You can add rewrite rule into /usr/local/nginx/conf/${rewrite}.conf."
+        touch /usr/local/nginx/conf/rewrite/${rewrite}.conf
+        echo "Create rewirte file successful,You can add rewrite rule into /usr/local/nginx/conf/rewrite/${rewrite}.conf."
     else
-        echo "You select the exist rewrite rule:/usr/local/nginx/conf/${rewrite}.conf"
+        echo "You select the exist rewrite rule:/usr/local/nginx/conf/rewrite/${rewrite}.conf"
     fi
 
     cat >"/usr/local/nginx/conf/vhost/${domain}.conf"<<EOF
@@ -178,7 +178,7 @@ server
         index index.html index.htm index.php default.html default.htm default.php;
         root  ${vhostdir};
 
-        include ${rewrite}.conf;
+        include rewrite/${rewrite}.conf;
         #error_page   404   /404.html;
 
         # Deny access to PHP files in specific directory
@@ -412,7 +412,7 @@ Add_VHost()
     elif [ "${allow_rewrite}" == "y" ]; then
         rewrite="other"
         echo "Please enter the rewrite of programme, "
-        echo "wordpress,discuz,typecho,sablog,typecho rewrite was exist."
+        echo "wordpress,discuzx,typecho,thinkphp,laravel,codeigniter,yii2 rewrite was exist."
         Echo_Yellow "(Default rewrite: other): "
         read rewrite
         if [ "${rewrite}" == "" ]; then
@@ -1035,7 +1035,7 @@ server
         # openssl dhparam -out /usr/local/nginx/conf/ssl/dhparam.pem 2048
         ssl_dhparam /usr/local/nginx/conf/ssl/dhparam.pem;
 
-        include ${rewrite}.conf;
+        include rewrite/${rewrite}.conf;
         #error_page   404   /404.html;
 
         # Deny access to PHP files in specific directory

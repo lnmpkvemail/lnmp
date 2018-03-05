@@ -246,16 +246,16 @@ else
         echo "Copy configure files..."
         sleep 1
         if [ ! -s /usr/local/nginx/conf/enable-php.conf ]; then
-            \cp conf/enable-php.conf /usr/local/nginx/conf/enable-php.conf
+            \cp ${cur_dir}/conf/enable-php.conf /usr/local/nginx/conf/enable-php.conf
         fi
         if [ ! -s /usr/local/nginx/conf/pathinfo.conf ]; then
-            \cp conf/pathinfo.conf /usr/local/nginx/conf/pathinfo.conf
+            \cp ${cur_dir}/conf/pathinfo.conf /usr/local/nginx/conf/pathinfo.conf
         fi
         if [ ! -s /usr/local/nginx/conf/enable-php-pathinfo.conf ]; then
-            \cp conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php-pathinfo.conf
+            \cp ${cur_dir}/conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php-pathinfo.conf
         fi
-        if [ ! -f /usr/local/nginx/conf/none.conf ]; then
-            \cp conf/rewrite/none.conf /usr/local/nginx/conf/none.conf
+        if [ ! -d /usr/local/nginx/conf/rewrite ]; then
+            \cp -ra ${cur_dir}/conf/rewrite /usr/local/nginx/conf/
         fi
         if [ ! -d /usr/local/nginx/conf/vhost ]; then
             mkdir /usr/local/nginx/conf/vhost
@@ -267,9 +267,9 @@ else
         chmod +x /bin/lnmp
         echo "Copy configure files..."
         sleep 1
-        \cp conf/proxy.conf /usr/local/nginx/conf/proxy.conf
+        \cp ${cur_dir}/conf/proxy.conf /usr/local/nginx/conf/proxy.conf
         if [ ! -s /usr/local/nginx/conf/proxy-pass-php.conf ]; then
-            \cp conf/proxy-pass-php.conf /usr/local/nginx/conf/proxy-pass-php.conf
+            \cp ${cur_dir}/conf/proxy-pass-php.conf /usr/local/nginx/conf/proxy-pass-php.conf
         fi
         if ! grep -q "SetEnvIf X-Forwarded-Proto https HTTPS=on" /usr/local/apache/conf/httpd.conf; then
             if /usr/local/apache/bin/httpd -v|grep -Eqi "Apache/2.2."; then
