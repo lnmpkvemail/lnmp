@@ -74,6 +74,7 @@ lnmp.conf配置文件，可以修改lnmp.conf自定义下载服务器地址、�
 * 设置如下环境变量即可完全无人值守安装
 
 变量名 | 变量值含义
+--- | ---
 LNMP_Auto | y
 DBSelect | 数据库版本
 DB_Root_Password | 数据库root密码（不可为空）
