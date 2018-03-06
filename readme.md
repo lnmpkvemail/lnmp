@@ -98,9 +98,14 @@ MariaDB 10.1 | 7 | PHP 7.1 | 7 | | | |
 MariaDB 10.2 | 8 | PHP 7.2 | 8 | | | |
 不安装数据库 | 0 | | | | | |
 
-* 以LNMP模式，默认选项安装MySQL 5.5、MySQL root密码设置为lnmp.org、启用InnoDB、PHP 5.6、不安装内存分配器为例，在终端执行([建议先运行screen](https://www.vpser.net/manage/run-screen-lnmp.html))：
+* 以LNMP模式，默认选项安装MySQL 5.5、MySQL root密码设置为lnmp.org、启用InnoDB、PHP 5.6、不安装内存分配器为例，先执行([建议先运行screen](https://www.vpser.net/manage/run-screen-lnmp.html))，再下载解压lnmp安装包：
+
 `wget http://soft.vpser.net/lnmp/lnmp1.5beta.tar.gz -cO lnmp1.5beta.tar.gz && tar zxf lnmp1.5beta.tar.gz && cd lnmp1.5`
+
+然后设置无人值守参数并安装：
+
 `LNMP_Auto="y" DBSelect="2" DB_Root_Password="lnmp.org" InstallInnodb="y" PHPSelect="5" SelectMalloc="1" ./install.sh lnmp`
+
 (如果缺失参数的话还是会有要求选择缺失选项的提示)。
 
 ### 卸载
