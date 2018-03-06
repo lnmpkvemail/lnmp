@@ -84,17 +84,19 @@ SelectMalloc | 内存分配器版本序号
 ApacheSelect | Apache版本序号，仅LNMPA和LAMP模式需改参数
 ServerAdmin | 管理员邮箱，仅LNMPA和LAMP模式需改参数
 
+* 各程序版本对应序号
+
 MySQL版本 | 对应序号 | PHP版本 | 对应序号 | 内存分配器 | 对应序号 | Apache版本 | 对应序号
-:--: | :--: | :--: | :--: | :--: | :--:
+:------: | :------: | :------: | :------: | :------: | :--------: | :--------: | :--------:
 MySQL 5.1 | 1 | PHP 5.2 | 1 | 不安装 | 1 | Apache 2.2 | 1
 MySQL 5.5 | 2 | PHP 5.3 | 2 | Jemalloc | 2 | Apache 2.4 | 2
-MySQL 5.6 | 3 | PHP 5.4 | 3 | TCMalloc | 3
-MySQL 5.7 | 4 | PHP 5.5 | 4
-MariaDB 5.5 | 5 | PHP 5.6 | 5
-MariaDB 10.0 | 6 | PHP 7.0 | 6
-MariaDB 10.1 | 7 | PHP 7.1 | 7
-MariaDB 10.2 | 8 | PHP 7.2 | 8
-不安装数据库 | 0
+MySQL 5.6 | 3 | PHP 5.4 | 3 | TCMalloc | 3 | |
+MySQL 5.7 | 4 | PHP 5.5 | 4 | | | |
+MariaDB 5.5 | 5 | PHP 5.6 | 5 | | | |
+MariaDB 10.0 | 6 | PHP 7.0 | 6 | | | |
+MariaDB 10.1 | 7 | PHP 7.1 | 7 | | | |
+MariaDB 10.2 | 8 | PHP 7.2 | 8 | | | |
+不安装数据库 | 0 | | | | | |
 
 * 以LNMP模式，默认选项安装MySQL 5.5、MySQL root密码设置为lnmp.org、启用InnoDB、PHP 5.6、不安装内存分配器为例，在终端执行([建议先运行screen](https://www.vpser.net/manage/run-screen-lnmp.html))：
 `wget http://soft.vpser.net/lnmp/lnmp1.5beta.tar.gz -cO lnmp1.5beta.tar.gz && tar zxf lnmp1.5beta.tar.gz && cd lnmp1.5`
