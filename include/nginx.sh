@@ -80,24 +80,7 @@ Install_Nginx()
     else
         \cp conf/nginx.conf /usr/local/nginx/conf/nginx.conf
     fi
-    \cp conf/rewrite/dabr.conf /usr/local/nginx/conf/dabr.conf
-    \cp conf/rewrite/discuz.conf /usr/local/nginx/conf/discuz.conf
-    \cp conf/rewrite/sablog.conf /usr/local/nginx/conf/sablog.conf
-    \cp conf/rewrite/typecho.conf /usr/local/nginx/conf/typecho.conf
-    \cp conf/rewrite/typecho2.conf /usr/local/nginx/conf/typecho2.conf
-    \cp conf/rewrite/wordpress.conf /usr/local/nginx/conf/wordpress.conf
-    \cp conf/rewrite/discuzx.conf /usr/local/nginx/conf/discuzx.conf
-    \cp conf/rewrite/none.conf /usr/local/nginx/conf/none.conf
-    \cp conf/rewrite/wp2.conf /usr/local/nginx/conf/wp2.conf
-    \cp conf/rewrite/phpwind.conf /usr/local/nginx/conf/phpwind.conf
-    \cp conf/rewrite/shopex.conf /usr/local/nginx/conf/shopex.conf
-    \cp conf/rewrite/dedecms.conf /usr/local/nginx/conf/dedecms.conf
-    \cp conf/rewrite/drupal.conf /usr/local/nginx/conf/drupal.conf
-    \cp conf/rewrite/ecshop.conf /usr/local/nginx/conf/ecshop.conf
-    \cp conf/rewrite/codeigniter.conf /usr/local/nginx/conf/codeigniter.conf
-    \cp conf/rewrite/laravel.conf /usr/local/nginx/conf/laravel.conf
-    \cp conf/rewrite/thinkphp.conf /usr/local/nginx/conf/thinkphp.conf
-    \cp conf/rewrite/yii2.conf /usr/local/nginx/conf/yii2.conf
+    \cp -ra conf/rewrite /usr/local/nginx/conf/
     \cp conf/pathinfo.conf /usr/local/nginx/conf/pathinfo.conf
     \cp conf/enable-php.conf /usr/local/nginx/conf/enable-php.conf
     \cp conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php-pathinfo.conf
