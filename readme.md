@@ -76,15 +76,30 @@ lnmp.conf配置文件，可以修改lnmp.conf自定义下载服务器地址、�
 变量名 | 变量值含义
 --- | ---
 LNMP_Auto | 启用无人值守自动安装
-DBSelect | 数据库版本
+DBSelect | 数据库版本序号
 DB_Root_Password | 数据库root密码（不可为空）
-InstallInnodb | 是否安装Innodb引擎
-PHPSelect | PHP版本
-SelectMalloc | 内存分配器版本
-ApacheSelect | Apache版本
-ServerAdmin | 管理员邮箱
+InstallInnodb | 是否安装Innodb引擎，y 或 n ，当不安装数据库时可以不加
+PHPSelect | PHP版本序号
+SelectMalloc | 内存分配器版本序号
+ApacheSelect | Apache版本序号，仅LNMPA和LAMP模式需改参数
+ServerAdmin | 管理员邮箱，仅LNMPA和LAMP模式需改参数
 
-* 例子`LNMP_Auto="y" DBSelect="3" DB_Root_Password="password" InstallInnodb="y" PHPSelect="5" SelectMalloc="1" ApacheSelect="2" ServerAdmin="user@test.com" ./install.sh lnmpa`
+MySQL版本 | 对应序号 | PHP版本 | 对应序号 | 内存分配器 | 对应序号 | Apache版本 | 对应序号
+:--: | :--: | :--: | :--: | :--: | :--:
+MySQL 5.1 | 1 | PHP 5.2 | 1 | 不安装 | 1 | Apache 2.2 | 1
+MySQL 5.5 | 2 | PHP 5.3 | 2 | Jemalloc | 2 | Apache 2.4 | 2
+MySQL 5.6 | 3 | PHP 5.4 | 3 | TCMalloc | 3
+MySQL 5.7 | 4 | PHP 5.5 | 4
+MariaDB 5.5 | 5 | PHP 5.6 | 5
+MariaDB 10.0 | 6 | PHP 7.0 | 6
+MariaDB 10.1 | 7 | PHP 7.1 | 7
+MariaDB 10.2 | 8 | PHP 7.2 | 8
+不安装数据库 | 0
+
+* 以LNMP模式，默认选项安装MySQL 5.5、MySQL root密码设置为lnmp.org、启用InnoDB、PHP 5.6、不安装内存分配器为例，在终端执行([建议先运行screen](https://www.vpser.net/manage/run-screen-lnmp.html))：
+`wget http://soft.vpser.net/lnmp/lnmp1.5beta.tar.gz -cO lnmp1.5beta.tar.gz && tar zxf lnmp1.5beta.tar.gz && cd lnmp1.5`
+`LNMP_Auto="y" DBSelect="2" DB_Root_Password="lnmp.org" InstallInnodb="y" PHPSelect="5" SelectMalloc="1" ./install.sh lnmp`
+(如果缺失参数的话还是会有要求选择缺失选项的提示)。
 
 ### 卸载
 * 卸载LNMP、LNMPA或LAMP可执行：`./uninstall.sh` 按提示选择即可卸载。
