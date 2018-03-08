@@ -77,12 +77,12 @@ lnmp.conf配置文件，可以修改lnmp.conf自定义下载服务器地址、�
 --- | ---
 LNMP_Auto | 启用无人值守自动安装
 DBSelect | 数据库版本序号
-DB_Root_Password | 数据库root密码（不可为空）
-InstallInnodb | 是否安装Innodb引擎，y 或 n ，当不安装数据库时可以不加
+DB_Root_Password | 数据库root密码（不可为空），不安装数据库时可不加该参数
+InstallInnodb | 是否安装Innodb引擎，y 或 n ，不安装数据库时可不加该参数
 PHPSelect | PHP版本序号
 SelectMalloc | 内存分配器版本序号
-ApacheSelect | Apache版本序号，仅LNMPA和LAMP模式需改参数
-ServerAdmin | 管理员邮箱，仅LNMPA和LAMP模式需改参数
+ApacheSelect | Apache版本序号，仅LNMPA和LAMP模式需添加该参数
+ServerAdmin | 管理员邮箱，仅LNMPA和LAMP模式需添加该参数
 
 * 各程序版本对应序号
 
@@ -156,6 +156,20 @@ MariaDB 10.2 | 8 | PHP 7.2 | 8 | | | |
 * PHP-FPM配置文件：/usr/local/php/etc/php-fpm.conf
 * PureFtpd配置文件：/usr/local/pureftpd/etc/pure-ftpd.conf
 * Apache配置文件：/usr/local/apache/conf/httpd.conf
+
+### lnmp.conf 配置文件参数说明
+
+| 参数名称 | 参数介绍 | 例子 |
+| :-------: | :---------: | :--------: | 
+|Download_Mirror|下载镜像|一般默认，如异常可[修改下载镜像](https://lnmp.org/faq/download-url.html)|
+|Nginx_Modules_Options|添加Nginx模块或其他编译参数|--add-module=/第三方模块源码目录|
+|PHP_Modules_Options|添加PHP模块或编译参数|--enable-exif 有些模块需提前安装好依赖包|
+|MySQL_Data_Dir|MySQL数据库目录设置|默认/usr/local/mysql/var|
+|MariaDB_Data_Dir|MariaDB数据库目录设置|默认/usr/local/mariadb/var|
+|Default_Website_Dir|默认虚拟主机网站目录位置|默认/home/wwwroot/default|
+|Enable_Nginx_Openssl|Nginx是否使用新版openssl|默认 y，建议不修改，y是启用并开启到http2|
+|Enable_PHP_Fileinfo|是否安装开启php的fileinfo模块|默认n，根据自己情况而定，安装启用的话改成 y|
+|Enable_Nginx_Lua|是否为Nginx安装lua支持|默认n，安装lua可以使用一些基于lua的waf网站防火墙|
 
 ## 技术支持
 
