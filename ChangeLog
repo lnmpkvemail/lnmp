@@ -16,7 +16,10 @@ LNMP 1.5
 增加对Amazone Linux 2支持；
 增加修复MySQL gcc7 bug；
 增加magento2实例配置文件 magento2-example.conf；
+增加无人值守安装，官网上有具体教程；
 修复深度Deepin桌面版问题；
+修复MySQL bug；
+修复MariaDB bug；
 移除PHP禁用函数scandir；
 调整默认PHP版本为5.6；
 调整默认Apache版本为2.4；
@@ -24,6 +27,10 @@ LNMP 1.5
 调整MySQL国内下载源为科大的；
 调整LAMP模式下SSL添加过程增加中间证书可选项；
 调整默认虚拟主机页面字体显示等细节；
+调整nginx伪静态至/usr/local/nginx/conf/rewrite目录；
+调整优化lnmp下载源选择；
+完善卸载脚本；
+完善优化lnmp升级脚本 upgrade1.x-1.5.sh；
 其他一些功能优化及调整......
 
 LNMP 1.4
