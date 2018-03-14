@@ -127,6 +127,7 @@ MariaDB 10.2 | 8 | PHP 7.2 | 8 | | | |
 * 数据库管理：`lnmp database {add|list|edit|del}`
 * FTP用户管理：`lnmp ftp {add|list|edit|del|show}`
 * SSL添加：`lnmp ssl add`
+* 通配符/泛域名SSL添加：`lnmp dnsssl {cx|ali|cf|dp|he|gd|aws}` 需依赖域名dns api
 
 ## 相关图形界面
 * PHPMyAdmin：http://yourIP/phpmyadmin/

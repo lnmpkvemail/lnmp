@@ -842,6 +842,75 @@ Add_SSL()
     fi
 }
 
+Add_Dns_SSL()
+{
+    provider=$1
+    if [ "${provider}" != "" ]; then
+        dns_provider="dns_${provider}"
+    else
+        dns_provider=""
+    fi
+    if [ -s /usr/local/acme.sh/acme.sh ]; then
+        echo "/usr/local/acme.sh/acme.sh [found]"
+    else
+        cd /tmp
+        [[ -f latest.tar.gz ]] && rm -f latest.tar.gz
+        wget https://soft.vpser.net/lib/acme.sh/latest.tar.gz --prefer-family=IPv4 --no-check-certificate
+        tar zxf latest.tar.gz
+        cd acme.sh-*
+        ./acme.sh --install --log --home /usr/local/acme.sh --certhome /usr/local/apache/conf/ssl
+        cd ..
+        rm -f latest.tar.gz
+        rm -rf acme.sh-*
+        sed -i 's/cat "\$CERT_PATH"$/#cat "\$CERT_PATH"/g' /usr/local/acme.sh/acme.sh
+    fi
+    if [[ ! -s /usr/local/acme.sh/dnsapi/dns_${provider}.sh && "${provider}" != "" ]]; then
+        echo "DNS Provider: ${provider} not found."
+        exit 1
+    fi
+    Add_SSL_Info_Menu
+
+    . "/usr/local/acme.sh/acme.sh.env"
+
+    if [ -s /usr/local/apache/conf/ssl/${domain}/fullchain.cer ]; then
+        echo "Removing exist domain certificate..."
+        rm -rf /usr/local/apache/conf/ssl/${domain}
+    fi
+
+    letsdomain=""
+    if [ "${moredomain}" != "" ]; then
+        letsdomain="-d ${domain}"
+        for i in ${moredomain};do
+            letsdomain=${letsdomain}" -d ${i}"
+        done
+    else
+        letsdomain="-d ${domain}"
+    fi
+
+    echo "Starting create SSL Certificate use Let's Encrypt..."
+    /usr/local/acme.sh/acme.sh --issue ${letsdomain} --dns ${dns_provider} --reloadcmd "/etc/init.d/httpd graceful"
+    lets_status=$?
+    if [ "${lets_status}" = 0 ]; then
+        if [ ! -d "${vhostdir}" ]; then
+            echo "Create Virtul Host directory......"
+            mkdir -p ${vhostdir}
+            echo "set permissions of Virtual Host directory......"
+            chmod -R 755 ${vhostdir}
+            chown -R www:www ${vhostdir}
+        fi
+
+        if [ ! -s "/usr/local/apache/conf/vhost/${domain}.conf" ]; then
+            Add_VHost_Config
+        fi
+        ssl_certificate="/usr/local/apache/conf/ssl/${domain}/${domain}.cer"
+        ssl_certificate_key="/usr/local/apache/conf/ssl/${domain}/${domain}.key"
+        Create_SSL_Config
+        Echo_Green "Let's Encrypt SSL Certificate create successfully."
+    else
+        Echo_Red "Let's Encrypt SSL Certificate create failed!"
+    fi
+}
+
 Color_Text()
 {
   echo -e " \e[0;$2m$1\e[0m"
@@ -918,13 +987,17 @@ case "${arg1}" in
         Add_SSL_Menu
         Add_SSL
         ;;
+    dnsssl)
+        Add_Dns_SSL ${arg2}
+        ;;
     *)
         echo "Usage: lnmp {start|stop|reload|restart|kill|status}"
-        echo "Usage: lnmp {nginx|mysql|mariadb|pureftpd|httpd} {start|stop|reload|restart|kill|status}"
+        echo "Usage: lnmp {httpd|mysql|mariadb|pureftpd} {start|stop|reload|restart|kill|status}"
         echo "Usage: lnmp vhost {add|list|del}"
         echo "Usage: lnmp database {add|list|edit|del}"
         echo "Usage: lnmp ftp {add|list|edit|del|show}"
         echo "Usage: lnmp ssl add"
+        echo "Usage: lnmp dnsssl {cx|ali|cf|dp|he|gd|aws}"
         ;;
 esac
 exit

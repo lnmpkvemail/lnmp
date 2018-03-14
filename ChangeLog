@@ -17,6 +17,7 @@ LNMP 1.5
 增加修复MySQL gcc7 bug；
 增加magento2实例配置文件 magento2-example.conf；
 增加无人值守安装，官网上有具体教程；
+增加LetseEcrypt 通配符/泛域名 SSL证书生成；
 修复深度Deepin桌面版问题；
 修复MySQL bug；
 修复MariaDB bug；
