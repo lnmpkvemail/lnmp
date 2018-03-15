@@ -486,7 +486,7 @@ Del_Database()
     fi
     echo "Your will delete database and MySQL user with same name: ${database_name}"
     echo "Sleep 10s, Press ctrl+c to cancel..."
-    sleep 10
+    Sleep_Sec 10
     cat >/tmp/.del.mysql.sql<<EOF
 DROP USER '${database_name}'@'127.0.0.1';
 DROP USER '${database_name}'@'localhost';
@@ -598,7 +598,7 @@ Del_Ftp()
     Enter_Ftp_Name
     echo "Your will delete ftp user ${ftp_account_name}"
     echo "Sleep 10s,Press ctrl+c to cancel..."
-    sleep 10
+    Sleep_Sec 10
     /usr/local/pureftpd/bin/pure-pw userdel ${ftp_account_name} -f /usr/local/pureftpd/etc/pureftpd.passwd -m
     [ $? -eq 0 ] && echo "FTP User: ${ftp_account_name} deleted Sucessfully." || echo "FTP User: ${ftp_account_name} not exists!"
 }
@@ -848,7 +848,7 @@ Add_Dns_SSL()
     if [ "${provider}" != "" ]; then
         dns_provider="dns_${provider}"
     else
-        dns_provider=""
+        Echo_Red "The dns manual mode can not renew automatically, you must issue it again manually."
     fi
     if [ -s /usr/local/acme.sh/acme.sh ]; then
         echo "/usr/local/acme.sh/acme.sh [found]"
@@ -888,8 +888,16 @@ Add_Dns_SSL()
     fi
 
     echo "Starting create SSL Certificate use Let's Encrypt..."
-    /usr/local/acme.sh/acme.sh --issue ${letsdomain} --dns ${dns_provider} --reloadcmd "/etc/init.d/httpd graceful"
-    lets_status=$?
+    if [ "${provider}" != "" ]; then
+        /usr/local/acme.sh/acme.sh --issue ${letsdomain} --dns ${dns_provider} --reloadcmd "/etc/init.d/httpd graceful"
+        lets_status=$?
+    else
+        /usr/local/acme.sh/acme.sh --issue ${letsdomain} --dns
+        Echo_Yellow "Please add the above TXT record to the domain in 120 seconds!!!\n"
+        Sleep_Sec 120
+        /usr/local/acme.sh/acme.sh --renew ${letsdomain}
+        lets_status=$?
+    fi
     if [ "${lets_status}" = 0 ]; then
         if [ ! -d "${vhostdir}" ]; then
             echo "Create Virtul Host directory......"
@@ -934,6 +942,18 @@ Echo_Yellow()
 Echo_Blue()
 {
   echo $(Color_Text "$1" "34")
+}
+
+Sleep_Sec()
+{
+    seconds=$1
+    while [ "${seconds}" -ge "0" ];do
+      echo -ne "\r     \r"
+      echo -n ${seconds}
+      seconds=$(($seconds - 1))
+      sleep 1
+    done
+    echo -ne "\r"
 }
 
 Check_DB
