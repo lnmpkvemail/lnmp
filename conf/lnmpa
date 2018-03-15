@@ -908,7 +908,7 @@ Add_Dns_SSL()
     if [ "${provider}" != "" ]; then
         dns_provider="dns_${provider}"
     else
-        Echo_Red "The dns manual mode can not renew automatically, you must issue it again manually."
+        Echo_Red "The dns manual mode can not renew automatically, you must renew it manually."
     fi
     if [ -s /usr/local/acme.sh/acme.sh ]; then
         echo "/usr/local/acme.sh/acme.sh [found]"
@@ -953,7 +953,7 @@ Add_Dns_SSL()
         lets_status=$?
     else
         /usr/local/acme.sh/acme.sh --issue ${letsdomain} --dns
-        Echo_Yellow "Please add the above TXT record to the domain in 120 seconds!!!\n"
+        Echo_Yellow "Please add the above TXT record to the domain in 120 seconds!!!"
         echo
         Sleep_Sec 120
         /usr/local/acme.sh/acme.sh --renew ${letsdomain}
