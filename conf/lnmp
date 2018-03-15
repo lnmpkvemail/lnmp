@@ -1158,7 +1158,7 @@ Add_Dns_SSL()
         /usr/local/acme.sh/acme.sh --renew ${letsdomain}
         lets_status=$?
     fi
-    if [ "${lets_status}" = 0 ] || [[ "${lets_status}" = 1 && -s "/usr/local/nginx/conf/ssl/${domain}/fullchain.cer" ]]; then
+    if [ "${lets_status}" = 0 ] || [[ "${provider}" = "" && "${lets_status}" = 1 && -s "/usr/local/nginx/conf/ssl/${domain}/fullchain.cer" ]]; then
         if [ ! -d "${vhostdir}" ]; then
             echo "Create Virtul Host directory......"
             mkdir -p ${vhostdir}
