@@ -41,6 +41,18 @@ Dele_Iptables_Rules()
     /sbin/iptables -D INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT
 }
 
+Sleep_Sec()
+{
+    seconds=$1
+    while [ "${seconds}" -ge "0" ];do
+      echo -ne "\r     \r"
+      echo -n ${seconds}
+      seconds=$(($seconds - 1))
+      sleep 1
+    done
+    echo -ne "\r"
+}
+
 Uninstall_LNMP()
 {
     echo "Stoping LNMP..."
@@ -205,7 +217,7 @@ ${MySQL_Dir}
 /etc/my.cnf
 /bin/lnmp
 EOF
-        sleep 3
+        Sleep_Sec 3
         Press_Start
         Uninstall_LNMP
     ;;
@@ -225,7 +237,7 @@ ${MySQL_Dir}
 /etc/my.cnf
 /bin/lnmp
 EOF
-        sleep 3
+        Sleep_Sec 3
         Press_Start
         Uninstall_LNMPA
     ;;
@@ -243,7 +255,7 @@ ${MySQL_Dir}
 /etc/my.cnf
 /bin/lnmp
 EOF
-        sleep 3
+        Sleep_Sec 3
         Press_Start
         Uninstall_LAMP
     ;;
