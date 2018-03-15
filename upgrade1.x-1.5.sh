@@ -306,5 +306,10 @@ else
         sed -i 's#/etc/init.d/mysql.*##' /bin/lnmp
     fi
 
+    if [ -s /usr/local/acme.sh/acme.sh ]; then
+        /usr/local/acme.sh/acme.sh --upgrade
+        sed -i 's/cat "\$CERT_PATH"$/#cat "\$CERT_PATH"/g' /usr/local/acme.sh/acme.sh
+    fi
+
     Echo_Green "upgrade lnmp manager complete."
 fi
