@@ -105,7 +105,7 @@ RHEL_Modify_Source()
 Ubuntu_Modify_Source()
 {
     if [ "${country}" = "CN" ]; then
-        OldReleasesURL='http://mirrors.ustc.edu.cn/ubuntu-old-releases/ubuntu/dists/'
+        OldReleasesURL='http://mirrors.ustc.edu.cn/ubuntu-old-releases/ubuntu/'
     else
         OldReleasesURL='http://old-releases.ubuntu.com/ubuntu/'
     fi
@@ -160,7 +160,7 @@ EOF
 
 Check_Old_Releases_URL()
 {
-    OR_Status=`wget --spider --server-response ${OldReleasesURL}/ubuntu/dists/$1/Release 2>&1 | awk '/^  HTTP/{print $2}'`
+    OR_Status=`wget --spider --server-response ${OldReleasesURL}/dists/$1/Release 2>&1 | awk '/^  HTTP/{print $2}'`
     if [ ${OR_Status} != "404" ]; then
         echo "Ubuntu old-releases status: ${OR_Status}";
         CodeName=$1
