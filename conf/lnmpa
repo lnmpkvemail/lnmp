@@ -1071,7 +1071,7 @@ case "${arg1}" in
         Add_SSL_Menu
         Add_SSL
         ;;
-    dnsssl)
+    dnsssl|dns)
         Add_Dns_SSL ${arg2}
         ;;
     *)
@@ -1081,6 +1081,6 @@ case "${arg1}" in
         echo "Usage: lnmp database {add|list|edit|del}"
         echo "Usage: lnmp ftp {add|list|edit|del|show}"
         echo "Usage: lnmp ssl add"
-        echo "Usage: lnmp dnsssl {cx|ali|cf|dp|he|gd|aws}"
+        echo "Usage: lnmp {dnsssl|dns} {cx|ali|cf|dp|he|gd|aws}"
 esac
 exit
