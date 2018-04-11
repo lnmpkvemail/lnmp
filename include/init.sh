@@ -133,13 +133,15 @@ Ubuntu_Modify_Source()
     elif grep -Eqi "15.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^15.10'; then
         CodeName='wily'
     elif grep -Eqi "16.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^16.10'; then
-        Ubuntu_Deadline yakkety
+        CodeName='yakkety'
     elif grep -Eqi "14.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^14.04'; then
         Ubuntu_Deadline trusty
     elif grep -Eqi "17.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^17.04'; then
-        Ubuntu_Deadline zesty
-    elif grep -Eqi "17.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^17.04'; then
+        CodeName='zesty'
+    elif grep -Eqi "17.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^17.10'; then
         Ubuntu_Deadline artful
+    elif grep -Eqi "16.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^16.04'; then
+        Ubuntu_Deadline xenial
     fi
     if [ "${CodeName}" != "" ]; then
         \cp /etc/apt/sources.list /etc/apt/sources.list.$(date +"%Y%m%d")
@@ -169,34 +171,27 @@ Check_Old_Releases_URL()
 
 Ubuntu_Deadline()
 {
-    yakkety_deadline=`date -d "2017-7-22 00:00:00" +%s`
     trusty_deadline=`date -d "2019-7-22 00:00:00" +%s`
-    zesty_deadline=`date -d "2018-1-31 00:00:00" +%s`
     artful_deadline=`date -d "2018-7-31 00:00:00" +%s`
+    xenial_deadline=`date -d "2021-4-31 00:00:00" +%s`
     cur_time=`date  +%s`
     case "$1" in
-        yakkety)
-            if [ ${cur_time} -gt ${yakkety_deadline} ]; then
-                echo "${cur_time} > ${yakkety_deadline}"
-                Check_Old_Releases_URL yakkety
-            fi
-            ;;
         trusty)
             if [ ${cur_time} -gt ${trusty_deadline} ]; then
                 echo "${cur_time} > ${trusty_deadline}"
                 Check_Old_Releases_URL trusty
             fi
             ;;
-        zesty)
-            if [ ${cur_time} -gt ${zesty_deadline} ]; then
-                echo "${cur_time} > ${zesty_deadline}"
-                Check_Old_Releases_URL zesty
-            fi
-            ;;
         artful)
             if [ ${cur_time} -gt ${artful_deadline} ]; then
                 echo "${cur_time} > ${artful_deadline}"
                 Check_Old_Releases_URL artful
+            fi
+            ;;
+        xenial)
+            if [ ${cur_time} -gt ${xenial_deadline} ]; then
+                echo "${cur_time} > ${xenial_deadline}"
+                Check_Old_Releases_URL xenial
             fi
             ;;
     esac
