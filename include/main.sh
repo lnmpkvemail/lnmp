@@ -2,7 +2,7 @@
 
 DB_Info=('MySQL 5.1.73' 'MySQL 5.5.59' 'MySQL 5.6.39' 'MySQL 5.7.21' 'MariaDB 5.5.59' 'MariaDB 10.0.34' 'MariaDB 10.1.32' 'MariaDB 10.2.14')
 PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.38' 'PHP 5.6.35' 'PHP 7.0.29' 'PHP 7.1.16' 'PHP 7.2.4')
-Apache_Info=('Apache 2.2.34' 'Apache 2.4.29')
+Apache_Info=('Apache 2.2.34' 'Apache 2.4.33')
 
 Database_Selection()
 {
