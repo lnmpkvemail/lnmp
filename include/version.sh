@@ -56,7 +56,7 @@ fi
 if [[ "${PHPSelect}" =~ ^[123]$ ]]; then
     PhpMyAdmin_Ver='phpMyAdmin-4.0.10.20-all-languages'
 else
-    PhpMyAdmin_Ver='phpMyAdmin-4.7.9-all-languages'
+    PhpMyAdmin_Ver='phpMyAdmin-4.8.0-all-languages'
 fi
 APR_Ver='apr-1.6.3'
 APR_Util_Ver='apr-util-1.6.1'
@@ -72,9 +72,9 @@ XCache_Ver='xcache-3.2.0'
 ImageMagick_Ver='ImageMagick-7.0.7-25'
 Imagick_Ver='imagick-3.4.3'
 ZendOpcache_Ver='zendopcache-7.0.5'
-Redis_Stable_Ver='redis-4.0.8'
+Redis_Stable_Ver='redis-4.0.9'
 PHPRedis_Ver='redis-4.0.0'
-Memcached_Ver='memcached-1.5.6'
+Memcached_Ver='memcached-1.5.7'
 Libmemcached_Ver='libmemcached-1.0.18'
 PHPMemcached_Ver='memcached-2.2.0'
 PHP7Memcached_Ver='memcached-3.0.4'
