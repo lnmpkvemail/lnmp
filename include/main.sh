@@ -355,6 +355,9 @@ Get_Dist_Name()
     elif grep -Eqi "Mint" /etc/issue || grep -Eq "Mint" /etc/*-release; then
         DISTRO='Mint'
         PM='apt'
+    elif grep -Eqi "Kali" /etc/issue || grep -Eq "Kali" /etc/*-release; then
+        DISTRO='Kali'
+        PM='apt'
     else
         DISTRO='unknow'
     fi
