@@ -24,6 +24,9 @@ EOF
         ulimit -s unlimited
     fi
     
+    if [ -s /bin/systemctl ]; then
+        systemctl enable mariadb.service
+    fi
     StartUp mariadb
     /etc/init.d/mariadb start
 

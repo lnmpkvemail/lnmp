@@ -33,6 +33,9 @@ MySQL_Sec_Setting()
         ulimit -s unlimited
     fi
 
+    if [ -s /bin/systemctl ]; then
+        systemctl enable mysql.service
+    fi
     /etc/init.d/mysql start
 
     ln -sf /usr/local/mysql/bin/mysql /usr/bin/mysql
