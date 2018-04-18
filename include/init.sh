@@ -524,6 +524,12 @@ Deb_Lib_Opt()
         ln -sf /usr/include/i386-linux-gnu/asm /usr/include/asm
     fi
 
+    if [ -d "/usr/lib/arm-linux-gnueabihf" ]; then
+        ln -sf /usr/lib/arm-linux-gnueabihf/libpng* /usr/lib/
+        ln -sf /usr/lib/arm-linux-gnueabihf/libjpeg* /usr/lib/
+        ln -sf /usr/include/arm-linux-gnueabihf/curl /usr/include/
+    fi
+
     ulimit -v unlimited
 
     if [ `grep -L "/lib"    '/etc/ld.so.conf'` ]; then
