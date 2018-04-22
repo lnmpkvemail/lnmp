@@ -31,6 +31,7 @@ Install_Multiplephp()
     1)
         echo "You will install ${PHP_Info[0]}"
         MPHP_Path='/usr/local/php5.2'
+        Check_DB
         if [ "${DB_Name}" == "None" ];then
             Echo_Red "MySQL or MariaDB not found,can't install PHP 5.2!"
             exit 1
