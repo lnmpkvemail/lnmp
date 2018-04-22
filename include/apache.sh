@@ -14,7 +14,7 @@ Install_Apache_22()
     fi
     Tarj_Cd ${Apache_Ver}.tar.bz2 ${Apache_Ver}
     ./configure --prefix=/usr/local/apache --enable-mods-shared=most --enable-headers --enable-mime-magic --enable-proxy --enable-so --enable-rewrite --with-ssl --enable-ssl --enable-deflate --enable-suexec --with-included-apr --with-expat=builtin
-    make && make install
+    Make_Install
     cd ${cur_dir}/src
     rm -rf ${cur_dir}/src/${Apache_Ver}
 
@@ -95,7 +95,7 @@ Install_Apache_24()
     else
         ./configure --prefix=/usr/local/apache --enable-mods-shared=most --enable-headers --enable-mime-magic --enable-proxy --enable-so --enable-rewrite --enable-ssl --with-ssl --enable-deflate --with-pcre --with-included-apr --with-apr-util --enable-mpms-shared=all --enable-remoteip
     fi
-    make && make install
+    Make_Install
     cd ${cur_dir}/src
     rm -rf ${cur_dir}/src/${Apache_Ver}
 

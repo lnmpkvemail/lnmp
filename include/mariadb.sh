@@ -100,7 +100,7 @@ Install_MariaDB_5()
     rm -f /etc/my.cnf
     Tar_Cd ${Mariadb_Ver}.tar.gz ${Mariadb_Ver}
     cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MariaDBMAOpt}
-    make && make install
+    Make_Install
 
     groupadd mariadb
     useradd -s /sbin/nologin -M -g mariadb mariadb
@@ -196,7 +196,7 @@ Install_MariaDB_10()
     MariaDB_WITHSSL
     Tar_Cd ${Mariadb_Ver}.tar.gz ${Mariadb_Ver}
     cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MariaDBWITHSSL} ${MariaDBMAOpt}
-    make && make install
+    Make_Install
 
     groupadd mariadb
     useradd -s /sbin/nologin -M -g mariadb mariadb
@@ -291,7 +291,7 @@ Install_MariaDB_101()
     MariaDB_WITHSSL
     Tar_Cd ${Mariadb_Ver}.tar.gz ${Mariadb_Ver}
     cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1 ${MariaDBWITHSSL} ${MariaDBMAOpt}
-    make && make install
+    Make_Install
 
     groupadd mariadb
     useradd -s /sbin/nologin -M -g mariadb mariadb
@@ -385,7 +385,7 @@ Install_MariaDB_102()
     rm -f /etc/my.cnf
     Tar_Cd ${Mariadb_Ver}.tar.gz ${Mariadb_Ver}
     cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1 ${MariaDBMAOpt}
-    make && make install
+    Make_Install
 
     groupadd mariadb
     useradd -s /sbin/nologin -M -g mariadb mariadb

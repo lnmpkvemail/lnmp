@@ -36,7 +36,7 @@ Install_ImageMagic()
         fi
 
         ./configure --prefix=/usr/local/imagemagick
-        make && make install
+        Make_Install
         cd ../
         rm -rf ${cur_dir}/src/${ImageMagick_Ver}
     fi
@@ -50,7 +50,7 @@ Install_ImageMagic()
     fi
     ${PHP_Path}/bin/phpize
     ./configure --with-php-config=${PHP_Path}/bin/php-config --with-imagick=/usr/local/imagemagick
-    make && make install
+    Make_Install
     cd ../
 
     cat >${PHP_Path}/conf.d/008-imagick.ini<<EOF

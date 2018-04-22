@@ -262,6 +262,24 @@ Check_Download()
     Download_Files ${Download_Mirror}/lib/openssl/${Openssl_Ver}.tar.gz ${Openssl_Ver}.tar.gz
 }
 
+Make_Install()
+{
+    make -j `grep 'processor' /proc/cpuinfo | wc -l`
+    if [ $? -ne 0 ]; then
+        make
+    fi
+    make install
+}
+
+PHP_Make_Install()
+{
+    make ZEND_EXTRA_LIBS='-liconv' -j `grep 'processor' /proc/cpuinfo | wc -l`
+    if [ $? -ne 0 ]; then
+        make ZEND_EXTRA_LIBS='-liconv'
+    fi
+    make install
+}
+
 Install_Autoconf()
 {
     Echo_Blue "[+] Installing ${Autoconf_Ver}"
@@ -269,7 +287,7 @@ Install_Autoconf()
     Download_Files ${Download_Mirror}/lib/autoconf/${Autoconf_Ver}.tar.gz ${Autoconf_Ver}.tar.gz
     Tar_Cd ${Autoconf_Ver}.tar.gz ${Autoconf_Ver}
     ./configure --prefix=/usr/local/autoconf-2.13
-    make && make install
+    Make_Install
     cd ${cur_dir}/src/
     rm -rf ${cur_dir}/src/${Autoconf_Ver}
 }
@@ -280,7 +298,7 @@ Install_Libiconv()
     Tar_Cd ${Libiconv_Ver}.tar.gz ${Libiconv_Ver}
     patch -p0 < ${cur_dir}/src/patch/libiconv-glibc-2.16.patch
     ./configure --enable-static
-    make && make install
+    Make_Install
     cd ${cur_dir}/src/
     rm -rf ${cur_dir}/src/${Libiconv_Ver}
 }
@@ -290,11 +308,11 @@ Install_Libmcrypt()
     Echo_Blue "[+] Installing ${LibMcrypt_Ver}"
     Tar_Cd ${LibMcrypt_Ver}.tar.gz ${LibMcrypt_Ver}
     ./configure
-    make && make install
+    Make_Install
     /sbin/ldconfig
     cd libltdl/
     ./configure --enable-ltdl-install
-    make && make install
+    Make_Install
     ln -sf /usr/local/lib/libmcrypt.la /usr/lib/libmcrypt.la
     ln -sf /usr/local/lib/libmcrypt.so /usr/lib/libmcrypt.so
     ln -sf /usr/local/lib/libmcrypt.so.4 /usr/lib/libmcrypt.so.4
@@ -309,7 +327,7 @@ Install_Mcrypt()
     Echo_Blue "[+] Installing ${Mcypt_Ver}"
     Tar_Cd ${Mcypt_Ver}.tar.gz ${Mcypt_Ver}
     ./configure
-    make && make install
+    Make_Install
     cd ${cur_dir}/src/
     rm -rf ${cur_dir}/src/${Mcypt_Ver}
 }
@@ -319,7 +337,7 @@ Install_Mhash()
     Echo_Blue "[+] Installing ${Mhash_Ver}"
     Tarj_Cd ${Mhash_Ver}.tar.bz2 ${Mhash_Ver}
     ./configure
-    make && make install
+    Make_Install
     ln -sf /usr/local/lib/libmhash.a /usr/lib/libmhash.a
     ln -sf /usr/local/lib/libmhash.la /usr/lib/libmhash.la
     ln -sf /usr/local/lib/libmhash.so /usr/lib/libmhash.so
@@ -335,7 +353,7 @@ Install_Freetype()
     Echo_Blue "[+] Installing ${Freetype_Ver}"
     Tarj_Cd ${Freetype_Ver}.tar.bz2 ${Freetype_Ver}
     ./configure --prefix=/usr/local/freetype
-    make && make install
+    Make_Install
 
     cat > /etc/ld.so.conf.d/freetype.conf<<EOF
 /usr/local/freetype/lib
@@ -355,7 +373,7 @@ Install_Curl()
         Download_Files ${Download_Mirror}/lib/curl/${Curl_Ver}.tar.bz2 ${Curl_Ver}.tar.bz2
         Tarj_Cd ${Curl_Ver}.tar.bz2 ${Curl_Ver}
         ./configure --prefix=/usr/local/curl --enable-ares --without-nss --with-ssl
-        make && make install
+        Make_Install
         cd ${cur_dir}/src/
         rm -rf ${cur_dir}/src/${Curl_Ver}
     fi
@@ -370,7 +388,7 @@ Install_Pcre()
         Download_Files ${Download_Mirror}/web/pcre/${Pcre_Ver}.tar.bz2 ${Pcre_Ver}.tar.bz2
         Tarj_Cd ${Pcre_Ver}.tar.bz2 ${Pcre_Ver}
         ./configure
-        make && make install
+        Make_Install
         cd ${cur_dir}/src/
         rm -rf ${cur_dir}/src/${Pcre_Ver}
     fi
@@ -382,7 +400,7 @@ Install_Jemalloc()
     cd ${cur_dir}/src
     Tarj_Cd ${Jemalloc_Ver}.tar.bz2 ${Jemalloc_Ver}
     ./configure
-    make && make install
+    Make_Install
     ldconfig
     cd ${cur_dir}/src/
     rm -rf ${cur_dir}/src/${Jemalloc_Ver}
@@ -404,7 +422,7 @@ Install_TCMalloc()
     else
         ./configure --enable-frame-pointers
     fi
-    make && make install
+    Make_Install
     ldconfig
     cd ${cur_dir}/src/
     rm -rf ${cur_dir}/src/${TCMalloc_Ver}
@@ -418,7 +436,7 @@ Install_Icu4c()
         Download_Files ${Download_Mirror}/lib/icu4c/${Libicu4c_Ver}-src.tgz ${Libicu4c_Ver}-src.tgz
         Tar_Cd ${Libicu4c_Ver}-src.tgz icu/source
         ./configure --prefix=/usr
-        make && make install
+        Make_Install
         cd ${cur_dir}/src/
         rm -rf ${cur_dir}/src/icu
     fi
@@ -449,7 +467,7 @@ Install_Openssl()
         Tar_Cd ${Openssl_Ver}.tar.gz ${Openssl_Ver}
         ./config -fPIC --prefix=/usr/local/openssl --openssldir=/usr/local/openssl
         make depend
-        make && make install
+        Make_Install
         cd ${cur_dir}/src/
         rm -rf ${cur_dir}/src/${Openssl_Ver}
     fi
@@ -464,7 +482,7 @@ Install_Nghttp2()
         [[ -d "${Nghttp2_Ver}" ]] && rm -rf ${Nghttp2_Ver}
         tar Jxf ${Nghttp2_Ver}.tar.xz && cd ${Nghttp2_Ver}
         ./configure --prefix=/usr/local/nghttp2
-        make && make install
+        Make_Install
         cd ${cur_dir}/src/
         rm -rf ${cur_dir}/src/${Nghttp2_Ver}
     fi

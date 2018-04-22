@@ -60,7 +60,7 @@ Install_Redis()
     fi
     ${PHP_Path}/bin/phpize
     ./configure --with-php-config=${PHP_Path}/bin/php-config
-    make && make install
+    Make_Install
     cd ../
 
     cat >${PHP_Path}/conf.d/007-redis.ini<<EOF

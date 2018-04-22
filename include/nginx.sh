@@ -66,7 +66,7 @@ Install_Nginx()
     else
         ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_v2_module --with-http_gzip_static_module --with-http_sub_module --with-stream --with-stream_ssl_module ${Nginx_With_Openssl} ${Nginx_Module_Lua} ${NginxMAOpt} ${Nginx_Modules_Options}
     fi
-    make && make install
+    Make_Install
     cd ../
 
     ln -sf /usr/local/nginx/sbin/nginx /usr/bin/nginx
