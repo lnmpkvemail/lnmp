@@ -182,6 +182,9 @@ Clean_Src_Dir()
     elif [[ "${DBSelect}" =~ ^[5678]$ ]]; then
         rm -rf ${cur_dir}/src/${Mariadb_Ver}
     fi
+    if [[ "${DBSelect}" =~ ^[4]$ ]]; then
+        rm -rf ${cur_dir}/src/${Boost_Ver}
+    fi
     rm -rf ${cur_dir}/src/${Php_Ver}
     if [ "${Stack}" = "lnmp" ]; then
         rm -rf ${cur_dir}/src/${Nginx_Ver}

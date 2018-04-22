@@ -436,11 +436,7 @@ Install_Boost()
     cd ${cur_dir}/src
     Download_Files ${Download_Mirror}/lib/boost/${Boost_Ver}.tar.bz2 ${Boost_Ver}.tar.bz2
     Tarj_Cd ${Boost_Ver}.tar.bz2 ${Boost_Ver}
-    ./bootstrap.sh
-    ./b2
-    ./b2 install
     cd ${cur_dir}/src/
-    rm -rf ${cur_dir}/src/${Boost_Ver}
 }
 
 Install_Openssl()
