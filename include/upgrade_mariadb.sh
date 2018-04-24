@@ -34,7 +34,7 @@ Upgrade_MariaDB()
 
     Verify_DB_Password
 
-    cur_mariadb_version=`/usr/local/mariadb/bin/mysql -V | awk '{print $5}' | tr -d "\-MariaDB,"`
+    cur_mariadb_version=`/usr/local/mariadb/bin/mysql_config --version`
     mariadb_version=""
     echo "Current MariaDB Version:${cur_mariadb_version}"
     echo "You can get version number from https://downloads.mariadb.org/"

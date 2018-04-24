@@ -642,7 +642,7 @@ Upgrade_MySQL()
 
     Verify_DB_Password
 
-    cur_mysql_version=`/usr/local/mysql/bin/mysql -V | awk '{print $5}' | tr -d ","`
+    cur_mysql_version=`/usr/local/mysql/bin/mysql_config --version`
     mysql_version=""
     echo "Current MYSQL Version:${cur_mysql_version}"
     echo "You can get version number from http://dev.mysql.com/downloads/mysql/"
