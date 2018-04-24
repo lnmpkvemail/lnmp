@@ -40,11 +40,11 @@ Add_LNMP_Startup()
     chmod +x /bin/lnmp
     StartUp nginx
     /etc/init.d/nginx start
-    if [[ "${DBSelect}" =~ ^[5678]$ ]]; then
+    if [[ "${DBSelect}" =~ ^[6789]$ ]]; then
         StartUp mariadb
         /etc/init.d/mariadb start
         sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#' /bin/lnmp
-    elif [[ "${DBSelect}" =~ ^[1234]$ ]]; then
+    elif [[ "${DBSelect}" =~ ^[12345]$ ]]; then
         StartUp mysql
         /etc/init.d/mysql start
     elif [ "${DBSelect}" = "0" ]; then
@@ -64,11 +64,11 @@ Add_LNMPA_Startup()
     chmod +x /bin/lnmp
     StartUp nginx
     /etc/init.d/nginx start
-    if [[ "${DBSelect}" =~ ^[5678]$ ]]; then
+    if [[ "${DBSelect}" =~ ^[6789]$ ]]; then
         StartUp mariadb
         /etc/init.d/mariadb start
         sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#' /bin/lnmp
-    elif [[ "${DBSelect}" =~ ^[1234]$ ]]; then
+    elif [[ "${DBSelect}" =~ ^[12345]$ ]]; then
         StartUp mysql
         /etc/init.d/mysql start
     elif [ "${DBSelect}" = "0" ]; then
@@ -85,11 +85,11 @@ Add_LAMP_Startup()
     chmod +x /bin/lnmp
     StartUp httpd
     /etc/init.d/httpd start
-    if [[ "${DBSelect}" =~ ^[5678]$ ]]; then
+    if [[ "${DBSelect}" =~ ^[6789]$ ]]; then
         StartUp mariadb
         /etc/init.d/mariadb start
         sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#' /bin/lnmp
-    elif [[ "${DBSelect}" =~ ^[1234]$ ]]; then
+    elif [[ "${DBSelect}" =~ ^[12345]$ ]]; then
         StartUp mysql
         /etc/init.d/mysql start
     elif [ "${DBSelect}" = "0" ]; then
@@ -113,14 +113,14 @@ Check_Nginx_Files()
 Check_DB_Files()
 {
     isDB=""
-    if [[ "${DBSelect}" =~ ^[5678]$ ]]; then
+    if [[ "${DBSelect}" =~ ^[6789]$ ]]; then
         if [[ -s /usr/local/mariadb/bin/mysql && -s /usr/local/mariadb/bin/mysqld_safe && -s /etc/my.cnf ]]; then
             Echo_Green "MariaDB: OK"
             isDB="ok"
         else
             Echo_Red "Error: MariaDB install failed."
         fi
-    elif [[ "${DBSelect}" =~ ^[1234]$ ]]; then
+    elif [[ "${DBSelect}" =~ ^[12345]$ ]]; then
         if [[ -s /usr/local/mysql/bin/mysql && -s /usr/local/mysql/bin/mysqld_safe && -s /etc/my.cnf ]]; then
             Echo_Green "MySQL: OK"
             isDB="ok"
@@ -177,13 +177,15 @@ Check_Apache_Files()
 Clean_Src_Dir()
 {
     echo "Clean src directory..."
-    if [[ "${DBSelect}" =~ ^[1234]$ ]]; then
+    if [[ "${DBSelect}" =~ ^[12345]$ ]]; then
         rm -rf ${cur_dir}/src/${Mysql_Ver}
-    elif [[ "${DBSelect}" =~ ^[5678]$ ]]; then
+    elif [[ "${DBSelect}" =~ ^[6789]$ ]]; then
         rm -rf ${cur_dir}/src/${Mariadb_Ver}
     fi
-    if [[ "${DBSelect}" =~ ^[4]$ ]]; then
+    if [[ "${DBSelect}" = "4" ]]; then
         rm -rf ${cur_dir}/src/${Boost_Ver}
+    elif [[ "${DBSelect}" = "5" ]]; then
+        rm -rf ${cur_dir}/src/${Boost_New_Ver}
     fi
     rm -rf ${cur_dir}/src/${Php_Ver}
     if [ "${Stack}" = "lnmp" ]; then

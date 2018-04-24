@@ -70,9 +70,9 @@ Install_Database()
 {
     echo "============================check files=================================="
     cd ${cur_dir}/src
-    if [[ "${DBSelect}" = "1" || "${DBSelect}" = "2" || "${DBSelect}" = "3" || "${DBSelect}" = "4" ]]; then
+    if [[ "${DBSelect}" =~ ^[12345]$ ]]; then
         Download_Files ${Download_Mirror}/datebase/mysql/${Mysql_Ver}.tar.gz ${Mysql_Ver}.tar.gz
-    elif [[ "${DBSelect}" = "5" || "${DBSelect}" = "6" || "${DBSelect}" = "7" || "${DBSelect}" = "8" ]]; then
+    elif [[ "${DBSelect}" =~ ^[6789]$ ]]; then
         Download_Files ${Download_Mirror}/datebase/mariadb/${Mariadb_Ver}.tar.gz ${Mariadb_Ver}.tar.gz
     fi
     echo "============================check files=================================="
@@ -88,30 +88,32 @@ Install_Database()
     elif [ "${DBSelect}" = "4" ]; then
         Install_MySQL_57
     elif [ "${DBSelect}" = "5" ]; then
-        Install_MariaDB_5
+        Install_MySQL_80
     elif [ "${DBSelect}" = "6" ]; then
-        Install_MariaDB_10
+        Install_MariaDB_5
     elif [ "${DBSelect}" = "7" ]; then
-        Install_MariaDB_101
+        Install_MariaDB_10
     elif [ "${DBSelect}" = "8" ]; then
+        Install_MariaDB_101
+    elif [ "${DBSelect}" = "9" ]; then
         Install_MariaDB_102
     fi
     TempMycnf_Clean
 
-    if [[ "${DBSelect}" =~ ^[5678]$ ]]; then
+    if [[ "${DBSelect}" =~ ^[6789]$ ]]; then
         StartUp mariadb
         /etc/init.d/mariadb start
-    elif [[ "${DBSelect}" =~ ^[1234]$ ]]; then
+    elif [[ "${DBSelect}" =~ ^[12345]$ ]]; then
         StartUp mysql
         /etc/init.d/mysql start
     fi
 
     Check_DB_Files
     if [[ "${isDB}" = "ok" ]]; then
-        if [[ "${DBSelect}" =~ ^[1234]$ ]]; then
+        if [[ "${DBSelect}" =~ ^[12345]$ ]]; then
             Echo_Green "MySQL root password: ${DB_Root_Password}"
             Echo_Green "Install ${Mysql_Ver} completed! enjoy it."
-        elif [[ "${DBSelect}" =~ ^[5678]$ ]]; then
+        elif [[ "${DBSelect}" =~ ^[6789]$ ]]; then
             Echo_Green "MariaDB root password: ${DB_Root_Password}"
             Echo_Green "Install ${Mariadb_Ver} completed! enjoy it."
         fi

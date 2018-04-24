@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DB_Info=('MySQL 5.1.73' 'MySQL 5.5.59' 'MySQL 5.6.39' 'MySQL 5.7.21' 'MariaDB 5.5.59' 'MariaDB 10.0.34' 'MariaDB 10.1.32' 'MariaDB 10.2.14')
+DB_Info=('MySQL 5.1.73' 'MySQL 5.5.60' 'MySQL 5.6.40' 'MySQL 5.7.22' 'MySQL 8.0.11' 'MariaDB 5.5.59' 'MariaDB 10.0.34' 'MariaDB 10.1.32' 'MariaDB 10.2.14')
 PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.38' 'PHP 5.6.35' 'PHP 7.0.29' 'PHP 7.1.16' 'PHP 7.2.4')
 Apache_Info=('Apache 2.2.34' 'Apache 2.4.33')
 
@@ -9,7 +9,7 @@ Database_Selection()
 #which MySQL Version do you want to install?
     if [ -z ${DBSelect} ]; then
         DBSelect="2"
-        Echo_Yellow "You have 9 options for your DataBase install."
+        Echo_Yellow "You have 10 options for your DataBase install."
         echo "1: Install ${DB_Info[0]}"
         echo "2: Install ${DB_Info[1]} (Default)"
         echo "3: Install ${DB_Info[2]}"
@@ -18,8 +18,9 @@ Database_Selection()
         echo "6: Install ${DB_Info[5]}"
         echo "7: Install ${DB_Info[6]}"
         echo "8: Install ${DB_Info[7]}"
+        echo "9: Install ${DB_Info[8]}"
         echo "0: DO NOT Install MySQL/MariaDB"
-        read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8 or 0): " DBSelect
+        read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8, 9 or 0): " DBSelect
     fi
 
     case "${DBSelect}" in
@@ -47,6 +48,9 @@ Database_Selection()
     8)
         echo "You will install ${DB_Info[7]}"
         ;;
+    9)
+        echo "You will install ${DB_Info[8]}"
+        ;;
     0)
         echo "Do not install MySQL/MariaDB!"
         ;;
@@ -55,16 +59,16 @@ Database_Selection()
         DBSelect="2"
     esac
 
-    if [[ "${DBSelect}" =~ ^[34678]$ ]] && [ `free -m | grep Mem | awk '{print  $2}'` -le 1024 ]; then
-        echo "Memory less than 1GB, can't install MySQL 5.6, 5.7 or MairaDB 10+!"
+    if [[ "${DBSelect}" =~ ^[345789]$ ]] && [ `free -m | grep Mem | awk '{print  $2}'` -le 1024 ]; then
+        echo "Memory less than 1GB, can't install MySQL 5.6+ or MairaDB 10+!"
         exit 1
     fi
 
-    if [[ "${DBSelect}" =~ ^[5678]$ ]]; then
+    if [[ "${DBSelect}" =~ ^[6789]$ ]]; then
         MySQL_Bin="/usr/local/mariadb/bin/mysql"
         MySQL_Config="/usr/local/mariadb/bin/mysql_config"
         MySQL_Dir="/usr/local/mariadb"
-    elif [[ "${DBSelect}" =~ ^[1234]$ ]]; then
+    elif [[ "${DBSelect}" =~ ^[12345]$ ]]; then
         MySQL_Bin="/usr/local/mysql/bin/mysql"
         MySQL_Config="/usr/local/mysql/bin/mysql_config"
         MySQL_Dir="/usr/local/mysql"
@@ -456,9 +460,9 @@ Print_APP_Ver()
         echo "${Nginx_Ver}"
     fi
 
-    if [[ "${DBSelect}" =~ ^[1234]$ ]]; then
+    if [[ "${DBSelect}" =~ ^[12345]$ ]]; then
         echo "${Mysql_Ver}"
-    elif [[ "${DBSelect}" =~ ^[5678]$ ]]; then
+    elif [[ "${DBSelect}" =~ ^[6789]$ ]]; then
         echo "${Mariadb_Ver}"
     elif [ "${DBSelect}" = "0" ]; then
         echo "Do not install MySQL/MariaDB!"
@@ -486,9 +490,9 @@ Print_APP_Ver()
     if [ "${Enable_Nginx_Lua}" = "y" ]; then
         echo "enable Nginx Lua."
     fi
-    if [[ "${DBSelect}" =~ ^[1234]$ ]]; then
+    if [[ "${DBSelect}" =~ ^[12345]$ ]]; then
         echo "Database Directory: ${MySQL_Data_Dir}"
-    elif [[ "${DBSelect}" =~ ^[5678]$ ]]; then
+    elif [[ "${DBSelect}" =~ ^[6789]$ ]]; then
         echo "Database Directory: ${MariaDB_Data_Dir}"
     elif [ "${DBSelect}" = "0" ]; then
         echo "Do not install MySQL/MariaDB!"

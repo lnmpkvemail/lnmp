@@ -243,9 +243,9 @@ Check_Download()
     if [ "${Stack}" != "lamp" ]; then
         Download_Files ${Download_Mirror}/web/nginx/${Nginx_Ver}.tar.gz ${Nginx_Ver}.tar.gz
     fi
-    if [[ "${DBSelect}" =~ ^[1234]$ ]]; then
+    if [[ "${DBSelect}" =~ ^[12345]$ ]]; then
         Download_Files ${Download_Mirror}/datebase/mysql/${Mysql_Ver}.tar.gz ${Mysql_Ver}.tar.gz
-    elif [[ "${DBSelect}" =~ ^[5678]$ ]]; then
+    elif [[ "${DBSelect}" =~ ^[6789]$ ]]; then
         Download_Files ${Download_Mirror}/datebase/mariadb/${Mariadb_Ver}.tar.gz ${Mariadb_Ver}.tar.gz
     fi
     Download_Files ${Download_Mirror}/web/php/${Php_Ver}.tar.bz2 ${Php_Ver}.tar.bz2
@@ -452,9 +452,14 @@ Install_Boost()
         apt-get install -y python-dev
     fi
     cd ${cur_dir}/src
-    Download_Files ${Download_Mirror}/lib/boost/${Boost_Ver}.tar.bz2 ${Boost_Ver}.tar.bz2
-    Tarj_Cd ${Boost_Ver}.tar.bz2 ${Boost_Ver}
-    cd ${cur_dir}/src/
+    if [ "${DBSelect}" = "4" ] || echo "${mysql_version}" | grep -Eqi '^5.7.'; then
+        Download_Files ${Download_Mirror}/lib/boost/${Boost_Ver}.tar.bz2 ${Boost_Ver}.tar.bz2
+        Tarj_Cd ${Boost_Ver}.tar.bz2 ${Boost_Ver}
+    elif [ "${DBSelect}" = "5" ] || echo "${mysql_version}" | grep -Eqi '^8.0.'; then
+        Download_Files ${Download_Mirror}/lib/boost/${Boost_New_Ver}.tar.bz2 ${Boost_New_Ver}.tar.bz2
+        Tarj_Cd ${Boost_New_Ver}.tar.bz2 ${Boost_New_Ver}
+    fi
+    cd ${cur_dir}/src
 }
 
 Install_Openssl()
