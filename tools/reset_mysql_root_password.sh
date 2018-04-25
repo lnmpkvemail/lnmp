@@ -19,34 +19,40 @@ echo "|           Usage: ./reset_mysql_root_password.sh                   |"
 echo "+-------------------------------------------------------------------+"
 
 if [ -s /usr/local/mariadb/bin/mysql ]; then
-    M_Name="mariadb"
+    DB_Name="mariadb"
+    DB_Ver=`/usr/local/mariadb/bin/mysql_config --version`
+elif [ -s /usr/local/mysql/bin/mysql ]; then
+    DB_Name="mysql"
+    DB_Ver=`/usr/local/mysql/bin/mysql_config --version`
 else
-    M_Name="mysql"
-fi
-
-cur_mysql_version=`/usr/local/mysql/bin/mysql -V | awk '{print $5}' | tr -d ","`
-
-mysql_root_password=""
-read -p "Enter New MySQL root password: " mysql_root_password
-if [ "${mysql_root_password}" = "" ]; then
-    echo "Error: Password can't be NULL!!"
+    echo "MySQL/MariaDB not found!"
     exit 1
 fi
 
-echo "Stoping MySQL..."
-/etc/init.d/${M_Name} stop
-echo "Starting MySQL with skip grant tables"
-/usr/local/${M_Name}/bin/mysqld_safe --skip-grant-tables >/dev/null 2>&1 &
-echo "using mysql to flush privileges and reset password"
+while :;do
+    DB_Root_Password=""
+    read -p "Enter New ${DB_Name} root password: " DB_Root_Password
+    if [ "${DB_Root_Password}" = "" ]; then
+        echo "Error: Password can't be NULL!!"
+    else
+        break
+    fi
+done
+
+echo "Stoping ${DB_Name}..."
+/etc/init.d/${DB_Name} stop
+echo "Starting ${DB_Name} with skip grant tables"
+/usr/local/${DB_Name}/bin/mysqld_safe --skip-grant-tables >/dev/null 2>&1 &
 sleep 5
-echo "update user set password = Password('${mysql_root_password}') where User = 'root'"
-if echo "${cur_mysql_version}" | grep -Eqi '^5.7.'; then
-    /usr/local/${M_Name}/bin/mysql -u root mysql << EOF
-update user set authentication_string = Password('${mysql_root_password}') where User = 'root';
+echo "update ${DB_Name} root password..."
+if echo "${DB_Ver}" | grep -Eqi '^8.0.|^5.7.|^10.2.'; then
+    /usr/local/${DB_Name}/bin/mysql -u root << EOF
+FLUSH PRIVILEGES;
+ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_Root_Password}';
 EOF
 else
-    /usr/local/${M_Name}/bin/mysql -u root mysql << EOF
-update user set password = Password('${mysql_root_password}') where User = 'root';
+    /usr/local/${DB_Name}/bin/mysql -u root << EOF
+update mysql.user set password = Password('${DB_Root_Password}') where User = 'root';
 EOF
 fi
 
@@ -54,9 +60,9 @@ if [ $? -eq 0 ]; then
     echo "Password reset succesfully. Now killing mysqld softly"
     killall mysqld
     sleep 5
-    echo "Restarting the actual mysql service"
-    /etc/init.d/${M_Name} start
-    echo "Password successfully reset to '${mysql_root_password}'"
+    echo "Restarting the actual ${DB_Name} service"
+    /etc/init.d/${DB_Name} start
+    echo "Password successfully reset to '${DB_Root_Password}'"
 else
-    echo "Reset MySQL root password failed!"
+    echo "Reset ${DB_Name} root password failed!"
 fi
