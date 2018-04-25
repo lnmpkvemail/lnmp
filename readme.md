@@ -92,10 +92,11 @@ MySQL 5.1 | 1 | PHP 5.2 | 1 | 不安装 | 1 | Apache 2.2 | 1
 MySQL 5.5 | 2 | PHP 5.3 | 2 | Jemalloc | 2 | Apache 2.4 | 2
 MySQL 5.6 | 3 | PHP 5.4 | 3 | TCMalloc | 3 | |
 MySQL 5.7 | 4 | PHP 5.5 | 4 | | | |
-MariaDB 5.5 | 5 | PHP 5.6 | 5 | | | |
-MariaDB 10.0 | 6 | PHP 7.0 | 6 | | | |
-MariaDB 10.1 | 7 | PHP 7.1 | 7 | | | |
-MariaDB 10.2 | 8 | PHP 7.2 | 8 | | | |
+MySQL 8.0 | 5 | PHP 5.6 | 5 | | | |
+MariaDB 5.5 | 6 | PHP 7.0 | 6 | | | |
+MariaDB 10.0 | 7 | PHP 7.1 | 7 | | | |
+MariaDB 10.1 | 8 | PHP 7.2 | 8 | | | |
+MariaDB 10.2 | 9 | | | | | |
 不安装数据库 | 0 | | | | | |
 
 * 以LNMP模式，默认选项安装MySQL 5.5、MySQL root密码设置为lnmp.org、启用InnoDB、PHP 5.6、不安装内存分配器为例，先执行([建议先运行screen](https://www.vpser.net/manage/run-screen-lnmp.html))，再下载解压lnmp安装包：
