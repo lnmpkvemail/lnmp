@@ -71,6 +71,8 @@ lnmp.conf配置文件，可以修改lnmp.conf自定义下载服务器地址、�
 * 可选7，执行：`./remove_disable_function.sh` 运行此脚本可删掉禁用函数。
 
 ### 无人值守安装
+
+**无人值守命令生成工具：<https://lnmp.org/auto.html>**
 * 设置如下环境变量即可完全无人值守安装
 
 变量名 | 变量值含义
