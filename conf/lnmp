@@ -590,8 +590,10 @@ Check_DB()
 {
     if [[ -s /usr/local/mariadb/bin/mysql && -s /usr/local/mariadb/bin/mysqld_safe && -s /etc/my.cnf ]]; then
         MySQL_Bin="/usr/local/mariadb/bin/mysql"
+        MySQL_Ver=`/usr/local/mariadb/bin/mysql_config --version`
     elif [[ -s /usr/local/mysql/bin/mysql && -s /usr/local/mysql/bin/mysqld_safe && -s /etc/my.cnf ]]; then
         MySQL_Bin="/usr/local/mysql/bin/mysql"
+        MySQL_Ver=`/usr/local/mysql/bin/mysql_config --version`
     else
         MySQL_Bin="None"
     fi
@@ -665,7 +667,20 @@ Add_Database_Menu()
 
 Add_Database()
 {
-    cat >/tmp/.add_mysql.sql<<EOF
+    if echo "${MySQL_Ver}" | grep -Eqi '^8.0.';then
+        cat >/tmp/.add_mysql.sql<<EOF
+CREATE USER '${database_name}'@'localhost' IDENTIFIED BY '${mysql_password}';
+CREATE USER '${database_name}'@'127.0.0.1' IDENTIFIED BY '${mysql_password}';
+GRANT USAGE ON *.* TO '${database_name}'@'localhost';
+GRANT USAGE ON *.* TO '${database_name}'@'127.0.0.1';
+CREATE DATABASE IF NOT EXISTS \`${database_name}\`;
+GRANT ALL PRIVILEGES ON \`${database_name}\`.* TO '${database_name}'@'localhost';
+GRANT ALL PRIVILEGES ON \`${database_name}\`.* TO '${database_name}'@'127.0.0.1';
+FLUSH PRIVILEGES;
+EOF
+
+    else
+        cat >/tmp/.add_mysql.sql<<EOF
 CREATE USER '${database_name}'@'localhost' IDENTIFIED BY '${mysql_password}';
 CREATE USER '${database_name}'@'127.0.0.1' IDENTIFIED BY '${mysql_password}';
 GRANT USAGE ON *.* TO '${database_name}'@'localhost' IDENTIFIED BY '${mysql_password}';
@@ -675,6 +690,8 @@ GRANT ALL PRIVILEGES ON \`${database_name}\`.* TO '${database_name}'@'localhost'
 GRANT ALL PRIVILEGES ON \`${database_name}\`.* TO '${database_name}'@'127.0.0.1';
 FLUSH PRIVILEGES;
 EOF
+
+    fi
     ${MySQL_Bin} --defaults-file=~/.my.cnf < /tmp/.add_mysql.sql
     [ $? -eq 0 ] && echo "Add database Sucessfully." || echo "Add database failed!"
     rm -f /tmp/.add_mysql.sql
@@ -706,9 +723,12 @@ Edit_Database()
             break
         fi
     done
-    db_ver=`${MySQL_Bin} -V | awk '{print $5}' | tr -d ","`
-    if echo ${db_ver} | grep -Eqi '^5.7.';then
+
+    if echo "${MySQL_Ver}" | grep -Eqi '^5.7.';then
         Do_Query "UPDATE mysql.user SET authentication_string=PASSWORD('${database_username_passwd}') WHERE User='${database_username}' AND Host IN ('localhost', '127.0.0.1', '::1');"
+    elif echo "${MySQL_Ver}" | grep -Eqi '^8.0.';then
+        Do_Query "SET PASSWORD FOR '${database_username}'@'127.0.0.1' = '${database_username_passwd}';"
+        Do_Query "SET PASSWORD FOR '${database_username}'@'localhost' = '${database_username_passwd}';"
     else
         Do_Query "UPDATE mysql.user SET Password=PASSWORD('${database_username_passwd}') WHERE User='${database_username}' AND Host IN ('localhost', '127.0.0.1', '::1');"
     fi
