@@ -483,8 +483,6 @@ Add_Database_Menu()
 
 Add_Database()
 {
-    Add_Database()
-{
     if echo "${MySQL_Ver}" | grep -Eqi '^8.0.';then
         cat >/tmp/.add_mysql.sql<<EOF
 CREATE USER '${database_name}'@'localhost' IDENTIFIED BY '${mysql_password}';
