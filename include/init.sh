@@ -233,7 +233,6 @@ Check_Download()
     Download_Files ${Download_Mirror}/web/libmcrypt/${LibMcrypt_Ver}.tar.gz ${LibMcrypt_Ver}.tar.gz
     Download_Files ${Download_Mirror}/web/mcrypt/${Mcypt_Ver}.tar.gz ${Mcypt_Ver}.tar.gz
     Download_Files ${Download_Mirror}/web/mhash/${Mhash_Ver}.tar.bz2 ${Mhash_Ver}.tar.bz2
-    Download_Files ${Download_Mirror}/lib/freetype/${Freetype_Ver}.tar.bz2 ${Freetype_Ver}.tar.bz2
     if [ "${SelectMalloc}" = "2" ]; then
         Download_Files ${Download_Mirror}/lib/jemalloc/${Jemalloc_Ver}.tar.bz2 ${Jemalloc_Ver}.tar.bz2
     elif [ "${SelectMalloc}" = "3" ]; then
@@ -296,7 +295,6 @@ Install_Libiconv()
 {
     Echo_Blue "[+] Installing ${Libiconv_Ver}"
     Tar_Cd ${Libiconv_Ver}.tar.gz ${Libiconv_Ver}
-    patch -p0 < ${cur_dir}/src/patch/libiconv-glibc-2.16.patch
     ./configure --enable-static
     Make_Install
     cd ${cur_dir}/src/
@@ -350,17 +348,24 @@ Install_Mhash()
 
 Install_Freetype()
 {
-    Echo_Blue "[+] Installing ${Freetype_Ver}"
-    Tarj_Cd ${Freetype_Ver}.tar.bz2 ${Freetype_Ver}
+    if [[ "${DISTRO}" = "Ubuntu" && "${Ubuntu_Version}" = "18.04" ]]; then
+        Download_Files ${Download_Mirror}/lib/freetype/${Freetype_New_Ver}.tar.bz2 ${Freetype_New_Ver}.tar.bz2
+        Echo_Blue "[+] Installing ${Freetype_New_Ver}"
+        Tarj_Cd ${Freetype_New_Ver}.tar.bz2 ${Freetype_New_Ver}
+    else
+        Download_Files ${Download_Mirror}/lib/freetype/${Freetype_Ver}.tar.bz2 ${Freetype_Ver}.tar.bz2
+        Echo_Blue "[+] Installing ${Freetype_Ver}"
+        Tarj_Cd ${Freetype_Ver}.tar.bz2 ${Freetype_Ver}
+    fi
     ./configure --prefix=/usr/local/freetype
     Make_Install
 
+    [[ -d /usr/lib/pkgconfig ]] && \cp /usr/local/freetype/lib/pkgconfig/freetype2.pc /usr/lib/pkgconfig/
     cat > /etc/ld.so.conf.d/freetype.conf<<EOF
 /usr/local/freetype/lib
 EOF
     ldconfig
-    ln -sf /usr/local/freetype/include/freetype2 /usr/local/include
-    ln -sf /usr/local/freetype/include/ft2build.h /usr/local/include
+    ln -sf /usr/local/freetype/include/freetype2/* /usr/include/
     cd ${cur_dir}/src/
     rm -rf ${cur_dir}/src/${Freetype_Ver}
 }

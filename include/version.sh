@@ -1,11 +1,12 @@
 #!/bin/bash
 
 Autoconf_Ver='autoconf-2.13'
-Libiconv_Ver='libiconv-1.14'
+Libiconv_Ver='libiconv-1.15'
 LibMcrypt_Ver='libmcrypt-2.5.8'
 Mcypt_Ver='mcrypt-2.6.8'
 Mhash_Ver='mhash-0.9.9.9'
 Freetype_Ver='freetype-2.7'
+Freetype_New_Ver='freetype-2.9'
 Curl_Ver='curl-7.57.0'
 Pcre_Ver='pcre-8.39'
 Jemalloc_Ver='jemalloc-5.0.1'
