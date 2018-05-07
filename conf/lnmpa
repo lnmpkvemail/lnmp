@@ -970,7 +970,7 @@ Add_Dns_SSL()
         /usr/local/acme.sh/acme.sh --issue ${letsdomain} --dns ${dns_provider} --reloadcmd "/etc/init.d/nginx reload"
         lets_status=$?
     else
-        /usr/local/acme.sh/acme.sh --issue ${letsdomain} --dns
+        /usr/local/acme.sh/acme.sh --issue ${letsdomain} --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please
         Echo_Yellow "Please add the above TXT record to the domain in 120 seconds!!!"
         echo
         Sleep_Sec 120
