@@ -173,7 +173,7 @@ Ubuntu_Deadline()
 {
     trusty_deadline=`date -d "2019-7-22 00:00:00" +%s`
     artful_deadline=`date -d "2018-7-31 00:00:00" +%s`
-    xenial_deadline=`date -d "2021-4-31 00:00:00" +%s`
+    xenial_deadline=`date -d "2021-4-30 00:00:00" +%s`
     cur_time=`date  +%s`
     case "$1" in
         trusty)
