@@ -409,6 +409,7 @@ Install_Jemalloc()
     ldconfig
     cd ${cur_dir}/src/
     rm -rf ${cur_dir}/src/${Jemalloc_Ver}
+    ln -sf /usr/local/lib/libjemalloc* /usr/lib/
 }
 
 Install_TCMalloc()
@@ -431,6 +432,7 @@ Install_TCMalloc()
     ldconfig
     cd ${cur_dir}/src/
     rm -rf ${cur_dir}/src/${TCMalloc_Ver}
+    ln -sf /usr/local/lib/libtcmalloc* /usr/lib/
 }
 
 Install_Icu4c()

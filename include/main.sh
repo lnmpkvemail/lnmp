@@ -198,17 +198,17 @@ MemoryAllocator_Selection()
 
     if [ "${SelectMalloc}" =  "1" ]; then
         MySQL51MAOpt=''
-        MySQL55MAOpt=''
+        MySQLMAOpt=''
         NginxMAOpt=''
     elif [ "${SelectMalloc}" =  "2" ]; then
         MySQL51MAOpt='--with-mysqld-ldflags=-ljemalloc'
-        MySQL55MAOpt="-DCMAKE_EXE_LINKER_FLAGS='-ljemalloc' -DWITH_SAFEMALLOC=OFF"
-        MariaDBMAOpt=''
+        MySQLMAOpt='[mysqld_safe]
+malloc-lib=/usr/lib/libjemalloc.so'
         NginxMAOpt="--with-ld-opt='-ljemalloc'"
     elif [ "${SelectMalloc}" =  "3" ]; then
         MySQL51MAOpt='--with-mysqld-ldflags=-ltcmalloc'
-        MySQL55MAOpt="-DCMAKE_EXE_LINKER_FLAGS='-ltcmalloc' -DWITH_SAFEMALLOC=OFF"
-        MariaDBMAOpt="-DCMAKE_EXE_LINKER_FLAGS='-ltcmalloc' -DWITH_SAFEMALLOC=OFF"
+        MySQLMAOpt='[mysqld_safe]
+malloc-lib=/usr/lib/libtcmalloc.so'
         NginxMAOpt='--with-google_perftools_module'
     fi
 }
