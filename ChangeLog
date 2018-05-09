@@ -4,6 +4,7 @@ LNMP 1.5
 
 增加PHP 7.2支持；
 增加MariaDB 10.2支持；
+增加MySQL 8.0支持；
 增加PHP模块fileinfo选项，安装或升级时可以选择是否安装开启，选项在安装包目录下 lnmp.conf 中 Enable_PHP_Fileinfo 默认为 n 不开启，如有安装设置为 y ；
 增加Nginx lua模块选项，安装或升级时可以选择是否为nginx安装开启lua，选项在安装包目录下 lnmp.conf 中 Enable_Nginx_Lua 默认为 n 不开启，如有安装设置为 y ；
 增加thinkphp、yii2、codeigniter、laravel伪静态；
@@ -13,11 +14,14 @@ LNMP 1.5
 增加旧版本Ubuntu中国地区源；
 增加虚拟主机添加时pathinfo可选项；
 增加certbot升级到acme.sh的一键升级功能命令为 ./upgrade1.x-1.5.sh ssl 按提示输入和原来SSL虚拟主机一样配置的信息就可以；
+增加多核编译加快安装时间；
+增加kali Linux发行版支持；
 增加对Amazone Linux 2支持；
 增加修复MySQL gcc7 bug；
 增加magento2实例配置文件 magento2-example.conf；
 增加无人值守安装，官网上有具体教程；
-增加LetseEcrypt 通配符/泛域名 SSL证书生成；
+增加LetseEcrypt 通配符/泛域名 SSL证书生成，官网上有具体教程；
+优化MySQL/MariaDB root密码重装工具；
 修复深度Deepin桌面版问题；
 修复MySQL bug；
 修复MariaDB bug；
@@ -32,6 +36,7 @@ LNMP 1.5
 调整优化lnmp下载源选择；
 完善卸载脚本；
 完善优化lnmp升级脚本 upgrade1.x-1.5.sh；
+调整数据库内存优化加载方法；
 其他一些功能优化及调整......
 
 LNMP 1.4
