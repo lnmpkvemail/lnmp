@@ -36,6 +36,9 @@ Install_PHPMemcached()
     fi
     Download_Files ${Download_Mirror}/web/libmemcached/${Libmemcached_Ver}.tar.gz
     Tar_Cd ${Libmemcached_Ver}.tar.gz ${Libmemcached_Ver}
+    if gcc -dumpversion|grep -q "^7"; then
+        patch -p1 < ${cur_dir}/src/patch/libmemcached-1.0.18-gcc7.patch
+    fi
     ./configure --prefix=/usr/local/libmemcached --with-memcached
     Make_Install
     cd ../
