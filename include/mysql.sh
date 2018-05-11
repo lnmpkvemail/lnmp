@@ -17,7 +17,7 @@ MySQL_ARM_Patch()
 
 MySQL_Gcc7_Patch()
 {
-    if gcc -dumpversion|grep -q "^7"; then
+    if gcc -dumpversion|grep -q "^[78]"; then
         echo "gcc version: 7"
         if [ "${DBSelect}" = "1" ] || echo "${mysql_version}" | grep -Eqi '^5.1.'; then
             patch -p1 < ${cur_dir}/src/patch/mysql-5.1-mysql-gcc7.patch
