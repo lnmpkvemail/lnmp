@@ -32,11 +32,11 @@ elif [ "${DBSelect}" = "4" ]; then
 elif [ "${DBSelect}" = "5" ]; then
     Mysql_Ver='mysql-8.0.11'
 elif [ "${DBSelect}" = "6" ]; then
-    Mariadb_Ver='mariadb-5.5.59'
+    Mariadb_Ver='mariadb-5.5.60'
 elif [ "${DBSelect}" = "7" ]; then
-    Mariadb_Ver='mariadb-10.0.34'
+    Mariadb_Ver='mariadb-10.0.35'
 elif [ "${DBSelect}" = "8" ]; then
-    Mariadb_Ver='mariadb-10.1.32'
+    Mariadb_Ver='mariadb-10.1.33'
 elif [ "${DBSelect}" = "9" ]; then
     Mariadb_Ver='mariadb-10.2.14'
 fi
