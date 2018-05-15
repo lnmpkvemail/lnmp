@@ -917,6 +917,7 @@ Add_Dns_SSL()
         /usr/local/acme.sh/acme.sh --renew ${letsdomain}
         lets_status=$?
     fi
+    ssl_choice="2"
     if [ "${lets_status}" = 0 ] || [[ "${provider}" = "" && "${lets_status}" = 1 && -s "/usr/local/apache/conf/ssl/${domain}/${domain}.cer" ]]; then
         if [ ! -d "${vhostdir}" ]; then
             echo "Create Virtul Host directory......"
