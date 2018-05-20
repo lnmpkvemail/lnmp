@@ -15,7 +15,7 @@ Upgrade_Nginx()
     Nginx_Version=""
     echo "Current Nginx Version:${Cur_Nginx_Version}"
     echo "You can get version number from http://nginx.org/en/download.html"
-    read -p "Please enter nginx version you want, (example: 1.7.8): " Nginx_Version
+    read -p "Please enter nginx version you want, (example: 1.14.0): " Nginx_Version
     if [ "${Nginx_Version}" = "" ]; then
         echo "Error: You must enter a nginx version!!"
         exit 1

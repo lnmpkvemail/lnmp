@@ -4,7 +4,7 @@ Upgrade_phpMyAdmin()
 {
     phpMyAdmin_Version=""
     echo "You can get version number from https://www.phpmyadmin.net/downloads/"
-    read -p "Please enter phpMyAdmin version you want, (example: 4.6.6 ): " phpMyAdmin_Version
+    read -p "Please enter phpMyAdmin version you want, (example: 4.8.0 ): " phpMyAdmin_Version
     if [ "${phpMyAdmin_Version}" = "" ]; then
         echo "Error: You must enter a phpMyAdmin version!!"
         exit 1

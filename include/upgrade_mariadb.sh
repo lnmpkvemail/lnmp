@@ -39,7 +39,7 @@ Upgrade_MariaDB()
     echo "Current MariaDB Version:${cur_mariadb_version}"
     echo "You can get version number from https://downloads.mariadb.org/"
     Echo_Yellow "Please enter MariaDB Version you want."
-    read -p "(example: 10.0.21 ): " mariadb_version
+    read -p "(example: 10.0.35 ): " mariadb_version
     if [ "${mariadb_version}" = "" ]; then
         echo "Error: You must input MariaDB Version!!"
         exit 1

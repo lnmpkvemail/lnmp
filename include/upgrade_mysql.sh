@@ -585,7 +585,7 @@ Upgrade_MySQL()
     echo "Current MYSQL Version:${cur_mysql_version}"
     echo "You can get version number from http://dev.mysql.com/downloads/mysql/"
     Echo_Yellow "Please input MySQL Version you want."
-    read -p "(example: 5.5.45 ): " mysql_version
+    read -p "(example: 5.5.60 ): " mysql_version
     if [ "${mysql_version}" = "" ]; then
         echo "Error: You must input MySQL Version!!"
         exit 1
