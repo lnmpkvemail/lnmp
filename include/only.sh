@@ -53,7 +53,7 @@ DB_Dependent()
         rpm -qa|grep mysql
         rpm -e mysql mysql-libs --nodeps
         yum -y remove mysql-server mysql mysql-libs
-        for packages in make cmake gcc gcc-c++ gcc-g77 flex bison wget zlib zlib-devel openssl openssl-devel ncurses ncurses-devel libaio-devel rpcgen libtirpc-devel;
+        for packages in make cmake gcc gcc-c++ gcc-g77 flex bison wget zlib zlib-devel openssl openssl-devel ncurses ncurses-devel libaio-devel rpcgen libtirpc-devel perl;
         do yum -y install $packages; done
     elif [ "$PM" = "apt" ]; then
         apt-get update -y
