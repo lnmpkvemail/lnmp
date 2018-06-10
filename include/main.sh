@@ -396,7 +396,7 @@ Get_OS_Bit()
 
 Get_ARM()
 {
-    if uname -m | grep -Eqi "arm"; then
+    if uname -m | grep -Eqi "arm|aarch64"; then
         Is_ARM='y'
     fi
 }
