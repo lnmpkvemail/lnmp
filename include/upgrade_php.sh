@@ -656,8 +656,6 @@ fi
 Upgrade_PHP()
 {
     Start_Upgrade_PHP
-    PHP_with_curl
-    PHP_with_openssl
     if echo "${php_version}" | grep -Eqi '^5.2.';then
         Upgrade_PHP_52
     elif echo "${php_version}" | grep -Eqi '^5.3.';then
