@@ -914,7 +914,7 @@ Add_Dns_SSL()
         Echo_Yellow "Please add the above TXT record to the domain in 120 seconds!!!"
         echo
         Sleep_Sec 120
-        /usr/local/acme.sh/acme.sh --renew ${letsdomain}
+        /usr/local/acme.sh/acme.sh --renew ${letsdomain} --yes-I-know-dns-manual-mode-enough-go-ahead-please
         lets_status=$?
     fi
     ssl_choice="2"
