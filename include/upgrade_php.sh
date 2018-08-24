@@ -33,7 +33,7 @@ Start_Upgrade_PHP()
         cd ${cur_dir}/src
         country=`curl -sSk --connect-timeout 10 -m 60 https://ip.vpser.net/country`
         if [ "${country}" = "CN" ]; then
-            wget -c --progress=bar:force http://cn2.php.net/distributions/php-${php_version}.tar.bz2
+            wget -c --progress=bar:force http://jp2.php.net/distributions/php-${php_version}.tar.bz2
             if [ $? -ne 0 ]; then
                 wget -c --progress=bar:force http://php.net/distributions/php-${php_version}.tar.bz2
             fi
