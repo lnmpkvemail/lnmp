@@ -584,6 +584,10 @@ Deb_Lib_Opt()
         ln -sf /usr/include/arm-linux-gnueabihf/curl /usr/include/
     fi
 
+    if [ -d /usr/include/aarch64-linux-gnu/curl ]; then
+        ln -sf /usr/include/aarch64-linux-gnu/curl /usr/include/
+    fi
+
     ldconfig
 
     cat >>/etc/security/limits.conf<<eof
