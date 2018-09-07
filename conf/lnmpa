@@ -746,6 +746,27 @@ Add_SSL_Info_Menu()
     fi
 }
 
+Add_DNS_SSL_Only_Info_Menu()
+{
+    domain=""
+    while :;do
+        Echo_Yellow "Please enter domain(example: lnmp.org): "
+        read domain
+        if [ "${domain}" != "" ]; then
+            echo " Your domain: ${domain}"
+            break
+        else
+            Echo_Red "Domain name can't be empty!"
+        fi
+    done
+
+    Echo_Yellow "Enter more domain name(example: *.lnmp.org): "
+    read moredomain
+    if [ "${moredomain}" != "" ]; then
+        echo " domain list: ${moredomain}"
+    fi
+}
+
 Add_SSL_Menu()
 {
     if [ "${info}" == "n" ]; then
@@ -965,6 +986,11 @@ Add_Dns_SSL()
         letsdomain="-d ${domain}"
     fi
 
+    if echo "${letsdomain}" | grep -q '\*\.' && echo "${letsdomain}" | grep -qi 'www\.'; then
+        Echo_Red "wildcard SSL certificate DO NOT allow add www. subdomain."
+        exit 1
+    fi
+
     echo "Starting create SSL Certificate use Let's Encrypt..."
     if [ "${provider}" != "" ]; then
         /usr/local/acme.sh/acme.sh --issue ${letsdomain} --dns ${dns_provider} --reloadcmd "/etc/init.d/nginx reload"
@@ -992,6 +1018,80 @@ Add_Dns_SSL()
         ssl_certificate="/usr/local/nginx/conf/ssl/${domain}/fullchain.cer"
         ssl_certificate_key="/usr/local/nginx/conf/ssl/${domain}/${domain}.key"
         Create_SSL_Config
+        Echo_Green "Let's Encrypt SSL Certificate create successfully."
+    else
+        Echo_Red "Let's Encrypt SSL Certificate create failed!"
+    fi
+}
+
+Add_Dns_SSL_Only()
+{
+    provider=$1
+    if [ "${provider}" != "" ]; then
+        dns_provider="dns_${provider}"
+    else
+        Echo_Red "The dns manual mode can not renew automatically, you must renew it manually."
+    fi
+    if [ -s /usr/local/acme.sh/acme.sh ]; then
+        echo "/usr/local/acme.sh/acme.sh [found]"
+    else
+        cd /tmp
+        [[ -f latest.tar.gz ]] && rm -f latest.tar.gz
+        wget https://soft.vpser.net/lib/acme.sh/latest.tar.gz --prefer-family=IPv4 --no-check-certificate
+        tar zxf latest.tar.gz
+        cd acme.sh-*
+        ./acme.sh --install --log --home /usr/local/acme.sh --certhome /usr/local/nginx/conf/ssl
+        cd ..
+        rm -f latest.tar.gz
+        rm -rf acme.sh-*
+        sed -i 's/cat "\$CERT_PATH"$/#cat "\$CERT_PATH"/g' /usr/local/acme.sh/acme.sh
+    fi
+    if [[ ! -s /usr/local/acme.sh/dnsapi/dns_${provider}.sh && "${provider}" != "" ]]; then
+        echo "DNS Provider: ${provider} not found."
+        exit 1
+    fi
+    Add_DNS_SSL_Only_Info_Menu
+
+    . "/usr/local/acme.sh/acme.sh.env"
+
+    if [ -s /usr/local/nginx/conf/ssl/${domain}/fullchain.cer ]; then
+        echo "Removing exist domain certificate..."
+        rm -rf /usr/local/nginx/conf/ssl/${domain}
+    fi
+
+    letsdomain=""
+    if [ "${moredomain}" != "" ]; then
+        letsdomain="-d ${domain}"
+        for i in ${moredomain};do
+            letsdomain=${letsdomain}" -d ${i}"
+        done
+    else
+        letsdomain="-d ${domain}"
+    fi
+
+    if echo "${letsdomain}" | grep -q '\*\.' && echo "${letsdomain}" | grep -qi 'www\.'; then
+        Echo_Red "wildcard SSL certificate DO NOT allow add www. subdomain."
+        exit 1
+    fi
+
+    echo "Starting create SSL Certificate use Let's Encrypt..."
+    if [ "${provider}" != "" ]; then
+        /usr/local/acme.sh/acme.sh --issue ${letsdomain} --dns ${dns_provider} --reloadcmd "/etc/init.d/nginx reload"
+        lets_status=$?
+    else
+        /usr/local/acme.sh/acme.sh --issue ${letsdomain} --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please
+        Echo_Yellow "Please add the above TXT record to the domain in 120 seconds!!!"
+        echo
+        Sleep_Sec 120
+        /usr/local/acme.sh/acme.sh --renew ${letsdomain} --yes-I-know-dns-manual-mode-enough-go-ahead-please
+        lets_status=$?
+    fi
+    if [ "${lets_status}" = 0 ] || [[ "${provider}" = "" && "${lets_status}" = 1 && -s "/usr/local/nginx/conf/ssl/${domain}/fullchain.cer" ]]; then
+        Echo_Blue "------------------ SSL Certificate information as follows ------------------"
+        Echo_Blue "| Domain: ${domain} ${moredomain}"
+        Echo_Blue "| SSL Certificate: /usr/local/nginx/conf/ssl/${domain}/fullchain.cer"
+        Echo_Blue "| SSL Certificate Key: /usr/local/nginx/conf/ssl/${domain}/${domain}.key"
+        Echo_Blue "------------------------------------ ---------------------------------------"
         Echo_Green "Let's Encrypt SSL Certificate create successfully."
     else
         Echo_Red "Let's Encrypt SSL Certificate create failed!"
@@ -1091,6 +1191,9 @@ case "${arg1}" in
         ;;
     dnsssl|dns)
         Add_Dns_SSL ${arg2}
+        ;;
+    onlyssl)
+        Add_Dns_SSL_Only ${arg2}
         ;;
     *)
         echo "Usage: lnmp {start|stop|reload|restart|kill|status}"
