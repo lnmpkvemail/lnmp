@@ -829,6 +829,9 @@ Add_Letsencrypt()
         rm -f latest.tar.gz
         rm -rf acme.sh-*
         sed -i 's/cat "\$CERT_PATH"$/#cat "\$CERT_PATH"/g' /usr/local/acme.sh/acme.sh
+        if [ -f /usr/bin/yum ]; then
+            service crond restart
+        fi
     fi
 
     . "/usr/local/acme.sh/acme.sh.env"
@@ -962,6 +965,9 @@ Add_Dns_SSL()
         rm -f latest.tar.gz
         rm -rf acme.sh-*
         sed -i 's/cat "\$CERT_PATH"$/#cat "\$CERT_PATH"/g' /usr/local/acme.sh/acme.sh
+        if [ -f /usr/bin/yum ]; then
+            service crond restart
+        fi
     fi
     if [[ ! -s /usr/local/acme.sh/dnsapi/dns_${provider}.sh && "${provider}" != "" ]]; then
         echo "DNS Provider: ${provider} not found."
@@ -1045,6 +1051,9 @@ Add_Dns_SSL_Only()
         rm -f latest.tar.gz
         rm -rf acme.sh-*
         sed -i 's/cat "\$CERT_PATH"$/#cat "\$CERT_PATH"/g' /usr/local/acme.sh/acme.sh
+        if [ -f /usr/bin/yum ]; then
+            service crond restart
+        fi
     fi
     if [[ ! -s /usr/local/acme.sh/dnsapi/dns_${provider}.sh && "${provider}" != "" ]]; then
         echo "DNS Provider: ${provider} not found."
