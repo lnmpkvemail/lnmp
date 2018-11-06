@@ -94,7 +94,7 @@ Select_PHP()
             Echo_Green "8: PHP 7.1 [found]"
         fi
         if [[ -s /usr/local/php7.2/sbin/php-fpm && -s /usr/local/nginx/conf/enable-php7.2.conf && -s /etc/init.d/php-fpm7.2 ]]; then
-            Echo_Green "8: PHP 7.2 [found]"
+            Echo_Green "9: PHP 7.2 [found]"
         fi
         Echo_Yellow "Enter your choice (1, 2, 3, 4, 5, 6 ,7 or 8): "
         read php_select
