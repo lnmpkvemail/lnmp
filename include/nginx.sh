@@ -3,7 +3,7 @@
 Install_Nginx_Openssl()
 {
     if [ "${Enable_Nginx_Openssl}" = 'y' ]; then
-        if [ ! -n "${Nginx_Ver}" ]; then
+        if [ ! -n "${Nginx_Version}" ]; then
             Nginx_Version=$(echo ${Nginx_Ver} | sed "s/nginx-//")
         fi
         Nginx_Ver_Com=$(${cur_dir}/include/version_compare 1.13.0 ${Nginx_Version})
