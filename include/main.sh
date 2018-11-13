@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DB_Info=('MySQL 5.1.73' 'MySQL 5.5.60' 'MySQL 5.6.40' 'MySQL 5.7.22' 'MySQL 8.0.11' 'MariaDB 5.5.60' 'MariaDB 10.0.35' 'MariaDB 10.1.33' 'MariaDB 10.2.14')
+DB_Info=('MySQL 5.1.73' 'MySQL 5.5.60' 'MySQL 5.6.40' 'MySQL 5.7.22' 'MySQL 8.0.11' 'MariaDB 5.5.60' 'MariaDB 10.0.35' 'MariaDB 10.1.33' 'MariaDB 10.2.14' 'MariaDB 10.3.10')
 PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.38' 'PHP 5.6.36' 'PHP 7.0.30' 'PHP 7.1.18' 'PHP 7.2.6')
 Apache_Info=('Apache 2.2.34' 'Apache 2.4.33')
 
@@ -19,8 +19,9 @@ Database_Selection()
         echo "7: Install ${DB_Info[6]}"
         echo "8: Install ${DB_Info[7]}"
         echo "9: Install ${DB_Info[8]}"
+        echo "10: Install ${DB_Info[9]}"
         echo "0: DO NOT Install MySQL/MariaDB"
-        read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8, 9 or 0): " DBSelect
+        read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8, 9, 10 or 0): " DBSelect
     fi
 
     case "${DBSelect}" in
@@ -51,6 +52,9 @@ Database_Selection()
     9)
         echo "You will install ${DB_Info[8]}"
         ;;
+    10)
+        echo "You will install ${DB_Info[9]}"
+        ;;
     0)
         echo "Do not install MySQL/MariaDB!"
         ;;
@@ -59,12 +63,12 @@ Database_Selection()
         DBSelect="2"
     esac
 
-    if [[ "${DBSelect}" =~ ^[345789]$ ]] && [ `free -m | grep Mem | awk '{print  $2}'` -le 1024 ]; then
+    if [[ "${DBSelect}" =~ ^[345789]|[10]$ ]] && [ `free -m | grep Mem | awk '{print  $2}'` -le 1024 ]; then
         echo "Memory less than 1GB, can't install MySQL 5.6+ or MairaDB 10+!"
         exit 1
     fi
 
-    if [[ "${DBSelect}" =~ ^[6789]$ ]]; then
+    if [[ "${DBSelect}" =~ ^[6789]|[10]$ ]]; then
         MySQL_Bin="/usr/local/mariadb/bin/mysql"
         MySQL_Config="/usr/local/mariadb/bin/mysql_config"
         MySQL_Dir="/usr/local/mariadb"
