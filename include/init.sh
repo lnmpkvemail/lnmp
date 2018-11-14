@@ -142,6 +142,8 @@ Ubuntu_Modify_Source()
         Ubuntu_Deadline artful
     elif grep -Eqi "16.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^16.04'; then
         Ubuntu_Deadline xenial
+    elif grep -Eqi "18.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^18.10'; then
+        Ubuntu_Deadline cosmic
     fi
     if [ "${CodeName}" != "" ]; then
         \cp /etc/apt/sources.list /etc/apt/sources.list.$(date +"%Y%m%d")
@@ -174,6 +176,7 @@ Ubuntu_Deadline()
     trusty_deadline=`date -d "2019-7-22 00:00:00" +%s`
     artful_deadline=`date -d "2018-7-31 00:00:00" +%s`
     xenial_deadline=`date -d "2021-4-30 00:00:00" +%s`
+    cosmic_deadline=`date -d "2019-7-30 00:00:00" +%s`
     cur_time=`date  +%s`
     case "$1" in
         trusty)
@@ -192,6 +195,12 @@ Ubuntu_Deadline()
             if [ ${cur_time} -gt ${xenial_deadline} ]; then
                 echo "${cur_time} > ${xenial_deadline}"
                 Check_Old_Releases_URL xenial
+            fi
+            ;;
+        cosmic)
+            if [ ${cur_time} -gt ${cosmic_deadline} ]; then
+                echo "${cur_time} > ${cosmic_deadline}"
+                Check_Old_Releases_URL cosmic
             fi
             ;;
     esac
