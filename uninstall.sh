@@ -30,17 +30,6 @@ echo "+------------------------------------------------------------------------+
 echo "|           For more information please visit https://lnmp.org           |"
 echo "+------------------------------------------------------------------------+"
 
-Dele_Iptables_Rules()
-{
-    /sbin/iptables -D INPUT -i lo -j ACCEPT
-    /sbin/iptables -D INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
-    /sbin/iptables -D INPUT -p tcp --dport 22 -j ACCEPT
-    /sbin/iptables -D INPUT -p tcp --dport 80 -j ACCEPT
-    /sbin/iptables -D INPUT -p tcp --dport 443 -j ACCEPT
-    /sbin/iptables -D INPUT -p tcp --dport 3306 -j DROP
-    /sbin/iptables -D INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT
-}
-
 Sleep_Sec()
 {
     seconds=$1
@@ -58,9 +47,6 @@ Uninstall_LNMP()
     echo "Stoping LNMP..."
     lnmp kill
     lnmp stop
-
-    echo "Deleting iptables rules..."
-    Dele_Iptables_Rules
 
     Remove_StartUp nginx
     Remove_StartUp php-fpm
@@ -113,9 +99,6 @@ Uninstall_LNMPA()
     echo "Stoping LNMPA..."
     lnmp kill
     lnmp stop
-
-    echo "Deleting iptables rules..."
-    Dele_Iptables_Rules
     
     Remove_StartUp nginx
     Remove_StartUp httpd
@@ -156,9 +139,6 @@ Uninstall_LAMP()
     echo "Stoping LAMP..."
     lnmp kill
     lnmp stop
-
-    echo "Deleting iptables rules..."
-    Dele_Iptables_Rules
 
     Remove_StartUp httpd
     if [ ${DB_Name} != "None" ]; then
