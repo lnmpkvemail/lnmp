@@ -425,8 +425,10 @@ Tar_Cd()
     [[ -d "${DirName}" ]] && rm -rf ${DirName}
     echo "Uncompress ${FileName}..."
     tar zxf ${FileName}
-    echo "cd ${DirName}..."
-    cd ${DirName}
+    if [ ! -n "${DirName}" ]; then
+        echo "cd ${DirName}..."
+        cd ${DirName}
+    fi
 }
 
 Tarj_Cd()
@@ -437,8 +439,10 @@ Tarj_Cd()
     [[ -d "${DirName}" ]] && rm -rf ${DirName}
     echo "Uncompress ${FileName}..."
     tar jxf ${FileName}
-    echo "cd ${DirName}..."
-    cd ${DirName}
+    if [ ! -n "${DirName}" ]; then
+        echo "cd ${DirName}..."
+        cd ${DirName}
+    fi
 }
 
 Check_LNMPConf()
