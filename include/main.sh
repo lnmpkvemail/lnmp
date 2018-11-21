@@ -425,7 +425,7 @@ Tar_Cd()
     [[ -d "${DirName}" ]] && rm -rf ${DirName}
     echo "Uncompress ${FileName}..."
     tar zxf ${FileName}
-    if [ ! -n "${DirName}" ]; then
+    if [ -n "${DirName}" ]; then
         echo "cd ${DirName}..."
         cd ${DirName}
     fi
@@ -439,7 +439,7 @@ Tarj_Cd()
     [[ -d "${DirName}" ]] && rm -rf ${DirName}
     echo "Uncompress ${FileName}..."
     tar jxf ${FileName}
-    if [ ! -n "${DirName}" ]; then
+    if [ -n "${DirName}" ]; then
         echo "cd ${DirName}..."
         cd ${DirName}
     fi
