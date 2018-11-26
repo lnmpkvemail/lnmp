@@ -1,15 +1,15 @@
 #!/bin/bash
 
-DB_Info=('MySQL 5.1.73' 'MySQL 5.5.60' 'MySQL 5.6.40' 'MySQL 5.7.22' 'MySQL 8.0.11' 'MariaDB 5.5.60' 'MariaDB 10.0.35' 'MariaDB 10.1.33' 'MariaDB 10.2.14' 'MariaDB 10.3.10')
-PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.38' 'PHP 5.6.36' 'PHP 7.0.30' 'PHP 7.1.18' 'PHP 7.2.6')
-Apache_Info=('Apache 2.2.34' 'Apache 2.4.33')
+DB_Info=('MySQL 5.1.73' 'MySQL 5.5.62' 'MySQL 5.6.42' 'MySQL 5.7.24' 'MySQL 8.0.13' 'MariaDB 5.5.62' 'MariaDB 10.0.37' 'MariaDB 10.1.37' 'MariaDB 10.2.19' 'MariaDB 10.3.11')
+PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.38' 'PHP 5.6.38' 'PHP 7.0.32' 'PHP 7.1.24' 'PHP 7.2.12')
+Apache_Info=('Apache 2.2.34' 'Apache 2.4.37')
 
 Database_Selection()
 {
 #which MySQL Version do you want to install?
     if [ -z ${DBSelect} ]; then
         DBSelect="2"
-        Echo_Yellow "You have 10 options for your DataBase install."
+        Echo_Yellow "You have 11 options for your DataBase install."
         echo "1: Install ${DB_Info[0]}"
         echo "2: Install ${DB_Info[1]} (Default)"
         echo "3: Install ${DB_Info[2]}"
