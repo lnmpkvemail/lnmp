@@ -48,7 +48,7 @@ Upgrade_Nginx()
     Install_Nginx_Lua
     Tar_Cd nginx-${Nginx_Version}.tar.gz nginx-${Nginx_Version}
     Get_Dist_Version
-    if [[ "${DISTRO}" = "Fedora" && "${Fedora_Version}" = "28" ]]; then
+    if [[ "${DISTRO}" = "Fedora" && ${Fedora_Version} -ge 28 ]]; then
         patch -p1 < ${cur_dir}/src/patch/nginx-libxcrypt.patch
     fi
     Nginx_Ver_Com=$(${cur_dir}/include/version_compare 1.14.2 ${Nginx_Version})
