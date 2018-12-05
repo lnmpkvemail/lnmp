@@ -68,7 +68,7 @@ Install_Apache_24()
         mkdir -p /home/wwwlogs
         chmod 777 /home/wwwlogs
         chown -R www:www ${Default_Website_Dir}
-        Install_Openssl
+        Install_Openssl_New
         Install_Nghttp2
     fi
     Tarj_Cd ${Apache_Ver}.tar.bz2 ${Apache_Ver}

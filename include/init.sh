@@ -497,6 +497,22 @@ Install_Openssl()
     fi
 }
 
+Install_Openssl_New()
+{
+        Echo_Blue "[+] Installing ${Openssl_New_Ver}"
+        cd ${cur_dir}/src
+        Download_Files ${Download_Mirror}/lib/openssl/${Openssl_New_Ver}.tar.gz ${Openssl_New_Ver}.tar.gz
+        [[ -d "${Openssl_New_Ver}" ]] && rm -rf ${Openssl_New_Ver}
+        Tar_Cd ${Openssl_New_Ver}.tar.gz ${Openssl_New_Ver}
+        ./config enable-weak-ssl-ciphers -fPIC --prefix=/usr/local/openssl --openssldir=/usr/local/openssl
+        make depend
+        Make_Install
+        ln -sf /usr/local/openssl/lib/libcrypto.so.1.1 /usr/lib/
+        ln -sf /usr/local/openssl/lib/libssl.so.1.1 /usr/lib/
+        cd ${cur_dir}/src/
+        rm -rf ${cur_dir}/src/${Openssl_New_Ver}
+}
+
 Install_Nghttp2()
 {
     if [[ ! -s /usr/local/nghttp2/lib/libnghttp2.so || ! -s /usr/local/nghttp2/include/nghttp2/nghttp2.h ]]; then
