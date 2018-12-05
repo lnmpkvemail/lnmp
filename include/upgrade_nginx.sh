@@ -51,7 +51,8 @@ Upgrade_Nginx()
     if [[ "${DISTRO}" = "Fedora" && "${Fedora_Version}" = "28" ]]; then
         patch -p1 < ${cur_dir}/src/patch/nginx-libxcrypt.patch
     fi
-    if gcc -dumpversion|grep -q "^[8]"; then
+    Nginx_Ver_Com=$(${cur_dir}/include/version_compare 1.14.2 ${Nginx_Version})
+    if gcc -dumpversion|grep -q "^[8]" && [ "${Nginx_Ver_Com}" == "1" ]; then
         patch -p1 < ${cur_dir}/src/patch/nginx-gcc8.patch
     fi
     Nginx_Ver_Com=$(${cur_dir}/include/version_compare 1.9.4 ${Nginx_Version})
