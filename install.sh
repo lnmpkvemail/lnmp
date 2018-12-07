@@ -143,6 +143,8 @@ Install_PHP()
         Install_PHP_71
     elif [ "${PHPSelect}" = "8" ]; then
         Install_PHP_72
+    elif [ "${PHPSelect}" = "9" ]; then
+        Install_PHP_73
     fi
 }
 

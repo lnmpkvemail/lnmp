@@ -676,7 +676,7 @@ Upgrade_PHP()
         Upgrade_PHP_556
     elif echo "${php_version}" | grep -Eqi '^7.[01].';then
         Upgrade_PHP_7
-    elif echo "${php_version}" | grep -Eqi '^7.2.';then
+    elif echo "${php_version}" | grep -Eqi '^7.[23].';then
         Upgrade_PHP_72
     fi
 }

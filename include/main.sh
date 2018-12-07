@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DB_Info=('MySQL 5.1.73' 'MySQL 5.5.62' 'MySQL 5.6.42' 'MySQL 5.7.24' 'MySQL 8.0.13' 'MariaDB 5.5.62' 'MariaDB 10.0.37' 'MariaDB 10.1.37' 'MariaDB 10.2.19' 'MariaDB 10.3.11')
-PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.38' 'PHP 5.6.38' 'PHP 7.0.32' 'PHP 7.1.24' 'PHP 7.2.12')
+PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.38' 'PHP 5.6.39' 'PHP 7.0.33' 'PHP 7.1.25' 'PHP 7.2.13' 'PHP 7.3.0')
 Apache_Info=('Apache 2.2.34' 'Apache 2.4.37')
 
 Database_Selection()
@@ -124,7 +124,7 @@ PHP_Selection()
         echo "==========================="
 
         PHPSelect="3"
-        Echo_Yellow "You have 8 options for your PHP install."
+        Echo_Yellow "You have 9 options for your PHP install."
         echo "1: Install ${PHP_Info[0]}"
         echo "2: Install ${PHP_Info[1]}"
         echo "3: Install ${PHP_Info[2]}"
@@ -133,7 +133,8 @@ PHP_Selection()
         echo "6: Install ${PHP_Info[5]}"
         echo "7: Install ${PHP_Info[6]}"
         echo "8: Install ${PHP_Info[7]}"
-        read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7 or 8): " PHPSelect
+        echo "9: Install ${PHP_Info[9]}"
+        read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8 or 9): " PHPSelect
     fi
 
     case "${PHPSelect}" in
@@ -164,6 +165,9 @@ PHP_Selection()
         ;;
     8)
         echo "You will install ${PHP_Info[7]}"
+        ;;
+    9)
+        echo "You will install ${PHP_Info[8]}"
         ;;
     *)
         echo "No input,You will install ${PHP_Info[4]}"
