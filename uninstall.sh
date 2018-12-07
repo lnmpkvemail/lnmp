@@ -11,7 +11,7 @@ fi
 cur_dir=$(pwd)
 Stack=$1
 
-LNMP_Ver='1.4'
+LNMP_Ver='1.6'
 
 . lnmp.conf
 . include/main.sh
