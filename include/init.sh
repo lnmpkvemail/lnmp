@@ -461,7 +461,7 @@ Install_Icu4c()
 
 Install_Boost()
 {
-    Echo_Blue "[+] Installing ${Boost_Ver}"
+    Echo_Blue "[+] Download or use exist boost..."
     cd ${cur_dir}/src
     if [ "${DBSelect}" = "4" ] || echo "${mysql_version}" | grep -Eqi '^5.7.'; then
         if [ -s "${Boost_Ver}.tar.bz2" ]; then
