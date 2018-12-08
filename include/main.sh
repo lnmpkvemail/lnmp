@@ -133,7 +133,7 @@ PHP_Selection()
         echo "6: Install ${PHP_Info[5]}"
         echo "7: Install ${PHP_Info[6]}"
         echo "8: Install ${PHP_Info[7]}"
-        echo "9: Install ${PHP_Info[9]}"
+        echo "9: Install ${PHP_Info[8]}"
         read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8 or 9): " PHPSelect
     fi
 
