@@ -25,7 +25,7 @@ while :;do
     if [ -d "${website_root}" ]; then
         if [ -f ${website_root}/.user.ini ];then
             chattr -i ${website_root}/.user.ini
-            rm -f ${website_root}.user.ini
+            rm -f ${website_root}/.user.ini
             sed -i 's/^fastcgi_param PHP_ADMIN_VALUE/#fastcgi_param PHP_ADMIN_VALUE/g' /usr/local/nginx/conf/fastcgi.conf
             /etc/init.d/php-fpm restart
             /etc/init.d/nginx reload
