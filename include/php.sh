@@ -34,7 +34,7 @@ PHP_with_curl()
 PHP_with_openssl()
 {
     if /usr/bin/openssl version | grep -Eqi "OpenSSL 1.1.*"; then
-        if ( [ "${PHPSelect}" != "" ] &&  echo "${PHPSelect}" | grep -vEqi "6|7|8" ) || ( [ "${php_version}" != "" ] && echo "${php_version}" | grep -vEqi '^7.' ); then
+        if ( [ "${PHPSelect}" != "" ] &&  echo "${PHPSelect}" | grep -vEqi "6|7|8|9" ) || ( [ "${php_version}" != "" ] && echo "${php_version}" | grep -vEqi '^7.' ); then
             Install_Openssl
             with_openssl='--with-openssl=/usr/local/openssl'
         else
