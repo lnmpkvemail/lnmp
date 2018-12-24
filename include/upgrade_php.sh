@@ -26,11 +26,11 @@ Start_Upgrade_PHP()
         exit 1
     fi
     Press_Start
+    cd ${cur_dir}/src
     if [ -s php-${php_version}.tar.bz2 ]; then
         echo "php-${php_version}.tar.bz2 [found]"
     else
         echo "Notice: php-$php_version.tar.bz2 not found!!!download now..."
-        cd ${cur_dir}/src
         country=`curl -sSk --connect-timeout 10 -m 60 https://ip.vpser.net/country`
         if [ "${country}" = "CN" ]; then
             wget -c --progress=bar:force http://jp2.php.net/distributions/php-${php_version}.tar.bz2
