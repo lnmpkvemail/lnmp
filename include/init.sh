@@ -31,15 +31,20 @@ CentOS_RemoveAMP()
     Echo_Blue "[-] Yum remove packages..."
     rpm -qa|grep httpd
     rpm -e httpd httpd-tools --nodeps
-    rpm -qa|grep mysql
-    rpm -e mysql mysql-libs --nodeps
+    if [[ "${DBSelect}" != "0" ]]; then
+        yum -y remove mysql-server mysql mysql-libs mariadb-server mariadb mariadb-libs
+        rpm -qa|grep mysql
+        if [ $? -ne 0 ]; then
+            rpm -e mysql mysql-libs --nodeps
+            rpm -e mariadb mariadb-libs --nodeps
+        fi
+    fi
     rpm -qa|grep php
     rpm -e php-mysql php-cli php-gd php-common php --nodeps
 
     Remove_Error_Libcurl
 
     yum -y remove httpd*
-    yum -y remove mysql-server mysql mysql-libs
     yum -y remove php*
     yum clean all
 }
@@ -48,13 +53,18 @@ Deb_RemoveAMP()
 {
     Echo_Blue "[-] apt-get remove packages..."
     apt-get update -y
-    for removepackages in apache2 apache2-doc apache2-utils apache2.2-common apache2.2-bin apache2-mpm-prefork apache2-doc apache2-mpm-worker mysql-client mysql-server mysql-common mysql-server-core-5.5 mysql-client-5.5 php5 php5-common php5-cgi php5-cli php5-mysql php5-curl php5-gd;
+    for removepackages in apache2 apache2-doc apache2-utils apache2.2-common apache2.2-bin apache2-mpm-prefork apache2-doc apache2-mpm-worker php5 php5-common php5-cgi php5-cli php5-mysql php5-curl php5-gd;
     do apt-get purge -y $removepackages; done
+    if [[ "${DBSelect}" != "0" ]]; then
+        for removepackages in mysql-client mysql-server mysql-common mysql-server-core-5.5 mysql-client-5.5 mariadb-client mariadb-server mariadb-common;
+        do apt-get purge -y $removepackages; done
+        dpkg -l |grep mysql
+        dpkg -P mysql-server mysql-common libmysqlclient15off libmysqlclient15-dev
+        dpkg -P mariadb-client mariadb-server mariadb-common
+    fi
     killall apache2
     dpkg -l |grep apache
     dpkg -P apache2 apache2-doc apache2-mpm-prefork apache2-utils apache2.2-common
-    dpkg -l |grep mysql
-    dpkg -P mysql-server mysql-common libmysqlclient15off libmysqlclient15-dev
     dpkg -l |grep php
     dpkg -P php5 php5-common php5-cli php5-cgi php5-mysql php5-curl php5-gd
     apt-get autoremove -y && apt-get clean
