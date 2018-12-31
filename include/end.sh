@@ -40,7 +40,7 @@ Add_LNMP_Startup()
     chmod +x /bin/lnmp
     StartUp nginx
     /etc/init.d/nginx start
-    if [[ "${DBSelect}" =~ ^[6789]$ ]]; then
+    if [[ "${DBSelect}" =~ ^[6789]|10$ ]]; then
         StartUp mariadb
         /etc/init.d/mariadb start
         sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#' /bin/lnmp

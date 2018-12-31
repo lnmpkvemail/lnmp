@@ -77,7 +77,7 @@ Install_Database()
     cd ${cur_dir}/src
     if [[ "${DBSelect}" =~ ^[12345]$ ]]; then
         Download_Files ${Download_Mirror}/datebase/mysql/${Mysql_Ver}.tar.gz ${Mysql_Ver}.tar.gz
-    elif [[ "${DBSelect}" =~ ^[6789]$ ]]; then
+    elif [[ "${DBSelect}" =~ ^[6789]|10$ ]]; then
         Download_Files ${Download_Mirror}/datebase/mariadb/${Mariadb_Ver}.tar.gz ${Mariadb_Ver}.tar.gz
     fi
     echo "============================check files=================================="
@@ -102,10 +102,12 @@ Install_Database()
         Install_MariaDB_101
     elif [ "${DBSelect}" = "9" ]; then
         Install_MariaDB_102
+    elif [ "${DBSelect}" = "10" ]; then
+        Install_MariaDB_103
     fi
     TempMycnf_Clean
 
-    if [[ "${DBSelect}" =~ ^[6789]$ ]]; then
+    if [[ "${DBSelect}" =~ ^[6789]|10$ ]]; then
         StartUp mariadb
         /etc/init.d/mariadb start
     elif [[ "${DBSelect}" =~ ^[12345]$ ]]; then
@@ -118,7 +120,7 @@ Install_Database()
         if [[ "${DBSelect}" =~ ^[12345]$ ]]; then
             Echo_Green "MySQL root password: ${DB_Root_Password}"
             Echo_Green "Install ${Mysql_Ver} completed! enjoy it."
-        elif [[ "${DBSelect}" =~ ^[6789]$ ]]; then
+        elif [[ "${DBSelect}" =~ ^[6789]|10$ ]]; then
             Echo_Green "MariaDB root password: ${DB_Root_Password}"
             Echo_Green "Install ${Mariadb_Ver} completed! enjoy it."
         fi
