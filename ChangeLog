@@ -1,5 +1,18 @@
 更新记录
 
+LNMP 1.6
+
+增加PHP 7.3支持；
+增加MariaDB 10.3支持；
+增加Nginx/Apache TLS 1.3支持；
+增加使用DNS API方式只创建SSL证书不添加网站，命令lnmp onlyssl；
+修复新版深度Deepin 15.8桌面版问题；
+修复新版Fedora 29下问题；
+调整boost下载安装方式；
+调整卸载时不删除安装时添加的iptables规则；
+更新诸多软件版本；
+其他一些功能优化及调整......
+
 LNMP 1.5
 
 增加PHP 7.2支持；
