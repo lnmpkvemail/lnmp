@@ -514,6 +514,7 @@ Print_APP_Ver()
 
 Print_Sys_Info()
 {
+    echo "LNMP Version: ${LNMP_Ver}"
     eval echo "${DISTRO} \${${DISTRO}_Version}"
     cat /etc/issue
     cat /etc/*-release
