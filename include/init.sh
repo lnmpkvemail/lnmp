@@ -472,18 +472,19 @@ Install_Icu4c()
 Install_Boost()
 {
     Echo_Blue "[+] Download or use exist boost..."
-    cd ${cur_dir}/src
     if [ "${DBSelect}" = "4" ] || echo "${mysql_version}" | grep -Eqi '^5.7.'; then
-        if [ -s "${Boost_Ver}.tar.bz2" ]; then
-            Tarj_Cd ${Boost_Ver}.tar.bz2
+        if [ -s "${cur_dir}/src/${Boost_Ver}.tar.bz2" ]; then
+            [[ -d "${cur_dir}/src/${Boost_Ver}" ]] && rm -rf "${cur_dir}/src/${Boost_Ver}"
+            tar jxf ${cur_dir}/src/${Boost_Ver}.tar.bz2 -C ${cur_dir}/src
             MySQL_WITH_BOOST="-DWITH_BOOST=${cur_dir}/src/${Boost_Ver}"
         else
             MySQL_WITH_BOOST="-DDOWNLOAD_BOOST=1 -DWITH_BOOST=${cur_dir}/src"
         fi
     elif [ "${DBSelect}" = "5" ] || echo "${mysql_version}" | grep -Eqi '^8.0.'; then
         Get_Boost_Ver=$(grep 'SET(BOOST_PACKAGE_NAME' cmake/boost.cmake |grep -oP '\d+(\_\d+){2}')
-        if [ -s "boost_${Get_Boost_Ver}.tar.bz2" ]; then
-            Tarj_Cd boost_${Get_Boost_Ver}.tar.bz2
+        if [ -s "${cur_dir}/src/boost_${Get_Boost_Ver}.tar.bz2" ]; then
+            [[ -d "${cur_dir}/src/boost_${Get_Boost_Ver}" ]] && rm -rf "${cur_dir}/src/boost_${Get_Boost_Ver}"
+            tar jxf ${cur_dir}/src/boost_${Get_Boost_Ver}.tar.bz2 -C ${cur_dir}/src
             MySQL_WITH_BOOST="-DWITH_BOOST=${cur_dir}/src/boost_${Get_Boost_Ver}"
         else
             MySQL_WITH_BOOST="-DDOWNLOAD_BOOST=1 -DWITH_BOOST=${cur_dir}/src"
