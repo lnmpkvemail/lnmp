@@ -224,6 +224,10 @@ zend_loader.obfuscation_level_support=3
 zend_loader.license_path=
 EOF
 
+    if grep -q '^LoadModule mpm_event_module' /usr/local/apache/conf/httpd.conf && [ "${ApacheSelect}" = "2" ]; then
+        mv /usr/local/php/conf.d/002-zendguardloader.ini /usr/local/php/conf.d/002-zendguardloader.ini.disable
+    fi
+
 if [ "${Stack}" = "lnmp" ]; then
     echo "Creating new php-fpm configure file..."
     cat >/usr/local/php/etc/php-fpm.conf<<EOF
@@ -313,6 +317,10 @@ zend_loader.disable_licensing=0
 zend_loader.obfuscation_level_support=3
 zend_loader.license_path=
 EOF
+
+    if grep -q '^LoadModule mpm_event_module' /usr/local/apache/conf/httpd.conf && [ "${ApacheSelect}" = "2" ]; then
+        mv /usr/local/php/conf.d/002-zendguardloader.ini /usr/local/php/conf.d/002-zendguardloader.ini.disable
+    fi
 
 if [ "${Stack}" = "lnmp" ]; then
     echo "Creating new php-fpm configure file..."
@@ -404,6 +412,10 @@ zend_loader.obfuscation_level_support=3
 zend_loader.license_path=
 EOF
 
+    if grep -q '^LoadModule mpm_event_module' /usr/local/apache/conf/httpd.conf && [ "${ApacheSelect}" = "2" ]; then
+        mv /usr/local/php/conf.d/002-zendguardloader.ini /usr/local/php/conf.d/002-zendguardloader.ini.disable
+    fi
+
 if [ "${Stack}" = "lnmp" ]; then
     echo "Creating new php-fpm configure file..."
     cat >/usr/local/php/etc/php-fpm.conf<<EOF
@@ -493,6 +505,10 @@ zend_loader.disable_licensing=0
 zend_loader.obfuscation_level_support=3
 zend_loader.license_path=
 EOF
+
+    if grep -q '^LoadModule mpm_event_module' /usr/local/apache/conf/httpd.conf && [ "${ApacheSelect}" = "2" ]; then
+        mv /usr/local/php/conf.d/002-zendguardloader.ini /usr/local/php/conf.d/002-zendguardloader.ini.disable
+    fi
 
 if [ "${Stack}" = "lnmp" ]; then
     echo "Creating new php-fpm configure file..."
