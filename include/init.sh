@@ -645,3 +645,28 @@ Remove_Error_Libcurl()
         rm -f /usr/local/lib/libcurl*
     fi
 }
+
+Add_Swap()
+{
+    Swap_Total=$(free -m | grep Swap | awk '{print  $2}')
+    if [[ "${Enable_Swap}" = "y" && "${Swap_Total}" = "0" ]]; then
+        echo "Add Swap file..."
+        if [ "${MemTotal}" -lt 1024 ]; then
+            DD_Count='1024'
+        elif [[ "${MemTotal}" -ge 1024 && "${MemTotal}" -le 2048 ]]; then
+            DD_Count='2028'
+        fi
+        dd if=/dev/zero of=/var/swapfile bs=1M count=${DD_Count}
+        chmod 0600 /var/swapfile
+        echo "Enable Swap..."
+        /sbin/mkswap /var/swapfile
+        /sbin/swapon /var/swapfile
+        if [ $? -eq 0 ]; then
+            [ `grep -L '/var/swapfile'    '/etc/fstab'` ] && echo "/var/swapfile swap swap defaults 0 0" >>/etc/fstab
+            /sbin/swapon -s
+        else
+            rm -f /var/swapfile
+            echo "Add Swap Failed!"
+        fi
+    fi
+}
