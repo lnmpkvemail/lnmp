@@ -522,6 +522,7 @@ Install_Openssl_New()
         ln -sf /usr/local/openssl/lib/libssl.so.1.1 /usr/lib/
         cd ${cur_dir}/src/
         rm -rf ${cur_dir}/src/${Openssl_New_Ver}
+        ldconfig
 }
 
 Install_Nghttp2()
