@@ -522,6 +522,7 @@ Print_Sys_Info()
     MemTotal=`free -m | grep Mem | awk '{print  $2}'`
     echo "Memory is: ${MemTotal} MB "
     df -h
+    openssl version
 }
 
 StartUp()
