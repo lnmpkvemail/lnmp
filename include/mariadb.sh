@@ -3,7 +3,7 @@
 MariaDB_WITHSSL()
 {
     if /usr/bin/openssl version | grep -Eqi "OpenSSL 1.1.*"; then
-        if [[ "${DBSelect}" =~ ^[78]$ ]] || echo "${mysql_version}" | grep -Eqi '^10.[01].'; then
+        if [[ "${DBSelect}" =~ ^[78]$ ]] || echo "${mariadb_version}" | grep -Eqi '^10.[01].'; then
             Install_Openssl
             MariaDBWITHSSL='-DWITH_SSL=/usr/local/openssl'
         else
