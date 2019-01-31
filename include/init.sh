@@ -397,10 +397,15 @@ Install_Curl()
         cd ${cur_dir}/src
         Download_Files ${Download_Mirror}/lib/curl/${Curl_Ver}.tar.bz2 ${Curl_Ver}.tar.bz2
         Tarj_Cd ${Curl_Ver}.tar.bz2 ${Curl_Ver}
-        ./configure --prefix=/usr/local/curl --enable-ares --without-nss --with-ssl
+        if [ -s /usr/local/openssl/bin/openssl ] || /usr/local/openssl/bin/openssl version | grep -Eqi 'OpenSSL 1.0.2'; then
+            ./configure --prefix=/usr/local/curl --enable-ares --without-nss --with-zlib --with-ssl=/usr/local/openssl
+        else
+            ./configure --prefix=/usr/local/curl --enable-ares --without-nss --with-zlib --with-ssl
+        fi
         Make_Install
         cd ${cur_dir}/src/
         rm -rf ${cur_dir}/src/${Curl_Ver}
+        ldconfig
     fi
     Remove_Error_Libcurl
 }
@@ -510,19 +515,26 @@ Install_Openssl()
 
 Install_Openssl_New()
 {
-        Echo_Blue "[+] Installing ${Openssl_New_Ver}"
-        cd ${cur_dir}/src
-        Download_Files ${Download_Mirror}/lib/openssl/${Openssl_New_Ver}.tar.gz ${Openssl_New_Ver}.tar.gz
-        [[ -d "${Openssl_New_Ver}" ]] && rm -rf ${Openssl_New_Ver}
-        Tar_Cd ${Openssl_New_Ver}.tar.gz ${Openssl_New_Ver}
-        ./config enable-weak-ssl-ciphers -fPIC --prefix=/usr/local/openssl --openssldir=/usr/local/openssl
-        make depend
-        Make_Install
-        ln -sf /usr/local/openssl/lib/libcrypto.so.1.1 /usr/lib/
-        ln -sf /usr/local/openssl/lib/libssl.so.1.1 /usr/lib/
-        cd ${cur_dir}/src/
-        rm -rf ${cur_dir}/src/${Openssl_New_Ver}
+    if /usr/bin/openssl version | grep -vEqi "OpenSSL 1.1.1*"; then
+        if [ ! -s /usr/local/openssl1.1.1/bin/openssl ] || /usr/local/openssl1.1.1/bin/openssl version | grep -Eqi 'OpenSSL 1.1.1*'; then
+            Echo_Blue "[+] Installing ${Openssl_New_Ver}"
+            cd ${cur_dir}/src
+            Download_Files ${Download_Mirror}/lib/openssl/${Openssl_New_Ver}.tar.gz ${Openssl_New_Ver}.tar.gz
+            [[ -d "${Openssl_New_Ver}" ]] && rm -rf ${Openssl_New_Ver}
+            Tar_Cd ${Openssl_New_Ver}.tar.gz ${Openssl_New_Ver}
+            ./config enable-weak-ssl-ciphers -fPIC --prefix=/usr/local/openssl1.1.1 --openssldir=/usr/local/openssl1.1.1
+            make depend
+            Make_Install
+            ln -sf /usr/local/openssl1.1.1/lib/libcrypto.so.1.1 /usr/lib/
+            ln -sf /usr/local/openssl1.1.1/lib/libssl.so.1.1 /usr/lib/
+            cd ${cur_dir}/src/
+            rm -rf ${cur_dir}/src/${Openssl_New_Ver}
+        fi
         ldconfig
+        apache_with_ssl='--with-ssl=/usr/local/openssl1.1.1'
+    else
+        apache_with_ssl='--with-ssl'
+    fi
 }
 
 Install_Nghttp2()
