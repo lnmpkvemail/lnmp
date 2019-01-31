@@ -163,7 +163,7 @@ EOF
     echo "Test Apache configure file..."
     /etc/init.d/httpd configtest
     echo "Restart Apache..."
-    /etc/init.d/httpd restart
+    /etc/init.d/httpd graceful
 }
 
 Add_VHost()
@@ -852,7 +852,7 @@ EOF
     echo "Test Apache configure file..."
     /etc/init.d/httpd configtest
     echo "Restart Apache..."
-    /etc/init.d/httpd restart
+    /etc/init.d/httpd graceful
 }
 
 Add_SSL()
