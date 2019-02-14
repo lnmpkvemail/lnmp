@@ -17,7 +17,7 @@ Boost_Ver='boost_1_59_0'
 Boost_New_Ver='boost_1_67_0'
 Openssl_Ver='openssl-1.0.2q'
 Openssl_New_Ver='openssl-1.1.1a'
-Nghttp2_Ver='nghttp2-1.35.1'
+Nghttp2_Ver='nghttp2-1.36.0'
 Luajit_Ver='LuaJIT-2.0.5'
 LuaNginxModule='lua-nginx-module-0.10.13'
 NgxDevelKit='ngx_devel_kit-0.3.0'
@@ -58,21 +58,21 @@ elif [ "${PHPSelect}" = "6" ]; then
 elif [ "${PHPSelect}" = "7" ]; then
     Php_Ver='php-7.1.26'
 elif [ "${PHPSelect}" = "8" ]; then
-    Php_Ver='php-7.2.14'
+    Php_Ver='php-7.2.15'
 elif [ "${PHPSelect}" = "9" ]; then
-    Php_Ver='php-7.3.1'
+    Php_Ver='php-7.3.2'
 fi
 if [[ "${PHPSelect}" =~ ^[123]$ ]]; then
     PhpMyAdmin_Ver='phpMyAdmin-4.0.10.20-all-languages'
 else
-    PhpMyAdmin_Ver='phpMyAdmin-4.8.4-all-languages'
+    PhpMyAdmin_Ver='phpMyAdmin-4.8.5-all-languages'
 fi
 APR_Ver='apr-1.6.5'
 APR_Util_Ver='apr-util-1.6.1'
 if [ "${ApacheSelect}" = "1" ]; then
     Apache_Ver='httpd-2.2.34'
 elif [ "${ApacheSelect}" = "2" ]; then
-    Apache_Ver='httpd-2.4.37'
+    Apache_Ver='httpd-2.4.38'
 fi
 
 Pureftpd_Ver='pure-ftpd-1.0.47'
