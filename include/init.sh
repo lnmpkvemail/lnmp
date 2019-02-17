@@ -483,7 +483,9 @@ Install_Boost()
             tar jxf ${cur_dir}/src/${Boost_Ver}.tar.bz2 -C ${cur_dir}/src
             MySQL_WITH_BOOST="-DWITH_BOOST=${cur_dir}/src/${Boost_Ver}"
         else
-            MySQL_WITH_BOOST="-DDOWNLOAD_BOOST=1 -DWITH_BOOST=${cur_dir}/src"
+            Download_Files ${Download_Mirror}/lib/boost/${Boost_Ver}.tar.bz2 ${Boost_Ver}.tar.bz2
+            tar jxf ${cur_dir}/src/${Boost_Ver}.tar.bz2 -C ${cur_dir}/src
+            MySQL_WITH_BOOST="-DWITH_BOOST=${cur_dir}/src/${Boost_Ver}"
         fi
     elif [ "${DBSelect}" = "5" ] || echo "${mysql_version}" | grep -Eqi '^8.0.'; then
         Get_Boost_Ver=$(grep 'SET(BOOST_PACKAGE_NAME' cmake/boost.cmake |grep -oP '\d+(\_\d+){2}')
