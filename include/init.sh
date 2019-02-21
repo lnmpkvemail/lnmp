@@ -10,7 +10,7 @@ Set_Timezone()
 CentOS_InstallNTP()
 {
     Echo_Blue "[+] Installing ntp..."
-    yum install -y ntp
+    yum install -y ntpdate
     ntpdate -u pool.ntp.org
     date
     start_time=$(date +%s)
