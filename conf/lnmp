@@ -172,7 +172,7 @@ Add_VHost_Config()
     cat >"/usr/local/nginx/conf/vhost/${domain}.conf"<<EOF
 server
     {
-        listen 80;
+        listen 80 reuseport;
         #listen [::]:80;
         server_name ${domain} ${moredomain};
         index index.html index.htm index.php default.html default.htm default.php;
@@ -1063,7 +1063,7 @@ Create_SSL_Config()
 
 server
     {
-        listen 443 ssl http2;
+        listen 443 ssl http2 reuseport;
         #listen [::]:443 ssl http2;
         server_name ${domain} ${moredomain};
         index index.html index.htm index.php default.html default.htm default.php;
