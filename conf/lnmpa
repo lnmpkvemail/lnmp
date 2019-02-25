@@ -806,16 +806,8 @@ Add_SSL_Menu()
     done
 }
 
-Add_Letsencrypt()
+Install_Check_Acme.sh()
 {
-    if [[ "${vhostdir}" == "" || "${letsdomain}" == "" ]]; then
-        Echo_Red "Two parameters are needed!"
-        exit 1
-    fi
-    if [ ! -d "${vhostdir}" ]; then
-        Echo_Red "${vhostdir} does not exist or is not a directory!"
-        exit
-    fi
     if [ -s /usr/local/acme.sh/acme.sh ]; then
         echo "/usr/local/acme.sh/acme.sh [found]"
     else
@@ -829,12 +821,30 @@ Add_Letsencrypt()
         rm -f latest.tar.gz
         rm -rf acme.sh-*
         sed -i 's/cat "\$CERT_PATH"$/#cat "\$CERT_PATH"/g' /usr/local/acme.sh/acme.sh
-        if [ -f /usr/bin/yum ]; then
+        if command -v yum >/dev/null 2>&1; then
             service crond restart
+            chkconfig crond on
+        elif command -v apt-get >/dev/null 2>&1; then
+            /etc/init.d/cron restart
+            update-rc.d cron defaults
         fi
     fi
 
     . "/usr/local/acme.sh/acme.sh.env"
+}
+
+Add_Letsencrypt()
+{
+    if [[ "${vhostdir}" == "" || "${letsdomain}" == "" ]]; then
+        Echo_Red "Two parameters are needed!"
+        exit 1
+    fi
+    if [ ! -d "${vhostdir}" ]; then
+        Echo_Red "${vhostdir} does not exist or is not a directory!"
+        exit
+    fi
+
+    Install_Check_Acme.sh
 
     if [ -s /usr/local/nginx/conf/ssl/${domain}/fullchain.cer ]; then
         echo "Removing exist domain certificate..."
@@ -952,30 +962,15 @@ Add_Dns_SSL()
     else
         Echo_Red "The dns manual mode can not renew automatically, you must renew it manually."
     fi
-    if [ -s /usr/local/acme.sh/acme.sh ]; then
-        echo "/usr/local/acme.sh/acme.sh [found]"
-    else
-        cd /tmp
-        [[ -f latest.tar.gz ]] && rm -f latest.tar.gz
-        wget https://soft.vpser.net/lib/acme.sh/latest.tar.gz --prefer-family=IPv4 --no-check-certificate
-        tar zxf latest.tar.gz
-        cd acme.sh-*
-        ./acme.sh --install --log --home /usr/local/acme.sh --certhome /usr/local/nginx/conf/ssl
-        cd ..
-        rm -f latest.tar.gz
-        rm -rf acme.sh-*
-        sed -i 's/cat "\$CERT_PATH"$/#cat "\$CERT_PATH"/g' /usr/local/acme.sh/acme.sh
-        if [ -f /usr/bin/yum ]; then
-            service crond restart
-        fi
-    fi
+
+    Install_Check_Acme.sh
+
     if [[ ! -s /usr/local/acme.sh/dnsapi/dns_${provider}.sh && "${provider}" != "" ]]; then
         echo "DNS Provider: ${provider} not found."
         exit 1
     fi
-    Add_SSL_Info_Menu
 
-    . "/usr/local/acme.sh/acme.sh.env"
+    Add_SSL_Info_Menu
 
     if [ -s /usr/local/nginx/conf/ssl/${domain}/fullchain.cer ]; then
         echo "Removing exist domain certificate..."
@@ -1038,30 +1033,14 @@ Add_Dns_SSL_Only()
     else
         Echo_Red "The dns manual mode can not renew automatically, you must renew it manually."
     fi
-    if [ -s /usr/local/acme.sh/acme.sh ]; then
-        echo "/usr/local/acme.sh/acme.sh [found]"
-    else
-        cd /tmp
-        [[ -f latest.tar.gz ]] && rm -f latest.tar.gz
-        wget https://soft.vpser.net/lib/acme.sh/latest.tar.gz --prefer-family=IPv4 --no-check-certificate
-        tar zxf latest.tar.gz
-        cd acme.sh-*
-        ./acme.sh --install --log --home /usr/local/acme.sh --certhome /usr/local/nginx/conf/ssl
-        cd ..
-        rm -f latest.tar.gz
-        rm -rf acme.sh-*
-        sed -i 's/cat "\$CERT_PATH"$/#cat "\$CERT_PATH"/g' /usr/local/acme.sh/acme.sh
-        if [ -f /usr/bin/yum ]; then
-            service crond restart
-        fi
-    fi
+
+    Install_Check_Acme.sh
+
     if [[ ! -s /usr/local/acme.sh/dnsapi/dns_${provider}.sh && "${provider}" != "" ]]; then
         echo "DNS Provider: ${provider} not found."
         exit 1
     fi
     Add_DNS_SSL_Only_Info_Menu
-
-    . "/usr/local/acme.sh/acme.sh.env"
 
     if [ -s /usr/local/nginx/conf/ssl/${domain}/fullchain.cer ]; then
         echo "Removing exist domain certificate..."
