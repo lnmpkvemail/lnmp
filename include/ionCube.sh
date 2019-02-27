@@ -23,6 +23,8 @@ Install_ionCube()
        zend_ext="/usr/local/ioncube/ioncube_loader_lin_7.1.so"
     elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.2.'; then
        zend_ext="/usr/local/ioncube/ioncube_loader_lin_7.2.so"
+    elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.3.'; then
+       zend_ext="/usr/local/ioncube/ioncube_loader_lin_7.3.so"
     else
         Echo_Red "Do not support current PHP version or PHP error!"
         exit 1
