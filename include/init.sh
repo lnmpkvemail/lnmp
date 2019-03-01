@@ -665,14 +665,36 @@ Remove_Error_Libcurl()
 
 Add_Swap()
 {
+    Disk_Avail=$(${cur_dir}/include/disk.py)
+    if [ "${MemTotal}" -lt 1024 ]; then
+        DD_Count='1024'
+        if [ "${Disk_Avail}" -lt 5 ]; then
+            Enable_Swap='n'
+        fi
+    elif [[ "${MemTotal}" -ge 1024 && "${MemTotal}" -le 2048 ]]; then
+        DD_Count='2028'
+        if [ "${Disk_Avail}" -lt 10 ]; then
+            Enable_Swap='n'
+        fi
+    elif [[ "${MemTotal}" -ge 2048 && "${MemTotal}" -le 4096 ]]; then
+        DD_Count='4096'
+        if [ "${Disk_Avail}" -lt 15 ]; then
+            Enable_Swap='n'
+        fi
+    elif [[ "${MemTotal}" -ge 4096 && "${MemTotal}" -le 16384 ]]; then
+        DD_Count='8192'
+        if [ "${Disk_Avail}" -lt 20 ]; then
+            Enable_Swap='n'
+        fi
+    elif [[ "${MemTotal}" -ge 16384 ]]; then
+        DD_Count='16384'
+        if [ "${Disk_Avail}" -lt 25 ]; then
+            Enable_Swap='n'
+        fi
+    fi
     Swap_Total=$(free -m | grep Swap | awk '{print  $2}')
     if [[ "${Enable_Swap}" = "y" && "${Swap_Total}" = "0" ]]; then
         echo "Add Swap file..."
-        if [ "${MemTotal}" -lt 1024 ]; then
-            DD_Count='1024'
-        elif [[ "${MemTotal}" -ge 1024 && "${MemTotal}" -le 2048 ]]; then
-            DD_Count='2028'
-        fi
         dd if=/dev/zero of=/var/swapfile bs=1M count=${DD_Count}
         chmod 0600 /var/swapfile
         echo "Enable Swap..."
