@@ -143,14 +143,4 @@ EOF
         sed -i '/nginx.pid/a\
 google_perftools_profiles /tmp/tcmalloc;' /usr/local/nginx/conf/nginx.conf
     fi
-
-    if [ "${Stack}" != "lamp" ]; then
-        uname_r=$(uname -r)
-        if echo $uname_r|grep -Eq "^3\.(9|1[0-9])*|^[4-9]\.*"; then
-            echo "3.9+";
-            sed -i 's/listen 80 default_server;/listen 80 default_server reuseport;/g' /usr/local/nginx/conf/nginx.conf
-            sed -i 's/listen 80;/listen 80 reuseport;/g' ${cur_dir}/conf/${Stack}
-            sed -i 's/listen 443 ssl http2;/listen 443 ssl http2 reuseport;/g' ${cur_dir}/conf/${Stack}
-        fi
-    fi
 }
