@@ -123,6 +123,7 @@ Init_Install()
         Install_MariaDB_103
     fi
     TempMycnf_Clean
+    Clean_DB_Src_Dir
     Check_PHP_Option
 }
 
@@ -147,6 +148,7 @@ Install_PHP()
     elif [ "${PHPSelect}" = "9" ]; then
         Install_PHP_73
     fi
+    Clean_PHP_Src_Dir
 }
 
 LNMP_Stack()

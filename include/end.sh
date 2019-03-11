@@ -174,9 +174,9 @@ Check_Apache_Files()
     fi
 }
 
-Clean_Src_Dir()
+Clean_DB_Src_Dir()
 {
-    echo "Clean src directory..."
+    echo "Clean database src directory..."
     if [[ "${DBSelect}" =~ ^[12345]$ ]]; then
         rm -rf ${cur_dir}/src/${Mysql_Ver}
     elif [[ "${DBSelect}" =~ ^[6789]|10$ ]]; then
@@ -187,7 +187,17 @@ Clean_Src_Dir()
     elif [[ "${DBSelect}" = "5" ]]; then
         rm -rf ${cur_dir}/src/${Boost_New_Ver}
     fi
+}
+
+Clean_PHP_Src_Dir()
+{
+    echo "Clean PHP src directory..."
     rm -rf ${cur_dir}/src/${Php_Ver}
+}
+
+Clean_Web_Src_Dir()
+{
+    echo "Clean Web Server src directory..."
     if [ "${Stack}" = "lnmp" ]; then
         rm -rf ${cur_dir}/src/${Nginx_Ver}
     elif [ "${Stack}" = "lnmpa" ]; then
@@ -200,7 +210,7 @@ Clean_Src_Dir()
 
 Print_Sucess_Info()
 {
-    Clean_Src_Dir
+    Clean_Web_Src_Dir
     echo "+------------------------------------------------------------------------+"
     echo "|          LNMP V${LNMP_Ver} for ${DISTRO} Linux Server, Written by Licess          |"
     echo "+------------------------------------------------------------------------+"
