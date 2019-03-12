@@ -665,7 +665,13 @@ Remove_Error_Libcurl()
 
 Add_Swap()
 {
-    Disk_Avail=$(${cur_dir}/include/disk.py)
+    if [ -s /usr/bin/python ]; then
+        Disk_Avail=$(${cur_dir}/include/disk.py)
+    elif [ -s /usr/bin/python3 ]; then
+        Disk_Avail=$(python3 ${cur_dir}/include/disk.py)
+    elif [ -s /usr/bin/python2 ]; then
+        Disk_Avail=$(python2 ${cur_dir}/include/disk.py)
+    fi
     if [ "${MemTotal}" -lt 1024 ]; then
         DD_Count='1024'
         if [ "${Disk_Avail}" -lt 5 ]; then
