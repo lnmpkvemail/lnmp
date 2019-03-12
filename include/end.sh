@@ -206,6 +206,8 @@ Clean_Web_Src_Dir()
     elif [ "${Stack}" = "lamp" ]; then
         rm -rf ${cur_dir}/src/${Apache_Ver}
     fi
+    [[ -d "${cur_dir}/src/${Openssl_Ver}" ]] && rm -rf ${cur_dir}/src/${Openssl_Ver}
+    [[ -d "${cur_dir}/src/${Openssl_New_Ver}" ]] && rm -rf ${cur_dir}/src/${Openssl_New_Ver}
 }
 
 Print_Sucess_Info()
