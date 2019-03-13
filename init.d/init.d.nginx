@@ -17,30 +17,22 @@
 # Author:   licess
 # website:  https://lnmp.org
 
-PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-NAME=nginx
-NGINX_BIN=/usr/local/nginx/sbin/$NAME
-CONFIGFILE=/usr/local/nginx/conf/$NAME.conf
-PIDFILE=/usr/local/nginx/logs/$NAME.pid
-if [ -s /bin/ss ]; then
-    StatBin=/bin/ss
-else
-    StatBin=/bin/netstat
-fi
-
+NGINX_BIN='/usr/local/nginx/sbin/nginx'
+CONFIG='/usr/local/nginx/conf/nginx.conf'
 
 case "$1" in
     start)
-        echo -n "Starting $NAME... "
+        echo -n "Starting nginx... "
 
-        if $StatBin -tnpl | grep -q nginx;then
-            echo "$NAME (pid `pidof $NAME`) already running."
+        PID=$(ps -ef | grep "$NGINX_BIN" | grep -v grep | awk '{print $2}')
+        if [ "$PID" != "" ]; then
+            echo "nginx (pid $PID) already running."
             exit 1
         fi
 
-        $NGINX_BIN -c $CONFIGFILE
+        $NGINX_BIN -c $CONFIG
 
-        if [ "$?" != 0 ] ; then
+        if [ "$?" != 0 ]; then
             echo " failed"
             exit 1
         else
@@ -49,10 +41,11 @@ case "$1" in
         ;;
 
     stop)
-        echo -n "Stoping $NAME... "
+        echo -n "Stoping nginx... "
 
-        if ! $StatBin -tnpl | grep -q nginx; then
-            echo "$NAME is not running."
+        PID=$(ps -ef | grep "$NGINX_BIN" | grep -v grep | awk '{print $2}')
+        if [ "$PID" = "" ]; then
+            echo "nginx is not running."
             exit 1
         fi
 
@@ -67,26 +60,27 @@ case "$1" in
         ;;
 
     status)
-        if $StatBin -tnpl | grep -q nginx; then
-            PID=`pidof nginx`
-            echo "$NAME (pid $PID) is running..."
+        PID=$(ps -ef | grep "$NGINX_BIN" | grep -v grep | awk '{print $2}')
+        if [ "$PID" != "" ]; then
+            echo "nginx (pid $PID) is running..."
         else
-            echo "$NAME is stopped."
+            echo "nginx is stopped."
             exit 0
         fi
         ;;
 
     force-quit|kill)
-        echo -n "Terminating $NAME... "
+        echo -n "Terminating nginx... "
 
-        if ! $StatBin -tnpl | grep -q nginx; then
-            echo "$NAME is is stopped."
+        PID=$(ps -ef | grep "$NGINX_BIN" | grep -v grep | awk '{print $2}')
+        if [ "$PID" = "" ]; then
+            echo "nginx is is stopped."
             exit 1
         fi
 
-        kill `pidof $NAME`
+        kill $PID
 
-        if [ "$?" != 0 ] ; then
+        if [ "$?" != 0 ]; then
             echo " failed"
             exit 1
         else
@@ -101,19 +95,20 @@ case "$1" in
         ;;
 
     reload)
-        echo -n "Reload service $NAME... "
+        echo -n "Reload nginx... "
 
-        if $StatBin -tnpl | grep -q nginx; then
+        PID=$(ps -ef | grep "$NGINX_BIN" | grep -v grep | awk '{print $2}')
+        if [ "$PID" != "" ]; then
             $NGINX_BIN -s reload
             echo " done"
         else
-            echo "$NAME is not running, can't reload."
+            echo "nginx is not running, can't reload."
             exit 1
         fi
         ;;
 
     configtest)
-        echo -n "Test $NAME configure files... "
+        echo -n "Test nginx configure files... "
 
         $NGINX_BIN -t
         ;;
