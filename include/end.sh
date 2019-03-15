@@ -17,18 +17,16 @@ Add_Iptables_Rules()
                 systemctl stop firewalld
                 systemctl disable firewalld
             fi
+            StartUp iptables
         elif [ "$PM" = "apt" ]; then
-            iptables-save > /etc/iptables.rules
-            cat >/etc/network/if-post-down.d/iptables<<EOF
-#!/bin/bash
-iptables-save > /etc/iptables.rules
-EOF
-            chmod +x /etc/network/if-post-down.d/iptables
-            cat >/etc/network/if-pre-up.d/iptables<<EOF
-#!/bin/bash
-iptables-restore < /etc/iptables.rules
-EOF
-            chmod +x /etc/network/if-pre-up.d/iptables
+            apt-get --no-install-recommends install -y iptables-persistent
+            if [ -s /etc/init.d/iptables-persistent ]; then
+                /etc/init.d/netfilter-persistent save
+                /etc/init.d/netfilter-persistent reload
+            else
+                /etc/init.d/iptables-persistent save
+                /etc/init.d/iptables-persistent reload
+            fi
         fi
     fi
 }
