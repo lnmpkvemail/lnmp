@@ -20,7 +20,7 @@ Add_Iptables_Rules()
             StartUp iptables
         elif [ "$PM" = "apt" ]; then
             apt-get --no-install-recommends install -y iptables-persistent
-            if [ -s /etc/init.d/iptables-persistent ]; then
+            if [ -s /etc/init.d/netfilter-persistent ]; then
                 /etc/init.d/netfilter-persistent save
                 /etc/init.d/netfilter-persistent reload
             else
