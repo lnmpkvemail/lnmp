@@ -324,10 +324,10 @@ Install_LSB()
 
 Get_Dist_Version()
 {
-    if [ -s /usr/bin/python3 ]; then
-        eval ${DISTRO}_Version=`/usr/bin/python3 -c 'import platform; print(platform.linux_distribution()[1])'`
-    elif [ -s /usr/bin/python2 ]; then
-        eval ${DISTRO}_Version=`/usr/bin/python2 -c 'import platform; print platform.linux_distribution()[1]'`
+    if command -v python2 >/dev/null 2>&1; then
+        eval ${DISTRO}_Version=$(python2 -c 'import platform; print platform.linux_distribution()[1]')
+    elif command -v python3 >/dev/null 2>&1; then
+        eval ${DISTRO}_Version=$(python3 -c 'import platform; print(platform.linux_distribution()[1])')
     fi
     if [ $? -ne 0 ]; then
         Install_LSB
