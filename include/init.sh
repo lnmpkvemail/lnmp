@@ -665,11 +665,11 @@ Remove_Error_Libcurl()
 
 Add_Swap()
 {
-    if [ -s /usr/bin/python ]; then
+    if command -v python >/dev/null 2>&1; then
         Disk_Avail=$(${cur_dir}/include/disk.py)
-    elif [ -s /usr/bin/python3 ]; then
+    elif command -v python3 >/dev/null 2>&1; then
         Disk_Avail=$(python3 ${cur_dir}/include/disk.py)
-    elif [ -s /usr/bin/python2 ]; then
+    elif command -v python2 >/dev/null 2>&1; then
         Disk_Avail=$(python2 ${cur_dir}/include/disk.py)
     fi
     if [ "${MemTotal}" -lt 1024 ]; then
