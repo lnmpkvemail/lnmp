@@ -63,8 +63,8 @@ Database_Selection()
         DBSelect="2"
     esac
 
-    if [[ "${DBSelect}" =~ ^[45789]|10$ ]] && [ `free -m | grep Mem | awk '{print  $2}'` -le 1024 ]; then
-        echo "Memory less than 1GB, can't install MySQL 5.7+ or MairaDB 10+!"
+    if [[ "${DBSelect}" =~ ^[59]|10$ ]] && [ `free -m | grep Mem | awk '{print  $2}'` -le 1024 ]; then
+        echo "Memory less than 1GB, can't install MySQL 8.0 or MairaDB 10.3!"
         exit 1
     fi
 
