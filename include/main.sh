@@ -273,13 +273,13 @@ Apache_Selection()
 Kill_PM()
 {
     if ps aux | grep "yum" | grep -qv "grep"; then
-        if [ -s /usr/bin/killall ]; then
+        if command -v killall >/dev/null 2>&1; then
             killall yum
         else
             kill `pidof yum`
         fi
     elif ps aux | grep "apt-get" | grep -qv "grep"; then
-        if [ -s /usr/bin/killall ]; then
+        if command -v killall >/dev/null 2>&1; then
             killall apt-get
         else
             kill `pidof apt-get`
@@ -551,7 +551,7 @@ Remove_StartUp()
 
 Check_Mirror()
 {
-    if [ ! -s /usr/bin/curl ]; then
+    if command -v curl >/dev/null 2>&1; then
         if [ "$PM" = "yum" ]; then
             yum install -y curl
         elif [ "$PM" = "apt" ]; then
