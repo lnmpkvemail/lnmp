@@ -33,7 +33,7 @@ PHP_with_curl()
 
 PHP_with_openssl()
 {
-    if /usr/bin/openssl version | grep -Eqi "OpenSSL 1.1.*"; then
+    if openssl version | grep -Eqi "OpenSSL 1.1.*"; then
         if ( [ "${PHPSelect}" != "" ] &&  echo "${PHPSelect}" | grep -Eqi "[1-5]" ) || ( [ "${php_version}" != "" ] && echo "${php_version}" | grep -Eqi '^5.' ) || echo "${Php_Ver}" | grep -Eqi "php-5."; then
             UseOldOpenssl='y'
         fi

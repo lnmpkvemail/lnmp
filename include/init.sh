@@ -519,7 +519,7 @@ Install_Openssl()
 
 Install_Openssl_New()
 {
-    if /usr/bin/openssl version | grep -vEqi "OpenSSL 1.1.1*"; then
+    if openssl version | grep -vEqi "OpenSSL 1.1.1*"; then
         if [ ! -s /usr/local/openssl1.1.1/bin/openssl ] || /usr/local/openssl1.1.1/bin/openssl version | grep -Eqi 'OpenSSL 1.1.1*'; then
             Echo_Blue "[+] Installing ${Openssl_New_Ver}"
             cd ${cur_dir}/src
