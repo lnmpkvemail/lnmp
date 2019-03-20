@@ -551,7 +551,7 @@ Remove_StartUp()
 
 Check_Mirror()
 {
-    if command -v curl >/dev/null 2>&1; then
+    if ! command -v curl >/dev/null 2>&1; then
         if [ "$PM" = "yum" ]; then
             yum install -y curl
         elif [ "$PM" = "apt" ]; then
