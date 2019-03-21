@@ -12,6 +12,7 @@ Add_Iptables_Rules()
         /sbin/iptables -I INPUT 6 -p tcp --dport 3306 -j DROP
         /sbin/iptables -I INPUT 7 -p icmp -m icmp --icmp-type 8 -j ACCEPT
         if [ "$PM" = "yum" ]; then
+            yum -y install iptables-services
             service iptables save
             if [ -s /usr/sbin/firewalld ]; then
                 systemctl stop firewalld
@@ -23,9 +24,11 @@ Add_Iptables_Rules()
             if [ -s /etc/init.d/netfilter-persistent ]; then
                 /etc/init.d/netfilter-persistent save
                 /etc/init.d/netfilter-persistent reload
+                StartUp netfilter-persistent
             else
                 /etc/init.d/iptables-persistent save
                 /etc/init.d/iptables-persistent reload
+                StartUp iptables-persistent
             fi
         fi
     fi
