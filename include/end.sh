@@ -3,18 +3,19 @@
 Add_Iptables_Rules()
 {
     #add iptables firewall rules
-    if [ -s /sbin/iptables ]; then
-        /sbin/iptables -I INPUT 1 -i lo -j ACCEPT
-        /sbin/iptables -I INPUT 2 -m state --state ESTABLISHED,RELATED -j ACCEPT
-        /sbin/iptables -I INPUT 3 -p tcp --dport 22 -j ACCEPT
-        /sbin/iptables -I INPUT 4 -p tcp --dport 80 -j ACCEPT
-        /sbin/iptables -I INPUT 5 -p tcp --dport 443 -j ACCEPT
-        /sbin/iptables -I INPUT 6 -p tcp --dport 3306 -j DROP
-        /sbin/iptables -I INPUT 7 -p icmp -m icmp --icmp-type 8 -j ACCEPT
+    if command -v iptables >/dev/null 2>&1; then
+        iptables -I INPUT 1 -i lo -j ACCEPT
+        iptables -I INPUT 2 -m state --state ESTABLISHED,RELATED -j ACCEPT
+        iptables -I INPUT 3 -p tcp --dport 22 -j ACCEPT
+        iptables -I INPUT 4 -p tcp --dport 80 -j ACCEPT
+        iptables -I INPUT 5 -p tcp --dport 443 -j ACCEPT
+        iptables -I INPUT 6 -p tcp --dport 3306 -j DROP
+        iptables -I INPUT 7 -p icmp -m icmp --icmp-type 8 -j ACCEPT
         if [ "$PM" = "yum" ]; then
             yum -y install iptables-services
             service iptables save
-            if [ -s /usr/sbin/firewalld ]; then
+            service iptables reload
+            if command -v firewalld >/dev/null 2>&1; then
                 systemctl stop firewalld
                 systemctl disable firewalld
             fi
@@ -234,7 +235,7 @@ Print_Sucess_Info()
     fi
     echo "+------------------------------------------------------------------------+"
     lnmp status
-    if [ -s /bin/ss ]; then
+    if command -v ss >/dev/null 2>&1; then
         ss -ntl
     else
         netstat -ntl

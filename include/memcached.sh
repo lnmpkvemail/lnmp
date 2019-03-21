@@ -127,14 +127,21 @@ EOF
 
     Restart_PHP
 
-    if [ -s /sbin/iptables ]; then
-        if /sbin/iptables -C INPUT -i lo -j ACCEPT; then
-            /sbin/iptables -A INPUT -p tcp --dport 11211 -j DROP
-            /sbin/iptables -A INPUT -p udp --dport 11211 -j DROP
+    if command -v iptables >/dev/null 2>&1; then
+        if iptables -C INPUT -i lo -j ACCEPT; then
+            iptables -A INPUT -p tcp --dport 11211 -j DROP
+            iptables -A INPUT -p udp --dport 11211 -j DROP
             if [ "$PM" = "yum" ]; then
                 service iptables save
+                service iptables reload
             elif [ "$PM" = "apt" ]; then
-                iptables-save > /etc/iptables.rules
+                if [ -s /etc/init.d/netfilter-persistent ]; then
+                    /etc/init.d/netfilter-persistent save
+                    /etc/init.d/netfilter-persistent reload
+                else
+                    /etc/init.d/iptables-persistent save
+                    /etc/init.d/iptables-persistent reload
+                fi
             fi
         fi
     fi
@@ -163,13 +170,20 @@ Uninstall_Memcached()
     rm -rf /usr/local/memcached
     rm -rf /etc/init.d/memcached
     rm -rf /usr/bin/memcached
-    if [ -s /sbin/iptables ]; then
-        /sbin/iptables -D INPUT -p tcp --dport 11211 -j DROP
-        /sbin/iptables -D INPUT -p udp --dport 11211 -j DROP
+    if command -v iptables >/dev/null 2>&1; then
+        iptables -D INPUT -p tcp --dport 11211 -j DROP
+        iptables -D INPUT -p udp --dport 11211 -j DROP
         if [ "$PM" = "yum" ]; then
             service iptables save
+            service iptables reload
         elif [ "$PM" = "apt" ]; then
-            iptables-save > /etc/iptables.rules
+            if [ -s /etc/init.d/netfilter-persistent ]; then
+                /etc/init.d/netfilter-persistent save
+                /etc/init.d/netfilter-persistent reload
+            else
+                /etc/init.d/iptables-persistent save
+                /etc/init.d/iptables-persistent reload
+            fi
         fi
     fi
     Echo_Green "Uninstall Memcached completed."

@@ -70,20 +70,27 @@ Install_Pureftpd()
     cd ..
     rm -rf ${cur_dir}/src/${Pureftpd_Ver}
 
-    if [ -s /sbin/iptables ]; then
+    if command -v iptables >/dev/null 2>&1; then
         if [ -s /bin/lnmp ]; then
-            /sbin/iptables -I INPUT 7 -p tcp --dport 20 -j ACCEPT
-            /sbin/iptables -I INPUT 8 -p tcp --dport 21 -j ACCEPT
-            /sbin/iptables -I INPUT 9 -p tcp --dport 20000:30000 -j ACCEPT
+            iptables -I INPUT 7 -p tcp --dport 20 -j ACCEPT
+            iptables -I INPUT 8 -p tcp --dport 21 -j ACCEPT
+            iptables -I INPUT 9 -p tcp --dport 20000:30000 -j ACCEPT
         else
-            /sbin/iptables -I INPUT -p tcp --dport 20 -j ACCEPT
-            /sbin/iptables -I INPUT -p tcp --dport 21 -j ACCEPT
-            /sbin/iptables -I INPUT -p tcp --dport 20000:30000 -j ACCEPT
+            iptables -I INPUT -p tcp --dport 20 -j ACCEPT
+            iptables -I INPUT -p tcp --dport 21 -j ACCEPT
+            iptables -I INPUT -p tcp --dport 20000:30000 -j ACCEPT
         fi
         if [ "${PM}" = "yum" ]; then
             service iptables save
+            service iptables reload
         elif [ "${PM}" = "apt" ]; then
-            /sbin/iptables-save > /etc/iptables.rules
+            if [ -s /etc/init.d/netfilter-persistent ]; then
+                /etc/init.d/netfilter-persistent save
+                /etc/init.d/netfilter-persistent reload
+            else
+                /etc/init.d/iptables-persistent save
+                /etc/init.d/iptables-persistent reload
+            fi
         fi
     fi
 
