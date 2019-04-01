@@ -103,9 +103,7 @@ Install_Nginx()
     \cp conf/pathinfo.conf /usr/local/nginx/conf/pathinfo.conf
     \cp conf/enable-php.conf /usr/local/nginx/conf/enable-php.conf
     \cp conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php-pathinfo.conf
-    \cp conf/enable-ssl-example.conf /usr/local/nginx/conf/enable-ssl-example.conf
-    \cp conf/magento2-example.conf /usr/local/nginx/conf/magento2-example.conf
-    \cp conf/nginx-reverse-proxy-example.conf /usr/local/nginx/conf/nginx-reverse-proxy-example.conf
+    \cp -ra conf/example /usr/local/nginx/conf/example
     if [ "${Enable_Nginx_Lua}" = 'y' ]; then
         sed -i "/location \/nginx_status/i\        location /lua\n        {\n            default_type text/html;\n            content_by_lua 'ngx.say\(\"hello world\"\)';\n        }\n" /usr/local/nginx/conf/nginx.conf
     fi
