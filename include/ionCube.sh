@@ -44,10 +44,10 @@ Install_ionCube()
         fi
     else
         if [ "${Is_64bit}" = "y" ] ; then
-            Download_Files http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz ioncube_loaders_lin_x86-64.tar.gz
+            Download_Files https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz ioncube_loaders_lin_x86-64.tar.gz
             tar zxf ioncube_loaders_lin_x86-64.tar.gz
         else
-            Download_Files http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86.tar.gz ioncube_loaders_lin_x86.tar.gz
+            Download_Files https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86.tar.gz ioncube_loaders_lin_x86.tar.gz
             tar zxf ioncube_loaders_lin_x86.tar.gz
         fi
     fi
