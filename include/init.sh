@@ -474,7 +474,7 @@ Install_Icu4c()
     fi
 }
 
-Install_Boost()
+Download_Boost()
 {
     Echo_Blue "[+] Download or use exist boost..."
     if [ "${DBSelect}" = "4" ] || echo "${mysql_version}" | grep -Eqi '^5.7.'; then
@@ -497,6 +497,24 @@ Install_Boost()
             MySQL_WITH_BOOST="-DWITH_BOOST=${cur_dir}/src/boost_${Get_Boost_Ver}"
         else
             MySQL_WITH_BOOST="-DDOWNLOAD_BOOST=1 -DWITH_BOOST=${cur_dir}/src"
+        fi
+    fi
+}
+
+Install_Boost()
+{
+    Echo_Blue "[+] Download or use exist boost..."
+    if [ "${DBSelect}" = "4" ] || [ "${DBSelect}" = "5" ]; then
+        if [ -d "${cur_dir}/src/${Mysql_Ver}/boost" ]; then
+            MySQL_WITH_BOOST="-DWITH_BOOST=${cur_dir}/src/${Mysql_Ver}/boost"
+        else
+            Download_Boost
+        fi
+    elif echo "${mysql_version}" | grep -Eqi '^5.7.' || echo "${mysql_version}" | grep -Eqi '^8.0.'; then
+        if [ -d "${cur_dir}/src/mysql-${mysql_version}/boost" ]; then
+            MySQL_WITH_BOOST="-DWITH_BOOST=${cur_dir}/src/mysql-${mysql_version}/boost"
+        else
+            Download_Boost
         fi
     fi
 }
