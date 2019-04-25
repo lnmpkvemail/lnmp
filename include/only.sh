@@ -42,6 +42,9 @@ Install_Only_Nginx()
     Download_Files ${Download_Mirror}/web/nginx/${Nginx_Ver}.tar.gz ${Nginx_Ver}.tar.gz
     Install_Nginx
     StartUp nginx
+    rm -rf ${cur_dir}/src/${Nginx_Ver}
+    [[ -d "${cur_dir}/src/${Openssl_Ver}" ]] && rm -rf ${cur_dir}/src/${Openssl_Ver}
+    [[ -d "${cur_dir}/src/${Openssl_New_Ver}" ]] && rm -rf ${cur_dir}/src/${Openssl_New_Ver}
     /etc/init.d/nginx start
     Add_Iptables_Rules
     \cp ${cur_dir}/conf/index.html ${Default_Website_Dir}/index.html
@@ -116,6 +119,7 @@ Install_Database()
         /etc/init.d/mysql start
     fi
 
+    Clean_DB_Src_Dir
     Check_DB_Files
     if [[ "${isDB}" = "ok" ]]; then
         if [[ "${DBSelect}" =~ ^[12345]$ ]]; then

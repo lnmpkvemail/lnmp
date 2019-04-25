@@ -185,9 +185,9 @@ Clean_DB_Src_Dir()
         rm -rf ${cur_dir}/src/${Mariadb_Ver}
     fi
     if [[ "${DBSelect}" = "4" ]]; then
-        rm -rf ${cur_dir}/src/${Boost_Ver}
+        [[ -d "${cur_dir}/src/${Boost_Ver}" ]] && rm -rf ${cur_dir}/src/${Boost_Ver}
     elif [[ "${DBSelect}" = "5" ]]; then
-        rm -rf ${cur_dir}/src/${Boost_New_Ver}
+        [[ -d "${cur_dir}/src/${Boost_New_Ver}" ]] && rm -rf ${cur_dir}/src/${Boost_New_Ver}
     fi
 }
 
