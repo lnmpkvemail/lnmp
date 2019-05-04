@@ -376,7 +376,7 @@ Install_Mhash()
 
 Install_Freetype()
 {
-    if echo "${Ubuntu_Version}" | grep -Eqi "1[89]\." || echo "${Mint_Version}" | grep -Eqi "19\." || echo "${Deepin_Version}" | grep -Eqi "15\.[7-9]" || echo "${Debian_Version}" | grep -Eqi "9|10\."; then
+    if echo "${Ubuntu_Version}" | grep -Eqi "1[89]\." || echo "${Mint_Version}" | grep -Eqi "19\." || echo "${Deepin_Version}" | grep -Eqi "15\.[7-9]|1[0-9]" || echo "${Debian_Version}" | grep -Eqi "9|10\."; then
         Download_Files ${Download_Mirror}/lib/freetype/${Freetype_New_Ver}.tar.bz2 ${Freetype_New_Ver}.tar.bz2
         Echo_Blue "[+] Installing ${Freetype_New_Ver}"
         Tarj_Cd ${Freetype_New_Ver}.tar.bz2 ${Freetype_New_Ver}
