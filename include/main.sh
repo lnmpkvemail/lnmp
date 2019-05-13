@@ -340,7 +340,7 @@ Get_Dist_Name()
     if grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
         DISTRO='CentOS'
         PM='yum'
-    elif grep -Eqi "Red Hat Enterprise Linux Server" /etc/issue || grep -Eq "Red Hat Enterprise Linux Server" /etc/*-release; then
+    elif grep -Eqi "Red Hat Enterprise Linux" /etc/issue || grep -Eq "Red Hat Enterprise Linux" /etc/*-release; then
         DISTRO='RHEL'
         PM='yum'
     elif grep -Eqi "Aliyun" /etc/issue || grep -Eq "Aliyun" /etc/*-release; then
@@ -389,6 +389,9 @@ Get_RHEL_Version()
         elif grep -Eqi "release 7." /etc/redhat-release; then
             echo "Current Version: RHEL Ver 7"
             RHEL_Ver='7'
+        elif grep -Eqi "release 8." /etc/redhat-release; then
+            echo "Current Version: RHEL Ver 8"
+            RHEL_Ver='8'
         fi
     fi
 }
