@@ -620,6 +620,10 @@ CentOS_Lib_Opt()
 eof
 
     echo "fs.file-max=65535" >> /etc/sysctl.conf
+
+    if echo "${Fedora_Version}" | grep -Eqi "3[0-9]" && [ ! -d "/etc/init.d" ]; then
+        ln -sf /etc/rc.d/init.d /etc/init.d
+    fi
 }
 
 Deb_Lib_Opt()
