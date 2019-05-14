@@ -31,8 +31,8 @@ Install_ImageMagic()
             Download_Files ${Download_Mirror}/web/imagemagick/ImageMagick-6.9.9-27.tar.gz ImageMagick-6.9.9-27.tar.gz
             Tar_Cd ImageMagick-6.9.9-27.tar.gz ImageMagick-6.9.9-27
         else
-            Download_Files ${Download_Mirror}/web/imagemagick/${ImageMagick_Ver}.tar.bz2 ${ImageMagick_Ver}.tar.bz2
-            Tarj_Cd ${ImageMagick_Ver}.tar.bz2 ${ImageMagick_Ver}
+            Download_Files ${Download_Mirror}/web/imagemagick/${ImageMagick_Ver}.tar.xz ${ImageMagick_Ver}.tar.xz
+            tar Jxf ${ImageMagick_Ver}.tar.xz && cd ${ImageMagick_Ver}
         fi
 
         ./configure --prefix=/usr/local/imagemagick
