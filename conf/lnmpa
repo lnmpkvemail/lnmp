@@ -1191,5 +1191,6 @@ case "${arg1}" in
         echo "Usage: lnmp ftp {add|list|edit|del|show}"
         echo "Usage: lnmp ssl add"
         echo "Usage: lnmp {dnsssl|dns} {cx|ali|cf|dp|he|gd|aws}"
+        echo "Usage: lnmp onlyssl {cx|ali|cf|dp|he|gd|aws}"
 esac
 exit
