@@ -105,11 +105,16 @@ Check_Hosts()
 RHEL_Modify_Source()
 {
     Get_RHEL_Version
-    \cp ${cur_dir}/conf/CentOS-Base-163.repo /etc/yum.repos.d/CentOS-Base-163.repo
-    sed -i "s/\$releasever/${RHEL_Ver}/g" /etc/yum.repos.d/CentOS-Base-163.repo
-    sed -i "s/RPM-GPG-KEY-CentOS-6/RPM-GPG-KEY-CentOS-${RHEL_Ver}/g" /etc/yum.repos.d/CentOS-Base-163.repo
-    yum clean all
-    yum makecache
+    if [ "${RHELRepo}" = "local" ]; then
+        echo "DO NOT change RHEL repository, use the repository you set."
+    else
+        echo "RHEL will use 163 centos repository..."
+        \cp ${cur_dir}/conf/CentOS-Base-163.repo /etc/yum.repos.d/CentOS-Base-163.repo
+        sed -i "s/\$releasever/${RHEL_Ver}/g" /etc/yum.repos.d/CentOS-Base-163.repo
+        sed -i "s/RPM-GPG-KEY-CentOS-6/RPM-GPG-KEY-CentOS-${RHEL_Ver}/g" /etc/yum.repos.d/CentOS-Base-163.repo
+        yum clean all
+        yum makecache
+    fi
 }
 
 Ubuntu_Modify_Source()
