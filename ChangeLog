@@ -6,10 +6,24 @@ LNMP 1.6
 增加MariaDB 10.3支持；
 增加Nginx/Apache TLS 1.3支持；
 增加使用DNS API方式只创建SSL证书不添加网站，命令lnmp onlyssl；
+增加Fedora 30、Ubuntu 19.04、RHEL 8等新版本的支持；
+增加nginx、apache等一些例子，并移至conf/example目录下；
+增加在低于2048MB内存是增加2GB SWAP或低于1024MB时增加1GB SWAP的选项；
+增加反向代理配置例子文件 nginx-reverse-proxy-example.conf；
+增加只安装nginx模式增加拷贝lnmp管理工具；
+优化不安装数据库时的处理流程；
+优化acme.sh规则可能不生效的情况；
+优化nginx系统满足条件是启用reuseport；
+优化程序代码目录清理；
+优化重写nginx管理脚本；
+优化安装数据库时的内存判断，放宽内存限制；
 修复新版深度Deepin 15.8桌面版问题；
 修复新版Fedora 29下问题；
-调整boost下载安装方式；
+调整mysql使用带boost源码，同时支持不带boost安装方式；
 调整卸载时不删除安装时添加的iptables规则；
+调整fileinfo安装选项，内存满足时自动安装(可关闭)；
+升级Nginx至1.16.0；
+升级各程序版本；
 更新诸多软件版本；
 其他一些功能优化及调整......
 
