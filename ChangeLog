@@ -11,7 +11,7 @@ LNMP 1.6
 增加在低于2048MB内存是增加2GB SWAP或低于1024MB时增加1GB SWAP的选项；
 增加反向代理配置例子文件 nginx-reverse-proxy-example.conf；
 增加只安装nginx模式增加拷贝lnmp管理工具；
-增加 RHELRepo=local 参数，RHEL安装时使用RHEL本地源；
+增加 RHELRepo=local 参数，RHEL安装时使用RHEL本地源，不设置源为163 centos源；
 增加 CheckMirror=n 参考，安装时不检查下载镜像，方便无网络安装；
 优化不安装数据库时的处理流程；
 优化acme.sh规则可能不生效的情况；
