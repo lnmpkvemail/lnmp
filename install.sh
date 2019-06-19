@@ -62,7 +62,7 @@ Init_Install()
     Get_Dist_Version
     Print_Sys_Info
     Check_Hosts
-    if [ "${CheckMirror}" = "n" ]; then
+    if [ "${CheckMirror}" != "n" ]; then
         Check_Mirror
     fi
     if [ "${DISTRO}" = "RHEL" ]; then
