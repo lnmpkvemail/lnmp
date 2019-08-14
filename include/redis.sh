@@ -20,7 +20,12 @@ Install_Redis()
         Download_Files http://download.redis.io/releases/${Redis_Stable_Ver}.tar.gz ${Redis_Stable_Ver}.tar.gz
         Tar_Cd ${Redis_Stable_Ver}.tar.gz ${Redis_Stable_Ver}
 
-        if [ "${Is_64bit}" = "y" ] ; then
+        Get_OS_Bit
+        Get_ARM
+        if [ "${Is_ARM}" = "y" ]; then
+            sed -i 's/FINAL_LIBS=-lm/FINAL_LIBS=-lm -latomic/' src/Makefile
+        fi
+        if [[ "${Is_64bit}" = "y" || "${Is_ARM}" = "y" ]]; then
             make PREFIX=/usr/local/redis install
         else
             make CFLAGS="-march=i686" PREFIX=/usr/local/redis install
