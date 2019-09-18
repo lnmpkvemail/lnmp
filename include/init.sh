@@ -729,13 +729,13 @@ Add_Swap()
             Enable_Swap='n'
         fi
     elif [[ "${MemTotal}" -ge 16384 ]]; then
-        DD_Count='16384'
+        DD_Count='8192'
         if [ "${Disk_Avail}" -lt 27 ]; then
             Enable_Swap='n'
         fi
     fi
     Swap_Total=$(free -m | grep Swap | awk '{print  $2}')
-    if [[ "${Enable_Swap}" = "y" && "${Swap_Total}" -le 512 ]]; then
+    if [[ "${Enable_Swap}" = "y" && "${Swap_Total}" -le 512 && ! -s /var/swapfile ]]; then
         echo "Add Swap file..."
         dd if=/dev/zero of=/var/swapfile bs=1M count=${DD_Count}
         chmod 0600 /var/swapfile
