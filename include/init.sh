@@ -476,12 +476,15 @@ Install_TCMalloc()
 
 Install_Icu4c()
 {
-    if ! command -v icu-config >/dev/null 2>&1 || icu-config --version | grep '^3.'; then
+    if command -v icu-config >/dev/null 2>&1 && icu-config --version | grep -Eq "^3."; then
         Echo_Blue "[+] Installing ${Libicu4c_Ver}"
         cd ${cur_dir}/src
         Download_Files ${Download_Mirror}/lib/icu4c/${Libicu4c_Ver}-src.tgz ${Libicu4c_Ver}-src.tgz
         Tar_Cd ${Libicu4c_Ver}-src.tgz icu/source
         ./configure --prefix=/usr
+        if [ ! -s /usr/include/xlocale.h ]; then
+            ln -s /usr/include/locale.h /usr/include/xlocale.h
+        fi
         Make_Install
         cd ${cur_dir}/src/
         rm -rf ${cur_dir}/src/icu
