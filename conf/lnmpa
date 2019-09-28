@@ -408,8 +408,10 @@ Check_DB()
 {
     if [[ -s /usr/local/mariadb/bin/mysql && -s /usr/local/mariadb/bin/mysqld_safe && -s /etc/my.cnf ]]; then
         MySQL_Bin="/usr/local/mariadb/bin/mysql"
+        MySQL_Ver=`/usr/local/mariadb/bin/mysql_config --version`
     elif [[ -s /usr/local/mysql/bin/mysql && -s /usr/local/mysql/bin/mysqld_safe && -s /etc/my.cnf ]]; then
         MySQL_Bin="/usr/local/mysql/bin/mysql"
+        MySQL_Ver=`/usr/local/mysql/bin/mysql_config --version`
     else
         MySQL_Bin="None"
     fi
