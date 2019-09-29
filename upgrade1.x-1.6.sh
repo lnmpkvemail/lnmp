@@ -18,6 +18,21 @@ Get_Dist_Name
 Check_Stack
 Check_DB
 
+Upgrade_1.6_Dependent()
+{
+    if [ "$PM" = "yum" ]; then
+        Echo_Blue "[+] Yum installing dependent packages..."
+        for packages in patch wget crontabs unzip tar ca-certificates net-tools libc-client-devel psmisc libXpm-devel git-core c-ares-devel libicu-devel libxslt libxslt-devel xz expat-devel bzip2 bzip2-devel libaio-devel rpcgen libtirpc-devel perl python-devel cyrus-sasl-devel;
+        do yum -y install $packages; done
+        yum -y update nss
+    elif [ "$PM" = "apt" ]; then
+        Echo_Blue "[+] apt-get installing dependent packages..."
+        apt-get update -y
+        for packages in debian-keyring debian-archive-keyring build-essential bison libkrb5-dev libcurl3-gnutls libcurl4-gnutls-dev libcurl4-openssl-dev libcap-dev ca-certificates libc-client2007e-dev psmisc patch git libc-ares-dev libicu-dev e2fsprogs libxslt libxslt1-dev libc-client-dev xz-utils libexpat1-dev bzip2 libbz2-dev libaio-dev libtirpc-dev python-dev;
+        do apt-get --no-install-recommends install -y $packages; done
+    fi
+}
+
 if [ "${isSSL}" == "ssl" ]; then
     echo "+--------------------------------------------------+"
     echo "|  A tool to upgrade lnmp 1.4 certbot to acme.sh   |"
@@ -90,6 +105,7 @@ if [ "${isSSL}" == "ssl" ]; then
             rm -rf acme.sh-*
             sed -i 's/cat "\$CERT_PATH"$/#cat "\$CERT_PATH"/g' /usr/local/acme.sh/acme.sh
             if command -v yum >/dev/null 2>&1; then
+                yum -y update nss
                 service crond restart
                 chkconfig crond on
             elif command -v apt-get >/dev/null 2>&1; then
@@ -192,6 +208,7 @@ if [ "${isSSL}" == "ssl" ]; then
             rm -rf acme.sh-*
             sed -i 's/cat "\$CERT_PATH"$/#cat "\$CERT_PATH"/g' /usr/local/acme.sh/acme.sh
             if command -v yum >/dev/null 2>&1; then
+                yum -y update nss
                 service crond restart
                 chkconfig crond on
             elif command -v apt-get >/dev/null 2>&1; then
@@ -244,15 +261,7 @@ else
         Echo_Red "Can't get stack info."
         exit
     elif [ "${Get_Stack}" == "lnmp" ]; then
-        if [ "$PM" = "yum" ]; then
-            Echo_Blue "[+] Yum installing dependent packages..."
-            for packages in patch wget crontabs unzip tar ca-certificates net-tools libc-client-devel psmisc libXpm-devel git-core c-ares-devel libicu-devel libxslt libxslt-devel xz expat-devel bzip2 bzip2-devel libaio-devel rpcgen libtirpc-devel perl python-devel cyrus-sasl-devel;
-            do yum -y install $packages; done
-        elif [ "$PM" = "apt" ]; then
-            apt-get update -y
-            for packages in debian-keyring debian-archive-keyring build-essential bison libkrb5-dev libcurl3-gnutls libcurl4-gnutls-dev libcurl4-openssl-dev libcap-dev ca-certificates libc-client2007e-dev psmisc patch git libc-ares-dev libicu-dev e2fsprogs libxslt libxslt1-dev libc-client-dev xz-utils libexpat1-dev bzip2 libbz2-dev libaio-dev libtirpc-dev python-dev;
-            do apt-get --no-install-recommends install -y $packages; done
-        fi
+        Upgrade_1.6_Dependent
         echo "Copy lnmp manager..."
         sleep 1
         \cp ${cur_dir}/conf/lnmp /bin/lnmp
@@ -275,6 +284,7 @@ else
             mkdir /usr/local/nginx/conf/vhost
         fi
     elif [ "${Get_Stack}" == "lnmpa" ]; then
+        Upgrade_1.6_Dependent
         echo "Copy lnmp manager..."
         sleep 1
         \cp ${cur_dir}/conf/lnmpa /bin/lnmp
@@ -296,6 +306,7 @@ else
             mkdir /usr/local/nginx/conf/vhost
         fi
     elif [ "${Get_Stack}" == "lamp" ]; then
+        Upgrade_1.6_Dependent
         echo "Copy configure files..."
         sleep 1
         \cp ${cur_dir}/conf/lamp /bin/lnmp
