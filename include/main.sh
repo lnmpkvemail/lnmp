@@ -328,8 +328,7 @@ Get_Dist_Version()
         eval ${DISTRO}_Version=$(python2 -c 'import platform; print platform.linux_distribution()[1]')
     elif command -v python3 >/dev/null 2>&1; then
         eval ${DISTRO}_Version=$(python3 -c 'import platform; print(platform.linux_distribution()[1])')
-    fi
-    if [ $? -ne 0 ]; then
+    else
         Install_LSB
         eval ${DISTRO}_Version=`lsb_release -rs`
     fi
