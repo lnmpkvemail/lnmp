@@ -206,7 +206,6 @@ Install_MySQL_51()
     fi
     sed -i '/set -ex;/,/done/d' Makefile
     Make_Install
-    cd ../
 
     groupadd mysql
     useradd -s /sbin/nologin -M -g mysql mysql
