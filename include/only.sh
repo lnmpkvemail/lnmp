@@ -155,6 +155,7 @@ Install_Only_Database()
         echo "DO NOT Install MySQL or MariaDB."
         exit 1
     fi
+    Echo_Red "The script will REMOVE MySQL/MariaDB installed via yum or apt-get and it's databases!!!"
     Press_Install
     Install_Database 2>&1 | tee /root/install_database.log
 }
