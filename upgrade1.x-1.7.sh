@@ -18,7 +18,7 @@ Get_Dist_Name
 Check_Stack
 Check_DB
 
-Upgrade_1.6_Dependent()
+Upgrade_Dependent()
 {
     if [ "$PM" = "yum" ]; then
         Echo_Blue "[+] Yum installing dependent packages..."
@@ -263,7 +263,7 @@ if [ "${isSSL}" == "ssl" ]; then
     fi
 else
     echo "+--------------------------------------------------+"
-    echo "|  A tool to upgrade lnmp manager from 1.x to 1.6  |"
+    echo "|  A tool to upgrade lnmp manager from 1.x to 1.7  |"
     echo "+--------------------------------------------------+"
     echo "|For more information please visit https://lnmp.org|"
     echo "+--------------------------------------------------+"
@@ -272,7 +272,7 @@ else
         Echo_Red "Can't get stack info."
         exit
     elif [ "${Get_Stack}" == "lnmp" ]; then
-        Upgrade_1.6_Dependent
+        Upgrade_Dependent
         echo "Copy lnmp manager..."
         sleep 1
         \cp ${cur_dir}/conf/lnmp /bin/lnmp
@@ -295,7 +295,7 @@ else
             mkdir /usr/local/nginx/conf/vhost
         fi
     elif [ "${Get_Stack}" == "lnmpa" ]; then
-        Upgrade_1.6_Dependent
+        Upgrade_Dependent
         echo "Copy lnmp manager..."
         sleep 1
         \cp ${cur_dir}/conf/lnmpa /bin/lnmp
@@ -317,7 +317,7 @@ else
             mkdir /usr/local/nginx/conf/vhost
         fi
     elif [ "${Get_Stack}" == "lamp" ]; then
-        Upgrade_1.6_Dependent
+        Upgrade_Dependent
         echo "Copy configure files..."
         sleep 1
         \cp ${cur_dir}/conf/lamp /bin/lnmp
