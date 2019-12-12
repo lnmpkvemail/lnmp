@@ -220,6 +220,7 @@ if [ "${isSSL}" == "ssl" ]; then
             sed -i 's/cat "\$CERT_PATH"$/#cat "\$CERT_PATH"/g' /usr/local/acme.sh/acme.sh
             if command -v yum >/dev/null 2>&1; then
                 yum -y update nss
+                yum -y install ca-certificates
                 service crond restart
                 chkconfig crond on
             elif command -v apt-get >/dev/null 2>&1; then
