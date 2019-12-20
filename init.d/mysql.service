@@ -1,0 +1,16 @@
+[Unit]
+Description=MySQL Community Server
+After=network.target syslog.target
+
+[Service]
+Type=forking
+
+ExecStart=/etc/init.d/mysql start
+ExecStop=/etc/init.d/mysql stop
+ExecReload=/etc/init.d/mysql reload
+
+Restart=no
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

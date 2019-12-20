@@ -186,7 +186,9 @@ EOF
     /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
     chgrp -R mariadb /usr/local/mariadb/.
     \cp support-files/mysql.server /etc/init.d/mariadb
+    \cp ${cur_dir}/init.d/mariadb.service /etc/systemd/system/mariadb.service
     chmod 755 /etc/init.d/mariadb
+    chmod +x /etc/systemd/system/mariadb.service
 
     Mariadb_Sec_Setting
 }
@@ -283,7 +285,9 @@ EOF
     /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
     chgrp -R mariadb /usr/local/mariadb/.
     \cp support-files/mysql.server /etc/init.d/mariadb
+    \cp ${cur_dir}/init.d/mariadb.service /etc/systemd/system/mariadb.service
     chmod 755 /etc/init.d/mariadb
+    chmod +x /etc/systemd/system/mariadb.service
 
     Mariadb_Sec_Setting
 }
@@ -380,7 +384,9 @@ EOF
     /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
     chgrp -R mariadb /usr/local/mariadb/.
     \cp support-files/mysql.server /etc/init.d/mariadb
+    \cp ${cur_dir}/init.d/mariadb.service /etc/systemd/system/mariadb.service
     chmod 755 /etc/init.d/mariadb
+    chmod +x /etc/systemd/system/mariadb.service
 
     Mariadb_Sec_Setting
 }
@@ -476,7 +482,9 @@ EOF
     /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
     chgrp -R mariadb /usr/local/mariadb/.
     \cp support-files/mysql.server /etc/init.d/mariadb
+    \cp ${cur_dir}/init.d/mariadb.service /etc/systemd/system/mariadb.service
     chmod 755 /etc/init.d/mariadb
+    chmod +x /etc/systemd/system/mariadb.service
 
     Mariadb_Sec_Setting
 }
@@ -572,7 +580,9 @@ EOF
     /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
     chgrp -R mariadb /usr/local/mariadb/.
     \cp support-files/mysql.server /etc/init.d/mariadb
+    \cp ${cur_dir}/init.d/mariadb.service /etc/systemd/system/mariadb.service
     chmod 755 /etc/init.d/mariadb
+    chmod +x /etc/systemd/system/mariadb.service
 
     Mariadb_Sec_Setting
 }

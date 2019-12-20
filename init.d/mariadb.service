@@ -1,0 +1,16 @@
+[Unit]
+Description=MariaDB Server
+After=network.target syslog.target
+
+[Service]
+Type=forking
+
+ExecStart=/etc/init.d/mariadb start
+ExecStop=/etc/init.d/mariadb stop
+ExecReload=/etc/init.d/mariadb reload
+
+Restart=no
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

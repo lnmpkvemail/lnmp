@@ -133,7 +133,9 @@ EOF
     fi
 
     \cp init.d/init.d.nginx /etc/init.d/nginx
+    \cp init.d/nginx.service /etc/systemd/system/nginx.service
     chmod +x /etc/init.d/nginx
+    chmod +x /etc/systemd/system/nginx.service
 
     if [ "${SelectMalloc}" = "3" ]; then
         mkdir /tmp/tcmalloc

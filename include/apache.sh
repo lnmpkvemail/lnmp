@@ -54,7 +54,9 @@ Install_Apache_22()
     fi
 
     \cp ${cur_dir}/init.d/init.d.httpd /etc/init.d/httpd
+    \cp ${cur_dir}/init.d/httpd.service /etc/systemd/system/httpd.service
     chmod +x /etc/init.d/httpd
+    chmod +x /etc/systemd/system/httpd.service
 }
 
 Install_Apache_24()
@@ -124,5 +126,7 @@ Install_Apache_24()
     fi
 
     \cp ${cur_dir}/init.d/init.d.httpd /etc/init.d/httpd
+    \cp ${cur_dir}/init.d/httpd.service /etc/systemd/system/httpd.service
     chmod +x /etc/init.d/httpd
+    chmod +x /etc/systemd/system/httpd.service
 }

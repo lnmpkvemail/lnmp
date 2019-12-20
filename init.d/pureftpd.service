@@ -1,0 +1,12 @@
+[Unit]
+Description=Pure-FTPd is an FTP server
+After=network.target
+
+[Service]
+Type=forking
+PIDFile=/var/run/pure-ftpd.pid
+ExecStart=/usr/local/pureftpd/sbin/pure-ftpd /usr/local/pureftpd/etc/pure-ftpd.conf
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

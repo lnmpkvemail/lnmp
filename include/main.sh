@@ -535,11 +535,15 @@ StartUp()
 {
     init_name=$1
     echo "Add ${init_name} service at system startup..."
-    if [ "$PM" = "yum" ]; then
-        chkconfig --add ${init_name}
-        chkconfig ${init_name} on
-    elif [ "$PM" = "apt" ]; then
-        update-rc.d -f ${init_name} defaults
+    if command -v systemctl >/dev/null 2>&1 && [[ -s /etc/systemd/system/${init_name}.service || -s /lib/systemd/system/${init_name}.service || -s /usr/lib/systemd/system/${init_name}.service ]]; then
+        systemctl enable ${init_name}.service
+    else
+        if [ "$PM" = "yum" ]; then
+            chkconfig --add ${init_name}
+            chkconfig ${init_name} on
+        elif [ "$PM" = "apt" ]; then
+            update-rc.d -f ${init_name} defaults
+        fi
     fi
 }
 
@@ -547,11 +551,15 @@ Remove_StartUp()
 {
     init_name=$1
     echo "Removing ${init_name} service at system startup..."
-    if [ "$PM" = "yum" ]; then
-        chkconfig ${init_name} off
-        chkconfig --del ${init_name}
-    elif [ "$PM" = "apt" ]; then
-        update-rc.d -f ${init_name} remove
+    if command -v systemctl >/dev/null 2>&1 && [[ -s /etc/systemd/system/${init_name}.service || -s /lib/systemd/system/${init_name}.service || -s /usr/lib/systemd/system/${init_name}.service ]]; then
+        systemctl disable ${init_name}.service
+    else
+        if [ "$PM" = "yum" ]; then
+            chkconfig ${init_name} off
+            chkconfig --del ${init_name}
+        elif [ "$PM" = "apt" ]; then
+            update-rc.d -f ${init_name} remove
+        fi
     fi
 }
 
