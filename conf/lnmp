@@ -217,7 +217,7 @@ EOF
 
 Multiple_PHP_Select()
 {
-    if [[ ! -s /usr/local/php5.2/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.2.conf ]] && [[ ! -s /usr/local/php5.3/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.3.conf ]] && [[ ! -s /usr/local/php5.4/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.4.conf ]] && [[ ! -s /usr/local/php5.5/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.5.conf ]] && [[ ! -s /usr/local/php5.6/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.6.conf ]] && [[ ! -s /usr/local/php7.0/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.0.conf ]] && [[ ! -s /usr/local/php7.1/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.1.conf ]] && [[ ! -s /usr/local/php7.2/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.2.conf ]]; then
+    if [[ ! -s /usr/local/php5.2/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.2.conf ]] && [[ ! -s /usr/local/php5.3/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.3.conf ]] && [[ ! -s /usr/local/php5.4/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.4.conf ]] && [[ ! -s /usr/local/php5.5/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.5.conf ]] && [[ ! -s /usr/local/php5.6/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.6.conf ]] && [[ ! -s /usr/local/php7.0/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.0.conf ]] && [[ ! -s /usr/local/php7.1/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.1.conf ]] && [[ ! -s /usr/local/php7.2/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.2.conf ]] && [[ ! -s /usr/local/php7.3/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.3.conf ]] && [[ ! -s /usr/local/php7.4/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.4.conf ]]; then
         if [ "${enable_pathinfo}" == "y" ]; then
             include_enable_php="include enable-php-pathinfo.conf;"
         else
@@ -251,7 +251,13 @@ Multiple_PHP_Select()
         if [[ -s /usr/local/php7.2/sbin/php-fpm && -s /usr/local/nginx/conf/enable-php7.2.conf && -s /etc/init.d/php-fpm7.2 ]]; then
             Echo_Green "9: PHP 7.2 [found]"
         fi
-        Echo_Yellow "Enter your choice (1, 2, 3, 4, 5, 6 ,7, 8 or 9): "
+        if [[ -s /usr/local/php7.3/sbin/php-fpm && -s /usr/local/nginx/conf/enable-php7.3.conf && -s /etc/init.d/php-fpm7.3 ]]; then
+            Echo_Green "10: PHP 7.3 [found]"
+        fi
+        if [[ -s /usr/local/php7.4/sbin/php-fpm && -s /usr/local/nginx/conf/enable-php7.4.conf && -s /etc/init.d/php-fpm7.4 ]]; then
+            Echo_Green "11: PHP 7.4 [found]"
+        fi
+        Echo_Yellow "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8, 9, 10 or 11): "
         read php_select
         case "${php_select}" in
             1)
@@ -356,6 +362,30 @@ Multiple_PHP_Select()
                     fi
                 else
                     include_enable_php="include enable-php7.2.conf;"
+                fi
+                ;;
+            10)
+                echo "Current selection:: PHP `/usr/local/php7.3/bin/php-config --version`"
+                if [ "${enable_pathinfo}" == "y" ]; then
+                    include_enable_php="include enable-php7.3-pathinfo.conf;"
+                    if [ ! -s /usr/local/nginx/conf/enable-php7.3-pathinfo.conf ]; then
+                        \cp /usr/local/nginx/conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php7.3-pathinfo.conf
+                        sed -i 's/php-cgi.sock/php-cgi7.3.sock/g' /usr/local/nginx/conf/enable-php7.3-pathinfo.conf
+                    fi
+                else
+                    include_enable_php="include enable-php7.3.conf;"
+                fi
+                ;;
+            11)
+                echo "Current selection:: PHP `/usr/local/php7.4/bin/php-config --version`"
+                if [ "${enable_pathinfo}" == "y" ]; then
+                    include_enable_php="include enable-php7.4-pathinfo.conf;"
+                    if [ ! -s /usr/local/nginx/conf/enable-php7.4-pathinfo.conf ]; then
+                        \cp /usr/local/nginx/conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php7.4-pathinfo.conf
+                        sed -i 's/php-cgi.sock/php-cgi7.4.sock/g' /usr/local/nginx/conf/enable-php7.4-pathinfo.conf
+                    fi
+                else
+                    include_enable_php="include enable-php7.4.conf;"
                 fi
                 ;;
             *)
