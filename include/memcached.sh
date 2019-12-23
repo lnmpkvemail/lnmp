@@ -5,12 +5,11 @@ Install_PHPMemcache()
     echo "Install memcache php extension..."
     cd ${cur_dir}/src
     if echo "${Cur_PHP_Version}" | grep -Eqi '^7.';then
-        rm -rf pecl-memcache
-        git clone https://github.com/websupport-sk/pecl-memcache.git
-        cd pecl-memcache
+        Download_Files ${Download_Mirror}/web/memcache/${PHP7Memcache_Ver}.tgz ${PHP7Memcache_Ver}.tgz
+        Tar_Cd ${PHP7Memcache_Ver}.tgz ${PHP7Memcache_Ver}
     else
-        Download_Files ${Download_Mirror}/web/memcache/${PHPMemcache_Ver}.tgz ${PHPMemcache_Ver}.tgz
-        Tar_Cd ${PHPMemcache_Ver}.tgz ${PHPMemcache_Ver}
+        Download_Files ${Download_Mirror}/web/memcache/${PHP7Memcache_Ver}.tgz ${PHP7Memcache_Ver}.tgz
+        Tar_Cd ${PHP7Memcache_Ver}.tgz ${PHP7Memcache_Ver}
     fi
     ${PHP_Path}/bin/phpize
     ./configure --with-php-config=${PHP_Path}/bin/php-config
