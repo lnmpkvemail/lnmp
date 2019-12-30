@@ -116,13 +116,13 @@ Init_Install()
     elif [ "${DBSelect}" = "6" ]; then
         Install_MariaDB_5
     elif [ "${DBSelect}" = "7" ]; then
-        Install_MariaDB_10
-    elif [ "${DBSelect}" = "8" ]; then
         Install_MariaDB_101
-    elif [ "${DBSelect}" = "9" ]; then
+    elif [ "${DBSelect}" = "8" ]; then
         Install_MariaDB_102
-    elif [ "${DBSelect}" = "10" ]; then
+    elif [ "${DBSelect}" = "9" ]; then
         Install_MariaDB_103
+    elif [ "${DBSelect}" = "10" ]; then
+        Install_MariaDB_104
     fi
     TempMycnf_Clean
     Clean_DB_Src_Dir
