@@ -328,13 +328,30 @@ Install_LSB()
 
 Get_Dist_Version()
 {
-    if command -v python2 >/dev/null 2>&1; then
-        eval ${DISTRO}_Version=$(python2 -c 'import platform; print platform.linux_distribution()[1]')
-    elif command -v python3 >/dev/null 2>&1; then
-        eval ${DISTRO}_Version=$(python3 -c 'import platform; print(platform.linux_distribution()[1])')
-    else
-        Install_LSB
-        eval ${DISTRO}_Version=`lsb_release -rs`
+    if command -v lsb_release >/dev/null 2>&1; then
+        DISTRO_Version=$(lsb_release -sr)
+        eval ${DISTRO}_Version=$(lsb_release -sr)
+    elif [ -f /etc/lsb-release ]; then
+        . /etc/lsb-release
+        DISTRO_Version="$DISTRIB_RELEASE"
+        eval ${DISTRO}_Version="$DISTRIB_RELEASE"
+    elif [ -f /etc/os-release ]; then
+        . /etc/os-release
+        DISTRO_Version="$VERSION_ID"
+        eval ${DISTRO}_Version="$VERSION_ID"
+    fi
+    if [[ "${DISTRO}" = "" || "${DISTRO_Version}" = "" ]]; then
+        if command -v python2 >/dev/null 2>&1; then
+            DISTRO_Version=$(python2 -c 'import platform; print platform.linux_distribution()[1]')
+            eval ${DISTRO}_Version=$(python2 -c 'import platform; print platform.linux_distribution()[1]')
+        elif command -v python3 >/dev/null 2>&1; then
+            DISTRO_Version=$(python3 -c 'import platform; print(platform.linux_distribution()[1])')
+            eval ${DISTRO}_Version=$(python3 -c 'import platform; print(platform.linux_distribution()[1])')
+        else
+            Install_LSB
+            DISTRO_Version=`lsb_release -rs`
+            eval ${DISTRO}_Version=`lsb_release -rs`
+        fi
     fi
 }
 
