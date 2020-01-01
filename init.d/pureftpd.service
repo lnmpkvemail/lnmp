@@ -6,7 +6,7 @@ After=network.target
 Type=forking
 PIDFile=/var/run/pure-ftpd.pid
 ExecStart=/usr/local/pureftpd/sbin/pure-ftpd /usr/local/pureftpd/etc/pure-ftpd.conf
-PrivateTmp=true
+PrivateTmp=false
 
 [Install]
 WantedBy=multi-user.target

@@ -7,7 +7,7 @@ Type=forking
 ExecStart=/usr/local/apache/bin/httpd $OPTIONS -k start
 ExecReload=/usr/local/apache/bin/httpd $OPTIONS -k graceful
 ExecStop=/usr/local/apache/bin/httpd -k stop
-PrivateTmp=true
+PrivateTmp=false
 
 [Install]
 WantedBy=multi-user.target

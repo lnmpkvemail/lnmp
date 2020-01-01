@@ -10,7 +10,7 @@ ExecStop=/etc/init.d/mariadb stop
 ExecReload=/etc/init.d/mariadb reload
 
 Restart=no
-PrivateTmp=true
+PrivateTmp=false
 
 [Install]
 WantedBy=multi-user.target

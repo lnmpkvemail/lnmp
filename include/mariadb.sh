@@ -3,7 +3,7 @@
 MariaDB_WITHSSL()
 {
     if openssl version | grep -Eqi "OpenSSL 1.1.*"; then
-        if [[ "${DBSelect}" =~ ^[78]$ ]] || echo "${mariadb_version}" | grep -Eqi '^10.[01].'; then
+        if [[ "${DBSelect}" =~ ^7$ ]] || echo "${mariadb_version}" | grep -Eqi '^10.[01].'; then
             Install_Openssl
             MariaDBWITHSSL='-DWITH_SSL=/usr/local/openssl'
         else
@@ -40,6 +40,11 @@ EOF
     sleep 2
 
     /usr/local/mariadb/bin/mysqladmin -u root password "${DB_Root_Password}"
+
+    /etc/init.d/mariadb restart
+    
+    Make_TempMycnf "${DB_Root_Password}"
+    Do_Query ""
     if [ $? -ne 0 ]; then
         echo "failed, try other way..."
         /etc/init.d/mariadb restart
@@ -48,15 +53,17 @@ EOF
 user=root
 password=''
 EOF
-        /usr/local/mariadb/bin/mysql --defaults-file=~/.emptymy.cnf -e "UPDATE mysql.user SET Password=PASSWORD('${DB_Root_Password}') WHERE User='root';"
+        if [[ "${DBSelect}" = "10" ]] || echo "${mariadb_version}" | grep -Eqi '^10.4.'; then
+            /usr/local/mariadb/bin/mysql --defaults-file=~/.emptymy.cnf -e "SET PASSWORD = PASSWORD('${DB_Root_Password}');"
+        else
+            /usr/local/mariadb/bin/mysql --defaults-file=~/.emptymy.cnf -e "UPDATE mysql.user SET Password=PASSWORD('${DB_Root_Password}') WHERE User='root';"
+        fi
         [ $? -eq 0 ] && echo "Set password Sucessfully." || echo "Set password failed!"
         /usr/local/mariadb/bin/mysql --defaults-file=~/.emptymy.cnf -e "FLUSH PRIVILEGES;"
         [ $? -eq 0 ] && echo "FLUSH PRIVILEGES Sucessfully." || echo "FLUSH PRIVILEGES failed!"
         rm -f ~/.emptymy.cnf
     fi
-    /etc/init.d/mariadb restart
 
-    Make_TempMycnf "${DB_Root_Password}"
     Do_Query ""
     if [ $? -eq 0 ]; then
         echo "OK, MySQL root password correct."
@@ -78,7 +85,6 @@ EOF
     Do_Query "FLUSH PRIVILEGES;"
     [ $? -eq 0 ] && echo " ... Success." || echo " ... Failed!"
 
-    /etc/init.d/mariadb restart
     /etc/init.d/mariadb stop
 }
 
@@ -493,7 +499,7 @@ Install_MariaDB_104()
     Echo_Blue "[+] Installing ${Mariadb_Ver}..."
     rm -f /etc/my.cnf
     Tar_Cd ${Mariadb_Ver}.tar.gz ${Mariadb_Ver}
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1
+    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DMYSQL_UNIX_ADDR=/tmp/mysql.sock -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1
     Make_Install
 
     groupadd mariadb

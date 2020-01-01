@@ -10,7 +10,7 @@ ExecStop=/etc/init.d/mysql stop
 ExecReload=/etc/init.d/mysql reload
 
 Restart=no
-PrivateTmp=true
+PrivateTmp=false
 
 [Install]
 WantedBy=multi-user.target
