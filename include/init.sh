@@ -253,6 +253,10 @@ CentOS_Dependent()
         yum -y install https://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/o/oniguruma-devel-5.9.5-3.el7.x86_64.rpm
     fi
 
+    if [ "${DISTRO}" = "Fedora" ]; then
+        dnf install chkconfig -y
+    fi
+
     if [ -s /etc/yum.conf.lnmp ]; then
         mv -f /etc/yum.conf.lnmp /etc/yum.conf
     fi
