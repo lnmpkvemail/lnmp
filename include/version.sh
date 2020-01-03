@@ -9,15 +9,15 @@ Freetype_Ver='freetype-2.7'
 Freetype_New_Ver='freetype-2.10.0'
 Curl_Ver='curl-7.62.0'
 Pcre_Ver='pcre-8.42'
-Jemalloc_Ver='jemalloc-5.2.0'
+Jemalloc_Ver='jemalloc-5.2.1'
 TCMalloc_Ver='gperftools-2.7'
 Libunwind_Ver='libunwind-1.2.1'
 Libicu4c_Ver='icu4c-58_3'
 Boost_Ver='boost_1_59_0'
 Boost_New_Ver='boost_1_67_0'
-Openssl_Ver='openssl-1.0.2t'
+Openssl_Ver='openssl-1.0.2u'
 Openssl_New_Ver='openssl-1.1.1d'
-Nghttp2_Ver='nghttp2-1.38.0'
+Nghttp2_Ver='nghttp2-1.40.0'
 Luajit_Ver='luajit2-2.1-20190329'
 LuaNginxModule='lua-nginx-module-0.10.14'
 NgxDevelKit='ngx_devel_kit-0.3.1'
@@ -66,8 +66,10 @@ elif [ "${PHPSelect}" = "10" ]; then
 fi
 if [[ "${PHPSelect}" =~ ^[123]$ ]]; then
     PhpMyAdmin_Ver='phpMyAdmin-4.0.10.20-all-languages'
+elif [[ "${PHPSelect}" =~ ^[456]$ ]]; then
+    PhpMyAdmin_Ver='phpMyAdmin-4.9.3-all-languages'
 else
-    PhpMyAdmin_Ver='phpMyAdmin-4.9.2-all-languages'
+    PhpMyAdmin_Ver='phpMyAdmin-5.0.0-all-languages'
 fi
 APR_Ver='apr-1.7.0'
 APR_Util_Ver='apr-util-1.6.1'
@@ -80,7 +82,7 @@ fi
 Pureftpd_Ver='pure-ftpd-1.0.49'
 
 XCache_Ver='xcache-3.2.0'
-ImageMagick_Ver='ImageMagick-7.0.8-45'
+ImageMagick_Ver='ImageMagick-7.0.9-13'
 Imagick_Ver='imagick-3.4.4'
 ZendOpcache_Ver='zendopcache-7.0.5'
 Redis_Stable_Ver='redis-5.0.5'
