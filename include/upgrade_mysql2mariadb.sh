@@ -205,7 +205,6 @@ EOF
     \cp support-files/mysql.server /etc/init.d/mariadb
     \cp ${cur_dir}/init.d/mariadb.service /etc/systemd/system/mariadb.service
     chmod 755 /etc/init.d/mariadb
-    chmod +x /etc/systemd/system/mariadb.service
 
     Mariadb_Sec_Setting
     /etc/init.d/mariadb start

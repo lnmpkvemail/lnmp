@@ -63,7 +63,6 @@ Install_Pureftpd()
     \cp ${cur_dir}/init.d/init.d.pureftpd /etc/init.d/pureftpd
     \cp ${cur_dir}/init.d/pureftpd.service /etc/systemd/system/pureftpd.service
     chmod +x /etc/init.d/pureftpd
-    chmod +x /etc/systemd/system/pureftpd.service
     touch /usr/local/pureftpd/etc/pureftpd.passwd
     touch /usr/local/pureftpd/etc/pureftpd.pdb
 
