@@ -30,6 +30,7 @@ Upgrade_Date=$(date +"%Y%m%d%H%M%S")
 . include/upgrade_mphp.sh
 
 Get_Dist_Name
+Get_Dist_Version
 MemTotal=`free -m | grep Mem | awk '{print  $2}'`
 
 Display_Upgrade_Menu()
