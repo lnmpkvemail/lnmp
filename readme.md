@@ -43,6 +43,7 @@ lnmp.conf配置文件，可以修改lnmp.conf自定义下载服务器地址、�
 * 参数: php   仅适用于LNMP，可升级至大部分PHP版本。
 * 参数: phpa    可升级LNMPA/LAMP的PHP至大部分版本。
 * 参数: phpmyadmin    可升级phpMyadmin。
+* 参数: mphp    同版本内升级多PHP版本。
 
 ### 扩展插件
 执行: `./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube}`
@@ -100,15 +101,15 @@ MySQL 5.6 | 3 | PHP 5.4 | 3 | TCMalloc | 3 | |
 MySQL 5.7 | 4 | PHP 5.5 | 4 | | | |
 MySQL 8.0 | 5 | PHP 5.6 | 5 | | | |
 MariaDB 5.5 | 6 | PHP 7.0 | 6 | | | |
-MariaDB 10.0 | 7 | PHP 7.1 | 7 | | | |
-MariaDB 10.1 | 8 | PHP 7.2 | 8 | | | |
-MariaDB 10.2 | 9 | PHP 7.3 | 9 | | | |
-MariaDB 10.3 | 10 | PHP 7.4 | 10 | | | |
+MariaDB 10.1 | 7 | PHP 7.1 | 7 | | | |
+MariaDB 10.2 | 8 | PHP 7.2 | 8 | | | |
+MariaDB 10.3 | 9 | PHP 7.3 | 9 | | | |
+MariaDB 10.4 | 10 | PHP 7.4 | 10 | | | |
 不安装数据库 | 0 | | | | | |
 
 * 以LNMP模式，默认选项安装MySQL 5.5、MySQL root密码设置为lnmp.org、启用InnoDB、PHP 5.6、不安装内存分配器为例，先执行([建议先运行screen](https://www.vpser.net/manage/run-screen-lnmp.html))，再下载解压lnmp安装包：
 
-`wget http://soft.vpser.net/lnmp/lnmp1.6beta.tar.gz -cO lnmp1.6beta.tar.gz && tar zxf lnmp1.6beta.tar.gz && cd lnmp1.6`
+`wget http://soft.vpser.net/lnmp/lnmp1.7beta.tar.gz -cO lnmp1.7beta.tar.gz && tar zxf lnmp1.7beta.tar.gz && cd lnmp1.7`
 
 然后设置无人值守参数并安装：
 
