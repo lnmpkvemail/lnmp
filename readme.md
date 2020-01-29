@@ -180,6 +180,7 @@ MariaDB 10.4 | 10 | PHP 7.4 | 10 | | | |
 |Enable_Nginx_Openssl|Nginx是否使用新版openssl|默认 y，建议不修改，y是启用并开启到http2|
 |Enable_PHP_Fileinfo|是否安装开启php的fileinfo模块|默认n，根据自己情况而定，安装启用的话改成 y|
 |Enable_Nginx_Lua|是否为Nginx安装lua支持|默认n，安装lua可以使用一些基于lua的waf网站防火墙|
+|Enable_Swap|是否添加SWAP|默认y，当内存不足时可提高编译安装成功概率|
 
 ## 技术支持
 
