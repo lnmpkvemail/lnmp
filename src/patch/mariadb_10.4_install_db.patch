@@ -1,0 +1,34 @@
+diff -ruN mariadb-10.4.11.orig/scripts/mysql_install_db.sh mariadb-10.4.11/scripts/mysql_install_db.sh
+--- mariadb-10.4.11.orig/scripts/mysql_install_db.sh	2019-12-10 21:47:14.000000000 +0800
++++ mariadb-10.4.11/scripts/mysql_install_db.sh	2020-02-04 21:51:31.235465452 +0800
+@@ -478,30 +478,6 @@
+   fi
+ done
+ 
+-if test -n "$user"
+-then
+-  chown $user "$pamtooldir/auth_pam_tool_dir" && \
+-  chmod 0700 "$pamtooldir/auth_pam_tool_dir"
+-  if test $? -ne 0
+-  then
+-      echo "Cannot change ownership of the '$pamtooldir/auth_pam_tool_dir' directory"
+-      echo " to the '$user' user. Check that you have the necessary permissions and try again."
+-      exit 1
+-  fi
+-  if test -z "$srcdir"
+-  then
+-    chown 0 "$pamtooldir/auth_pam_tool_dir/auth_pam_tool" && \
+-    chmod 04755 "$pamtooldir/auth_pam_tool_dir/auth_pam_tool"
+-    if test $? -ne 0
+-    then
+-        echo "Couldn't set an owner to '$pamtooldir/auth_pam_tool_dir/auth_pam_tool'."
+-        echo " It must be root, the PAM authentication plugin doesn't work otherwise.."
+-        echo
+-    fi
+-  fi
+-  args="$args --user=$user"
+-fi
+-
+ if test -f "$ldata/mysql/user.frm"
+ then
+     echo "mysql.user table already exists!"
