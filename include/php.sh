@@ -880,7 +880,7 @@ Install_PHP_74()
     Pear_Pecl_Set
     Install_Composer
 
-    echo "Install ZendGuardLoader for PHP 7.3..."
+    echo "Install ZendGuardLoader for PHP 7.4..."
     echo "unavailable now."
 
 if [ "${Stack}" = "lnmp" ]; then
