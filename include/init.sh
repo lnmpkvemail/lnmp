@@ -720,6 +720,13 @@ Remove_Error_Libcurl()
 
 Add_Swap()
 {
+    if ! command -v python >/dev/null 2>&1; then
+        if [ "$PM" = "yum" ]; then
+            yum -y install python2
+        elif [ "$PM" = "apt" ]; then
+            apt-get --no-install-recommends install -y python
+        fi
+    fi
     if command -v python >/dev/null 2>&1; then
         Disk_Avail=$(${cur_dir}/include/disk.py)
     elif command -v python3 >/dev/null 2>&1; then
