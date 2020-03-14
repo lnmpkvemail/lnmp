@@ -742,7 +742,7 @@ Add_SSL_Menu()
             done
             while :;do
                 Echo_Yellow "Please enter full path to SSL Chain file: "
-                read ssl_certificate_key
+                read ssl_chain
                 if [ "${ssl_chain}" == "" ]; then
                     Echo_Yellow "SSL Chain file will not set."
                     Conf_SSLChain="#SSLCertificateChainFile /path/to/your/chain.pem"
