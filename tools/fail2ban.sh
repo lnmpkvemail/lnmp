@@ -20,7 +20,9 @@ if [ "${PM}" = "yum" ]; then
     if [ "${DISTRO}" = "CentOS" ] && echo "${CentOS_Version}" | grep -Eqi "^8"; then
         dnf install python2 -y
         alternatives --set python /usr/bin/python2
-        dnf install iptables -y
+    fi
+    if ! command -v iptables >/dev/null 2>&1; then
+        yum install iptables -y
     fi
     service rsyslog restart
     \cp /var/log/secure /var/log/secure.$(date +"%Y%m%d%H%M%S")
@@ -59,7 +61,7 @@ echo "Copy init files..."
 if [ ! -d /var/run/fail2ban ];then
     mkdir /var/run/fail2ban
 fi
-if [ `/sbin/iptables -h|grep -c "\-w"` -eq 0 ]; then
+if [ `iptables -h|grep -c "\-w"` -eq 0 ]; then
     sed -i 's/lockingopt =.*/lockingopt =/g' /etc/fail2ban/action.d/iptables-common.conf
 fi
 if [ "${PM}" = "yum" ]; then
