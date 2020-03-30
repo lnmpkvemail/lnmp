@@ -277,10 +277,9 @@ Apache_Selection()
 Kill_PM()
 {
     if ps aux | grep "yum" | grep -qv "grep"; then
-        if command -v killall >/dev/null 2>&1; then
-            killall yum
-        else
-            kill `pidof yum`
+        kill -9 $(ps -ef|grep yum|grep -v grep|awk '{print $2}')
+        if [ -s /var/run/yum.pid ]; then
+            rm -f /var/run/yum.pid
         fi
     elif ps aux | grep "apt-get" | grep -qv "grep"; then
         if command -v killall >/dev/null 2>&1; then
