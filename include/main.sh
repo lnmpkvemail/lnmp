@@ -471,6 +471,20 @@ Tarj_Cd()
     fi
 }
 
+TarJ_Cd()
+{
+    local FileName=$1
+    local DirName=$2
+    cd ${cur_dir}/src
+    [[ -d "${DirName}" ]] && rm -rf ${DirName}
+    echo "Uncompress ${FileName}..."
+    tar Jxf ${FileName}
+    if [ -n "${DirName}" ]; then
+        echo "cd ${DirName}..."
+        cd ${DirName}
+    fi
+}
+
 Check_LNMPConf()
 {
     if [ ! -s "${cur_dir}/lnmp.conf" ]; then
