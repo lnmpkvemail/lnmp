@@ -76,7 +76,7 @@ APR_Util_Ver='apr-util-1.6.1'
 if [ "${ApacheSelect}" = "1" ]; then
     Apache_Ver='httpd-2.2.34'
 elif [ "${ApacheSelect}" = "2" ]; then
-    Apache_Ver='httpd-2.4.41'
+    Apache_Ver='httpd-2.4.43'
 fi
 
 Pureftpd_Ver='pure-ftpd-1.0.49'
@@ -85,7 +85,7 @@ XCache_Ver='xcache-3.2.0'
 ImageMagick_Ver='ImageMagick-7.0.9-13'
 Imagick_Ver='imagick-3.4.4'
 ZendOpcache_Ver='zendopcache-7.0.5'
-Redis_Stable_Ver='redis-5.0.5'
+Redis_Stable_Ver='redis-5.0.8'
 PHPRedis_Ver='redis-5.2.1'
 Memcached_Ver='memcached-1.5.14'
 Libmemcached_Ver='libmemcached-1.0.18'
