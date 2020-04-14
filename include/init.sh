@@ -192,7 +192,7 @@ Check_Old_Releases_URL()
 
 Ubuntu_Deadline()
 {
-    trusty_deadline=`date -d "2020-4-30 00:00:00" +%s`
+    trusty_deadline=`date -d "2022-4-30 00:00:00" +%s`
     xenial_deadline=`date -d "2024-4-30 00:00:00" +%s`
     eoan_deadline=`date -d "2020-7-30 00:00:00" +%s`
     cur_time=`date  +%s`
