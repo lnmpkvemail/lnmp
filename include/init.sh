@@ -154,13 +154,15 @@ Ubuntu_Modify_Source()
     elif grep -Eqi "17.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^17.04'; then
         CodeName='zesty'
     elif grep -Eqi "17.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^17.10'; then
-        Ubuntu_Deadline artful
+        CodeName='artful'
     elif grep -Eqi "16.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^16.04'; then
         Ubuntu_Deadline xenial
     elif grep -Eqi "18.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^18.10'; then
-        Ubuntu_Deadline cosmic
+        CodeName='cosmic'
     elif grep -Eqi "19.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^19.04'; then
-        Ubuntu_Deadline disco
+        CodeName='disco'
+    elif grep -Eqi "19.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^19.10'; then
+        Ubuntu_Deadline eoan
     fi
     if [ "${CodeName}" != "" ]; then
         \cp /etc/apt/sources.list /etc/apt/sources.list.$(date +"%Y%m%d")
@@ -190,11 +192,9 @@ Check_Old_Releases_URL()
 
 Ubuntu_Deadline()
 {
-    trusty_deadline=`date -d "2019-7-22 00:00:00" +%s`
-    artful_deadline=`date -d "2018-7-31 00:00:00" +%s`
-    xenial_deadline=`date -d "2021-4-30 00:00:00" +%s`
-    cosmic_deadline=`date -d "2019-7-30 00:00:00" +%s`
-    disco_deadline=`date -d "2020-1-30 00:00:00" +%s`
+    trusty_deadline=`date -d "2020-4-30 00:00:00" +%s`
+    xenial_deadline=`date -d "2024-4-30 00:00:00" +%s`
+    eoan_deadline=`date -d "2020-7-30 00:00:00" +%s`
     cur_time=`date  +%s`
     case "$1" in
         trusty)
@@ -203,28 +203,16 @@ Ubuntu_Deadline()
                 Check_Old_Releases_URL trusty
             fi
             ;;
-        artful)
-            if [ ${cur_time} -gt ${artful_deadline} ]; then
-                echo "${cur_time} > ${artful_deadline}"
-                Check_Old_Releases_URL artful
-            fi
-            ;;
         xenial)
             if [ ${cur_time} -gt ${xenial_deadline} ]; then
                 echo "${cur_time} > ${xenial_deadline}"
                 Check_Old_Releases_URL xenial
             fi
             ;;
-        cosmic)
-            if [ ${cur_time} -gt ${cosmic_deadline} ]; then
-                echo "${cur_time} > ${cosmic_deadline}"
-                Check_Old_Releases_URL cosmic
-            fi
-            ;;
-        disco)
-            if [ ${cur_time} -gt ${disco_deadline} ]; then
-                echo "${cur_time} > ${disco_deadline}"
-                Check_Old_Releases_URL disco
+        eoan)
+            if [ ${cur_time} -gt ${eoan_deadline} ]; then
+                echo "${cur_time} > ${eoan_deadline}"
+                Check_Old_Releases_URL eoan
             fi
             ;;
     esac
