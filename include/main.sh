@@ -276,8 +276,8 @@ Apache_Selection()
 
 Kill_PM()
 {
-    if ps aux | grep "yum" | grep -qv "grep"; then
-        kill -9 $(ps -ef|grep yum|grep -v grep|awk '{print $2}')
+    if ps aux | grep -E "yum|dnf" | grep -qv "grep"; then
+        kill -9 $(ps -ef|grep -E "yum|dnf"|grep -v grep|awk '{print $2}')
         if [ -s /var/run/yum.pid ]; then
             rm -f /var/run/yum.pid
         fi
