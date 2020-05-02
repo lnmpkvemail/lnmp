@@ -725,7 +725,7 @@ Add_Swap()
         fi
     fi
     if command -v python >/dev/null 2>&1; then
-        Disk_Avail=$(${cur_dir}/include/disk.py)
+        Disk_Avail=$(python ${cur_dir}/include/disk.py)
     elif command -v python3 >/dev/null 2>&1; then
         Disk_Avail=$(python3 ${cur_dir}/include/disk.py)
     elif command -v python2 >/dev/null 2>&1; then
