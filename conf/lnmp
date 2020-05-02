@@ -1051,6 +1051,20 @@ Install_Check_Acme.sh()
         rm -f latest.tar.gz
         rm -rf acme.sh-*
         sed -i 's/cat "\$CERT_PATH"$/#cat "\$CERT_PATH"/g' /usr/local/acme.sh/acme.sh
+        cat >/usr/local/acme.sh/upgrade.sh<<EOF
+#!/bin/bash
+
+/usr/local/acme.sh/acme.sh --upgrade
+sed -i 's/cat "\\\$CERT_PATH"\$/#cat "\\\$CERT_PATH"/g' /usr/local/acme.sh/acme.sh
+EOF
+
+        chmod +x /usr/local/acme.sh/upgrade.sh
+        if crontab -l|grep -q "/usr/local/acme.sh/upgrade.sh"; then
+            echo "acme.sh upgrade crontab rule is exist."
+        else
+            echo "Add acme.sh upgrade crontab rule..."
+            (crontab -l ; echo '0 3 */7 * * /usr/local/acme.sh/upgrade.sh') | crontab -
+        fi
         if command -v yum >/dev/null 2>&1; then
             yum -y update nss
             yum -y install ca-certificates
