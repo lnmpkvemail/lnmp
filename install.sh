@@ -101,7 +101,6 @@ Init_Install()
         CentOS_Lib_Opt
     elif [ "$PM" = "apt" ]; then
         Deb_Lib_Opt
-        Deb_Check_MySQL
     fi
     if [ "${DBSelect}" = "1" ]; then
         Install_MySQL_51

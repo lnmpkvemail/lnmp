@@ -56,11 +56,20 @@ Deb_RemoveAMP()
     for removepackages in apache2 apache2-doc apache2-utils apache2.2-common apache2.2-bin apache2-mpm-prefork apache2-doc apache2-mpm-worker php5 php5-common php5-cgi php5-cli php5-mysql php5-curl php5-gd;
     do apt-get purge -y $removepackages; done
     if [[ "${DBSelect}" != "0" ]]; then
-        for removepackages in mysql-client mysql-server mysql-common mysql-server-core-5.5 mysql-client-5.5 mariadb-client mariadb-server mariadb-common;
-        do apt-get purge -y $removepackages; done
-        dpkg -l |grep mysql
-        dpkg -P mysql-server mysql-common libmysqlclient15off libmysqlclient15-dev
-        dpkg -P mariadb-client mariadb-server mariadb-common
+        if echo "${Ubuntu_Version}" | grep -Eqi "^20\.04"; then
+            dpkg -l |grep mysql
+            dpkg --force-all -P mysql-server
+            dpkg --force-all -P mariadb-client mariadb-server mariadb-common libmariadbd-dev
+            [[ -d "/etc/mysql" ]] && rm -rf /etc/mysql
+            for removepackages in mysql-server mariadb-server;
+            do apt-get purge -y $removepackages; done
+        else
+            dpkg -l |grep mysql
+            dpkg --force-all -P mysql-server mysql-common libmysqlclient15off libmysqlclient15-dev libmysqlclient18 libmysqlclient18-dev libmysqlclient20 libmysqlclient-dev libmysqlclient21
+            dpkg --force-all -P mariadb-client mariadb-server mariadb-common libmariadbd-dev
+            for removepackages in mysql-client mysql-server mysql-common mysql-server-core-5.5 mysql-client-5.5 mariadb-client mariadb-server mariadb-common;
+            do apt-get purge -y $removepackages; done
+        fi
     fi
     killall apache2
     dpkg -l |grep apache
