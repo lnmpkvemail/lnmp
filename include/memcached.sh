@@ -60,7 +60,7 @@ Install_Memcached()
 {
     ver="1"
     echo "Which memcached php extension do you choose:"
-    echo "Install php-memcache,(Discuz x) please enter: 1"
+    echo "Install php-memcache, please enter: 1"
     echo "Install php-memcached, please enter: 2"
     read -p "Enter 1 or 2 (Default 1): " ver
 
