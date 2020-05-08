@@ -83,6 +83,7 @@ extension = "redis.so"
 EOF
 
     \cp ${cur_dir}/init.d/init.d.redis /etc/init.d/redis
+    \cp ${cur_dir}/init.d/redis.service /etc/systemd/system/redis.service
     chmod +x /etc/init.d/redis
     echo "Add to auto startup..."
     StartUp redis
