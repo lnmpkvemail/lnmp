@@ -17,6 +17,9 @@ Install_Redis()
     if [ -s /usr/local/redis/bin/redis-server ]; then
         echo "Redis server already exists."
     else
+        if gcc -dumpversion|grep -q "^[34]."; then
+            Redis_Stable_Ver='redis-5.0.9'
+        fi
         Download_Files http://download.redis.io/releases/${Redis_Stable_Ver}.tar.gz ${Redis_Stable_Ver}.tar.gz
         Tar_Cd ${Redis_Stable_Ver}.tar.gz ${Redis_Stable_Ver}
 
