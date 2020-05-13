@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 DB_Info=('MySQL 5.1.73' 'MySQL 5.5.62' 'MySQL 5.6.48' 'MySQL 5.7.30' 'MySQL 8.0.20' 'MariaDB 5.5.66' 'MariaDB 10.1.43' 'MariaDB 10.2.30' 'MariaDB 10.3.21' 'MariaDB 10.4.11')
 PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.38' 'PHP 5.6.40' 'PHP 7.0.33' 'PHP 7.1.33' 'PHP 7.2.30' 'PHP 7.3.17' 'PHP 7.4.5')

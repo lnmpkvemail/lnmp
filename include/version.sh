@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 Autoconf_Ver='autoconf-2.13'
 Libiconv_Ver='libiconv-1.15'

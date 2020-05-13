@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 Nginx_Dependent()
 {

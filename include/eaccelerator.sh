@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #Install eaccelerator 0.9.5.3
 Install_Old_eA()

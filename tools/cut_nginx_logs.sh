@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #function:cut nginx log files for lnmp v0.5 and v0.6
 #author: https://lnmp.org
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 Add_Iptables_Rules()
 {

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #Funciont: Backup website and mysql database
 #Author: licess

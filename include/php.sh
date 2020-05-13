@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 Export_PHP_Autoconf()
 {
