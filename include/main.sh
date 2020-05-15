@@ -287,6 +287,11 @@ Kill_PM()
         else
             kill `pidof apt-get`
         fi
+        if [[ -s /var/lib/dpkg/lock-frontend || -s /var/lib/dpkg/lock ]]; then
+            rm -f /var/lib/dpkg/lock-frontend
+            rm -f /var/lib/dpkg/lock
+            dpkg --configure -a
+        fi
     fi
 }
 
