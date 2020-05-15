@@ -281,12 +281,8 @@ Kill_PM()
         if [ -s /var/run/yum.pid ]; then
             rm -f /var/run/yum.pid
         fi
-    elif ps aux | grep "apt-get" | grep -qv "grep"; then
-        if command -v killall >/dev/null 2>&1; then
-            killall apt-get
-        else
-            kill `pidof apt-get`
-        fi
+    elif ps aux | grep -E "apt-get|dpkg|apt" | grep -qv "grep"; then
+        kill -9 $(ps -ef|grep -E "apt-get|apt|dpkg"|grep -v grep|awk '{print $2}')
         if [[ -s /var/lib/dpkg/lock-frontend || -s /var/lib/dpkg/lock ]]; then
             rm -f /var/lib/dpkg/lock-frontend
             rm -f /var/lib/dpkg/lock
