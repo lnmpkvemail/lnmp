@@ -1,5 +1,26 @@
 更新记录
 
+LNMP 1.7
+
+增加PHP 7.4支持；
+增加MariaDB 10.4支持；
+增加systemd service脚本；
+增加phpmyadmin 5.0；
+增加多PHP版本升级工具 ./upgrade.sh mphp，只支持7.2.x-7.2.x类似小版本升级，大版本直接新装即可；
+移除MariaDB 10.0；
+优化lnmp管理脚本；
+优化数据库root密码重置工具；
+优化系统版本获取脚本；
+优化redis安装脚本；
+优化fail2ban安装脚本；
+优化nginx安装、升级脚本；
+完善CentOS8、Ubuntu20、Deepin20、Fedora等新版本的支持；
+完善MySQL升级时增加旧版本下载镜像；
+调整php7 memcached使用稳定版；
+修复lamp模式下ssl chain添加的bug；
+更新诸多软件版本；
+其他一些功能优化及调整......
+
 LNMP 1.6
 
 增加PHP 7.3支持；
