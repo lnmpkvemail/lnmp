@@ -63,6 +63,21 @@ DB_Dependent()
         fi
         for packages in make cmake gcc gcc-c++ gcc-g77 flex bison wget zlib zlib-devel openssl openssl-devel ncurses ncurses-devel libaio-devel rpcgen libtirpc-devel patch cyrus-sasl-devel;
         do yum -y install $packages; done
+        if [ "${DISTRO}" = "CentOS" ] && echo "${CentOS_Version}" | grep -Eqi "^8"; then
+            if ! yum repolist all|grep PowerTools; then
+                echo "PowerTools repository not found, add PowerTools repository ..."
+                cat >/etc/yum.repos.d/CentOS-PowerTools.repo<<EOF
+    [PowerTools]
+    name=CentOS-\$releasever - PowerTools
+    mirrorlist=http://mirrorlist.centos.org/?release=\$releasever&arch=\$basearch&repo=PowerTools&infra=\$infra
+    #baseurl=http://mirror.centos.org/\$contentdir/\$releasever/PowerTools/\$basearch/os/
+    gpgcheck=1
+    enabled=0
+    gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+EOF
+            fi
+            dnf --enablerepo=PowerTools install rpcgen -y
+        fi
     elif [ "$PM" = "apt" ]; then
         apt-get update -y
         for removepackages in mysql-client mysql-server mysql-common mysql-server-core-5.5 mysql-client-5.5 mariadb-client mariadb-server mariadb-common;
