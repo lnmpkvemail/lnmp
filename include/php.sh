@@ -852,6 +852,7 @@ fi
 
 Install_PHP_74()
 {
+    Install_Libzip
     Echo_Blue "[+] Installing ${Php_Ver}"
     Tarj_Cd ${Php_Ver}.tar.bz2 ${Php_Ver}
     if [ "${Stack}" = "lnmp" ]; then

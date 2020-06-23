@@ -769,6 +769,7 @@ fi
 
 Upgrade_PHP_74()
 {
+    Install_Libzip
     Echo_Blue "[+] Installing ${php_version}"
     Tarj_Cd php-${php_version}.tar.bz2 php-${php_version}
     if [ "${Stack}" = "lnmp" ]; then

@@ -613,6 +613,24 @@ Install_Nghttp2()
     fi
 }
 
+Install_Libzip()
+{
+    if echo "${CentOS_Version}" | grep -Eqi "^7"  || echo "${RHEL_Version}" | grep -Eqi "^7"; then
+        if [ ! -s /usr/local/lib/libzip.so ]; then
+            Echo_Blue "[+] Installing ${Libzip_Ver}"
+            cd ${cur_dir}/src
+            Download_Files ${Download_Mirror}/lib/libzip/${Libzip_Ver}.tar.xz ${Libzip_Ver}.tar.xz
+            TarJ_Cd ${Libzip_Ver}.tar.xz ${Libzip_Ver}
+            ./configure
+            Make_Install
+            cd ${cur_dir}/src/
+            rm -rf ${cur_dir}/src/${Libzip_Ver}
+        fi
+        export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
+        ldconfig
+    fi
+}
+
 CentOS_Lib_Opt()
 {
     if [ "${Is_64bit}" = "y" ] ; then
