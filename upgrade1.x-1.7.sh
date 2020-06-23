@@ -43,9 +43,14 @@ EOF
             dnf --enablerepo=PowerTools install oniguruma-devel -y
         fi
 
-        if [ "${DISTRO}" = "CentOS" ] && echo "${CentOS_Version}" | grep -Eqi "^7"; then
-            yum -y install https://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/o/oniguruma-5.9.5-3.el7.x86_64.rpm
-            yum -y install https://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/o/oniguruma-devel-5.9.5-3.el7.x86_64.rpm
+        if echo "${CentOS_Version}" | grep -Eqi "^7" || echo "${RHEL_Version}" | grep -Eqi "^7"; then
+            yum -y install epel-release
+            yum -y install oniguruma oniguruma-devel
+            if [ "${CheckMirror}" = "n" ]; then
+                cd ${cur_dir}/src/
+                yum -y install ./oniguruma-6.8.2-1.el7.x86_64.rpm
+                yum -y install ./oniguruma-devel-6.8.2-1.el7.x86_64.rpm
+            fi
         fi
     elif [ "$PM" = "apt" ]; then
         Echo_Blue "[+] apt-get installing dependent packages..."
