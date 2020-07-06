@@ -8,8 +8,8 @@ Install_PHPMemcache()
         Download_Files ${Download_Mirror}/web/memcache/${PHP7Memcache_Ver}.tgz ${PHP7Memcache_Ver}.tgz
         Tar_Cd ${PHP7Memcache_Ver}.tgz ${PHP7Memcache_Ver}
     else
-        Download_Files ${Download_Mirror}/web/memcache/${PHP7Memcache_Ver}.tgz ${PHP7Memcache_Ver}.tgz
-        Tar_Cd ${PHP7Memcache_Ver}.tgz ${PHP7Memcache_Ver}
+        Download_Files ${Download_Mirror}/web/memcache/${PHPMemcache_Ver}.tgz ${PHPMemcache_Ver}.tgz
+        Tar_Cd ${PHPMemcache_Ver}.tgz ${PHPMemcache_Ver}
     fi
     ${PHP_Path}/bin/phpize
     ./configure --with-php-config=${PHP_Path}/bin/php-config
