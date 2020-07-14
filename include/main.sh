@@ -651,6 +651,22 @@ Check_Mirror()
     fi
 }
 
+Check_CMPT()
+{
+    if [[ "${DBSelect}" = "5" || "${PHPSelect}" == "10" ]]; then
+        if echo "${Ubuntu_Version}" | grep -Eqi "^1[0-7]\." || echo "${Debian_Version}" | grep -Eqi "^[4-8]" || echo "${Raspbian_Version}" | grep -Eqi "^[4-8]" || echo "${CentOS_Version}" | grep -Eqi "^[4-7]"  || echo "${RHEL_Version}" | grep -Eqi "^[4-7]" || echo "${Fedora_Version}" | grep -Eqi "^2[0-3]"; then
+            Echo_Red "PHP 7.4 or MySQL 8.0 please use latest linux distributions!"
+            exit 1
+        fi
+    fi
+    if [[ "${PHPSelect}" =~ ^[123456]$ ]]; then
+        if echo "${Ubuntu_Version}" | grep -Eqi "^19|2[0-7]\." || echo "${Debian_Version}" | grep -Eqi "^10" || echo "${Raspbian_Version}" | grep -Eqi "^10" || echo "${CentOS_Version}" | grep -Eqi "^[4-7]"  || echo "${RHEL_Version}" | grep -Eqi "^[4-8]" || echo "${Deepin_Version}" | grep -Eqi "^2[0-9]"; then
+            Echo_Red "Under PHP 7.1 do not support Ubuntu 19+, Debian 10 etc, which are very new Linux distributions!"
+            exit 1
+        fi
+    fi
+}
+
 Color_Text()
 {
   echo -e " \e[0;$2m$1\e[0m"

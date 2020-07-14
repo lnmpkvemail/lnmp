@@ -61,6 +61,7 @@ Init_Install()
     Get_Dist_Version
     Print_Sys_Info
     Check_Hosts
+    Check_CMPT
     if [ "${CheckMirror}" != "n" ]; then
         Check_Mirror
     fi
