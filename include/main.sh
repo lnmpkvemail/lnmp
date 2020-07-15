@@ -660,8 +660,8 @@ Check_CMPT()
         fi
     fi
     if [[ "${PHPSelect}" =~ ^[123456]$ ]]; then
-        if echo "${Ubuntu_Version}" | grep -Eqi "^19|2[0-7]\." || echo "${Debian_Version}" | grep -Eqi "^10" || echo "${Raspbian_Version}" | grep -Eqi "^10" || echo "${CentOS_Version}" | grep -Eqi "^[4-7]"  || echo "${RHEL_Version}" | grep -Eqi "^[4-8]" || echo "${Deepin_Version}" | grep -Eqi "^2[0-9]"; then
-            Echo_Red "Under PHP 7.1 do not support Ubuntu 19+, Debian 10 etc, which are very new Linux distributions!"
+        if echo "${Ubuntu_Version}" | grep -Eqi "^19|2[0-7]\." || echo "${Debian_Version}" | grep -Eqi "^10" || echo "${Raspbian_Version}" | grep -Eqi "^10" || echo "${Deepin_Version}" | grep -Eqi "^2[0-9]" || echo "${Fedora_Version}" | grep -Eqi "^29|3[0-9]"; then
+            Echo_Red "Install lower than PHP 7.1 is not supported on very new linux versions such as Ubuntu 19+, Debian 10, Deepin 20+, Fedora 29+ etc."
             exit 1
         fi
     fi
