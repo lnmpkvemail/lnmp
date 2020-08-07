@@ -22,7 +22,7 @@ Upgrade_Dependent()
     if [ "$PM" = "yum" ]; then
         Echo_Blue "[+] Yum installing dependent packages..."
         Get_Dist_Version
-        for packages in patch wget crontabs unzip tar ca-certificates net-tools libc-client-devel psmisc libXpm-devel git-core c-ares-devel libicu-devel libxslt libxslt-devel xz expat-devel bzip2 bzip2-devel libaio-devel rpcgen libtirpc-devel perl python-devel cyrus-sasl-devel sqlite-devel oniguruma-devel;
+        for packages in patch wget crontabs unzip tar ca-certificates net-tools libc-client-devel psmisc libXpm-devel git-core c-ares-devel libicu-devel libxslt libxslt-devel xz expat-devel bzip2 bzip2-devel libaio-devel rpcgen libtirpc-devel perl python-devel cyrus-sasl-devel sqlite-devel oniguruma-devel re2c;
         do yum -y install $packages; done
         yum -y update nss
 
@@ -39,7 +39,7 @@ enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
 EOF
             fi
-            dnf --enablerepo=PowerTools install rpcgen -y
+            dnf --enablerepo=PowerTools install rpcgen re2c -y
             dnf --enablerepo=PowerTools install oniguruma-devel -y
         fi
 

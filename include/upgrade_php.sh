@@ -91,7 +91,7 @@ Install_PHP_Dependent()
     fi
 
     if [ "${DISTRO}" = "CentOS" ] && echo "${CentOS_Version}" | grep -Eqi "^8"; then
-        dnf --enablerepo=PowerTools install rpcgen -y
+        dnf --enablerepo=PowerTools install rpcgen re2c -y
         dnf --enablerepo=PowerTools install oniguruma-devel -y
     fi
 
