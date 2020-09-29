@@ -70,6 +70,7 @@ elif [ "${PM}" = "apt" ]; then
     ln -sf /usr/local/bin/fail2ban-client /usr/bin/fail2ban-client
     \cp files/debian-initd /etc/init.d/fail2ban
 fi
+\cp ../../init.d/fail2ban.service /etc/systemd/system/fail2ban.service
 chmod +x /etc/init.d/fail2ban
 cd ..
 rm -rf fail2ban-0.11.1
