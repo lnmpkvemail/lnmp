@@ -258,7 +258,12 @@ EOF
     fi
 
     if echo "${CentOS_Version}" | grep -Eqi "^7" || echo "${RHEL_Version}" | grep -Eqi "^7"; then
+        if [ "${country}" = "CN" ]; then
         yum -y install epel-release
+        if [ "${country}" = "CN" ]; then
+            sed -i "s@^#baseurl=http://download.fedoraproject.org/pub@baseurl=http://mirrors.aliyun.com@g" /etc/yum.repos.d/epel*.repo
+            sed -i "s@^metalink@#metalink@g" /etc/yum.repos.d/epel*.repo
+        fi
         yum -y install oniguruma oniguruma-devel
         if [ "${CheckMirror}" = "n" ]; then
             cd ${cur_dir}/src/
