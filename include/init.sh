@@ -117,13 +117,12 @@ RHEL_Modify_Source()
     if [ "${RHELRepo}" = "local" ]; then
         echo "DO NOT change RHEL repository, use the repository you set."
     else
-        echo "RHEL will use 163 centos repository..."
-        \cp ${cur_dir}/conf/CentOS-Base-163.repo /etc/yum.repos.d/CentOS-Base-163.repo
-        sed -i "s/\$releasever/${RHEL_Ver}/g" /etc/yum.repos.d/CentOS-Base-163.repo
-        sed -i "s/RPM-GPG-KEY-CentOS-6/RPM-GPG-KEY-CentOS-${RHEL_Ver}/g" /etc/yum.repos.d/CentOS-Base-163.repo
+        echo "RHEL ${RHEL_Ver} will use aliyun centos repository..."
+        wget --prefer-family=IPv4 http://mirrors.aliyun.com/repo/Centos-${RHEL_Ver}.repo -O /etc/yum.repos.d/Centos-${RHEL_Ver}.repo
         yum clean all
         yum makecache
     fi
+    sed -i "s/^enabled[ ]*=[ ]*1/enabled=0/" /etc/yum/pluginconf.d/subscription-manager.conf
 }
 
 Ubuntu_Modify_Source()
@@ -258,7 +257,6 @@ EOF
     fi
 
     if echo "${CentOS_Version}" | grep -Eqi "^7" || echo "${RHEL_Version}" | grep -Eqi "^7"; then
-        if [ "${country}" = "CN" ]; then
         yum -y install epel-release
         if [ "${country}" = "CN" ]; then
             sed -i "s@^#baseurl=http://download.fedoraproject.org/pub@baseurl=http://mirrors.aliyun.com@g" /etc/yum.repos.d/epel*.repo
