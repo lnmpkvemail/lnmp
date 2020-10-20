@@ -86,7 +86,7 @@ Install_PHP_Dependent()
         do yum -y install $packages; done
     elif [ "$PM" = "apt" ]; then
         apt-get update
-        for packages in libc-ares-dev libicu-dev e2fsprogs libxslt libxslt1-dev libc-client-dev xz-utils libexpat1-dev bzip2 libbz2-dev libsqlite3-dev libonig-dev;
+        for packages in libc-ares-dev libicu-dev e2fsprogs libxslt1.1 libxslt1-dev libc-client-dev xz-utils libexpat1-dev bzip2 libbz2-dev libsqlite3-dev libonig-dev;
         do apt-get --no-install-recommends install -y $packages; done
     fi
 
