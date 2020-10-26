@@ -667,12 +667,19 @@ CentOS_Lib_Opt()
 
     ldconfig
 
-    cat >>/etc/security/limits.conf<<eof
+    if command -v systemd-detect-virt >/dev/null 2>&1 && [[ "$(systemd-detect-virt)" = "lxc" ]]; then
+        cat >>/etc/security/limits.conf<<eof
+* soft nofile 65535
+* hard nofile 65535
+eof
+    else
+        cat >>/etc/security/limits.conf<<eof
 * soft nproc 65535
 * hard nproc 65535
 * soft nofile 65535
 * hard nofile 65535
 eof
+    fi
 
     echo "fs.file-max=65535" >> /etc/sysctl.conf
 
