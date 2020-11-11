@@ -745,6 +745,7 @@ Add_SSL_Menu()
                 if [ "${ssl_chain}" == "" ]; then
                     Echo_Yellow "SSL Chain file will not set."
                     Conf_SSLChain="#SSLCertificateChainFile /path/to/your/chain.pem"
+                else
                     break
                 fi
             done
