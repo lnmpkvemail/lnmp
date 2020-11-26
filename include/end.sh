@@ -41,19 +41,19 @@ Add_LNMP_Startup()
     \cp ${cur_dir}/conf/lnmp /bin/lnmp
     chmod +x /bin/lnmp
     StartUp nginx
-    /etc/init.d/nginx start
+    StartOrStop start nginx
     if [[ "${DBSelect}" =~ ^[6789]|10$ ]]; then
         StartUp mariadb
-        /etc/init.d/mariadb start
+        StartOrStop start mariadb
         sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#' /bin/lnmp
     elif [[ "${DBSelect}" =~ ^[12345]$ ]]; then
         StartUp mysql
-        /etc/init.d/mysql start
+        StartOrStop start mysql
     elif [ "${DBSelect}" = "0" ]; then
         sed -i 's#/etc/init.d/mysql.*##' /bin/lnmp
     fi
     StartUp php-fpm
-    /etc/init.d/php-fpm start
+    StartOrStop start php-fpm
     if [ "${PHPSelect}" = "1" ]; then
         sed -i 's#/usr/local/php/var/run/php-fpm.pid#/usr/local/php/logs/php-fpm.pid#' /bin/lnmp
     fi
@@ -65,19 +65,19 @@ Add_LNMPA_Startup()
     \cp ${cur_dir}/conf/lnmpa /bin/lnmp
     chmod +x /bin/lnmp
     StartUp nginx
-    /etc/init.d/nginx start
+    StartOrStop start nginx
     if [[ "${DBSelect}" =~ ^[6789]|10$ ]]; then
         StartUp mariadb
-        /etc/init.d/mariadb start
+        StartOrStop start mariadb
         sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#' /bin/lnmp
     elif [[ "${DBSelect}" =~ ^[12345]$ ]]; then
         StartUp mysql
-        /etc/init.d/mysql start
+        StartOrStop start mysql
     elif [ "${DBSelect}" = "0" ]; then
         sed -i 's#/etc/init.d/mysql.*##' /bin/lnmp
     fi
     StartUp httpd
-    /etc/init.d/httpd start
+    StartOrStop start httpd
 }
 
 Add_LAMP_Startup()
@@ -86,14 +86,14 @@ Add_LAMP_Startup()
     \cp ${cur_dir}/conf/lamp /bin/lnmp
     chmod +x /bin/lnmp
     StartUp httpd
-    /etc/init.d/httpd start
+    StartOrStop start httpd
     if [[ "${DBSelect}" =~ ^[6789]|10$ ]]; then
         StartUp mariadb
-        /etc/init.d/mariadb start
+        StartOrStop start mariadb
         sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#' /bin/lnmp
     elif [[ "${DBSelect}" =~ ^[12345]$ ]]; then
         StartUp mysql
-        /etc/init.d/mysql start
+        StartOrStop start mysql
     elif [ "${DBSelect}" = "0" ]; then
         sed -i 's#/etc/init.d/mysql.*##' /bin/lnmp
     fi

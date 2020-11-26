@@ -777,3 +777,14 @@ TempMycnf_Clean()
         rm -f /tmp/.mysql.tmp
     fi
 }
+
+StartOrStop()
+{
+    local action=$1
+    local service=$2
+    if command -v systemctl >/dev/null 2>&1 && [[ -s /etc/systemd/system/${service}.service || -s /lib/systemd/system/${service}.service || -s /usr/lib/systemd/system/${service}.service ]]; then
+        systemctl ${action} ${service}.service
+    else
+        /etc/init.d/${service} ${action}
+    fi
+}
