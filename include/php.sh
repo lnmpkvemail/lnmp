@@ -34,11 +34,11 @@ PHP_with_curl()
 PHP_with_openssl()
 {
     if openssl version | grep -Eqi "OpenSSL 1.1.*"; then
-        if ( [ "${PHPSelect}" != "" ] &&  echo "${PHPSelect}" | grep -Eqi "[1-5]" ) || ( [ "${php_version}" != "" ] && echo "${php_version}" | grep -Eqi '^5.' ) || echo "${Php_Ver}" | grep -Eqi "php-5."; then
+        if ( [ "${PHPSelect}" != "" ] &&  echo "${PHPSelect}" | grep -Eqi "^[1-5]$" ) || ( [ "${php_version}" != "" ] && echo "${php_version}" | grep -Eqi '^5.' ) || echo "${Php_Ver}" | grep -Eqi "php-5."; then
             UseOldOpenssl='y'
         fi
     fi
-    if echo "${PHPSelect}" | grep -Eqi "[1-2]" || echo "${php_version}" | grep -Eqi '^5.[2,3].*' || echo "${Php_Ver}" | grep -Eqi "php-5.[2,3].*"; then
+    if echo "${PHPSelect}" | grep -Eqi "^[1-2]$" || echo "${php_version}" | grep -Eqi '^5.[2,3].*' || echo "${Php_Ver}" | grep -Eqi "php-5.[2,3].*"; then
         UseOldOpenssl='y'
     fi
     if [ "${UseOldOpenssl}" = "y" ]; then
