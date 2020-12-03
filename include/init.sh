@@ -171,6 +171,8 @@ Ubuntu_Modify_Source()
         CodeName='disco'
     elif grep -Eqi "19.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^19.10'; then
         Ubuntu_Deadline eoan
+    elif grep -Eqi "20.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^20.10'; then
+        Ubuntu_Deadline groovy
     fi
     if [ "${CodeName}" != "" ]; then
         \cp /etc/apt/sources.list /etc/apt/sources.list.$(date +"%Y%m%d")
@@ -192,9 +194,9 @@ EOF
 Check_Old_Releases_URL()
 {
     OR_Status=`wget --spider --server-response ${OldReleasesURL}/dists/$1/Release 2>&1 | awk '/^  HTTP/{print $2}'`
-    if [ ${OR_Status} != "404" ]; then
+    if [ "${OR_Status}" = "200" ]; then
         echo "Ubuntu old-releases status: ${OR_Status}";
-        CodeName=$1
+        CodeName="$1"
     fi
 }
 
@@ -203,6 +205,7 @@ Ubuntu_Deadline()
     trusty_deadline=`date -d "2022-4-30 00:00:00" +%s`
     xenial_deadline=`date -d "2024-4-30 00:00:00" +%s`
     eoan_deadline=`date -d "2020-7-30 00:00:00" +%s`
+    groovy_deadline=`date -d "2021-7-30 00:00:00" +%s`
     cur_time=`date  +%s`
     case "$1" in
         trusty)
@@ -221,6 +224,12 @@ Ubuntu_Deadline()
             if [ ${cur_time} -gt ${eoan_deadline} ]; then
                 echo "${cur_time} > ${eoan_deadline}"
                 Check_Old_Releases_URL eoan
+            fi
+            ;;
+        groovy)
+            if [ ${cur_time} -gt ${groovy_deadline} ]; then
+                echo "${cur_time} > ${groovy_deadline}"
+                Check_Old_Releases_URL groovy
             fi
             ;;
     esac
