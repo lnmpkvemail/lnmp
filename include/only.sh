@@ -45,7 +45,7 @@ Install_Only_Nginx()
     rm -rf ${cur_dir}/src/${Nginx_Ver}
     [[ -d "${cur_dir}/src/${Openssl_Ver}" ]] && rm -rf ${cur_dir}/src/${Openssl_Ver}
     [[ -d "${cur_dir}/src/${Openssl_New_Ver}" ]] && rm -rf ${cur_dir}/src/${Openssl_New_Ver}
-    /etc/init.d/nginx start
+    StartOrStop start nginx
     Add_Iptables_Rules
     \cp ${cur_dir}/conf/index.html ${Default_Website_Dir}/index.html
     \cp ${cur_dir}/conf/lnmp /bin/lnmp
@@ -64,19 +64,8 @@ DB_Dependent()
         for packages in make cmake gcc gcc-c++ gcc-g77 flex bison wget zlib zlib-devel openssl openssl-devel ncurses ncurses-devel libaio-devel rpcgen libtirpc-devel patch cyrus-sasl-devel;
         do yum -y install $packages; done
         if [ "${DISTRO}" = "CentOS" ] && echo "${CentOS_Version}" | grep -Eqi "^8"; then
-            if ! yum repolist all|grep PowerTools; then
-                echo "PowerTools repository not found, add PowerTools repository ..."
-                cat >/etc/yum.repos.d/CentOS-PowerTools.repo<<EOF
-    [PowerTools]
-    name=CentOS-\$releasever - PowerTools
-    mirrorlist=http://mirrorlist.centos.org/?release=\$releasever&arch=\$basearch&repo=PowerTools&infra=\$infra
-    #baseurl=http://mirror.centos.org/\$contentdir/\$releasever/PowerTools/\$basearch/os/
-    gpgcheck=1
-    enabled=0
-    gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
-EOF
-            fi
-            dnf --enablerepo=PowerTools install rpcgen -y
+            Check_PowerTools
+            dnf --enablerepo=${repo_id} install rpcgen -y
         fi
     elif [ "$PM" = "apt" ]; then
         apt-get update -y
@@ -128,10 +117,10 @@ Install_Database()
 
     if [[ "${DBSelect}" =~ ^[6789]|10$ ]]; then
         StartUp mariadb
-        /etc/init.d/mariadb start
+        StartOrStop start mariadb
     elif [[ "${DBSelect}" =~ ^[12345]$ ]]; then
         StartUp mysql
-        /etc/init.d/mysql start
+        StartOrStop start mysql
     fi
 
     Clean_DB_Src_Dir

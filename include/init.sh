@@ -235,6 +235,28 @@ Ubuntu_Deadline()
     esac
 }
 
+Check_PowerTools()
+{
+    if ! yum -v repolist all|grep "PowerTools"; then
+        echo "PowerTools repository not found, add PowerTools repository ..."
+        cat >/etc/yum.repos.d/CentOS-PowerTools.repo<<EOF
+[PowerTools]
+name=CentOS-\$releasever - PowerTools
+mirrorlist=http://mirrorlist.centos.org/?release=\$releasever&arch=\$basearch&repo=PowerTools&infra=\$infra
+#baseurl=http://mirror.centos.org/\$contentdir/\$releasever/PowerTools/\$basearch/os/
+gpgcheck=1
+enabled=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+EOF
+        if [ "${country}" = "CN" ]; then
+            sed -i "s@^mirrorlist=@#mirrorlist=@" /etc/yum.repos.d/CentOS-PowerTools.repo
+            sed -i "s@^#baseurl=http://mirror.centos.org@baseurl=http://mirror.centos.org/centos@" /etc/yum.repos.d/CentOS-PowerTools.repo
+        fi
+    fi
+    repo_id=$(yum repolist all|grep -Ei "PowerTools"|awk '{print $1}')
+    [ -z "${repo_id}" ] && repo_id="PowerTools"
+}
+
 CentOS_Dependent()
 {
     if [ -s /etc/yum.conf ]; then
@@ -249,20 +271,9 @@ CentOS_Dependent()
     yum -y update nss
 
     if [ "${DISTRO}" = "CentOS" ] && echo "${CentOS_Version}" | grep -Eqi "^8"; then
-        if ! yum repolist all|grep PowerTools; then
-            echo "PowerTools repository not found, add PowerTools repository ..."
-            cat >/etc/yum.repos.d/CentOS-PowerTools.repo<<EOF
-[PowerTools]
-name=CentOS-\$releasever - PowerTools
-mirrorlist=http://mirrorlist.centos.org/?release=\$releasever&arch=\$basearch&repo=PowerTools&infra=\$infra
-#baseurl=http://mirror.centos.org/\$contentdir/\$releasever/PowerTools/\$basearch/os/
-gpgcheck=1
-enabled=0
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
-EOF
-        fi
-        dnf --enablerepo=PowerTools install rpcgen re2c -y
-        dnf --enablerepo=PowerTools install oniguruma-devel -y
+        Check_PowerTools
+        dnf --enablerepo=${repo_id} install rpcgen re2c -y
+        dnf --enablerepo=${repo_id} install oniguruma-devel -y
     fi
 
     if echo "${CentOS_Version}" | grep -Eqi "^7" || echo "${RHEL_Version}" | grep -Eqi "^7"; then

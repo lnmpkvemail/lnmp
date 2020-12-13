@@ -91,7 +91,7 @@ EOF
     echo "Add to auto startup..."
     StartUp redis
     Restart_PHP
-    /etc/init.d/redis start
+    StartOrStop start redis
 
     if [ -s "${zend_ext}" ] && [ -s /usr/local/redis/bin/redis-server ]; then
         Echo_Green "====== Redis install completed ======"
