@@ -257,6 +257,12 @@ EOF
     [ -z "${repo_id}" ] && repo_id="PowerTools"
 }
 
+Check_Codeready()
+{
+    repo_id=$(yum repolist all|grep -E "CodeReady"|awk '{print $1}')
+    [ -z "${repo_id}" ] && repo_id="ol8_codeready_builder"
+}
+
 CentOS_Dependent()
 {
     if [ -s /etc/yum.conf ]; then
@@ -272,6 +278,12 @@ CentOS_Dependent()
 
     if [ "${DISTRO}" = "CentOS" ] && echo "${CentOS_Version}" | grep -Eqi "^8"; then
         Check_PowerTools
+        dnf --enablerepo=${repo_id} install rpcgen re2c -y
+        dnf --enablerepo=${repo_id} install oniguruma-devel -y
+    fi
+
+    if [ "${DISTRO}" = "Oracle" ] && echo "${Oracle_Version}" | grep -Eqi "^8"; then
+        Check_Codeready
         dnf --enablerepo=${repo_id} install rpcgen re2c -y
         dnf --enablerepo=${repo_id} install oniguruma-devel -y
     fi
