@@ -150,6 +150,8 @@ Install_PHP()
         Install_PHP_73
     elif [ "${PHPSelect}" = "10" ]; then
         Install_PHP_74
+    elif [ "${PHPSelect}" = "11" ]; then
+        Install_PHP_80
     fi
     Clean_PHP_Src_Dir
 }

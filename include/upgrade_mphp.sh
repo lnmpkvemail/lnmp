@@ -12,7 +12,7 @@ Upgrade_Multiplephp()
         exit 1
     fi
 
-    if [[ ! -s /usr/local/php5.6/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.6.conf ]] && [[ ! -s /usr/local/php7.0/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.0.conf ]] && [[ ! -s /usr/local/php7.1/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.1.conf ]] && [[ ! -s /usr/local/php7.2/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.2.conf ]] && [[ ! -s /usr/local/php7.3/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.3.conf ]] && [[ ! -s /usr/local/php7.4/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.4.conf ]]; then
+    if [[ ! -s /usr/local/php5.6/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.6.conf ]] && [[ ! -s /usr/local/php7.0/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.0.conf ]] && [[ ! -s /usr/local/php7.1/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.1.conf ]] && [[ ! -s /usr/local/php7.2/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.2.conf ]] && [[ ! -s /usr/local/php7.3/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.3.conf ]] && [[ ! -s /usr/local/php7.4/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.4.conf ]] && [[ ! -s /usr/local/php8.0/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php8.0.conf ]]; then
         echo "Multiple php version not found!"
     else
         echo "List all mutiple php, Please select the PHP version."
@@ -33,6 +33,9 @@ Upgrade_Multiplephp()
         fi
         if [[ -s /usr/local/php7.4/sbin/php-fpm && -s /usr/local/nginx/conf/enable-php7.4.conf && -s /etc/init.d/php-fpm7.4 ]]; then
             Echo_Green "6: PHP 7.4 [found]"
+        fi
+        if [[ -s /usr/local/php8.0/sbin/php-fpm && -s /usr/local/nginx/conf/enable-php8.0.conf && -s /etc/init.d/php-fpm8.0 ]]; then
+            Echo_Green "7: PHP 8.0 [found]"
         fi
     fi
 
@@ -64,6 +67,9 @@ Upgrade_Multiplephp()
     elif [ "${MPHP_Select}" = "6" ]; then
         Cur_MPHP_Big_Ver="7.4"
         Cur_MPHP_Path='/usr/local/php7.4'
+    elif [ "${MPHP_Select}" = "7" ]; then
+        Cur_MPHP_Big_Ver="8.0"
+        Cur_MPHP_Path='/usr/local/php8.0'
     fi
 
     Echo_Yellow "Please choose whic multiple php version to upgrade."
@@ -136,6 +142,8 @@ Upgrade_Multiplephp()
         Upgrade_MPHP7.3
     elif [ "${MPHP_Select}" = "6" ]; then
         Upgrade_MPHP7.4
+    elif [ "${MPHP_Select}" = "7" ]; then
+        Upgrade_MPHP8.0
     fi
 }
 
@@ -612,6 +620,85 @@ EOF
     StartUp php-fpm7.4
 
     \cp ${cur_dir}/conf/enable-php7.4.conf /usr/local/nginx/conf/enable-php7.4.conf
+
+    sleep 2
+
+    lnmp start
+
+    rm -rf ${cur_dir}/src/php-${php_version}
+
+    if [ -s ${Cur_MPHP_Path}/sbin/php-fpm ] && [ -s ${Cur_MPHP_Path}/etc/php.ini ] && [ -s ${Cur_MPHP_Path}/bin/php ]; then
+        echo "==========================================="
+        Echo_Green "You have successfully upgrade to php-${php_version} "
+        echo "==========================================="
+    else
+        rm -rf ${Cur_MPHP_Path}
+        Echo_Red "Failed to upgrade php-${php_version}, you can download /root/upgrade_mphp${Upgrade_Date}.log from your server, and upload it to LNMP Forum."
+    fi
+}
+
+Upgrade_MPHP8.0()
+{
+    cd ${cur_dir}/src
+    Download_Files ${Download_Mirror}/web/php/php-${php_version}.tar.bz2 php-${php_version}.tar.bz2
+    Install_Libzip
+    Echo_Blue "[+] Upgrading php-${php_version}"
+    Tarj_Cd php-${php_version}.tar.bz2 php-${php_version}
+    ./configure --prefix=${Cur_MPHP_Path} --with-config-file-path=${Cur_MPHP_Path}/etc --with-config-file-scan-dir=${Cur_MPHP_Path}/conf.d --enable-fpm --with-fpm-user=www --with-fpm-group=www --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv=/usr/local --with-freetype=/usr/local/freetype --with-jpeg --with-zlib --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem ${with_curl} --enable-mbregex --enable-mbstring --enable-intl --enable-pcntl --enable-ftp --enable-gd ${with_openssl} --with-mhash --enable-pcntl --enable-sockets --with-zip --enable-soap --with-gettext ${with_fileinfo} --enable-opcache --with-xsl --with-pear ${PHP_Modules_Options}
+
+    PHP_Make_Install
+
+    echo "Copy new php configure file..."
+    mkdir -p ${Cur_MPHP_Path}/{etc,conf.d}
+    \cp php.ini-production ${Cur_MPHP_Path}/etc/php.ini
+
+    cd ${cur_dir}
+    # php extensions
+    echo "Modify php.ini......"
+    sed -i 's/post_max_size =.*/post_max_size = 50M/g' ${Cur_MPHP_Path}/etc/php.ini
+    sed -i 's/upload_max_filesize =.*/upload_max_filesize = 50M/g' ${Cur_MPHP_Path}/etc/php.ini
+    sed -i 's/;date.timezone =.*/date.timezone = PRC/g' ${Cur_MPHP_Path}/etc/php.ini
+    sed -i 's/short_open_tag =.*/short_open_tag = On/g' ${Cur_MPHP_Path}/etc/php.ini
+    sed -i 's/;cgi.fix_pathinfo=.*/cgi.fix_pathinfo=0/g' ${Cur_MPHP_Path}/etc/php.ini
+    sed -i 's/max_execution_time =.*/max_execution_time = 300/g' ${Cur_MPHP_Path}/etc/php.ini
+    sed -i 's/disable_functions =.*/disable_functions = passthru,exec,system,chroot,chgrp,chown,shell_exec,proc_open,proc_get_status,popen,ini_alter,ini_restore,dl,openlog,syslog,readlink,symlink,popepassthru,stream_socket_server/g' ${Cur_MPHP_Path}/etc/php.ini
+
+    echo "Install ZendGuardLoader for PHP 8.0..."
+    echo "unavailable now."
+
+    echo "Creating new php-fpm configure file..."
+    cat >${Cur_MPHP_Path}/etc/php-fpm.conf<<EOF
+[global]
+pid = ${Cur_MPHP_Path}/var/run/php-fpm.pid
+error_log = ${Cur_MPHP_Path}/var/log/php-fpm.log
+log_level = notice
+
+[www]
+listen = /tmp/php-cgi8.0.sock
+listen.backlog = -1
+listen.allowed_clients = 127.0.0.1
+listen.owner = www
+listen.group = www
+listen.mode = 0666
+user = www
+group = www
+pm = dynamic
+pm.max_children = 10
+pm.start_servers = 2
+pm.min_spare_servers = 1
+pm.max_spare_servers = 6
+request_terminate_timeout = 100
+request_slowlog_timeout = 0
+slowlog = var/log/slow.log
+EOF
+
+    echo "Copy php-fpm init.d file..."
+    \cp ${cur_dir}/src/php-${php_version}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm8.0
+    chmod +x /etc/init.d/php-fpm8.0
+
+    StartUp php-fpm8.0
+
+    \cp ${cur_dir}/conf/enable-php8.0.conf /usr/local/nginx/conf/enable-php8.0.conf
 
     sleep 2
 
