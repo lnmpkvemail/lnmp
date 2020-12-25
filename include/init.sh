@@ -9,9 +9,15 @@ Set_Timezone()
 
 CentOS_InstallNTP()
 {
-    Echo_Blue "[+] Installing ntp..."
-    yum install -y ntpdate
-    ntpdate -u pool.ntp.org
+    if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8"; then
+        Echo_Blue "[+] Installing chrony..."
+        dnf install chrony -y
+        chronyd -q "server pool.ntp.org iburst"
+    else
+        Echo_Blue "[+] Installing ntp..."
+        yum install -y ntpdate
+        ntpdate -u pool.ntp.org
+    fi
     date
     start_time=$(date +%s)
 }
