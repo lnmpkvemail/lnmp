@@ -118,7 +118,15 @@ RHEL_Modify_Source()
         echo "DO NOT change RHEL repository, use the repository you set."
     else
         echo "RHEL ${RHEL_Ver} will use aliyun centos repository..."
-        wget --prefer-family=IPv4 http://mirrors.aliyun.com/repo/Centos-${RHEL_Ver}.repo -O /etc/yum.repos.d/Centos-${RHEL_Ver}.repo
+        if [ ! -s "/etc/yum.repos.d/Centos-${RHEL_Ver}.repo" ]; then
+            wget --prefer-family=IPv4 http://mirrors.aliyun.com/repo/Centos-${RHEL_Ver}.repo -O /etc/yum.repos.d/Centos-${RHEL_Ver}.repo
+        fi
+        if echo "${RHEL_Version}" | grep -Eqi "^6"; then
+            sed -i "s#centos/\$releasever#centos-vault/\$releasever#g" /etc/yum.repos.d/Centos-${RHEL_Ver}.repo
+            sed -i "s/\$releasever/${RHEL_Version}/g" /etc/yum.repos.d/Centos-${RHEL_Ver}.repo
+        else
+            sed -i "s/\$releasever/${RHEL_Ver}/g" /etc/yum.repos.d/Centos-${RHEL_Ver}.repo
+        fi
         yum clean all
         yum makecache
     fi
@@ -276,7 +284,7 @@ CentOS_Dependent()
 
     yum -y update nss
 
-    if [ "${DISTRO}" = "CentOS" ] && echo "${CentOS_Version}" | grep -Eqi "^8"; then
+    if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8"; then
         Check_PowerTools
         dnf --enablerepo=${repo_id} install rpcgen re2c -y
         dnf --enablerepo=${repo_id} install oniguruma-devel -y
