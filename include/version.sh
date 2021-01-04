@@ -61,9 +61,9 @@ elif [ "${PHPSelect}" = "7" ]; then
 elif [ "${PHPSelect}" = "8" ]; then
     Php_Ver='php-7.2.34'
 elif [ "${PHPSelect}" = "9" ]; then
-    Php_Ver='php-7.3.23'
+    Php_Ver='php-7.3.25'
 elif [ "${PHPSelect}" = "10" ]; then
-    Php_Ver='php-7.4.12'
+    Php_Ver='php-7.4.13'
 elif [ "${PHPSelect}" = "11" ]; then
     Php_Ver='php-8.0.0'
 fi
