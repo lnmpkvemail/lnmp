@@ -9,7 +9,7 @@ Set_Timezone()
 
 CentOS_InstallNTP()
 {
-    if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8"; then
+    if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${Oracle_Version}" | grep -Eqi "^8"; then
         Echo_Blue "[+] Installing chrony..."
         dnf install chrony -y
         chronyd -q "server pool.ntp.org iburst"
