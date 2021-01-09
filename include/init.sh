@@ -267,13 +267,13 @@ EOF
             sed -i "s@^#baseurl=http://mirror.centos.org@baseurl=http://mirror.centos.org/centos@" /etc/yum.repos.d/CentOS-PowerTools.repo
         fi
     fi
-    repo_id=$(yum repolist all|grep -Ei "PowerTools"|awk '{print $1}')
+    repo_id=$(yum repolist all|grep -Ei "PowerTools"|head -n 1|awk '{print $1}')
     [ -z "${repo_id}" ] && repo_id="PowerTools"
 }
 
 Check_Codeready()
 {
-    repo_id=$(yum repolist all|grep -E "CodeReady"|awk '{print $1}')
+    repo_id=$(yum repolist all|grep -E "CodeReady"|head -n 1|awk '{print $1}')
     [ -z "${repo_id}" ] && repo_id="ol8_codeready_builder"
 }
 
