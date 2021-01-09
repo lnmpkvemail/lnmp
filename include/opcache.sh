@@ -1,5 +1,22 @@
 #!/usr/bin/env bash
 
+Install_Old_Opcache()
+{
+    cd ${cur_dir}/src
+
+    if [ -d "${ZendOpcache_Ver}" ]; then
+        rm -rf "${ZendOpcache_Ver}"
+    fi
+
+    Download_Files ${Download_Mirror}/web/opcache/${ZendOpcache_Ver}.tgz ${ZendOpcache_Ver}.tgz
+    Tar_Cd ${ZendOpcache_Ver}.tgz ${ZendOpcache_Ver}
+    ${PHP_Path}/bin/phpize
+    ./configure --with-php-config=${PHP_Path}/bin/php-config
+    make
+    make install
+    cd ../
+}
+
 Install_Opcache()
 {
 
@@ -28,8 +45,10 @@ Install_Opcache()
             sleep 3
             exit 1
         fi
+        Install_Old_Opcache
     elif echo "${Cur_PHP_Version}" | grep -Eqi '^5.4.'; then
         echo "${Cur_PHP_Version}"
+        Install_Old_Opcache
     elif echo "${Cur_PHP_Version}" | grep -Eqi '^5.[56].' || echo "${Cur_PHP_Version}" | grep -Eqi '^7.'; then
         cat >${PHP_Path}/conf.d/004-opcache.ini<<EOF
 [Zend Opcache]
@@ -41,41 +60,8 @@ opcache.revalidate_freq=60
 opcache.fast_shutdown=1
 opcache.enable_cli=1
 EOF
-
-        echo "Copy Opcache Control Panel..."
-        \cp ${cur_dir}/conf/ocp.php ${Default_Website_Dir}/ocp.php
-        Restart_PHP
-        if [ -s "${zend_ext}" ]; then
-            Echo_Green "====== Opcache install completed ======"
-            Echo_Green "Opcache installed successfully, enjoy it!"
-            exit 0
-        else
-            rm -f ${PHP_Path}/conf.d/004-opcache.ini
-            Echo_Red "OPcache install failed!"
-            exit 1
-        fi
-    else
-        echo "Error: can't get php version!"
-        echo "Maybe php was didn't install or php configuration file has errors.Please check."
-        sleep 3
-        exit 1
-    fi
-
-    cd ${cur_dir}/src
-
-    if [ -d "${ZendOpcache_Ver}" ]; then
-        rm -rf "${ZendOpcache_Ver}"
-    fi
-
-    Download_Files ${Download_Mirror}/web/opcache/${ZendOpcache_Ver}.tgz ${ZendOpcache_Ver}.tgz
-    Tar_Cd ${ZendOpcache_Ver}.tgz ${ZendOpcache_Ver}
-    ${PHP_Path}/bin/phpize
-    ./configure --with-php-config=${PHP_Path}/bin/php-config
-    make
-    make install
-    cd ../
-
-    cat >${PHP_Path}/conf.d/004-opcache.ini<<EOF
+    elif echo "${Cur_PHP_Version}" | grep -Eqi '^8.'; then
+        cat >${PHP_Path}/conf.d/004-opcache.ini<<EOF
 [Zend Opcache]
 zend_extension="opcache.so"
 opcache.memory_consumption=128
@@ -84,19 +70,29 @@ opcache.max_accelerated_files=4000
 opcache.revalidate_freq=60
 opcache.fast_shutdown=1
 opcache.enable_cli=1
+
+opcache.jit = 1255
+opcache.jit_buffer_size = 64M
 EOF
 
+    else
+        echo "Error: can't get php version!"
+        echo "Maybe php was didn't install or php configuration file has errors.Please check."
+        sleep 3
+        exit 1
+    fi
+
     echo "Copy Opcache Control Panel..."
-    \cp $cur_dir/conf/ocp.php ${Default_Website_Dir}/ocp.php
-
+    \cp ${cur_dir}/conf/ocp.php ${Default_Website_Dir}/ocp.php
     Restart_PHP
-
     if [ -s "${zend_ext}" ]; then
-        echo "====== Opcache install completed ======"
-        echo "Opcache installed successfully, enjoy it!"
+        Echo_Green "====== Opcache install completed ======"
+        Echo_Green "Opcache installed successfully, enjoy it!"
+        exit 0
     else
         rm -f ${PHP_Path}/conf.d/004-opcache.ini
-        echo "OPcache install failed!"
+        Echo_Red "OPcache install failed!"
+        exit 1
     fi
 }
 
