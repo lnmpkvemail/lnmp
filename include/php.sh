@@ -89,20 +89,24 @@ Pear_Pecl_Set()
 
 Install_Composer()
 {
-    echo "Downloading Composer..."
-    wget --prefer-family=IPv4 --no-check-certificate -T 120 -t3 ${Download_Mirror}/web/php/composer/composer.phar -O /usr/local/bin/composer
-    if [ $? -eq 0 ]; then
-        echo "Composer install successfully."
-        chmod +x /usr/local/bin/composer
-    else
-        echo "Composer install failed, try to from composer official website..."
-        curl -sS --connect-timeout 30 -m 60 https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+    if [ "${CheckMirror}" != "n" ]; then
+        echo "Downloading Composer..."
+        wget --prefer-family=IPv4 --no-check-certificate -T 120 -t3 ${Download_Mirror}/web/php/composer/composer.phar -O /usr/local/bin/composer
         if [ $? -eq 0 ]; then
             echo "Composer install successfully."
+            chmod +x /usr/local/bin/composer
+        else
+            echo "Composer install failed, try to from composer official website..."
+            curl -sS --connect-timeout 30 -m 60 https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+            if [ $? -eq 0 ]; then
+                echo "Composer install successfully."
+            fi
         fi
-    fi
-    if [ "${country}" = "CN" ]; then
-        composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
+        if [ "${country}" = "CN" ]; then
+            composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
+        fi
+    else
+        echo ""
     fi
 }
 
