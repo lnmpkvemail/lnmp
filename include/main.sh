@@ -562,13 +562,14 @@ Print_Sys_Info()
     echo "Memory is: ${MemTotal} MB "
     df -h
     openssl version
+    Check_WSL
 }
 
 StartUp()
 {
     init_name=$1
     echo "Add ${init_name} service at system startup..."
-    if command -v systemctl >/dev/null 2>&1 && [[ -s /etc/systemd/system/${init_name}.service || -s /lib/systemd/system/${init_name}.service || -s /usr/lib/systemd/system/${init_name}.service ]]; then
+    if [ "${isWSL}" = "n" ] && command -v systemctl >/dev/null 2>&1 && [[ -s /etc/systemd/system/${init_name}.service || -s /lib/systemd/system/${init_name}.service || -s /usr/lib/systemd/system/${init_name}.service ]]; then
         systemctl daemon-reload
         systemctl enable ${init_name}.service
     else
@@ -585,7 +586,7 @@ Remove_StartUp()
 {
     init_name=$1
     echo "Removing ${init_name} service at system startup..."
-    if command -v systemctl >/dev/null 2>&1 && [[ -s /etc/systemd/system/${init_name}.service || -s /lib/systemd/system/${init_name}.service || -s /usr/lib/systemd/system/${init_name}.service ]]; then
+    if [ "${isWSL}" = "n" ] && command -v systemctl >/dev/null 2>&1 && [[ -s /etc/systemd/system/${init_name}.service || -s /lib/systemd/system/${init_name}.service || -s /usr/lib/systemd/system/${init_name}.service ]]; then
         systemctl disable ${init_name}.service
     else
         if [ "$PM" = "yum" ]; then
@@ -789,9 +790,18 @@ StartOrStop()
 {
     local action=$1
     local service=$2
-    if command -v systemctl >/dev/null 2>&1 && [[ -s /etc/systemd/system/${service}.service ]]; then
+    if [ "${isWSL}" = "n" ] && command -v systemctl >/dev/null 2>&1 && [[ -s /etc/systemd/system/${service}.service ]]; then
         systemctl ${action} ${service}.service
     else
         /etc/init.d/${service} ${action}
+    fi
+}
+
+Check_WSL() {
+    if [[ "$(< /proc/sys/kernel/osrelease)" == *[Mm]icrosoft* ]]; then
+        echo "running on WSL"
+        isWSL="y"
+    else
+        isWSL="n"
     fi
 }

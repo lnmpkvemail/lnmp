@@ -111,6 +111,9 @@ Install_Nginx()
             sed -i "/include proxy-pass-php.conf;/i\        location /lua\n        {\n            default_type text/html;\n            content_by_lua 'ngx.say\(\"hello world\"\)';\n        }\n" /usr/local/nginx/conf/nginx.conf
         fi
     fi
+    if [ "${isWSL}" = "y" ]; then
+        sed -i "/gzip on;/i\        fastcgi_buffering off;\n" /usr/local/nginx/conf/nginx.conf
+    fi
 
     mkdir -p ${Default_Website_Dir}
     chmod +w ${Default_Website_Dir}
