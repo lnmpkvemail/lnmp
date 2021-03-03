@@ -71,6 +71,9 @@ Init_Install()
     if [ "${DISTRO}" = "Ubuntu" ]; then
         Ubuntu_Modify_Source
     fi
+    if [ "${DISTRO}" = "CentOS" ]; then
+        CentOS6_Modify_Source
+    fi
     Add_Swap
     Set_Timezone
     if [ "$PM" = "yum" ]; then

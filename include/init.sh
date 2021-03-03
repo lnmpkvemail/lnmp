@@ -249,6 +249,15 @@ Ubuntu_Deadline()
     esac
 }
 
+CentOS6_Modify_Source()
+{
+    if echo "${CentOS_Version}" | grep -Eqi "^6"; then
+        Echo_Yellow "CentOS 6 is now end of life, use vault repository."
+        \cp /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+        \cp ${cur_dir}/conf/CentOS6-Base-Vault.repo /etc/yum.repos.d/CentOS-Base.repo
+    fi
+}
+
 Check_PowerTools()
 {
     if ! yum -v repolist all|grep "PowerTools"; then
