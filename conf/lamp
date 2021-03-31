@@ -5,6 +5,10 @@ export PATH=$PATH:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~
 if [ $(id -u) != "0" ]; then
     echo "Error: You must be root to run this script!"
     exit 1
+else
+    if [ "$SUDO_UID" != "0" ]; then
+        acme_sh_sudo="-f"
+    fi
 fi
 
 echo "+-------------------------------------------+"
@@ -769,7 +773,7 @@ Install_Check_Acme.sh()
         wget https://soft.vpser.net/lib/acme.sh/latest.tar.gz --prefer-family=IPv4 --no-check-certificate
         tar zxf latest.tar.gz
         cd acme.sh-*
-        ./acme.sh --install --log --home /usr/local/acme.sh --certhome /usr/local/apache/conf/ssl
+        ./acme.sh --install ${acme_sh_sudo} --log --home /usr/local/acme.sh --certhome /usr/local/apache/conf/ssl
         cd ..
         rm -f latest.tar.gz
         rm -rf acme.sh-*
@@ -822,7 +826,7 @@ Add_Letsencrypt()
     fi
 
     echo "Starting create SSL Certificate use Let's Encrypt..."
-    /usr/local/acme.sh/acme.sh --issue ${letsdomain} -w ${vhostdir} --reloadcmd "/etc/init.d/httpd graceful"
+    /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --issue ${letsdomain} -w ${vhostdir} --reloadcmd "/etc/init.d/httpd graceful"
     lets_status=$?
     if [ "${lets_status}" = 0 ]; then
         Echo_Green "Let's Encrypt SSL Certificate create successfully."
@@ -953,14 +957,14 @@ Add_Dns_SSL()
 
     echo "Starting create SSL Certificate use Let's Encrypt..."
     if [ "${provider}" != "" ]; then
-        /usr/local/acme.sh/acme.sh --issue ${letsdomain} --dns ${dns_provider} --reloadcmd "/etc/init.d/httpd graceful"
+        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --issue ${letsdomain} --dns ${dns_provider} --reloadcmd "/etc/init.d/httpd graceful"
         lets_status=$?
     else
-        /usr/local/acme.sh/acme.sh --issue ${letsdomain} --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please
+        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --issue ${letsdomain} --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please
         Echo_Yellow "Please add the above TXT record to the domain in 120 seconds!!!"
         echo
         Sleep_Sec 120
-        /usr/local/acme.sh/acme.sh --renew ${letsdomain} --yes-I-know-dns-manual-mode-enough-go-ahead-please
+        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --renew ${letsdomain} --yes-I-know-dns-manual-mode-enough-go-ahead-please
         lets_status=$?
     fi
     ssl_choice="2"
@@ -1025,14 +1029,14 @@ Add_Dns_SSL_Only()
 
     echo "Starting create SSL Certificate use Let's Encrypt..."
     if [ "${provider}" != "" ]; then
-        /usr/local/acme.sh/acme.sh --issue ${letsdomain} --dns ${dns_provider} --reloadcmd "/etc/init.d/httpd graceful"
+        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --issue ${letsdomain} --dns ${dns_provider} --reloadcmd "/etc/init.d/httpd graceful"
         lets_status=$?
     else
-        /usr/local/acme.sh/acme.sh --issue ${letsdomain} --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please
+        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --issue ${letsdomain} --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please
         Echo_Yellow "Please add the above TXT record to the domain in 120 seconds!!!"
         echo
         Sleep_Sec 120
-        /usr/local/acme.sh/acme.sh --renew ${letsdomain} --yes-I-know-dns-manual-mode-enough-go-ahead-please
+        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --renew ${letsdomain} --yes-I-know-dns-manual-mode-enough-go-ahead-please
         lets_status=$?
     fi
     if [ "${lets_status}" = 0 ] || [[ "${provider}" = "" && "${lets_status}" = 1 && -s "/usr/local/apache/conf/ssl/${domain}/fullchain.cer" ]]; then
