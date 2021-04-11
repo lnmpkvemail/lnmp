@@ -1007,8 +1007,10 @@ Add_SSL_Menu()
     fi
     echo "1: Use your own SSL Certificate and Key"
     echo "2: Use Let's Encrypt to create SSL Certificate and Key"
+    echo "3: Use BuyPass to create SSL Certificate and Key"
+    echo "4: Use ZeroSSL to create SSL Certificate and Key"
     while :;do
-        Echo_Yellow "Enter 1 or 2: "
+        Echo_Yellow "Enter 1, 2, 3 or 4: "
         read ssl_choice
         if [ "${ssl_choice}" == "1" ]; then
             while :;do
@@ -1033,8 +1035,32 @@ Add_SSL_Menu()
         elif [ "${ssl_choice}" == "2" ]; then
             echo "It will be processed automatically."
             break
+        elif [ "${ssl_choice}" == "3" ]; then
+            while :;do
+                Echo_Yellow "Please enter your email address: "
+                read email_address
+                if [ "${email_address}" == "" ]; then
+                    Echo_Red "Email Address cannot be empty!"
+                else
+                    break
+                fi
+                echo "It will be processed automatically."
+            done
+            break
+        elif [ "${ssl_choice}" == "4" ]; then
+            while :;do
+                Echo_Yellow "Please enter your email address: "
+                read email_address
+                if [ "${email_address}" == "" ]; then
+                    Echo_Red "Email Address cannot be empty!"
+                else
+                    break
+                fi
+                echo "It will be processed automatically."
+            done
+            break
         else
-            Echo_Red "Please Enter 1 or 2!"
+            Echo_Red "Please Enter 1, 2, 3 or 4!"
         fi
     done
 }
@@ -1103,6 +1129,68 @@ Add_Letsencrypt()
 
     echo "Starting create SSL Certificate use Let's Encrypt..."
     /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --issue ${letsdomain} -w ${vhostdir} --reloadcmd "/etc/init.d/nginx reload"
+    lets_status=$?
+    if [ "${lets_status}" = 0 ]; then
+        Echo_Green "Let's Encrypt SSL Certificate create successfully."
+    else
+        Echo_Red "Let's Encrypt SSL Certificate create failed!"
+    fi
+}
+
+Add_Buypass()
+{
+    if [[ "${vhostdir}" == "" || "${letsdomain}" == "" ]]; then
+        Echo_Red "Two parameters are needed!"
+        exit 1
+    fi
+    if [ ! -d "${vhostdir}" ]; then
+        Echo_Red "${vhostdir} does not exist or is not a directory!"
+        exit
+    fi
+
+    Install_Check_Acme.sh
+
+    if [ -s /usr/local/nginx/conf/ssl/${domain}/fullchain.cer ]; then
+        echo "Removing exist domain certificate..."
+        rm -rf /usr/local/nginx/conf/ssl/${domain}
+    fi
+
+    echo "Starting register account..."
+    /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server buypass --register-account  --accountemail ${email_address}
+
+    echo "Starting create SSL Certificate use Let's Encrypt..."
+    /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server buypass --issue ${letsdomain} -w ${vhostdir} --days 170 --reloadcmd "/etc/init.d/nginx reload"
+    lets_status=$?
+    if [ "${lets_status}" = 0 ]; then
+        Echo_Green "Let's Encrypt SSL Certificate create successfully."
+    else
+        Echo_Red "Let's Encrypt SSL Certificate create failed!"
+    fi
+}
+
+Add_Zerossl()
+{
+    if [[ "${vhostdir}" == "" || "${letsdomain}" == "" ]]; then
+        Echo_Red "Two parameters are needed!"
+        exit 1
+    fi
+    if [ ! -d "${vhostdir}" ]; then
+        Echo_Red "${vhostdir} does not exist or is not a directory!"
+        exit
+    fi
+
+    Install_Check_Acme.sh
+
+    if [ -s /usr/local/nginx/conf/ssl/${domain}/fullchain.cer ]; then
+        echo "Removing exist domain certificate..."
+        rm -rf /usr/local/nginx/conf/ssl/${domain}
+    fi
+
+    echo "Starting register account..."
+    /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server zerossl --register-account  --accountemail ${email_address}
+
+    echo "Starting create SSL Certificate use Let's Encrypt..."
+    /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server zerossl --issue ${letsdomain} -w ${vhostdir} --reloadcmd "/etc/init.d/nginx reload"
     lets_status=$?
     if [ "${lets_status}" = 0 ]; then
         Echo_Green "Let's Encrypt SSL Certificate create successfully."
@@ -1180,7 +1268,7 @@ Add_SSL()
 {
     if [ "${ssl_choice}" == "1" ]; then
         Create_SSL_Config
-    elif [ "${ssl_choice}" == "2" ]; then
+    elif echo "${ssl_choice}" | grep -Eqi "^[2-4]$"; then
         letsdomain=""
         if [ "${moredomain}" != "" ]; then
             letsdomain="-d ${domain}"
@@ -1196,7 +1284,13 @@ Add_SSL()
         if [ ! -d "${vhostdir}" ]; then
             mkdir -p "${vhostdir}"
         fi
-        Add_Letsencrypt
+        if [ "${ssl_choice}" == "2" ]; then
+            Add_Letsencrypt
+        elif [ "${ssl_choice}" == "3" ]; then
+            Add_Buypass
+        elif [ "${ssl_choice}" == "4" ]; then
+            Add_Zerossl
+        fi
         ssl_certificate="/usr/local/nginx/conf/ssl/${domain}/fullchain.cer"
         ssl_certificate_key="/usr/local/nginx/conf/ssl/${domain}/${domain}.key"
         if [ "${lets_status}" = 0 ]; then
