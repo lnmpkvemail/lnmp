@@ -25,7 +25,7 @@ Install_Swoole()
 	fi
 
     Download_Files https://github.com/swoole/swoole-src/archive/v${Swoole_Stable_Ver}.tar.gz v${Swoole_Stable_Ver}.tar.gz
-    Tar_Cd v${Swoole_Stable_Ver}.tar.gz swoole-${Swoole_Stable_Ver}
+    Tar_Cd v${Swoole_Stable_Ver}.tar.gz swoole-src-${Swoole_Stable_Ver}
 
     ${PHP_Path}/bin/phpize
     ./configure --with-php-config=${PHP_Path}/bin/php-config
