@@ -23,6 +23,7 @@ action2=$2
 . include/imageMagick.sh
 . include/ionCube.sh
 . include/apcu.sh
+. include/swoole.sh
 
 Display_Addons_Menu()
 {
@@ -37,9 +38,10 @@ Display_Addons_Menu()
     echo "7: imageMagick"
     echo "##### encryption/decryption utility for PHP #####"
     echo "8: ionCube Loader"
+    echo "9: Swoole"
     echo "exit: Exit current script"
     echo "#####################################################"
-    read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8 or exit): " action2
+    read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8, 9 or exit): " action2
 }
 
 Restart_PHP()
@@ -217,11 +219,14 @@ Select_PHP
             8|ion[cC]ube)
                 Install_ionCube
                 ;;
+            9|[sS]woole)
+                Install_Swoole
+                ;;
             [eE][xX][iI][tT])
                 exit 1
                 ;;
             *)
-                echo "Usage: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|imagemagick|ioncube}"
+                echo "Usage: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|imagemagick|ioncube|swoole}"
                 ;;
         esac
         ;;
@@ -251,8 +256,11 @@ Select_PHP
             ion[cC]ube)
                 Uninstall_ionCube
                 ;;
+            [sS]woole)
+                Uninstall_Swoole
+                ;;
             *)
-                echo "Usage: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube}"
+                echo "Usage: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube|swoole}"
                 ;;
         esac
         ;;
@@ -260,7 +268,7 @@ Select_PHP
         exit 1
         ;;
     *)
-        echo "Usage: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube}"
+        echo "Usage: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube|swoole}"
         exit 1
         ;;
     esac
