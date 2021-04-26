@@ -3,7 +3,7 @@
 Install_Swoole()
 {
     echo "====== Installing Swoole ======"
-    echo "Install ${Swoole_Stable_Ver} Stable Version..."
+
     Press_Start
 
     Addons_Get_PHP_Ext_Dir
