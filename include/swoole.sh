@@ -19,10 +19,10 @@ Install_Swoole()
 
     # 建议使用的 Swoole 版本：https://wiki.swoole.com/#/version/log?id=%e5%bb%ba%e8%ae%ae%e4%bd%bf%e7%94%a8%e7%9a%84swoole%e7%89%88%e6%9c%ac
     if echo "${Cur_PHP_Version}" | grep -Eqi '^5.';then
-		Swoole_Stable_Ver='1.10.6'
-	elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.[01].';then
-		Swoole_Stable_Ver='4.5.11'
-	fi
+        Swoole_Stable_Ver='1.10.6'
+    elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.[01].';then
+        Swoole_Stable_Ver='4.5.11'
+    fi
 
     Download_Files https://github.com/swoole/swoole-src/archive/v${Swoole_Stable_Ver}.tar.gz v${Swoole_Stable_Ver}.tar.gz
     Tar_Cd v${Swoole_Stable_Ver}.tar.gz swoole-src-${Swoole_Stable_Ver}
