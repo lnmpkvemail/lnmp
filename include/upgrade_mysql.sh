@@ -554,7 +554,17 @@ Restore_Start_MySQL()
     echo "Restore backup databases..."
     /usr/local/mysql/bin/mysql --defaults-file=~/.my.cnf < /root/mysql_all_backup${Upgrade_Date}.sql
     echo "Repair databases..."
-    /usr/local/mysql/bin/mysql_upgrade -u root -p${DB_Root_Password}
+    MySQL_Ver_Com=$(${cur_dir}/include/version_compare 8.0.16 ${mysql_version})
+    if [ "${MySQL_Ver_Com}" == "-1" ]; then
+        /etc/init.d/mysql stop
+        echo "Upgring MySQL..."
+        /usr/local/mysql/bin/mysqld --user=mysql --upgrade=FORCE &
+        echo "Waiting for upgrade to start..."
+        sleep 180
+        /usr/local/mysql/bin/mysqladmin --defaults-file=~/.my.cnf shutdown
+    else
+        /usr/local/mysql/bin/mysql_upgrade -u root -p${DB_Root_Password}
+    fi
 
     /etc/init.d/mysql stop
     TempMycnf_Clean
