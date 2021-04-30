@@ -658,7 +658,7 @@ Upgrade_MySQL()
         echo "${mysql_src} [found]"
     else
         echo "Notice: ${mysql_src} not found!!!download now......"
-        country=`curl -sSk --connect-timeout 10 -m 60 https://ip.vpser.net/country`
+        Get_Country
         if [ "${country}" = "CN" ]; then
             wget -c --progress=bar:force http://mirrors.ustc.edu.cn/mysql-ftp/Downloads/MySQL-${mysql_short_version}/${mysql_src}
             if [ $? -ne 0 ]; then

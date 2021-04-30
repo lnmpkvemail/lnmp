@@ -598,6 +598,14 @@ Remove_StartUp()
     fi
 }
 
+Get_Country()
+{
+    country=`curl -sSk --connect-timeout 30 -m 60 https://ip.vpszt.com/country`
+    if [ $? -ne 0 ]; then
+        country=`curl -sSk --connect-timeout 30 -m 60 https://ip.vpser.net/country`
+    fi
+}
+
 Check_Mirror()
 {
     if ! command -v curl >/dev/null 2>&1; then
@@ -608,7 +616,7 @@ Check_Mirror()
             apt-get install -y curl
         fi
     fi
-    country=`curl -sSk --connect-timeout 30 -m 60 https://ip.vpser.net/country`
+    Get_Country
     echo "Server Location: ${country}"
     if [ "${Download_Mirror}" = "https://soft.vpser.net" ]; then
         echo "Try http://soft.vpser.net ..."

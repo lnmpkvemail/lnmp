@@ -35,6 +35,7 @@ Upgrade_Dependent()
 
         if echo "${CentOS_Version}" | grep -Eqi "^7" || echo "${RHEL_Version}" | grep -Eqi "^7"; then
             yum -y install epel-release
+            Get_Country
             if [ "${country}" = "CN" ]; then
                 sed -i "s@^#baseurl=http://download.fedoraproject.org/pub@baseurl=http://mirrors.aliyun.com@g" /etc/yum.repos.d/epel*.repo
                 sed -i "s@^metalink@#metalink@g" /etc/yum.repos.d/epel*.repo
