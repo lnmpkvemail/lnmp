@@ -305,6 +305,10 @@ CentOS_Dependent()
         dnf --enablerepo=${repo_id} install oniguruma-devel -y
     fi
 
+    if echo "${CentOS_Version}" | grep -Eqi "^8" && cat /etc/centos-release | grep -Eqi "CentOS Stream"; then
+        dnf install gcc-toolset-10 -y
+    fi
+
     if [ "${DISTRO}" = "Oracle" ] && echo "${Oracle_Version}" | grep -Eqi "^8"; then
         Check_Codeready
         dnf --enablerepo=${repo_id} install rpcgen re2c -y

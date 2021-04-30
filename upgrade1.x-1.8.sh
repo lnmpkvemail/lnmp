@@ -46,6 +46,10 @@ Upgrade_Dependent()
                 yum -y install ./oniguruma-devel-6.8.2-1.el7.x86_64.rpm
             fi
         fi
+
+        if echo "${CentOS_Version}" | grep -Eqi "^8" && cat /etc/centos-release | grep -Eqi "CentOS Stream"; then
+            dnf install gcc-toolset-10 -y
+        fi
     elif [ "$PM" = "apt" ]; then
         Echo_Blue "[+] apt-get installing dependent packages..."
         apt-get update -y

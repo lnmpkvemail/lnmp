@@ -67,6 +67,9 @@ DB_Dependent()
             Check_PowerTools
             dnf --enablerepo=${repo_id} install rpcgen -y
         fi
+        if echo "${CentOS_Version}" | grep -Eqi "^8" && cat /etc/centos-release | grep -Eqi "CentOS Stream"; then
+            dnf install gcc-toolset-10 -y
+        fi
     elif [ "$PM" = "apt" ]; then
         apt-get update -y
         for removepackages in mysql-client mysql-server mysql-common mysql-server-core-5.5 mysql-client-5.5 mariadb-client mariadb-server mariadb-common;
@@ -91,6 +94,7 @@ Install_Database()
     echo "============================check files=================================="
 
     Echo_Blue "Install dependent packages..."
+    Get_Dist_Version
     DB_Dependent
     if [ "${DBSelect}" = "1" ]; then
         Install_MySQL_51
