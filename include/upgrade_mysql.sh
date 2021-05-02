@@ -555,7 +555,7 @@ Restore_Start_MySQL()
     /usr/local/mysql/bin/mysql --defaults-file=~/.my.cnf < /root/mysql_all_backup${Upgrade_Date}.sql
     echo "Repair databases..."
     MySQL_Ver_Com=$(${cur_dir}/include/version_compare 8.0.16 ${mysql_version})
-    if [ "${MySQL_Ver_Com}" == "-1" ]; then
+    if [ "${MySQL_Ver_Com}" != "1" ]; then
         /etc/init.d/mysql stop
         echo "Upgring MySQL..."
         /usr/local/mysql/bin/mysqld --user=mysql --upgrade=FORCE &
