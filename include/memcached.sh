@@ -4,7 +4,10 @@ Install_PHPMemcache()
 {
     echo "Install memcache php extension..."
     cd ${cur_dir}/src
-    if echo "${Cur_PHP_Version}" | grep -Eqi '^7.';then
+    if echo "${Cur_PHP_Version}" | grep -Eqi '^8.';then
+        Download_Files ${Download_Mirror}/web/memcache/${PHP8Memcache_Ver}.tgz ${PHP8Memcache_Ver}.tgz
+        Tar_Cd ${PHP8Memcache_Ver}.tgz ${PHP8Memcache_Ver}
+    elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.';then
         Download_Files ${Download_Mirror}/web/memcache/${PHP7Memcache_Ver}.tgz ${PHP7Memcache_Ver}.tgz
         Tar_Cd ${PHP7Memcache_Ver}.tgz ${PHP7Memcache_Ver}
     else
