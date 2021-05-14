@@ -40,15 +40,6 @@ Install_ImageMagic()
         if echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.';then
             Download_Files ${Download_Mirror}/web/imagemagick/ImageMagick-6.9.9-27.tar.gz ImageMagick-6.9.9-27.tar.gz
             Tar_Cd ImageMagick-6.9.9-27.tar.gz ImageMagick-6.9.9-27
-        elif echo "${Cur_PHP_Version}" | grep -Eqi '^8.0.';then
-            [[ -d "imagick-src" ]] && rm -rf "imagick-src"
-            if [ "${country}" = "CN" ]; then
-                git clone https://github.com.cnmpjs.org/Imagick/imagick imagick-src
-                cd imagick-src
-            else
-                git clone https://github.com/Imagick/imagick imagick-src
-                cd imagick-src
-            fi
         else
             Download_Files ${Download_Mirror}/web/imagemagick/${ImageMagick_Ver}.tar.xz ${ImageMagick_Ver}.tar.xz
             TarJ_Cd ${ImageMagick_Ver}.tar.xz ${ImageMagick_Ver}
@@ -63,6 +54,15 @@ Install_ImageMagic()
     if echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.';then
         Download_Files ${Download_Mirror}/web/imagick/imagick-3.1.2.tgz imagick-3.1.2.tgz
         Tar_Cd imagick-3.1.2.tgz imagick-3.1.2
+    elif echo "${Cur_PHP_Version}" | grep -Eqi '^8.0.';then
+        [[ -d "imagick-src" ]] && rm -rf "imagick-src"
+        if [ "${country}" = "CN" ]; then
+            git clone https://github.com.cnmpjs.org/Imagick/imagick imagick-src
+            cd imagick-src
+        else
+            git clone https://github.com/Imagick/imagick imagick-src
+            cd imagick-src
+        fi
     else
         Download_Files ${Download_Mirror}/web/imagick/${Imagick_Ver}.tgz ${Imagick_Ver}.tgz
         Tar_Cd ${Imagick_Ver}.tgz ${Imagick_Ver}
