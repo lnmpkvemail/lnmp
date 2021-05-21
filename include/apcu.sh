@@ -71,6 +71,9 @@ EOF
 
     if [ -s "${zend_ext}" ]; then
         Restart_PHP
+        Echo_Green "APCu Dashboard: http://yourIP/apc.php "
+        Echo_Green "Admin Username: apc"
+        Echo_Green "Admin Password: ${apcu_pass}"
         Echo_Green "======== apcu install completed ======"
         Echo_Green "apcu installed successfully, enjoy it!"
     else
