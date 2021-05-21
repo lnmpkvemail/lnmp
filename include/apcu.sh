@@ -27,7 +27,7 @@ Install_Apcu()
 
     cd ${cur_dir}/src
 
-    if echo "${Cur_PHP_Version}" | grep -Eqi '^7.'; then
+    if echo "${Cur_PHP_Version}" | grep -Eqi '^7.|8.'; then
         Download_Files ${Download_Mirror}/web/apcu/${PHPNewApcu_Ver}.tgz ${PHPNewApcu_Ver}.tgz
         Tar_Cd ${PHPNewApcu_Ver}.tgz ${PHPNewApcu_Ver}
     else
