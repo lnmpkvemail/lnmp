@@ -612,6 +612,7 @@ Check_Mirror()
         if [ "$PM" = "yum" ]; then
             yum install -y curl
         elif [ "$PM" = "apt" ]; then
+            export DEBIAN_FRONTEND=noninteractive
             apt-get update
             apt-get install -y curl
         fi
