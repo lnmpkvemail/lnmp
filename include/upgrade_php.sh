@@ -88,6 +88,7 @@ Install_PHP_Dependent()
         for packages in c-ares-devel libicu-devel libxslt libxslt-devel xz expat-devel libzip-devel bzip2 bzip2-devel sqlite-devel oniguruma-devel;
         do yum -y install $packages; done
     elif [ "$PM" = "apt" ]; then
+        export DEBIAN_FRONTEND=noninteractive
         apt-get update
         for packages in libc-ares-dev libicu-dev e2fsprogs libxslt1.1 libxslt1-dev libc-client-dev xz-utils libexpat1-dev bzip2 libbz2-dev libsqlite3-dev libonig-dev;
         do apt-get --no-install-recommends install -y $packages; done

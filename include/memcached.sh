@@ -34,6 +34,7 @@ Install_PHPMemcached()
             export CXX="g++44"
         fi
     elif [ "$PM" = "apt" ]; then
+        export DEBIAN_FRONTEND=noninteractive
         apt-get install libsasl2-2 sasl2-bin libsasl2-2 libsasl2-dev libsasl2-modules -y
     fi
     Download_Files ${Download_Mirror}/web/libmemcached/${Libmemcached_Ver}.tar.gz

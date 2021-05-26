@@ -28,6 +28,7 @@ Install_ImageMagic()
     if [ "$PM" = "yum" ]; then
         yum install -y libwebp-devel
     elif [ "$PM" = "apt" ]; then
+        export DEBIAN_FRONTEND=noninteractive
         apt-get update
         apt-get install -y libwebp-dev
     fi

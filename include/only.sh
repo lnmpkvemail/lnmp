@@ -8,6 +8,7 @@ Nginx_Dependent()
         for packages in make gcc gcc-c++ gcc-g77 wget crontabs zlib zlib-devel openssl openssl-devel perl patch bzip2;
         do yum -y install $packages; done
     elif [ "$PM" = "apt" ]; then
+        export DEBIAN_FRONTEND=noninteractive
         apt-get update -y
         dpkg -P apache2 apache2-doc apache2-mpm-prefork apache2-utils apache2.2-common
         for removepackages in apache2 apache2-doc apache2-utils apache2.2-common apache2.2-bin apache2-mpm-prefork apache2-doc apache2-mpm-worker;
@@ -71,6 +72,7 @@ DB_Dependent()
             dnf install gcc-toolset-10 -y
         fi
     elif [ "$PM" = "apt" ]; then
+        export DEBIAN_FRONTEND=noninteractive
         apt-get update -y
         for removepackages in mysql-client mysql-server mysql-common mysql-server-core-5.5 mysql-client-5.5 mariadb-client mariadb-server mariadb-common;
         do apt-get purge -y $removepackages; done
