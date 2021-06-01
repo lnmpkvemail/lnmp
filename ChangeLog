@@ -4,7 +4,17 @@ LNMP 1.8
 
 增加PHP 8.0支持；
 增加Oracle Linux支持；
-优化时间同步;
+增加WSL优化支持；
+增加CentOS6源自动调整；
+增加BuyPass、ZeroSSL SSL证书；
+增加php-memcache支持PHP 8.0；
+增加imagick支持PHP 8.0；
+增加apcu支持PHP 8.0；
+优化时间同步；
+优化Aliyunx Linux优化；
+优化sudo下添加虚拟主机SSL；
+优化CentOS8 Stream支持；
+优化PHP下载；
 更新诸多软件版本；
 其他一些功能优化及调整......
 
