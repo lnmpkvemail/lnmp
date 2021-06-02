@@ -51,7 +51,7 @@ Install_PHPMemcached()
         [[ -d "php-memcached-src" ]] && rm -rf "php-memcached-src"
         Get_Country
         if [ "${country}" = "CN" ]; then
-            git clone https://github.com.cnmpjs.org/php-memcached-dev/php-memcached php-memcached-src
+            git clone https://github.com.cnpmjs.org/php-memcached-dev/php-memcached php-memcached-src
             cd php-memcached-src
         else
             git clone https://github.com/php-memcached-dev/php-memcached php-memcached-src

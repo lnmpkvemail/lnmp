@@ -58,7 +58,7 @@ Install_ImageMagic()
     elif echo "${Cur_PHP_Version}" | grep -Eqi '^8.0.';then
         [[ -d "imagick-src" ]] && rm -rf "imagick-src"
         if [ "${country}" = "CN" ]; then
-            git clone https://github.com.cnmpjs.org/Imagick/imagick imagick-src
+            git clone https://github.com.cnpmjs.org/Imagick/imagick imagick-src
             cd imagick-src
         else
             git clone https://github.com/Imagick/imagick imagick-src
