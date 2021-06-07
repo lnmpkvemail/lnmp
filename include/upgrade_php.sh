@@ -131,6 +131,12 @@ Install_PHP_Dependent()
 
 Check_PHP_Upgrade_Files()
 {
+    Echo_LNMPA_Upgrade_PHP_Failed()
+    {
+        Echo_Red "======== upgrade php failed ======"
+        Echo_Red "upgrade php log: /root/upgrade_a_php.log"
+        echo "You upload upgrade_a_php.log to LNMP Forum for help."    
+    }
     rm -rf ${cur_dir}/src/php-${php_version}
     if [ "${Stack}" = "lnmp" ]; then
         if [[ -s /usr/local/php/sbin/php-fpm && -s /etc/init.d/php-fpm && -s /usr/local/php/etc/php.ini && -s /usr/local/php/bin/php ]]; then
@@ -145,17 +151,19 @@ Check_PHP_Upgrade_Files()
             if [[ -s /usr/local/apache/bin/httpd && -s /usr/local/apache/modules/libphp7.so && -s /usr/local/apache/conf/httpd.conf ]]; then
                 Echo_Green "======== upgrade php completed ======"
             else
-                Echo_Red "======== upgrade php failed ======"
-                Echo_Red "upgrade php log: /root/upgrade_a_php.log"
-                echo "You upload upgrade_a_php.log to LNMP Forum for help."
+                Echo_LNMPA_Upgrade_PHP_Failed
+            fi
+        elif echo "${php_version}" | grep -Eqi '^8.';then
+            if [[ -s /usr/local/apache/bin/httpd && -s /usr/local/apache/modules/libphp.so && -s /usr/local/apache/conf/httpd.conf ]]; then
+                Echo_Green "======== upgrade php completed ======"
+            else
+                Echo_LNMPA_Upgrade_PHP_Failed
             fi
         else
             if [[ -s /usr/local/apache/modules/libphp5.so && -s /usr/local/php/etc/php.ini && -s /usr/local/php/bin/php ]]; then
                 Echo_Green "======== upgrade php completed ======"
             else
-                Echo_Red "======== upgrade php failed ======"
-                Echo_Red "upgrade php log: /root/upgrade_a_php.log"
-                echo "You upload upgrade_a_php.log to LNMP Forum for help."
+                Echo_LNMPA_Upgrade_PHP_Failed
             fi
         fi
     fi
@@ -928,6 +936,7 @@ EOF
 fi
     if [ "${Stack}" != "lnmp" ]; then
         sed -i '/^LoadModule php5_module/d' /usr/local/apache/conf/httpd.conf
+        sed -i '/^LoadModule php7_module/d' /usr/local/apache/conf/httpd.conf
     fi
     lnmp start
     Check_PHP_Upgrade_Files
