@@ -1143,7 +1143,7 @@ Add_Letsencrypt()
     fi
 
     echo "Starting create SSL Certificate use Let's Encrypt..."
-    /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --issue ${letsdomain} -w ${vhostdir} --reloadcmd "/etc/init.d/nginx reload"
+    /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server letsencrypt --issue ${letsdomain} -w ${vhostdir} --reloadcmd "/etc/init.d/nginx reload"
     lets_status=$?
     if [ "${lets_status}" = 0 ]; then
         Echo_Green "Let's Encrypt SSL Certificate create successfully."
@@ -1353,10 +1353,10 @@ Add_Dns_SSL()
 
     echo "Starting create SSL Certificate use Let's Encrypt..."
     if [ "${provider}" != "" ]; then
-        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --issue ${letsdomain} --dns ${dns_provider} --reloadcmd "/etc/init.d/nginx reload"
+        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server letsencrypt --issue ${letsdomain} --dns ${dns_provider} --reloadcmd "/etc/init.d/nginx reload"
         lets_status=$?
     else
-        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --issue ${letsdomain} --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please
+        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server letsencrypt --issue ${letsdomain} --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please
         Echo_Yellow "Please add the above TXT record to the domain in 120 seconds!!!"
         echo
         Sleep_Sec 120
@@ -1424,10 +1424,10 @@ Add_Dns_SSL_Only()
 
     echo "Starting create SSL Certificate use Let's Encrypt..."
     if [ "${provider}" != "" ]; then
-        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --issue ${letsdomain} --dns ${dns_provider} --reloadcmd "/etc/init.d/nginx reload"
+        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server letsencrypt --issue ${letsdomain} --dns ${dns_provider} --reloadcmd "/etc/init.d/nginx reload"
         lets_status=$?
     else
-        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --issue ${letsdomain} --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please
+        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server letsencrypt --issue ${letsdomain} --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please
         Echo_Yellow "Please add the above TXT record to the domain in 120 seconds!!!"
         echo
         Sleep_Sec 120
