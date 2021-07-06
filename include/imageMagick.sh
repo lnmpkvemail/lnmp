@@ -55,15 +55,6 @@ Install_ImageMagic()
     if echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.';then
         Download_Files ${Download_Mirror}/web/imagick/imagick-3.1.2.tgz imagick-3.1.2.tgz
         Tar_Cd imagick-3.1.2.tgz imagick-3.1.2
-    elif echo "${Cur_PHP_Version}" | grep -Eqi '^8.0.';then
-        [[ -d "imagick-src" ]] && rm -rf "imagick-src"
-        if [ "${country}" = "CN" ]; then
-            git clone https://github.com.cnpmjs.org/Imagick/imagick imagick-src
-            cd imagick-src
-        else
-            git clone https://github.com/Imagick/imagick imagick-src
-            cd imagick-src
-        fi
     else
         Download_Files ${Download_Mirror}/web/imagick/${Imagick_Ver}.tgz ${Imagick_Ver}.tgz
         Tar_Cd ${Imagick_Ver}.tgz ${Imagick_Ver}
