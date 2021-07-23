@@ -303,6 +303,7 @@ CentOS_Dependent()
         Check_PowerTools
         dnf --enablerepo=${repo_id} install rpcgen re2c -y
         dnf --enablerepo=${repo_id} install oniguruma-devel -y
+        dnf install libarchive -y
     fi
 
     if echo "${CentOS_Version}" | grep -Eqi "^8" && cat /etc/centos-release | grep -Eqi "CentOS Stream"; then
@@ -313,6 +314,7 @@ CentOS_Dependent()
         Check_Codeready
         dnf --enablerepo=${repo_id} install rpcgen re2c -y
         dnf --enablerepo=${repo_id} install oniguruma-devel -y
+        dnf install libarchive -y
     fi
 
     if echo "${CentOS_Version}" | grep -Eqi "^7" || echo "${RHEL_Version}" | grep -Eqi "^7"; then

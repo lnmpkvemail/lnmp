@@ -27,10 +27,18 @@ Upgrade_Dependent()
         do yum -y install $packages; done
         yum -y update nss
 
-        if [ "${DISTRO}" = "CentOS" ] && echo "${CentOS_Version}" | grep -Eqi "^8"; then
+        if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8"; then
             Check_PowerTools
             dnf --enablerepo=${repo_id} install rpcgen re2c -y
             dnf --enablerepo=${repo_id} install oniguruma-devel -y
+            dnf install libarchive -y
+        fi
+
+        if [ "${DISTRO}" = "Oracle" ] && echo "${Oracle_Version}" | grep -Eqi "^8"; then
+            Check_Codeready
+            dnf --enablerepo=${repo_id} install rpcgen re2c -y
+            dnf --enablerepo=${repo_id} install oniguruma-devel -y
+            dnf install libarchive -y
         fi
 
         if echo "${CentOS_Version}" | grep -Eqi "^7" || echo "${RHEL_Version}" | grep -Eqi "^7"; then

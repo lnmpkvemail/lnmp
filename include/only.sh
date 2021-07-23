@@ -64,12 +64,18 @@ DB_Dependent()
         fi
         for packages in make cmake gcc gcc-c++ gcc-g77 flex bison wget zlib zlib-devel openssl openssl-devel ncurses ncurses-devel libaio-devel rpcgen libtirpc-devel patch cyrus-sasl-devel pkg-config;
         do yum -y install $packages; done
-        if [ "${DISTRO}" = "CentOS" ] && echo "${CentOS_Version}" | grep -Eqi "^8"; then
+        if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8"; then
             Check_PowerTools
             dnf --enablerepo=${repo_id} install rpcgen -y
+            dnf install libarchive -y
         fi
         if echo "${CentOS_Version}" | grep -Eqi "^8" && cat /etc/centos-release | grep -Eqi "CentOS Stream"; then
             dnf install gcc-toolset-10 -y
+        fi
+        if [ "${DISTRO}" = "Oracle" ] && echo "${Oracle_Version}" | grep -Eqi "^8"; then
+            Check_Codeready
+            dnf --enablerepo=${repo_id} install rpcgen re2c -y
+            dnf install libarchive -y
         fi
     elif [ "$PM" = "apt" ]; then
         export DEBIAN_FRONTEND=noninteractive
