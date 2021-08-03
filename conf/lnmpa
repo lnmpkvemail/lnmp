@@ -629,6 +629,10 @@ Add_Ftp()
 {
     www_uid=`id -u www`
     www_gid=`id -g www`
+    if [ ! -d "${vhostdir}" ]; then
+        mkdir -p ${vhostdir}
+        chown www:www -R ${vhostdir}
+    fi
     cat >/tmp/pass${ftp_account_name}<<EOF
 ${ftp_account_password}
 ${ftp_account_password}
@@ -666,6 +670,10 @@ EOF
     if [ "${vhostdir}" != "" ]; then
         www_uid=`id -u www`
         www_gid=`id -g www`
+        if [ ! -d "${vhostdir}" ]; then
+            mkdir -p ${vhostdir}
+            chown www:www -R ${vhostdir}
+        fi
         /usr/local/pureftpd/bin/pure-pw usermod ${ftp_account_name} -f /usr/local/pureftpd/etc/pureftpd.passwd -u ${www_uid} -g ${www_gid} -d ${vhostdir} -m
         [ $? -eq 0 ] && echo "FTP User: ${ftp_account_name} change diretcory Sucessfully." || echo "FTP User: ${ftp_account_name} change directory failed!"
     else
