@@ -819,11 +819,11 @@ Remove_Error_Libcurl()
 
 Add_Swap()
 {
-    if ! command -v python >/dev/null 2>&1; then
+    if ! command -v python3 >/dev/null 2>&1; then
         if [ "$PM" = "yum" ]; then
-            yum -y install python2
+            yum -y install python3
         elif [ "$PM" = "apt" ]; then
-            apt-get --no-install-recommends install -y python
+            apt-get --no-install-recommends install -y python3
         fi
     fi
     if command -v python >/dev/null 2>&1; then
