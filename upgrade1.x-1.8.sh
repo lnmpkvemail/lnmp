@@ -23,7 +23,7 @@ Upgrade_Dependent()
     if [ "$PM" = "yum" ]; then
         Echo_Blue "[+] Yum installing dependent packages..."
         Get_Dist_Version
-        for packages in patch wget crontabs unzip tar ca-certificates net-tools libc-client-devel psmisc libXpm-devel git-core c-ares-devel libicu-devel libxslt libxslt-devel xz expat-devel bzip2 bzip2-devel libaio-devel rpcgen libtirpc-devel perl python-devel cyrus-sasl-devel sqlite-devel oniguruma-devel re2c pkg-config;
+        for packages in patch wget crontabs unzip tar ca-certificates net-tools libc-client-devel psmisc libXpm-devel git-core c-ares-devel libicu-devel libxslt libxslt-devel xz expat-devel bzip2 bzip2-devel libaio-devel rpcgen libtirpc-devel perl python-devel cyrus-sasl-devel sqlite-devel oniguruma-devel re2c pkg-config libarchive;
         do yum -y install $packages; done
         yum -y update nss
 
@@ -41,7 +41,7 @@ Upgrade_Dependent()
             dnf install libarchive -y
         fi
 
-        if echo "${CentOS_Version}" | grep -Eqi "^7" || echo "${RHEL_Version}" | grep -Eqi "^7"; then
+        if echo "${CentOS_Version}" | grep -Eqi "^7" || echo "${RHEL_Version}" | grep -Eqi "^7"  || echo "${Aliyun_Version}" | grep -Eqi "^2" || echo "${Oracle_Version}" | grep -Eqi "^7"; then
             yum -y install epel-release
             Get_Country
             if [ "${country}" = "CN" ]; then
