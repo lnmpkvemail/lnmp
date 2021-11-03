@@ -27,11 +27,15 @@ Upgrade_Dependent()
         do yum -y install $packages; done
         yum -y update nss
 
-        if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8"; then
+        if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${Rocky_Version}" | grep -Eqi "^8" || echo "${Alma_Version}" | grep -Eqi "^8"; then
             Check_PowerTools
             dnf --enablerepo=${repo_id} install rpcgen re2c -y
             dnf --enablerepo=${repo_id} install oniguruma-devel -y
             dnf install libarchive -y
+        fi
+
+        if echo "${CentOS_Version}" | grep -Eqi "^8" && cat /etc/centos-release | grep -Eqi "CentOS Stream"; then
+            dnf install gcc-toolset-10 -y
         fi
 
         if [ "${DISTRO}" = "Oracle" ] && echo "${Oracle_Version}" | grep -Eqi "^8"; then
@@ -42,11 +46,15 @@ Upgrade_Dependent()
         fi
 
         if echo "${CentOS_Version}" | grep -Eqi "^7" || echo "${RHEL_Version}" | grep -Eqi "^7"  || echo "${Aliyun_Version}" | grep -Eqi "^2" || echo "${Oracle_Version}" | grep -Eqi "^7"; then
-            yum -y install epel-release
-            Get_Country
-            if [ "${country}" = "CN" ]; then
-                sed -i "s@^#baseurl=http://download.fedoraproject.org/pub@baseurl=http://mirrors.aliyun.com@g" /etc/yum.repos.d/epel*.repo
-                sed -i "s@^metalink@#metalink@g" /etc/yum.repos.d/epel*.repo
+            if [ "${DISTRO}" = "Oracle" ]; then
+                yum -y install oracle-epel-release
+            else
+                yum -y install epel-release
+                Get_Country
+                if [ "${country}" = "CN" ]; then
+                    sed -i "s@^#baseurl=http://download.fedoraproject.org/pub@baseurl=http://mirrors.aliyun.com@g" /etc/yum.repos.d/epel*.repo
+                    sed -i "s@^metalink@#metalink@g" /etc/yum.repos.d/epel*.repo
+                fi
             fi
             yum -y install oniguruma oniguruma-devel
             if [ "${CheckMirror}" = "n" ]; then
@@ -54,10 +62,6 @@ Upgrade_Dependent()
                 yum -y install ./oniguruma-6.8.2-1.el7.x86_64.rpm
                 yum -y install ./oniguruma-devel-6.8.2-1.el7.x86_64.rpm
             fi
-        fi
-
-        if echo "${CentOS_Version}" | grep -Eqi "^8" && cat /etc/centos-release | grep -Eqi "CentOS Stream"; then
-            dnf install gcc-toolset-10 -y
         fi
     elif [ "$PM" = "apt" ]; then
         Echo_Blue "[+] apt-get installing dependent packages..."

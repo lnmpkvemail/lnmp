@@ -9,7 +9,7 @@ Set_Timezone()
 
 CentOS_InstallNTP()
 {
-    if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${Oracle_Version}" | grep -Eqi "^8"; then
+    if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${Oracle_Version}" | grep -Eqi "^8" || echo "${Rocky_Version}" | grep -Eqi "^8" || echo "${Alma_Version}" | grep -Eqi "^8"; then
         Echo_Blue "[+] Installing chrony..."
         dnf install chrony -y
         chronyd -q "server pool.ntp.org iburst"
@@ -299,7 +299,7 @@ CentOS_Dependent()
 
     yum -y update nss
 
-    if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8"; then
+    if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${Rocky_Version}" | grep -Eqi "^8" || echo "${Alma_Version}" | grep -Eqi "^8"; then
         Check_PowerTools
         dnf --enablerepo=${repo_id} install rpcgen re2c -y
         dnf --enablerepo=${repo_id} install oniguruma-devel -y
@@ -318,10 +318,14 @@ CentOS_Dependent()
     fi
 
     if echo "${CentOS_Version}" | grep -Eqi "^7" || echo "${RHEL_Version}" | grep -Eqi "^7"  || echo "${Aliyun_Version}" | grep -Eqi "^2" || echo "${Oracle_Version}" | grep -Eqi "^7"; then
-        yum -y install epel-release
-        if [ "${country}" = "CN" ]; then
-            sed -i "s@^#baseurl=http://download.fedoraproject.org/pub@baseurl=http://mirrors.aliyun.com@g" /etc/yum.repos.d/epel*.repo
-            sed -i "s@^metalink@#metalink@g" /etc/yum.repos.d/epel*.repo
+        if [ "${DISTRO}" = "Oracle" ]; then
+            yum -y install oracle-epel-release
+        else
+            yum -y install epel-release
+            if [ "${country}" = "CN" ]; then
+                sed -i "s@^#baseurl=http://download.fedoraproject.org/pub@baseurl=http://mirrors.aliyun.com@g" /etc/yum.repos.d/epel*.repo
+                sed -i "s@^metalink@#metalink@g" /etc/yum.repos.d/epel*.repo
+            fi
         fi
         yum -y install oniguruma oniguruma-devel
         if [ "${CheckMirror}" = "n" ]; then
@@ -474,7 +478,7 @@ Install_Mhash()
 
 Install_Freetype()
 {
-    if echo "${Ubuntu_Version}" | grep -Eqi "^1[89]\.|2[0-9]\." || echo "${Mint_Version}" | grep -Eqi "^19|2[0-9]" || echo "${Deepin_Version}" | grep -Eqi "^15\.[7-9]|15.1[0-9]|1[6-9]|2[0-9]" || echo "${Debian_Version}" | grep -Eqi "^9|10" || echo "${Raspbian_Version}" | grep -Eqi "^9|10"  || echo "${Kali_Version}" | grep -Eqi "^202[0-9]" || echo "${CentOS_Version}" | grep -Eqi "^8"  || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${Oracle_Version}" | grep -Eqi "^8" || echo "${Fedora_Version}" | grep -Eqi "^3[0-9]|29"; then
+    if echo "${Ubuntu_Version}" | grep -Eqi "^1[89]\.|2[0-9]\." || echo "${Mint_Version}" | grep -Eqi "^19|2[0-9]" || echo "${Deepin_Version}" | grep -Eqi "^15\.[7-9]|15.1[0-9]|1[6-9]|2[0-9]" || echo "${Debian_Version}" | grep -Eqi "^9|10" || echo "${Raspbian_Version}" | grep -Eqi "^9|10"  || echo "${Kali_Version}" | grep -Eqi "^202[0-9]" || echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${Oracle_Version}" | grep -Eqi "^8" || echo "${Fedora_Version}" | grep -Eqi "^3[0-9]|29" || echo "${Rocky_Version}" | grep -Eqi "^8" || echo "${Alma_Version}" | grep -Eqi "^8"; then
         Download_Files ${Download_Mirror}/lib/freetype/${Freetype_New_Ver}.tar.xz ${Freetype_New_Ver}.tar.xz
         Echo_Blue "[+] Installing ${Freetype_New_Ver}"
         TarJ_Cd ${Freetype_New_Ver}.tar.xz ${Freetype_New_Ver}

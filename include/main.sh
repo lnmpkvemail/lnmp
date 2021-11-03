@@ -374,6 +374,12 @@ Get_Dist_Name()
     elif grep -Eqi "Red Hat Enterprise Linux" /etc/issue || grep -Eq "Red Hat Enterprise Linux" /etc/*-release; then
         DISTRO='RHEL'
         PM='yum'
+    elif grep -Eqi "rockylinux" /etc/issue || grep -Eq "Rocky Linux" /etc/*-release; then
+        DISTRO='Rocky'
+        PM='yum'
+    elif grep -Eqi "almalinux" /etc/issue || grep -Eq "AlmaLinux" /etc/*-release; then
+        DISTRO='Alma'
+        PM='yum'
     elif grep -Eqi "Debian" /etc/issue || grep -Eq "Debian" /etc/*-release; then
         DISTRO='Debian'
         PM='apt'
