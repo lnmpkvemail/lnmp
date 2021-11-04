@@ -86,11 +86,11 @@ Upgrade_MySQL2MariaDB()
         echo "mariadb-${mariadb_version}.tar.gz [found]"
     else
         echo "Notice: mariadb-${mariadb_version}.tar.gz not found!!!download now......"
-        wget -c --progress=bar:force https://downloads.mariadb.org/interstitial/mariadb-${mariadb_version}/source/mariadb-${mariadb_version}.tar.gz
+        wget -c --progress=bar:force https://archive.mariadb.org/mariadb-${mariadb_version}/source/mariadb-${mariadb_version}.tar.gz
         if [ $? -eq 0 ]; then
             echo "Download mariadb-${mariadb_version}.tar.gz successfully!"
         else
-            wget -c --progress=bar:force https://downloads.mariadb.org/interstitial/mariadb-${mariadb_version}/kvm-tarbake-jaunty-x86/mariadb-${mariadb_version}.tar.gz
+            wget -c --progress=bar:force https://mirrors.aliyun.com/mariadb/mariadb-${mariadb_version}/source/mariadb-${mariadb_version}.tar.gz
             if [ $? -eq 0 ]; then
                 echo "Download mariadb-${mariadb_version}.tar.gz successfully!"
             else
