@@ -9,36 +9,9 @@ Install_PHP_Exif()
     Addons_Get_PHP_Ext_Dir
     zend_ext="${zend_ext_dir}exif.so"
 
-    if [ -s php-${Cur_PHP_Version}.tar.bz2 ]; then
-        echo "php-${Cur_PHP_Version}.tar.bz2 [found]"
-    else
-        echo "Notice: php-${Cur_PHP_Version}.tar.bz2 not found!!!download now..."
-        Get_Country
-        if [ "${country}" = "CN" ]; then
-            Download_Files http://php.vpszt.com/php-${Cur_PHP_Version}.tar.bz2 php-${Cur_PHP_Version}.tar.bz2
-            if [ $? -ne 0 ]; then
-                Download_Files https://www.php.net/distributions/php-${Cur_PHP_Version}.tar.bz2 php-${Cur_PHP_Version}.tar.bz2
-            fi
-        else
-            Download_Files https://www.php.net/distributions/php-${Cur_PHP_Version}.tar.bz2 php-${Cur_PHP_Version}.tar.bz2
-            if [ $? -ne 0 ]; then
-                Download_Files http://php.vpszt.com/php-${Cur_PHP_Version}.tar.bz2 php-${Cur_PHP_Version}.tar.bz2
-            fi
-        fi
-        if [ $? -eq 0 ]; then
-            echo "Download php-${Cur_PHP_Version}.tar.bz2 successfully!"
-        else
-            Download_Files http://museum.php.net/php5/php-${Cur_PHP_Version}.tar.bz2 php-${Cur_PHP_Version}.tar.bz2
-            if [ $? -eq 0 ]; then
-                echo "Download php-${Cur_PHP_Version}.tar.bz2 successfully!"
-            else
-                Echo_Red "Error! Can't download PHP ${Cur_PHP_Version}, please check!"
-                exit 1
-            fi
-        fi
-    fi
+    Download_PHP_Src
 
-    Tar_Cd php-${Cur_PHP_Version}.tar.bz2 php-${Cur_PHP_Version}/ext/exif
+    Tarj_Cd php-${Cur_PHP_Version}.tar.bz2 php-${Cur_PHP_Version}/ext/exif
     ${PHP_Path}/bin/phpize
     ./configure --with-php-config=${PHP_Path}/bin/php-config
     make && make install
