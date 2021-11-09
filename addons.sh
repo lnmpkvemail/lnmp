@@ -23,6 +23,7 @@ action2=$2
 . include/imageMagick.sh
 . include/ionCube.sh
 . include/apcu.sh
+. include/php_exif.sh
 
 Display_Addons_Menu()
 {
@@ -37,6 +38,8 @@ Display_Addons_Menu()
     echo "7: imageMagick"
     echo "##### encryption/decryption utility for PHP #####"
     echo "8: ionCube Loader"
+    echo "##### PHP Modules/Extensions #####"
+    echo "9: Exif"
     echo "exit: Exit current script"
     echo "#####################################################"
     read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8 or exit): " action2
@@ -217,6 +220,9 @@ Select_PHP
             8|ion[cC]ube)
                 Install_ionCube
                 ;;
+            9|[eE]xif)
+                Install_PHP_Exif
+                ;;
             [eE][xX][iI][tT])
                 exit 1
                 ;;
@@ -250,6 +256,9 @@ Select_PHP
                 ;;
             ion[cC]ube)
                 Uninstall_ionCube
+                ;;
+            [eE]xif)
+                Uninstall_PHP_Exif
                 ;;
             *)
                 echo "Usage: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube}"
