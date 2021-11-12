@@ -25,6 +25,7 @@ action2=$2
 . include/apcu.sh
 . include/php_exif.sh
 . include/php_fileinfo.sh
+. include/php_ldap.sh
 
 Display_Addons_Menu()
 {
@@ -42,10 +43,11 @@ Display_Addons_Menu()
     echo "##### PHP Modules/Extensions #####"
     echo "9: Exif"
     echo "10: Fileinfo"
+    echo "11: Ldap"
     echo "#################################################"
     echo "exit: Exit current script"
     echo "#################################################"
-    read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8 or exit): " action2
+    read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8... or exit): " action2
 }
 
 Restart_PHP()
@@ -261,11 +263,14 @@ Select_PHP
             10|[fF]ileinfo)
                 Install_PHP_Fileinfo
                 ;;
+            11|[lL]dap)
+                Install_PHP_Ldap
+                ;;
             [eE][xX][iI][tT])
                 exit 1
                 ;;
             *)
-                echo "Usage: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|imagemagick|ioncube|exif|fileinfo}"
+                echo "Usage: ./addons.sh install {eaccelerator|xcache|memcached|opcache|redis|imagemagick|ioncube|exif|fileinfo|ldap}"
                 ;;
         esac
         ;;
@@ -301,8 +306,11 @@ Select_PHP
             [fF]ileinfo)
                 Uninstall_PHP_Fileinfo
                 ;;
+            [lL]dap)
+                Uninstall_PHP_Ldap
+                ;;
             *)
-                echo "Usage: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube|exif|fileinfo}"
+                echo "Usage: ./addons.sh uninstall {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube|exif|fileinfo|ldap}"
                 ;;
         esac
         ;;
@@ -310,7 +318,7 @@ Select_PHP
         exit 1
         ;;
     *)
-        echo "Usage: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube}"
+        echo "Usage: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube|exif|fileinfo|ldap}"
         exit 1
         ;;
     esac

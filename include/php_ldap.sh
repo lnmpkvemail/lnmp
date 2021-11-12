@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+Install_PHP_Ldap()
+{
+    cd ${cur_dir}/src
+    echo "====== Installing PHP Ldap ======"
+    Press_Start
+
+    Addons_Get_PHP_Ext_Dir
+    zend_ext="${zend_ext_dir}ldap.so"
+
+    if [ "$PM" = "yum" ]; then
+        yum -y install openldap-devel cyrus-sasl-devel
+        [[ "${Is_64bit}" == "y" ]] && with_libdir="--with-libdir=lib64"
+    elif [ "$PM" = "apt" ]; then
+        apt-get install -y libldap2-dev libsasl2-dev
+    fi
+
+    Download_PHP_Src
+
+    Tarj_Cd php-${Cur_PHP_Version}.tar.bz2 php-${Cur_PHP_Version}/ext/ldap
+    ${PHP_Path}/bin/phpize
+    ./configure --with-php-config=${PHP_Path}/bin/php-config --with-ldap --with-ldap-sasl ${with_libdir}
+    make && make install
+    cd -
+    rm -rf php-${Cur_PHP_Version}
+
+    cat >${PHP_Path}/conf.d/009-ldap.ini<<EOF
+extension = "ldap.so"
+EOF
+
+    Restart_PHP
+    if [ -s "${zend_ext}" ]; then
+        Echo_Green "====== PHP Ldap install completed ======"
+        Echo_Green "PHP Ldap installed successfully, enjoy it!"
+        exit 0
+    else
+        rm -f ${PHP_Path}/conf.d/009-ldap.ini
+        Echo_Red "PHP Ldap install failed!"
+        exit 1
+    fi
+}
+
+Uninstall_PHP_Ldap()
+{
+    echo "You will uninstall PHP Ldap..."
+    Press_Start
+    rm -f ${PHP_Path}/conf.d/009-ldap.ini
+    Restart_PHP
+    Echo_Green "Uninstall PHP Ldap completed."
+}

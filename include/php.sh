@@ -71,13 +71,33 @@ PHP_with_Exif()
     fi
 }
 
+PHP_with_Ldap()
+{
+    if [ "${Enable_PHP_Ldap}" = "n" ];then
+        with_ldap=''
+    else
+        if [ "$PM" = "yum" ]; then
+            yum -y install openldap-devel cyrus-sasl-devel
+            if [ "${Is_64bit}" == "y" ]; then
+                with_ldap='--with-ldap --with-ldap-sasl --with-libdir=lib64'
+            else
+                with_ldap='--with-ldap --with-ldap-sasl'
+            fi
+        elif [ "$PM" = "apt" ]; then
+            apt-get install -y libldap2-dev libsasl2-dev
+            with_ldap='--with-ldap --with-ldap-sasl'
+        fi
+    fi
+}
+
 Check_PHP_Option()
 {
     PHP_with_openssl
     PHP_with_curl
     PHP_with_fileinfo
     PHP_with_Exif
-    PHP_Buildin_Option="${with_exif} "
+    PHP_with_Ldap
+    PHP_Buildin_Option="${with_exif} ${with_ldap}"
 }
 
 Ln_PHP_Bin()
