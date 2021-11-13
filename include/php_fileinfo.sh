@@ -10,6 +10,12 @@ Install_PHP_Fileinfo()
     Addons_Get_PHP_Ext_Dir
     zend_ext="${zend_ext_dir}fileinfo.so"
 
+    ${PHP_Path}/bin/php -m|grep fileinfo
+    if [ $? -eq 0 ]; then
+        Echo_Red "PHP Module 'fileinfo' already loaded!"
+        exit 1
+    fi
+
     Download_PHP_Src
 
     Tarj_Cd php-${Cur_PHP_Version}.tar.bz2 php-${Cur_PHP_Version}/ext/fileinfo

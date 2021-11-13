@@ -9,11 +9,21 @@ Install_PHP_Ldap()
     Addons_Get_PHP_Ext_Dir
     zend_ext="${zend_ext_dir}ldap.so"
 
+    ${PHP_Path}/bin/php -m|grep ldap
+    if [ $? -eq 0 ]; then
+        Echo_Red "PHP Module 'ldap' already loaded!"
+        exit 1
+    fi
+
     if [ "$PM" = "yum" ]; then
         yum -y install openldap-devel cyrus-sasl-devel
         [[ "${Is_64bit}" == "y" ]] && with_libdir="--with-libdir=lib64"
     elif [ "$PM" = "apt" ]; then
         apt-get install -y libldap2-dev libsasl2-dev
+        if [ -s /usr/lib/x86_64-linux-gnu/libldap.so ]; then
+            ln -sf /usr/lib/x86_64-linux-gnu/libldap.so /usr/lib/
+            ln -sf /usr/lib/x86_64-linux-gnu/liblber.so /usr/lib/
+        fi
     fi
 
     Download_PHP_Src

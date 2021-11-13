@@ -86,6 +86,10 @@ PHP_with_Ldap()
         elif [ "$PM" = "apt" ]; then
             apt-get install -y libldap2-dev libsasl2-dev
             with_ldap='--with-ldap --with-ldap-sasl'
+            if [ -s /usr/lib/x86_64-linux-gnu/libldap.so ]; then
+                ln -sf /usr/lib/x86_64-linux-gnu/libldap.so /usr/lib/
+                ln -sf /usr/lib/x86_64-linux-gnu/liblber.so /usr/lib/
+            fi
         fi
     fi
 }
