@@ -62,7 +62,7 @@ Deb_RemoveAMP()
     for removepackages in apache2 apache2-doc apache2-utils apache2.2-common apache2.2-bin apache2-mpm-prefork apache2-doc apache2-mpm-worker php5 php5-common php5-cgi php5-cli php5-mysql php5-curl php5-gd;
     do apt-get purge -y $removepackages; done
     if [[ "${DBSelect}" != "0" ]]; then
-        if echo "${Ubuntu_Version}" | grep -Eqi "^20\.04"; then
+        if echo "${Ubuntu_Version}" | grep -Eqi "^2[0-7]\."; then
             dpkg -l |grep mysql
             dpkg --force-all -P mysql-server
             dpkg --force-all -P mariadb-client mariadb-server mariadb-common libmariadbd-dev
@@ -478,7 +478,7 @@ Install_Mhash()
 
 Install_Freetype()
 {
-    if echo "${Ubuntu_Version}" | grep -Eqi "^1[89]\.|2[0-9]\." || echo "${Mint_Version}" | grep -Eqi "^19|2[0-9]" || echo "${Deepin_Version}" | grep -Eqi "^15\.[7-9]|15.1[0-9]|1[6-9]|2[0-9]" || echo "${Debian_Version}" | grep -Eqi "^9|10" || echo "${Raspbian_Version}" | grep -Eqi "^9|10"  || echo "${Kali_Version}" | grep -Eqi "^202[0-9]" || echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${Oracle_Version}" | grep -Eqi "^8" || echo "${Fedora_Version}" | grep -Eqi "^3[0-9]|29" || echo "${Rocky_Version}" | grep -Eqi "^8" || echo "${Alma_Version}" | grep -Eqi "^8"; then
+    if echo "${Ubuntu_Version}" | grep -Eqi "^1[89]\.|2[0-9]\." || echo "${Mint_Version}" | grep -Eqi "^19|2[0-9]" || echo "${Deepin_Version}" | grep -Eqi "^15\.[7-9]|15.1[0-9]|1[6-9]|2[0-9]" || echo "${Debian_Version}" | grep -Eqi "^9|1[0-9]" || echo "${Raspbian_Version}" | grep -Eqi "^9|1[0-9]"  || echo "${Kali_Version}" | grep -Eqi "^202[0-9]" || echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${Oracle_Version}" | grep -Eqi "^8" || echo "${Fedora_Version}" | grep -Eqi "^3[0-9]|29" || echo "${Rocky_Version}" | grep -Eqi "^8" || echo "${Alma_Version}" | grep -Eqi "^8"; then
         Download_Files ${Download_Mirror}/lib/freetype/${Freetype_New_Ver}.tar.xz ${Freetype_New_Ver}.tar.xz
         Echo_Blue "[+] Installing ${Freetype_New_Ver}"
         TarJ_Cd ${Freetype_New_Ver}.tar.xz ${Freetype_New_Ver}
