@@ -26,6 +26,7 @@ action2=$2
 . include/php_exif.sh
 . include/php_fileinfo.sh
 . include/php_ldap.sh
+. include/php_bz2.sh
 
 Display_Addons_Menu()
 {
@@ -44,6 +45,7 @@ Display_Addons_Menu()
     echo "9: Exif"
     echo "10: Fileinfo"
     echo "11: Ldap"
+    echo "12: Bz2"
     echo "#################################################"
     echo "exit: Exit current script"
     echo "#################################################"
@@ -266,11 +268,14 @@ Select_PHP
             11|[lL]dap)
                 Install_PHP_Ldap
                 ;;
+            12|[bB]z2)
+                Install_PHP_Bz2
+                ;;
             [eE][xX][iI][tT])
                 exit 1
                 ;;
             *)
-                echo "Usage: ./addons.sh install {eaccelerator|xcache|memcached|opcache|redis|imagemagick|ioncube|exif|fileinfo|ldap}"
+                echo "Usage: ./addons.sh install {eaccelerator|xcache|memcached|opcache|redis|imagemagick|ioncube|exif|fileinfo|ldap|bz2}"
                 ;;
         esac
         ;;
@@ -309,8 +314,11 @@ Select_PHP
             [lL]dap)
                 Uninstall_PHP_Ldap
                 ;;
+            [bB]z2)
+                Uninstall_PHP_Bz2
+                ;;
             *)
-                echo "Usage: ./addons.sh uninstall {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube|exif|fileinfo|ldap}"
+                echo "Usage: ./addons.sh uninstall {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube|exif|fileinfo|ldap|bz2}"
                 ;;
         esac
         ;;
@@ -318,7 +326,7 @@ Select_PHP
         exit 1
         ;;
     *)
-        echo "Usage: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube|exif|fileinfo|ldap}"
+        echo "Usage: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube|exif|fileinfo|ldap|bz2}"
         exit 1
         ;;
     esac
