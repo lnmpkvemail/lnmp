@@ -117,6 +117,18 @@ PHP_with_Sodium()
     fi
 }
 
+PHP_with_Imap()
+{
+    if [ "${Enable_PHP_Imap}" = "n" ];then
+        with_imap=''
+    else
+        with_imap='--with-imap --with-imap-ssl --with-kerberos'
+        if [ "$PM" = "yum" ]; then
+            [[ -s /usr/lib64/libc-client.so ]] && ln -sf /usr/lib64/libc-client.so /usr/lib/libc-client.so
+        fi
+    fi
+}
+
 Check_PHP_Option()
 {
     PHP_with_openssl
@@ -126,7 +138,8 @@ Check_PHP_Option()
     PHP_with_Ldap
     PHP_with_Bz2
     PHP_with_Sodium
-    PHP_Buildin_Option="${with_exif} ${with_ldap} ${with_bz2} ${with_sodium}"
+    PHP_with_Imap
+    PHP_Buildin_Option="${with_exif} ${with_ldap} ${with_bz2} ${with_sodium} ${with_imap}"
 }
 
 Ln_PHP_Bin()

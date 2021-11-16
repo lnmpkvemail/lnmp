@@ -333,6 +333,7 @@ CentOS_Dependent()
             yum -y install ./oniguruma-6.8.2-1.el7.x86_64.rpm
             yum -y install ./oniguruma-devel-6.8.2-1.el7.x86_64.rpm
         fi
+        yum -y install libc-client-devel uw-imap-devel
     fi
 
     if [ "${DISTRO}" = "Fedora" ]; then
@@ -823,7 +824,7 @@ Remove_Error_Libcurl()
 
 Add_Swap()
 {
-    if ! command -v python3 >/dev/null 2>&1; then
+    if ! command -v python >/dev/null 2>&1; then
         if [ "$PM" = "yum" ]; then
             yum -y install python3
         elif [ "$PM" = "apt" ]; then

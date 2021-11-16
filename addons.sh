@@ -28,6 +28,7 @@ action2=$2
 . include/php_ldap.sh
 . include/php_bz2.sh
 . include/php_sodium.sh
+. include/php_imap.sh
 
 Display_Addons_Menu()
 {
@@ -48,6 +49,7 @@ Display_Addons_Menu()
     echo "11: Ldap"
     echo "12: Bz2"
     echo "13: Sodium"
+    echo "14: Imap"
     echo "#################################################"
     echo "exit: Exit current script"
     echo "#################################################"
@@ -276,11 +278,14 @@ Select_PHP
             13|[sS]odium)
                 Install_PHP_Sodium
                 ;;
+            14|[iI]map)
+                Install_PHP_Imap
+                ;;
             [eE][xX][iI][tT])
                 exit 1
                 ;;
             *)
-                echo "Usage: ./addons.sh install {eaccelerator|xcache|memcached|opcache|redis|imagemagick|ioncube|exif|fileinfo|ldap|bz2|sodium}"
+                echo "Usage: ./addons.sh install {eaccelerator|xcache|memcached|opcache|redis|imagemagick|ioncube|exif|fileinfo|ldap|bz2|sodium|imap}"
                 ;;
         esac
         ;;
@@ -325,8 +330,11 @@ Select_PHP
             [sS]odium)
                 Uninstall_PHP_Sodium
                 ;;
+            [iI]map)
+                Uninstall_PHP_Imap
+                ;;
             *)
-                echo "Usage: ./addons.sh uninstall {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube|exif|fileinfo|ldap|bz2|sodium}"
+                echo "Usage: ./addons.sh uninstall {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube|exif|fileinfo|ldap|bz2|sodium|imap}"
                 ;;
         esac
         ;;
@@ -334,7 +342,7 @@ Select_PHP
         exit 1
         ;;
     *)
-        echo "Usage: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube|exif|fileinfo|ldap|bz2|sodium}"
+        echo "Usage: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube|exif|fileinfo|ldap|bz2|sodium|imap}"
         exit 1
         ;;
     esac
