@@ -94,6 +94,16 @@ PHP_with_Ldap()
     fi
 }
 
+PHP_with_Bz2()
+{
+    if [ "${Enable_PHP_Bz2}" = "n" ];then
+        with_bz2=''
+    else
+        Install_Libzip
+        with_bz2='--with-bz2'
+    fi
+}
+
 PHP_with_Sodium()
 {
     if [ "${Enable_PHP_Sodium}" = "n" ];then
@@ -114,8 +124,9 @@ Check_PHP_Option()
     PHP_with_fileinfo
     PHP_with_Exif
     PHP_with_Ldap
+    PHP_with_Bz2
     PHP_with_Sodium
-    PHP_Buildin_Option="${with_exif} ${with_ldap} ${with_sodium}"
+    PHP_Buildin_Option="${with_exif} ${with_ldap} ${with_bz2} ${with_sodium}"
 }
 
 Ln_PHP_Bin()
