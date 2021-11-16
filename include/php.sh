@@ -94,6 +94,19 @@ PHP_with_Ldap()
     fi
 }
 
+PHP_with_Sodium()
+{
+    if [ "${Enable_PHP_Sodium}" = "n" ];then
+        with_sodium=''
+    else
+        if echo "${PHPSelect}" | grep -Eqi "^[8-9]|1[0-2]$" || echo "${php_version}" | grep -Eqi '^7.[2-4].*|8.0.*' || echo "${Php_Ver}" | grep -Eqi "php-7.[2-4].*|php-8.0.*"; then
+            with_sodium='--with-sodium'
+        else
+            Echo_Red 'Below PHP 7.2 please use " . /addons.sh install sodium " to install the PHP Sodium module.'
+        fi
+    fi
+}
+
 Check_PHP_Option()
 {
     PHP_with_openssl
@@ -101,7 +114,8 @@ Check_PHP_Option()
     PHP_with_fileinfo
     PHP_with_Exif
     PHP_with_Ldap
-    PHP_Buildin_Option="${with_exif} ${with_ldap}"
+    PHP_with_Sodium
+    PHP_Buildin_Option="${with_exif} ${with_ldap} ${with_sodium}"
 }
 
 Ln_PHP_Bin()

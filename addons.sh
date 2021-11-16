@@ -27,6 +27,7 @@ action2=$2
 . include/php_fileinfo.sh
 . include/php_ldap.sh
 . include/php_bz2.sh
+. include/php_sodium.sh
 
 Display_Addons_Menu()
 {
@@ -46,6 +47,7 @@ Display_Addons_Menu()
     echo "10: Fileinfo"
     echo "11: Ldap"
     echo "12: Bz2"
+    echo "13: Sodium"
     echo "#################################################"
     echo "exit: Exit current script"
     echo "#################################################"
@@ -271,11 +273,14 @@ Select_PHP
             12|[bB]z2)
                 Install_PHP_Bz2
                 ;;
+            13|[sS]odium)
+                Install_PHP_Sodium
+                ;;
             [eE][xX][iI][tT])
                 exit 1
                 ;;
             *)
-                echo "Usage: ./addons.sh install {eaccelerator|xcache|memcached|opcache|redis|imagemagick|ioncube|exif|fileinfo|ldap|bz2}"
+                echo "Usage: ./addons.sh install {eaccelerator|xcache|memcached|opcache|redis|imagemagick|ioncube|exif|fileinfo|ldap|bz2|sodium}"
                 ;;
         esac
         ;;
@@ -317,8 +322,11 @@ Select_PHP
             [bB]z2)
                 Uninstall_PHP_Bz2
                 ;;
+            [sS]odium)
+                Uninstall_PHP_Sodium
+                ;;
             *)
-                echo "Usage: ./addons.sh uninstall {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube|exif|fileinfo|ldap|bz2}"
+                echo "Usage: ./addons.sh uninstall {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube|exif|fileinfo|ldap|bz2|sodium}"
                 ;;
         esac
         ;;
@@ -326,7 +334,7 @@ Select_PHP
         exit 1
         ;;
     *)
-        echo "Usage: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube|exif|fileinfo|ldap|bz2}"
+        echo "Usage: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube|exif|fileinfo|ldap|bz2|sodium}"
         exit 1
         ;;
     esac
