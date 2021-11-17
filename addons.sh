@@ -29,6 +29,7 @@ action2=$2
 . include/php_bz2.sh
 . include/php_sodium.sh
 . include/php_imap.sh
+. include/php_swoole.sh
 
 Display_Addons_Menu()
 {
@@ -50,6 +51,7 @@ Display_Addons_Menu()
     echo "12: Bz2"
     echo "13: Sodium"
     echo "14: Imap"
+    echo "15: Swoole"
     echo "#################################################"
     echo "exit: Exit current script"
     echo "#################################################"
@@ -281,11 +283,14 @@ Select_PHP
             14|[iI]map)
                 Install_PHP_Imap
                 ;;
+            15|[sS]woole)
+                Install_PHP_Swoole
+                ;;
             [eE][xX][iI][tT])
                 exit 1
                 ;;
             *)
-                echo "Usage: ./addons.sh install {eaccelerator|xcache|memcached|opcache|redis|imagemagick|ioncube|exif|fileinfo|ldap|bz2|sodium|imap}"
+                echo "Usage: ./addons.sh install {eaccelerator|xcache|memcached|opcache|redis|imagemagick|ioncube|exif|fileinfo|ldap|bz2|sodium|imap|swoole}"
                 ;;
         esac
         ;;
@@ -333,8 +338,11 @@ Select_PHP
             [iI]map)
                 Uninstall_PHP_Imap
                 ;;
+            [sS]woole)
+                Uninstall_PHP_Swoole
+                ;;
             *)
-                echo "Usage: ./addons.sh uninstall {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube|exif|fileinfo|ldap|bz2|sodium|imap}"
+                echo "Usage: ./addons.sh uninstall {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube|exif|fileinfo|ldap|bz2|sodium|imap|swoole}"
                 ;;
         esac
         ;;
@@ -342,7 +350,7 @@ Select_PHP
         exit 1
         ;;
     *)
-        echo "Usage: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube|exif|fileinfo|ldap|bz2|sodium|imap}"
+        echo "Usage: ./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube|exif|fileinfo|ldap|bz2|sodium|imap|swoole}"
         exit 1
         ;;
     esac
