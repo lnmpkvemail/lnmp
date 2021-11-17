@@ -34,26 +34,26 @@ action2=$2
 Display_Addons_Menu()
 {
     echo "##### cache / optimizer / accelerator #####"
-    echo "1: eAccelerator"
-    echo "2: XCache"
-    echo "3: Memcached"
-    echo "4: opcache"
-    echo "5: Redis"
-    echo "6: apcu"
+    echo "  1: eAccelerator"
+    echo "  2: XCache"
+    echo "  3: Memcached"
+    echo "  4: opcache"
+    echo "  5: Redis"
+    echo "  6: apcu"
     echo "##### Image Processing #####"
-    echo "7: imageMagick"
+    echo "  7: imageMagick"
     echo "##### encryption/decryption utility for PHP #####"
-    echo "8: ionCube Loader"
+    echo "  8: ionCube Loader"
     echo "##### PHP Modules/Extensions #####"
-    echo "9: Exif"
-    echo "10: Fileinfo"
-    echo "11: Ldap"
-    echo "12: Bz2"
-    echo "13: Sodium"
-    echo "14: Imap"
-    echo "15: Swoole"
+    echo "  9: Exif"
+    echo " 10: Fileinfo"
+    echo " 11: Ldap"
+    echo " 12: Bz2"
+    echo " 13: Sodium"
+    echo " 14: Imap"
+    echo " 15: Swoole"
     echo "#################################################"
-    echo "exit: Exit current script"
+    echo " exit: Exit current script"
     echo "#################################################"
     read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8... or exit): " action2
 }
@@ -80,6 +80,9 @@ echo "+-----------------------------------------------------------------------+"
 
 Select_PHP()
 {
+    if [ "${action2}" == "exit" ]; then
+        exit 1
+    fi
     if [[ ! -s /usr/local/php5.2/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.2.conf ]] && [[ ! -s /usr/local/php5.3/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.3.conf ]] && [[ ! -s /usr/local/php5.4/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.4.conf ]] && [[ ! -s /usr/local/php5.5/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.5.conf ]] && [[ ! -s /usr/local/php5.6/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php5.6.conf ]] && [[ ! -s /usr/local/php7.0/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.0.conf ]] && [[ ! -s /usr/local/php7.1/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.1.conf ]] && [[ ! -s /usr/local/php7.2/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.2.conf ]] && [[ ! -s /usr/local/php7.3/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.3.conf ]] && [[ ! -s /usr/local/php7.4/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php7.4.conf ]] && [[ ! -s /usr/local/php8.0/sbin/php-fpm && ! -s /usr/local/nginx/conf/enable-php8.0.conf ]]; then
         PHP_Path='/usr/local/php'
         PHPFPM_Initd='/etc/init.d/php-fpm'
