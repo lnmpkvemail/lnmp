@@ -7,7 +7,11 @@ Install_PHP_Sodium()
     Press_Start
 
     Addons_Get_PHP_Ext_Dir
-    zend_ext="${zend_ext_dir}sodium.so"
+    if echo "${Cur_PHP_Version}" | grep -Eqi '^5.[2-6].'; then
+        zend_ext="${zend_ext_dir}libsodium.so"
+    else
+        zend_ext="${zend_ext_dir}sodium.so"
+    fi
 
     ${PHP_Path}/bin/php -m|grep sodium
     if [ $? -eq 0 ]; then
@@ -35,7 +39,7 @@ Install_PHP_Sodium()
         make && make install
         cd -
         rm -rf php-${Cur_PHP_Version}
-    else
+    elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.[01].'; then
         Download_Files ${Download_Mirror}/web/sodium/${PHPSodium_Ver}.tgz ${PHPSodium_Ver}.tgz
         Tar_Cd ${PHPSodium_Ver}.tgz ${PHPSodium_Ver}
         ${PHP_Path}/bin/phpize
@@ -43,11 +47,21 @@ Install_PHP_Sodium()
         make && make install
         cd -
         rm -rf ${PHPSodium_Ver}
+    elif echo "${Cur_PHP_Version}" | grep -Eqi '^5.[2-6].'; then
+        Download_Files ${Download_Mirror}/web/sodium/libsodium-1.0.7.tgz libsodium-1.0.7.tgz
+        Tar_Cd libsodium-1.0.7.tgz libsodium-1.0.7
+        ${PHP_Path}/bin/phpize
+        ./configure --with-php-config=${PHP_Path}/bin/php-config
+        make && make install
+        cd -
+        rm -rf libsodium-1.0.7
     fi
 
-    cat >${PHP_Path}/conf.d/009-sodium.ini<<EOF
-extension = "sodium.so"
-EOF
+    if echo "${Cur_PHP_Version}" | grep -Eqi '^5.[2-6].'; then
+        echo 'extension = "libsodium.so"' > ${PHP_Path}/conf.d/009-sodium.ini
+    else
+        echo 'extension = "sodium.so"' > ${PHP_Path}/conf.d/009-sodium.ini
+    fi
 
     Restart_PHP
     if [ -s "${zend_ext}" ]; then
