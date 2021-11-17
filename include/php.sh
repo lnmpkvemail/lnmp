@@ -109,6 +109,11 @@ PHP_with_Sodium()
     if [ "${Enable_PHP_Sodium}" = "n" ];then
         with_sodium=''
     else
+        if [ "$PM" = "yum" ]; then
+            yum -y install libsodium-devel
+        elif [ "$PM" = "apt" ]; then
+            apt-get install -y libsodium-dev
+        fi
         if echo "${PHPSelect}" | grep -Eqi "^[8-9]|1[0-2]$" || echo "${php_version}" | grep -Eqi '^7.[2-4].*|8.0.*' || echo "${Php_Ver}" | grep -Eqi "php-7.[2-4].*|php-8.0.*"; then
             with_sodium='--with-sodium'
         else

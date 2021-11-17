@@ -333,6 +333,7 @@ CentOS_Dependent()
             yum -y install ./oniguruma-6.8.2-1.el7.x86_64.rpm
             yum -y install ./oniguruma-devel-6.8.2-1.el7.x86_64.rpm
         fi
+        yum -y install libsodium-devel
         yum -y install libc-client-devel uw-imap-devel
     fi
 

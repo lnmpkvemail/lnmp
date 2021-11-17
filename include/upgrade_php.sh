@@ -85,6 +85,11 @@ Install_PHP_Dependent()
 {
     echo "Installing Dependent for PHP..."
     if [ "$PM" = "yum" ]; then
+        if [ "${DISTRO}" = "Oracle" ]; then
+            yum -y install oracle-epel-release
+        else
+            yum -y install epel-release
+        fi
         for packages in c-ares-devel libicu-devel libxslt libxslt-devel xz expat-devel libzip-devel bzip2 bzip2-devel sqlite-devel oniguruma-devel;
         do yum -y install $packages; done
     elif [ "$PM" = "apt" ]; then
