@@ -158,7 +158,6 @@ Install_MPHP5.2()
     \cp php.ini-dist ${MPHP_Path}/etc/php.ini
 
     # php extensions
-    sed -i 's#extension_dir = "./"#extension_dir = "${MPHP_Path}/lib/php/extensions/no-debug-non-zts-20060613/"\n#' ${MPHP_Path}/etc/php.ini
     sed -i 's#output_buffering = Off#output_buffering = On#' ${MPHP_Path}/etc/php.ini
     sed -i 's/post_max_size = 8M/post_max_size = 50M/g' ${MPHP_Path}/etc/php.ini
     sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 50M/g' ${MPHP_Path}/etc/php.ini
