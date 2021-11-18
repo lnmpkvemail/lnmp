@@ -47,7 +47,7 @@ Install_PHP_Sodium()
         make && make install
         cd -
         rm -rf ${PHPSodium_Ver}
-    elif echo "${Cur_PHP_Version}" | grep -Eqi '^5.[2-6].'; then
+    elif echo "${Cur_PHP_Version}" | grep -Eqi '^5.[3-6].'; then
         Download_Files ${Download_Mirror}/web/sodium/libsodium-1.0.7.tgz libsodium-1.0.7.tgz
         Tar_Cd libsodium-1.0.7.tgz libsodium-1.0.7
         ${PHP_Path}/bin/phpize
@@ -55,9 +55,12 @@ Install_PHP_Sodium()
         make && make install
         cd -
         rm -rf libsodium-1.0.7
+    elif echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.'; then
+        Echo_Red "PHP Sodium does not support PHP 5.2!"
+        exit 1
     fi
 
-    if echo "${Cur_PHP_Version}" | grep -Eqi '^5.[2-6].'; then
+    if echo "${Cur_PHP_Version}" | grep -Eqi '^5.[3-6].'; then
         echo 'extension = "libsodium.so"' > ${PHP_Path}/conf.d/009-sodium.ini
     else
         echo 'extension = "sodium.so"' > ${PHP_Path}/conf.d/009-sodium.ini
