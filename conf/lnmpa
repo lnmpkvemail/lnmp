@@ -717,20 +717,16 @@ Add_SSL_Info_Menu()
 
     Echo_Yellow "Enter more domain name(example: lnmp.org sub.lnmp.org): "
     read moredomain
-    if [ "${moredomain}" != "" ]; then
-        echo " domain list: ${moredomain}"
-    fi
+    echo " domain list: ${domain} ${moredomain}"
 
-    while :;do
-        Echo_Yellow "Please enter the directory for domain $domain: "
-        read vhostdir
-        if [ "${vhostdir}" == "" ]; then
-            Echo_Red "Directory cannot be empty!"
-        else
-            break
-        fi
-        echo "Virtual Host Directory: ${vhostdir}"
-    done
+    Echo_Yellow "Please enter the directory for the domain: $domain"
+    echo
+    Echo_Yellow "Default directory: /home/wwwroot/${domain}: "
+    read vhostdir
+    if [ "${vhostdir}" == "" ]; then
+        vhostdir="/home/wwwroot/${domain}"
+    fi
+    echo "Virtual Host Directory: ${vhostdir}"
 
     Echo_Yellow "Allow access log? (y/n) "
     read access_log
@@ -759,30 +755,41 @@ Add_SSL_Info_Menu()
     fi
 }
 
-Add_DNS_SSL_Only_Info_Menu()
+Check_Acme_EMail()
+{
+    if [ ! -s /usr/local/acme.sh/account.conf ] || ! cat /usr/local/acme.sh/account.conf | grep -Eq "^ACCOUNT_EMAIL="; then
+        while :;do
+            Echo_Yellow "Please enter your email address: "
+            read email_address
+            if [[ "${email_address}" =~ ^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$ ]]; then
+                echo "Email address ${email_address} is valid."
+                break
+            else
+                echo "Email address $email is invalid! Please re-enter."
+            fi
+        done
+    fi
+}
+
+Add_DNS_SSL_Select_Menu()
 {
     echo "1: Use Let's Encrypt to create SSL Certificate and Key"
     echo "2: Use ZeroSSL to create SSL Certificate and Key"
         while :;do
         Echo_Yellow "Enter 1 or 2: "
-        read dns_only_ssl_choice
-        if [[ "${dns_only_ssl_choice}" =~ ^1|2$ ]]; then
-            if [ ! -s /usr/local/acme.sh/account.conf ] || ! cat /usr/local/acme.sh/account.conf | grep -Eq "^ACCOUNT_EMAIL="; then
-                while :;do
-                    Echo_Yellow "Please enter your email address: "
-                    read email_address
-                    if [ "${email_address}" == "" ]; then
-                        Echo_Red "Email Address cannot be empty!"
-                    else
-                        break
-                    fi
-                done
-            fi
+        read dns_ssl_choice
+        if [[ "${dns_ssl_choice}" =~ ^1|2$ ]]; then
+            Check_Acme_EMail
             break
         else
             Echo_Red "Please Enter 1 or 2!"
         fi
     done
+}
+
+Add_DNS_SSL_Only_Info_Menu()
+{
+    Add_DNS_SSL_Select_Menu
 
     domain=""
     while :;do
@@ -836,18 +843,7 @@ Add_SSL_Menu()
             done
             break
         elif [[ "${ssl_choice}" =~ ^2|3|4$ ]]; then
-            if [ ! -s /usr/local/acme.sh/account.conf ] || ! cat /usr/local/acme.sh/account.conf | grep -Eq "^ACCOUNT_EMAIL="; then
-                while :;do
-                    Echo_Yellow "Please enter your email address: "
-                    read email_address
-                    if [ "${email_address}" == "" ]; then
-                        Echo_Red "Email Address cannot be empty!"
-                    else
-                        break
-                    fi
-                    echo "It will be processed automatically."
-                done
-            fi
+            Check_Acme_EMail
             break
         else
             Echo_Red "Please Enter 1, 2, 3 or 4!"
@@ -1011,16 +1007,14 @@ Add_SSL()
             /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server zerossl --issue ${letsdomain} -w ${vhostdir} --reloadcmd "/etc/init.d/nginx reload"
         fi
         lets_status=$?
-        if [ "${lets_status}" = 0 ]; then
-            Echo_Green " Generate SSL Certificate successfully."
-        else
-            Echo_Red " Generate SSL Certificate failed!"
-        fi
 
         ssl_certificate="/usr/local/nginx/conf/ssl/${domain}/fullchain.cer"
         ssl_certificate_key="/usr/local/nginx/conf/ssl/${domain}/${domain}.key"
         if [ "${lets_status}" = 0 ]; then
             Create_SSL_Config
+            Echo_Green " Generate SSL Certificate successfully."
+        else
+            Echo_Red " Generate SSL Certificate failed!"
         fi
     fi
 }
@@ -1035,6 +1029,7 @@ Add_Dns_SSL()
     fi
 
     Add_SSL_Info_Menu
+    Add_DNS_SSL_Select_Menu
     Install_Check_Acme.sh
 
     if [[ ! -s /usr/local/acme.sh/dnsapi/dns_${provider}.sh && "${provider}" != "" ]]; then
@@ -1062,9 +1057,9 @@ Add_Dns_SSL()
         exit 1
     fi
 
-    if [ "${dns_only_ssl_choice}" == "1" ]; then
+    if [ "${dns_ssl_choice}" == "1" ]; then
         ca_server="letsencrypt"
-    elif [ "${dns_only_ssl_choice}" == "2" ]; then
+    elif [ "${dns_ssl_choice}" == "2" ]; then
         ca_server="zerossl"
     fi
 
@@ -1143,9 +1138,9 @@ Add_Dns_SSL_Only()
         exit 1
     fi
 
-    if [ "${dns_only_ssl_choice}" == "1" ]; then
+    if [ "${dns_ssl_choice}" == "1" ]; then
         ca_server="letsencrypt"
-    elif [ "${dns_only_ssl_choice}" == "2" ]; then
+    elif [ "${dns_ssl_choice}" == "2" ]; then
         ca_server="zerossl"
     fi
 
