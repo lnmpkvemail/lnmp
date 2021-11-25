@@ -23,6 +23,7 @@ Luajit_Ver='luajit2-2.1-20190329'
 LuaNginxModule='lua-nginx-module-0.10.14'
 NgxDevelKit='ngx_devel_kit-0.3.1'
 Nginx_Ver='nginx-1.20.2'
+NgxFancyIndex_Ver='ngx-fancyindex-0.5.2'
 if [ "${DBSelect}" = "1" ]; then
     Mysql_Ver='mysql-5.1.73'
 elif [ "${DBSelect}" = "2" ]; then

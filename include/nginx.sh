@@ -62,6 +62,18 @@ EOF
     fi
 }
 
+Install_Ngx_FancyIndex()
+{
+    if [ "${Enable_Ngx_FancyIndex}" = 'y' ]; then
+        echo "Installing Ngx FancyIndex for Nginx..."
+        cd ${cur_dir}/src
+        Download_Files ${Download_Mirror}/web/nginx/${NgxFancyIndex_Ver}.tar.gz ${NgxFancyIndex_Ver}.tar.gz
+
+        Tar_Cd ${NgxFancyIndex_Ver}.tar.gz
+        Ngx_FancyIndex="--add-module=${cur_dir}/src/${NgxFancyIndex_Ver}"
+    fi
+}
+
 Install_Nginx()
 {
     Echo_Blue "[+] Installing ${Nginx_Ver}... "
@@ -71,6 +83,7 @@ Install_Nginx()
     cd ${cur_dir}/src
     Install_Nginx_Openssl
     Install_Nginx_Lua
+    Install_Ngx_FancyIndex
     Tar_Cd ${Nginx_Ver}.tar.gz ${Nginx_Ver}
     if [[ "${DISTRO}" = "Fedora" && ${Fedora_Version} -ge 28 ]]; then
         patch -p1 < ${cur_dir}/src/patch/nginx-libxcrypt.patch
@@ -81,9 +94,9 @@ Install_Nginx()
     fi
     Nginx_Ver_Com=$(${cur_dir}/include/version_compare 1.9.4 ${Nginx_Version})
     if [[ "${Nginx_Ver_Com}" == "0" ||  "${Nginx_Ver_Com}" == "1" ]]; then
-        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_spdy_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${Nginx_With_Openssl} ${Nginx_With_Pcre} ${Nginx_Module_Lua} ${NginxMAOpt} ${Nginx_Modules_Options}
+        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_spdy_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${Nginx_With_Openssl} ${Nginx_With_Pcre} ${Nginx_Module_Lua} ${NginxMAOpt} ${Ngx_FancyIndex} ${Nginx_Modules_Options}
     else
-        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_v2_module --with-http_gzip_static_module --with-http_sub_module --with-stream --with-stream_ssl_module ${Nginx_With_Openssl} ${Nginx_With_Pcre} ${Nginx_Module_Lua} ${NginxMAOpt} ${Nginx_Modules_Options}
+        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_v2_module --with-http_gzip_static_module --with-http_sub_module --with-stream --with-stream_ssl_module ${Nginx_With_Openssl} ${Nginx_With_Pcre} ${Nginx_Module_Lua} ${NginxMAOpt} ${Ngx_FancyIndex} ${Nginx_Modules_Options}
     fi
     Make_Install
     cd ../
