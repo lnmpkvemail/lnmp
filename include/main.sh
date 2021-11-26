@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 DB_Info=('MySQL 5.1.73' 'MySQL 5.5.62' 'MySQL 5.6.51' 'MySQL 5.7.34' 'MySQL 8.0.25' 'MariaDB 5.5.68' 'MariaDB 10.1.48' 'MariaDB 10.2.38' 'MariaDB 10.3.29' 'MariaDB 10.4.19')
-PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.38' 'PHP 5.6.40' 'PHP 7.0.33' 'PHP 7.1.33' 'PHP 7.2.34' 'PHP 7.3.33' 'PHP 7.4.26' 'PHP 8.0.13')
+PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.38' 'PHP 5.6.40' 'PHP 7.0.33' 'PHP 7.1.33' 'PHP 7.2.34' 'PHP 7.3.33' 'PHP 7.4.26' 'PHP 8.0.13' 'PHP 8.1.0')
 Apache_Info=('Apache 2.2.34' 'Apache 2.4.51')
 
 Database_Selection()
@@ -136,7 +136,8 @@ PHP_Selection()
         echo "9: Install ${PHP_Info[8]}"
         echo "10: Install ${PHP_Info[9]}"
         echo "11: Install ${PHP_Info[10]}"
-        read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11): " PHPSelect
+        echo "12: Install ${PHP_Info[11]}"
+        read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12): " PHPSelect
     fi
 
     case "${PHPSelect}" in
@@ -176,6 +177,9 @@ PHP_Selection()
         ;;
     11)
         echo "You will install ${PHP_Info[10]}"
+        ;;
+    12)
+        echo "You will install ${PHP_Info[11]}"
         ;;
     *)
         echo "No input,You will install ${PHP_Info[4]}"
@@ -685,9 +689,9 @@ Check_CMPT()
             exit 1
         fi
     fi
-    if [[ "${PHPSelect}" == "10" ]]; then
+    if [[ "${PHPSelect}" =~ ^1[0-2]$ ]]; then
         if echo "${Ubuntu_Version}" | grep -Eqi "^1[0-7]\." || echo "${Debian_Version}" | grep -Eqi "^[4-8]" || echo "${Raspbian_Version}" | grep -Eqi "^[4-8]" || echo "${CentOS_Version}" | grep -Eqi "^[4-6]"  || echo "${RHEL_Version}" | grep -Eqi "^[4-6]" || echo "${Fedora_Version}" | grep -Eqi "^2[0-3]"; then
-            Echo_Red "PHP 7.4 please use latest linux distributions!"
+            Echo_Red "PHP 7.4 and PHP 8.* please use latest linux distributions!"
             exit 1
         fi
     fi
