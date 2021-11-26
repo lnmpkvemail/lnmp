@@ -67,9 +67,9 @@ Install_Ngx_FancyIndex()
     if [ "${Enable_Ngx_FancyIndex}" = 'y' ]; then
         echo "Installing Ngx FancyIndex for Nginx..."
         cd ${cur_dir}/src
-        Download_Files ${Download_Mirror}/web/nginx/${NgxFancyIndex_Ver}.tar.gz ${NgxFancyIndex_Ver}.tar.gz
+        Download_Files ${Download_Mirror}/web/nginx/${NgxFancyIndex_Ver}.tar.xz ${NgxFancyIndex_Ver}.tar.xz
 
-        Tar_Cd ${NgxFancyIndex_Ver}.tar.gz
+        TarJ_Cd ${NgxFancyIndex_Ver}.tar.xz
         Ngx_FancyIndex="--add-module=${cur_dir}/src/${NgxFancyIndex_Ver}"
     fi
 }
