@@ -21,7 +21,7 @@ Install_PHP_Imap()
         else
             yum -y install epel-release
         fi
-        yum -y install libc-client-devel krb5-devel
+        yum -y install libc-client-devel krb5-devel uw-imap-devel
         [[ -s /usr/lib64/libc-client.so ]] && ln -sf /usr/lib64/libc-client.so /usr/lib/libc-client.so
     elif [ "$PM" = "apt" ]; then
         apt-get install -y libc-client-dev libkrb5-dev

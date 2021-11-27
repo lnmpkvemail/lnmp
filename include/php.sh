@@ -51,7 +51,7 @@ PHP_with_openssl()
 
 PHP_with_fileinfo()
 {
-    if [ "${Enable_PHP_Fileinfo}" = "n" ];then
+    if [ "${Enable_PHP_Fileinfo}" = "n" ]; then
         if [ `free -m | grep Mem | awk '{print  $2}'` -lt 1024 ]; then
             with_fileinfo='--disable-fileinfo'
         else
@@ -64,7 +64,7 @@ PHP_with_fileinfo()
 
 PHP_with_Exif()
 {
-    if [ "${Enable_PHP_Exif}" = "n" ];then
+    if [ "${Enable_PHP_Exif}" = "n" ]; then
         with_exif=''
     else
         with_exif='--enable-exif'
@@ -73,30 +73,29 @@ PHP_with_Exif()
 
 PHP_with_Ldap()
 {
-    if [ "${Enable_PHP_Ldap}" = "n" ];then
+    if [ "${Enable_PHP_Ldap}" = "n" ]; then
         with_ldap=''
     else
         if [ "$PM" = "yum" ]; then
             yum -y install openldap-devel cyrus-sasl-devel
             if [ "${Is_64bit}" == "y" ]; then
-                with_ldap='--with-ldap --with-ldap-sasl --with-libdir=lib64'
-            else
-                with_ldap='--with-ldap --with-ldap-sasl'
+                ln -sf /usr/lib64/libldap* /usr/lib/
+                ln -sf /usr/lib64/liblber* /usr/lib/
             fi
         elif [ "$PM" = "apt" ]; then
             apt-get install -y libldap2-dev libsasl2-dev
-            with_ldap='--with-ldap --with-ldap-sasl'
             if [ -s /usr/lib/x86_64-linux-gnu/libldap.so ]; then
                 ln -sf /usr/lib/x86_64-linux-gnu/libldap.so /usr/lib/
                 ln -sf /usr/lib/x86_64-linux-gnu/liblber.so /usr/lib/
             fi
         fi
+        with_ldap='--with-ldap --with-ldap-sasl'
     fi
 }
 
 PHP_with_Bz2()
 {
-    if [ "${Enable_PHP_Bz2}" = "n" ];then
+    if [ "${Enable_PHP_Bz2}" = "n" ]; then
         with_bz2=''
     else
         Install_Libzip
@@ -106,7 +105,7 @@ PHP_with_Bz2()
 
 PHP_with_Sodium()
 {
-    if [ "${Enable_PHP_Sodium}" = "n" ];then
+    if [ "${Enable_PHP_Sodium}" = "n" ]; then
         with_sodium=''
     else
         if [ "$PM" = "yum" ]; then
@@ -124,13 +123,21 @@ PHP_with_Sodium()
 
 PHP_with_Imap()
 {
-    if [ "${Enable_PHP_Imap}" = "n" ];then
+    if [ "${Enable_PHP_Imap}" = "n" ]; then
         with_imap=''
     else
-        with_imap='--with-imap --with-imap-ssl --with-kerberos'
         if [ "$PM" = "yum" ]; then
+            if [ "${DISTRO}" = "Oracle" ]; then
+                yum -y install oracle-epel-release
+            else
+                yum -y install epel-release
+            fi
+            yum -y install libc-client-devel krb5-devel uw-imap-devel
             [[ -s /usr/lib64/libc-client.so ]] && ln -sf /usr/lib64/libc-client.so /usr/lib/libc-client.so
+        elif [ "$PM" = "apt" ]; then
+            apt-get install -y libc-client-dev libkrb5-dev
         fi
+        with_imap='--with-imap --with-imap-ssl --with-kerberos'
     fi
 }
 

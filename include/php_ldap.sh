@@ -17,7 +17,10 @@ Install_PHP_Ldap()
 
     if [ "$PM" = "yum" ]; then
         yum -y install openldap-devel cyrus-sasl-devel
-        [[ "${Is_64bit}" == "y" ]] && with_libdir="--with-libdir=lib64"
+        if [ "${Is_64bit}" == "y" ]; then
+            ln -sf /usr/lib64/libldap* /usr/lib/
+            ln -sf /usr/lib64/liblber* /usr/lib/
+        fi
     elif [ "$PM" = "apt" ]; then
         apt-get install -y libldap2-dev libsasl2-dev
         if [ -s /usr/lib/x86_64-linux-gnu/libldap.so ]; then
