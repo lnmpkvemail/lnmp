@@ -186,13 +186,13 @@ Upgrade_MPHP5.6()
     echo "Install ZendGuardLoader for PHP 5.6..."
     cd ${cur_dir}/src
     if [ "${Is_64bit}" = "y" ] ; then
-        Download_Files ${Download_Mirror}/web/zend/zend-loader-php5.6-linux-x86_64.tar.gz
-        tar zxf zend-loader-php5.6-linux-x86_64.tar.gz
+        Download_Files ${Download_Mirror}/web/zend/zend-loader-php5.6-linux-x86_64.tar.gz zend-loader-php5.6-linux-x86_64.tar.gz
+        Tar_Cd zend-loader-php5.6-linux-x86_64.tar.gz
         mkdir -p /usr/local/zend/
         \cp zend-loader-php5.6-linux-x86_64/ZendGuardLoader.so /usr/local/zend/ZendGuardLoader5.6.so
     else
-        Download_Files ${Download_Mirror}/web/zend/zend-loader-php5.6-linux-i386.tar.gz
-        tar zxf zend-loader-php5.6-linux-i386.tar.gz
+        Download_Files ${Download_Mirror}/web/zend/zend-loader-php5.6-linux-i386.tar.gz zend-loader-php5.6-linux-i386.tar.gz
+        Tar_Cd zend-loader-php5.6-linux-i386.tar.gz
         mkdir -p /usr/local/zend/
         \cp zend-loader-php5.6-linux-i386/ZendGuardLoader.so /usr/local/zend/ZendGuardLoader5.6.so
     fi
