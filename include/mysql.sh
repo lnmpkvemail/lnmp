@@ -26,6 +26,10 @@ MySQL_Sec_Setting()
         ulimit -s unlimited
     fi
 
+    if [ -d "/etc/mysql" ]; then
+        mv /etc/mysql /etc/mysql.backup.$(date +%Y%m%d)
+    fi
+
     if command -v systemctl >/dev/null 2>&1; then
         systemctl enable mysql.service
     fi
