@@ -14,8 +14,6 @@ MySQL_Gcc7_Patch()
         echo "gcc version: 7+"
         if [ "${DBSelect}" = "1" ] || echo "${mysql_version}" | grep -Eqi '^5.1.'; then
             patch -p1 < ${cur_dir}/src/patch/mysql-5.1-mysql-gcc7.patch
-        elif [ "${DBSelect}" = "2" ] || echo "${mysql_version}" | grep -Eqi '^5.5.'; then
-            patch -p1 < ${cur_dir}/src/patch/mysql-5.5-mysql-gcc7.patch
         fi
     fi
 }
@@ -300,7 +298,6 @@ Install_MySQL_55()
     rm -f /etc/my.cnf
     Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}
     MySQL_ARM_Patch
-    MySQL_Gcc7_Patch
     cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1
     Make_Install
 
