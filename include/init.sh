@@ -186,9 +186,13 @@ Ubuntu_Modify_Source()
     elif grep -Eqi "19.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^19.04'; then
         CodeName='disco'
     elif grep -Eqi "19.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^19.10'; then
-        Ubuntu_Deadline eoan
+        CodeName='eoan'
     elif grep -Eqi "20.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^20.10'; then
         Ubuntu_Deadline groovy
+    elif grep -Eqi "21.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^21.04'; then
+        Ubuntu_Deadline hirsute
+    elif grep -Eqi "21.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^21.10'; then
+        Ubuntu_Deadline impish
     fi
     if [ "${CodeName}" != "" ]; then
         \cp /etc/apt/sources.list /etc/apt/sources.list.$(date +"%Y%m%d")
@@ -220,8 +224,9 @@ Ubuntu_Deadline()
 {
     trusty_deadline=`date -d "2022-4-30 00:00:00" +%s`
     xenial_deadline=`date -d "2024-4-30 00:00:00" +%s`
-    eoan_deadline=`date -d "2020-7-30 00:00:00" +%s`
     groovy_deadline=`date -d "2021-7-30 00:00:00" +%s`
+    hirsute_deadline=`date -d "2022-1-30 00:00:00" +%s`
+    impish_deadline=`date -d "2022-7-30 00:00:00" +%s`
     cur_time=`date  +%s`
     case "$1" in
         trusty)
@@ -246,6 +251,18 @@ Ubuntu_Deadline()
             if [ ${cur_time} -gt ${groovy_deadline} ]; then
                 echo "${cur_time} > ${groovy_deadline}"
                 Check_Old_Releases_URL groovy
+            fi
+            ;;
+        hirsute)
+            if [ ${cur_time} -gt ${hirsute_deadline} ]; then
+                echo "${cur_time} > ${hirsute_deadline}"
+                Check_Old_Releases_URL hirsute
+            fi
+            ;;
+        impish)
+            if [ ${cur_time} -gt ${impish_deadline} ]; then
+                echo "${cur_time} > ${impish_deadline}"
+                Check_Old_Releases_URL impish
             fi
             ;;
     esac
