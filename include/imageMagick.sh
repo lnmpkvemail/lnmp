@@ -12,20 +12,22 @@ Install_ImageMagic()
         rm -f "${zend_ext}"
     fi
 
-    if [[ "${DISTRO}" = "CentOS" || "${DISTRO}" = "RHEL" || "${DISTRO}" = "Aliyun" || "${DISTRO}" = "Amazon" ]]; then
-        yum install -y epel-release
+    if [ "$PM" = "yum" ]; then
+        if [ "${DISTRO}" = "Oracle" ]; then
+            yum -y install oracle-epel-release
+        else
+            yum -y install epel-release
+        fi
         Get_Dist_Version
         Get_Country
         if [ "${country}" = "CN" ]; then
-            if echo "${CentOS_Version}" | grep -Eqi "^8"  || echo "${RHEL_Version}" | grep -Eqi "^8"; then
+            if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" || echo "${Rocky_Version}" | grep -Eqi "^8" || echo "${Alma_Version}" | grep -Eqi "^8"; then
                 sed -i "s@^#baseurl=https://download.fedoraproject.org/pub@baseurl=https://mirrors.aliyun.com@g" /etc/yum.repos.d/epel*.repo
             else
                 sed -i "s@^#baseurl=http://download.fedoraproject.org/pub@baseurl=http://mirrors.aliyun.com@g" /etc/yum.repos.d/epel*.repo
             fi
             sed -i "s@^metalink@#metalink@g" /etc/yum.repos.d/epel*.repo
         fi
-    fi
-    if [ "$PM" = "yum" ]; then
         yum install -y libwebp-devel
     elif [ "$PM" = "apt" ]; then
         export DEBIAN_FRONTEND=noninteractive

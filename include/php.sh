@@ -109,6 +109,11 @@ PHP_with_Sodium()
         with_sodium=''
     else
         if [ "$PM" = "yum" ]; then
+            if [ "${DISTRO}" = "Oracle" ]; then
+                yum -y install oracle-epel-release
+            else
+                yum -y install epel-release
+            fi
             yum -y install libsodium-devel
         elif [ "$PM" = "apt" ]; then
             apt-get install -y libsodium-dev
