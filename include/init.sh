@@ -842,7 +842,7 @@ Remove_Error_Libcurl()
 
 Add_Swap()
 {
-    if ! command -v python >/dev/null 2>&1; then
+    if ! command -v python >/dev/null 2>&1 && ! command -v python2 >/dev/null 2>&1 && ! command -v python3 >/dev/null 2>&1; then
         if [ "$PM" = "yum" ]; then
             yum -y install python3
         elif [ "$PM" = "apt" ]; then
@@ -856,29 +856,30 @@ Add_Swap()
     elif command -v python2 >/dev/null 2>&1; then
         Disk_Avail=$(python2 ${cur_dir}/include/disk.py)
     fi
-    if [ "${MemTotal}" -lt 1024 ]; then
+    DD_Count='1024'
+    if [[ "${MemTotal}" -lt 1024 ]]; then
         DD_Count='1024'
-        if [ "${Disk_Avail}" -lt 5 ]; then
+        if [[ "${Disk_Avail}" -lt 5 ]]; then
             Enable_Swap='n'
         fi
     elif [[ "${MemTotal}" -ge 1024 && "${MemTotal}" -le 2048 ]]; then
         DD_Count='2028'
-        if [ "${Disk_Avail}" -lt 13 ]; then
+        if [[ "${Disk_Avail}" -lt 13 ]]; then
             Enable_Swap='n'
         fi
     elif [[ "${MemTotal}" -ge 2048 && "${MemTotal}" -le 4096 ]]; then
         DD_Count='4096'
-        if [ "${Disk_Avail}" -lt 17 ]; then
+        if [[ "${Disk_Avail}" -lt 17 ]]; then
             Enable_Swap='n'
         fi
     elif [[ "${MemTotal}" -ge 4096 && "${MemTotal}" -le 16384 ]]; then
         DD_Count='8192'
-        if [ "${Disk_Avail}" -lt 19 ]; then
+        if [[ "${Disk_Avail}" -lt 19 ]]; then
             Enable_Swap='n'
         fi
     elif [[ "${MemTotal}" -ge 16384 ]]; then
         DD_Count='8192'
-        if [ "${Disk_Avail}" -lt 27 ]; then
+        if [[ "${Disk_Avail}" -lt 27 ]]; then
             Enable_Swap='n'
         fi
     fi
