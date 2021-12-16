@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 Autoconf_Ver='autoconf-2.13'
-Libiconv_Ver='libiconv-1.15'
+Libiconv_Ver='libiconv-1.16'
 LibMcrypt_Ver='libmcrypt-2.5.8'
 Mcypt_Ver='mcrypt-2.6.8'
 Mhash_Ver='mhash-0.9.9.9'

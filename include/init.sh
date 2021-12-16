@@ -325,7 +325,7 @@ CentOS_Dependent()
         dnf install libarchive -y
     fi
 
-    if echo "${CentOS_Version}" | grep -Eqi "^8" && cat /etc/centos-release | grep -Eqi "CentOS Stream"; then
+    if echo "${CentOS_Version}" | grep -Eqi "^8" && [ "${isCentosStream}" = "y" ]; then
         dnf install gcc-toolset-10 -y
     fi
 

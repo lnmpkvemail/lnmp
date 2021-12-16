@@ -363,6 +363,9 @@ Get_Dist_Name()
     if grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
         DISTRO='CentOS'
         PM='yum'
+        if grep -Eq "CentOS Stream" /etc/*-release; then
+            isCentosStream='y'
+        fi
     elif grep -Eqi "Alibaba" /etc/issue || grep -Eq "Alibaba Cloud Linux" /etc/*-release; then
         DISTRO='Alibaba'
         PM='yum'
