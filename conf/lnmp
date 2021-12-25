@@ -602,6 +602,10 @@ EOF
             echo "  =>Certificate file"
         elif [ "${ssl_choice}" == "2" ]; then
             echo "  =>Let's Encrypt"
+        elif [ "${ssl_choice}" == "3" ]; then
+            echo "  =>BuyPass"
+        elif [ "${ssl_choice}" == "4" ]; then
+            echo "  =>ZeroSSL"
         fi
     fi
     Echo_Green "================================================"
