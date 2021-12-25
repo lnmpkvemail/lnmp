@@ -1027,7 +1027,7 @@ Check_Acme_EMail()
                 echo "Email address ${email_address} is valid."
                 break
             else
-                echo "Email address $email is invalid! Please re-enter."
+                echo "Email address ${email_address} is invalid! Please re-enter."
             fi
         done
     fi
@@ -1117,6 +1117,9 @@ Install_Check_Acme.sh()
 {
     if [ -s /usr/local/acme.sh/acme.sh ]; then
         echo "/usr/local/acme.sh/acme.sh [found]"
+        if ! cat /usr/local/acme.sh/account.conf | grep -Eq "^ACCOUNT_EMAIL="; then
+            /usr/local/acme.sh/acme.sh --register-account -m ${email_address}
+        fi
     else
         cd /tmp
         [[ -f latest.tar.gz ]] && rm -f latest.tar.gz
