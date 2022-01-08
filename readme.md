@@ -44,7 +44,7 @@ lnmp.conf配置文件，可以修改lnmp.conf自定义下载服务器地址、�
 * 参数: phpmyadmin    可升级phpMyadmin。
 
 ### 扩展插件
-执行: `./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube}`
+执行: `./addons.sh {install|uninstall} {eaccelerator|xcache|memcached|opcache|redis|apcu|imagemagick|ioncube|exif|fileinfo|ldap|bz2|sodium|imap|swoole}`
 以下为扩展插件安装使用说明
 #### 缓存加速：
 * 参数: xcache 安装时需选择版本和设置密码，http://yourIP/xcache/ 进行管理，用户名 admin，密码为安装xcache时设置的。
@@ -54,12 +54,20 @@ lnmp.conf配置文件，可以修改lnmp.conf自定义下载服务器地址、�
 * 参数: eaccelerator 安装。
 * 参数: apcu 安装apcu php扩展，支持php7，可访问 http://yourIP/apc.php 进行管理。 
 **请勿安装多个缓存类扩展模块，多个可能导致网站出现问题 ！**
+#### PHP组件/模块：
+* 参数：exif   图片exif信息读取模块。
+* 参数：fileinfo   文件MIME类型编码读取模块，安装要求至少有1GB以上内存，否则可能会安装失败。
+* 参数：ldap    LDAP扩展。
+* 参数：bz2     bz2压缩扩展模块。
+* 参数：imap    imap模块。
+* 参数：swoole  PHP协程框架模块，第三方模块不支持通过lnmp.conf开启安装。
 
 #### 图像处理：
 * imageMagick安装卸载执行：`./addons.sh {install|uninstall} imageMagick` imageMagick路径：/usr/local/imagemagick/bin/。
 
 #### 解密：
 * IonCube安装执行：`./addons.sh {install|uninstall} ionCube`。
+* Sodium加密库扩展模块安装/卸载执行：`./addons.sh {install|uninstall} sodium `，一般微信支付之类的需要使用，PHP 7.2以下版本不支持通过lnmp.conf开启安装。
 
 #### 其他常用脚本：
 * 可选1，多PHP版本安装执行：`./install.sh mphp` 可以安装多个PHP版本 ，只支持LNMP模式，lnmp vhost add时进行选择或使用时需要将nginx虚拟主机配置文件里的include enable-php.conf替换为 include enable-php5.6.conf 即可前面的5.6换成你刚才安装的PHP的大版本号5.* 或7.0之类的。
