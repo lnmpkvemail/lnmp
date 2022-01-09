@@ -9,14 +9,16 @@ Set_Timezone()
 
 CentOS_InstallNTP()
 {
-    if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${Oracle_Version}" | grep -Eqi "^8" || echo "${Rocky_Version}" | grep -Eqi "^8" || echo "${Alma_Version}" | grep -Eqi "^8"; then
-        Echo_Blue "[+] Installing chrony..."
-        dnf install chrony -y
-        chronyd -q "server pool.ntp.org iburst"
-    else
-        Echo_Blue "[+] Installing ntp..."
-        yum install -y ntpdate
-        ntpdate -u pool.ntp.org
+    if [ "${CheckMirror}" != "n" ]; then
+        if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${Oracle_Version}" | grep -Eqi "^8" || echo "${Rocky_Version}" | grep -Eqi "^8" || echo "${Alma_Version}" | grep -Eqi "^8"; then
+            Echo_Blue "[+] Installing chrony..."
+            dnf install chrony -y
+            chronyd -q "server pool.ntp.org iburst"
+        else
+            Echo_Blue "[+] Installing ntp..."
+            yum install -y ntpdate
+            ntpdate -u pool.ntp.org
+        fi
     fi
     date
     start_time=$(date +%s)
@@ -106,14 +108,16 @@ Check_Hosts()
     else
         echo "127.0.0.1 localhost.localdomain localhost" >> /etc/hosts
     fi
-    pingresult=`ping -c1 lnmp.org 2>&1`
-    echo "${pingresult}"
-    if echo "${pingresult}" | grep -q "unknown host"; then
-        echo "DNS...fail"
-        echo "Writing nameserver to /etc/resolv.conf ..."
-        echo -e "nameserver 208.67.220.220\nnameserver 114.114.114.114" > /etc/resolv.conf
-    else
-        echo "DNS...ok"
+    if [ "${CheckMirror}" != "n" ]; then
+        pingresult=`ping -c1 lnmp.org 2>&1`
+        echo "${pingresult}"
+        if echo "${pingresult}" | grep -q "unknown host"; then
+            echo "DNS...fail"
+            echo "Writing nameserver to /etc/resolv.conf ..."
+            echo -e "nameserver 208.67.220.220\nnameserver 114.114.114.114" > /etc/resolv.conf
+        else
+            echo "DNS...ok"
+        fi
     fi
 }
 
