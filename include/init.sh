@@ -13,7 +13,7 @@ CentOS_InstallNTP()
         if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${Oracle_Version}" | grep -Eqi "^8" || echo "${Rocky_Version}" | grep -Eqi "^8" || echo "${Alma_Version}" | grep -Eqi "^8"; then
             Echo_Blue "[+] Installing chrony..."
             dnf install chrony -y
-            chronyd -q "server pool.ntp.org iburst"
+            chronyd -d -q "server pool.ntp.org iburst"
         else
             Echo_Blue "[+] Installing ntp..."
             yum install -y ntpdate
