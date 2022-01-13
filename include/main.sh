@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-DB_Info=('MySQL 5.1.73' 'MySQL 5.5.62' 'MySQL 5.6.51' 'MySQL 5.7.34' 'MySQL 8.0.25' 'MariaDB 5.5.68' 'MariaDB 10.1.48' 'MariaDB 10.2.38' 'MariaDB 10.3.29' 'MariaDB 10.4.19')
+DB_Info=('MySQL 5.1.73' 'MySQL 5.5.62' 'MySQL 5.6.51' 'MySQL 5.7.34' 'MySQL 8.0.25' 'MariaDB 5.5.68' 'MariaDB 10.3.32' 'MariaDB 10.4.22' 'MariaDB 10.5.13' 'MariaDB 10.6.5')
 PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.38' 'PHP 5.6.40' 'PHP 7.0.33' 'PHP 7.1.33' 'PHP 7.2.34' 'PHP 7.3.33' 'PHP 7.4.27' 'PHP 8.0.14' 'PHP 8.1.1')
 Apache_Info=('Apache 2.2.34' 'Apache 2.4.51')
 
@@ -63,7 +63,7 @@ Database_Selection()
         DBSelect="2"
     esac
 
-    if [[ "${DBSelect}" =~ ^[59]|10$ ]] && [ `free -m | grep Mem | awk '{print  $2}'` -le 1024 ]; then
+    if [[ "${DBSelect}" =~ ^5|[7-9]|10$ ]] && [ `free -m | grep Mem | awk '{print  $2}'` -le 1024 ]; then
         echo "Memory less than 1GB, can't install MySQL 8.0 or MairaDB 10.3+!"
         exit 1
     fi
