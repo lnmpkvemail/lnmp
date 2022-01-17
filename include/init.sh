@@ -26,10 +26,12 @@ CentOS_InstallNTP()
 
 Deb_InstallNTP()
 {
-    apt-get update -y
-    Echo_Blue "[+] Installing ntp..."
-    apt-get install -y ntpdate
-    ntpdate -u pool.ntp.org
+    if [ "${CheckMirror}" != "n" ]; then
+        apt-get update -y
+        Echo_Blue "[+] Installing ntp..."
+        apt-get install -y ntpdate
+        ntpdate -u pool.ntp.org
+    fi
     date
     start_time=$(date +%s)
 }
