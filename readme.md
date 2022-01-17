@@ -187,6 +187,12 @@ MariaDB 10.4 | 10 | PHP 7.4 | 10 | | | |
 |Enable_PHP_Fileinfo|是否安装开启php的fileinfo模块|默认n，根据自己情况而定，安装启用的话改成 y|
 |Enable_Nginx_Lua|是否为Nginx安装lua支持|默认n，安装lua可以使用一些基于lua的waf网站防火墙|
 |Enable_Swap|是否添加SWAP|默认y，当内存不足时可提高编译安装成功概率|
+|Enable_PHP_Exif|是否添加PHP exif模块|默认n，更改为y即安装|
+|Enable_PHP_Fileinfo|是否添加PHP fileinfo模块|默认n，更改为y即安装，需1GB以上内存|
+|Enable_PHP_Ldap|是否添加PHP ldap模块|默认n，更改为y即安装|
+|Enable_PHP_Bz2|是否添加PHP bz2模块|默认n，更改为y即安装|
+|Enable_PHP_Sodium|是否添加PHP sodium模块，PHP 7.2以下不支持lnmp.conf开启安装|默认n，更改为y即安装|
+|Enable_PHP_Imap|是否添加PHP imap模块|默认n，更改为y即安装|
 
 ## 技术支持
 
