@@ -10,6 +10,7 @@ Nginx_Dependent()
     elif [ "$PM" = "apt" ]; then
         export DEBIAN_FRONTEND=noninteractive
         apt-get update -y
+        [[ $? -ne 0 ]] && apt-get update --allow-releaseinfo-change -y
         dpkg -P apache2 apache2-doc apache2-mpm-prefork apache2-utils apache2.2-common
         for removepackages in apache2 apache2-doc apache2-utils apache2.2-common apache2.2-bin apache2-mpm-prefork apache2-doc apache2-mpm-worker;
         do apt-get purge -y $removepackages; done
@@ -80,6 +81,7 @@ DB_Dependent()
     elif [ "$PM" = "apt" ]; then
         export DEBIAN_FRONTEND=noninteractive
         apt-get update -y
+        [[ $? -ne 0 ]] && apt-get update --allow-releaseinfo-change -y
         for removepackages in mysql-client mysql-server mysql-common mysql-server-core-5.5 mysql-client-5.5 mariadb-client mariadb-server mariadb-common;
         do apt-get purge -y $removepackages; done
         dpkg -l |grep mysql

@@ -35,6 +35,7 @@ Install_Pureftpd()
         do yum -y install $packages; done
     elif [ "$PM" = "apt" ]; then
         apt-get update -y
+        [[ $? -ne 0 ]] && apt-get update --allow-releaseinfo-change -y
         for packages in build-essential gcc g++ make openssl libssl-dev bzip2;
         do apt-get --no-install-recommends install -y $packages; done
     fi

@@ -28,6 +28,7 @@ Deb_InstallNTP()
 {
     if [ "${CheckMirror}" != "n" ]; then
         apt-get update -y
+        [[ $? -ne 0 ]] && apt-get update --allow-releaseinfo-change -y
         Echo_Blue "[+] Installing ntp..."
         apt-get install -y ntpdate
         ntpdate -u pool.ntp.org
@@ -63,6 +64,7 @@ Deb_RemoveAMP()
 {
     Echo_Blue "[-] apt-get remove packages..."
     apt-get update -y
+    [[ $? -ne 0 ]] && apt-get update --allow-releaseinfo-change -y
     for removepackages in apache2 apache2-doc apache2-utils apache2.2-common apache2.2-bin apache2-mpm-prefork apache2-doc apache2-mpm-worker php5 php5-common php5-cgi php5-cli php5-mysql php5-curl php5-gd;
     do apt-get purge -y $removepackages; done
     if [[ "${DBSelect}" != "0" ]]; then
@@ -373,6 +375,7 @@ Deb_Dependent()
 {
     Echo_Blue "[+] Apt-get installing dependent packages..."
     apt-get update -y
+    [[ $? -ne 0 ]] && apt-get update --allow-releaseinfo-change -y
     apt-get autoremove -y
     apt-get -fy install
     export DEBIAN_FRONTEND=noninteractive
