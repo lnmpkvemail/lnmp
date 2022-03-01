@@ -65,15 +65,7 @@ Init_Install()
     if [ "${CheckMirror}" != "n" ]; then
         Check_Mirror
     fi
-    if [ "${DISTRO}" = "RHEL" ]; then
-        RHEL_Modify_Source
-    fi
-    if [ "${DISTRO}" = "Ubuntu" ]; then
-        Ubuntu_Modify_Source
-    fi
-    if [ "${DISTRO}" = "CentOS" ]; then
-        CentOS6_Modify_Source
-    fi
+    Modify_Source
     Add_Swap
     Set_Timezone
     if [ "$PM" = "yum" ]; then

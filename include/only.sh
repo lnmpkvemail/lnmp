@@ -33,6 +33,7 @@ Install_Only_Nginx()
     Echo_Blue "Install dependent packages..."
     cd ${cur_dir}/src
     Get_Dist_Version
+    Modify_Source
     Nginx_Dependent
     cd ${cur_dir}/src
     Download_Files ${Download_Mirror}/web/pcre/${Pcre_Ver}.tar.bz2 ${Pcre_Ver}.tar.bz2
@@ -69,8 +70,7 @@ DB_Dependent()
             Check_PowerTools
             dnf --enablerepo=${repo_id} install rpcgen -y
             dnf install libarchive -y
-        fi
-        if echo "${CentOS_Version}" | grep -Eqi "^8" && cat /etc/centos-release | grep -Eqi "CentOS Stream"; then
+
             dnf install gcc-toolset-10 -y
         fi
         if [ "${DISTRO}" = "Oracle" ] && echo "${Oracle_Version}" | grep -Eqi "^8"; then
@@ -105,6 +105,7 @@ Install_Database()
 
     Echo_Blue "Install dependent packages..."
     Get_Dist_Version
+    Modify_Source
     DB_Dependent
     if [ "${DBSelect}" = "1" ]; then
         Install_MySQL_51

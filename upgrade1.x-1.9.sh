@@ -32,9 +32,7 @@ Upgrade_Dependent()
             dnf --enablerepo=${repo_id} install rpcgen re2c -y
             dnf --enablerepo=${repo_id} install oniguruma-devel -y
             dnf install libarchive -y
-        fi
 
-        if echo "${CentOS_Version}" | grep -Eqi "^8" && cat /etc/centos-release | grep -Eqi "CentOS Stream"; then
             dnf install gcc-toolset-10 -y
         fi
 

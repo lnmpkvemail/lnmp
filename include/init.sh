@@ -285,26 +285,47 @@ CentOS6_Modify_Source()
     fi
 }
 
+CentOS8_Modify_Source()
+{
+    if echo "${CentOS_Version}" | grep -Eqi "^8" && [ "${isCentosStream}" != "y" ]; then
+        Echo_Yellow "CentOS 8 is now end of life, use vault repository."
+        if grep -q "^mirrorlist" /etc/yum.repos.d/CentOS-Linux-AppStream.repo && grep -q "#baseurl" /etc/yum.repos.d/CentOS-Linux-AppStream.repo; then
+            sed -i 's/^mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-*.repo
+            sed -i 's@#baseurl=.*$contentdir@baseurl=http://mirrors.aliyun.com/centos-vault/$contentdir@g' /etc/yum.repos.d/CentOS-Linux-*.repo
+        else
+            sed -i 's@baseurl=.*$contentdir@baseurl=http://mirrors.aliyun.com/centos-vault/$contentdir@g' /etc/yum.repos.d/CentOS-Linux-*.repo
+        fi
+    fi
+}
+
+Modify_Source()
+{
+    if [ "${DISTRO}" = "RHEL" ]; then
+        RHEL_Modify_Source
+    elif [ "${DISTRO}" = "Ubuntu" ]; then
+        Ubuntu_Modify_Source
+    elif [ "${DISTRO}" = "CentOS" ]; then
+        CentOS6_Modify_Source
+        CentOS8_Modify_Source
+    fi
+}
+
 Check_PowerTools()
 {
     if ! yum -v repolist all|grep "PowerTools"; then
         echo "PowerTools repository not found, add PowerTools repository ..."
-        cat >/etc/yum.repos.d/CentOS-PowerTools.repo<<EOF
-[PowerTools]
+        cat >/etc/yum.repos.d/CentOS-Linux-PowerTools.repo<<EOF
+[powertools]
 name=CentOS-\$releasever - PowerTools
-mirrorlist=http://mirrorlist.centos.org/?release=\$releasever&arch=\$basearch&repo=PowerTools&infra=\$infra
-#baseurl=http://mirror.centos.org/\$contentdir/\$releasever/PowerTools/\$basearch/os/
+#mirrorlist=http://mirrorlist.centos.org/?release=\$releasever&arch=\$basearch&repo=PowerTools&infra=\$infra
+baseurl=http://mirrors.aliyun.com/centos-vault/\$contentdir/\$releasever/PowerTools/\$basearch/os/
 gpgcheck=1
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
 EOF
-        if [ "${country}" = "CN" ]; then
-            sed -i "s@^mirrorlist=@#mirrorlist=@" /etc/yum.repos.d/CentOS-PowerTools.repo
-            sed -i "s@^#baseurl=http://mirror.centos.org@baseurl=http://mirror.centos.org/centos@" /etc/yum.repos.d/CentOS-PowerTools.repo
-        fi
     fi
     repo_id=$(yum repolist all|grep -Ei "PowerTools"|head -n 1|awk '{print $1}')
-    [ -z "${repo_id}" ] && repo_id="PowerTools"
+    [ -z "${repo_id}" ] && repo_id="powertools"
 }
 
 Check_Codeready()
@@ -331,9 +352,7 @@ CentOS_Dependent()
         dnf --enablerepo=${repo_id} install rpcgen re2c -y
         dnf --enablerepo=${repo_id} install oniguruma-devel -y
         dnf install libarchive -y
-    fi
 
-    if echo "${CentOS_Version}" | grep -Eqi "^8" && [ "${isCentosStream}" = "y" ]; then
         dnf install gcc-toolset-10 -y
     fi
 
