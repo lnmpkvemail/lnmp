@@ -133,13 +133,19 @@ RHEL_Modify_Source()
     else
         echo "RHEL ${RHEL_Ver} will use aliyun centos repository..."
         if [ ! -s "/etc/yum.repos.d/Centos-${RHEL_Ver}.repo" ]; then
-            wget --prefer-family=IPv4 http://mirrors.aliyun.com/repo/Centos-${RHEL_Ver}.repo -O /etc/yum.repos.d/Centos-${RHEL_Ver}.repo
+            if command -v curl >/dev/null 2>&1; then
+                curl http://mirrors.aliyun.com/repo/Centos-${RHEL_Ver}.repo -o /etc/yum.repos.d/Centos-${RHEL_Ver}.repo
+            else
+                wget --prefer-family=IPv4 http://mirrors.aliyun.com/repo/Centos-${RHEL_Ver}.repo -O /etc/yum.repos.d/Centos-${RHEL_Ver}.repo
+            fi
         fi
         if echo "${RHEL_Version}" | grep -Eqi "^6"; then
             sed -i "s#centos/\$releasever#centos-vault/\$releasever#g" /etc/yum.repos.d/Centos-${RHEL_Ver}.repo
             sed -i "s/\$releasever/${RHEL_Version}/g" /etc/yum.repos.d/Centos-${RHEL_Ver}.repo
-        else
-            sed -i "s/\$releasever/${RHEL_Ver}/g" /etc/yum.repos.d/Centos-${RHEL_Ver}.repo
+        elif echo "${RHEL_Version}" | grep -Eqi "^7"; then
+            sed -i "s/\$releasever/7/g" /etc/yum.repos.d/Centos-${RHEL_Ver}.repo
+        elif echo "${RHEL_Version}" | grep -Eqi "^8"; then
+            sed -i "s#centos/\$releasever#centos-vault/8.5.2111#g" /etc/yum.repos.d/Centos-${RHEL_Ver}.repo
         fi
         yum clean all
         yum makecache

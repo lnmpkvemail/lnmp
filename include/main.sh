@@ -434,6 +434,7 @@ Get_RHEL_Version()
             echo "Current Version: RHEL Ver 8"
             RHEL_Ver='8'
         fi
+        RHEL_Version="$(cat /etc/redhat-release | sed 's/.*release\ //' | sed 's/\ .*//')"
     fi
 }
 
