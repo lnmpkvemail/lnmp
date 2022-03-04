@@ -24,7 +24,6 @@ Install_Redis()
         Tar_Cd ${Redis_Stable_Ver}.tar.gz ${Redis_Stable_Ver}
 
         Get_OS_Bit
-        Get_ARM
         if [ "${Is_ARM}" = "y" ]; then
             sed -i 's/FINAL_LIBS=-lm/FINAL_LIBS=-lm -latomic/' src/Makefile
         fi

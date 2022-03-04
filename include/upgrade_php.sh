@@ -225,19 +225,13 @@ Upgrade_PHP_52()
     Pear_Pecl_Set
 
     cd ${cur_dir}/src
-    if [ "${Is_64bit}" = "y" ] ; then
-        Download_Files ${Download_Mirror}/web/zend/ZendOptimizer-3.3.9-linux-glibc23-x86_64.tar.gz ZendOptimizer-3.3.9-linux-glibc23-x86_64.tar.gz
-        Tar_Cd ZendOptimizer-3.3.9-linux-glibc23-x86_64.tar.gz
-        mkdir -p /usr/local/zend/
-        \cp ZendOptimizer-3.3.9-linux-glibc23-x86_64/data/5_2_x_comp/ZendOptimizer.so /usr/local/zend/
-    else
-        Download_Files ${Download_Mirror}/web/zend/ZendOptimizer-3.3.9-linux-glibc23-i386.tar.gz ZendOptimizer-3.3.9-linux-glibc23-i386.tar.gz
-        Tar_Cd ZendOptimizer-3.3.9-linux-glibc23-i386.tar.gz
-        mkdir -p /usr/local/zend/
-        \cp ZendOptimizer-3.3.9-linux-glibc23-i386/data/5_2_x_comp/ZendOptimizer.so /usr/local/zend/
-    fi
-
     if [ "${Is_ARM}" != "y" ]; then
+        echo "Install ZendGuardLoader for PHP 5.2..."
+        Download_Files ${Download_Mirror}/web/zend/ZendOptimizer-3.3.9-linux-glibc23-${ARCH}.tar.gz ZendOptimizer-3.3.9-linux-glibc23-${ARCH}.tar.gz
+        Tar_Cd ZendOptimizer-3.3.9-linux-glibc23-${ARCH}.tar.gz
+        mkdir -p /usr/local/zend/
+        \cp ZendOptimizer-3.3.9-linux-glibc23-${ARCH}/data/5_2_x_comp/ZendOptimizer.so /usr/local/zend/
+
         cat >/usr/local/php/conf.d/002-zendoptimizer.ini<<EOF
 [Zend Optimizer]
 zend_optimizer.optimization_level=1
@@ -275,7 +269,6 @@ Upgrade_PHP_53()
     mkdir -p /usr/local/php/{etc,conf.d}
     \cp php.ini-production /usr/local/php/etc/php.ini
 
-    cd ${cur_dir}
     # php extensions
     echo "Modify php.ini......"
     sed -i 's/post_max_size =.*/post_max_size = 50M/g' /usr/local/php/etc/php.ini
@@ -290,19 +283,13 @@ Upgrade_PHP_53()
 
     echo "Install ZendGuardLoader..."
     cd ${cur_dir}/src
-    if [ "${Is_64bit}" = "y" ] ; then
-        Download_Files ${Download_Mirror}/web/zend/ZendGuardLoader-php-5.3-linux-glibc23-x86_64.tar.gz ZendGuardLoader-php-5.3-linux-glibc23-x86_64.tar.gz
-        Tar_Cd ZendGuardLoader-php-5.3-linux-glibc23-x86_64.tar.gz
-        mkdir -p /usr/local/zend/
-        \cp ZendGuardLoader-php-5.3-linux-glibc23-x86_64/php-5.3.x/ZendGuardLoader.so /usr/local/zend/
-    else
-        Download_Files ${Download_Mirror}/web/zend/ZendGuardLoader-php-5.3-linux-glibc23-i386.tar.gz ZendGuardLoader-php-5.3-linux-glibc23-i386.tar.gz
-        Tar_Cd ZendGuardLoader-php-5.3-linux-glibc23-i386.tar.gz
-        mkdir -p /usr/local/zend/
-        \cp ZendGuardLoader-php-5.3-linux-glibc23-i386/php-5.3.x/ZendGuardLoader.so /usr/local/zend/
-    fi
-
     if [ "${Is_ARM}" != "y" ]; then
+        echo "Install ZendGuardLoader for PHP 5.3..."
+        Download_Files ${Download_Mirror}/web/zend/ZendGuardLoader-php-5.3-linux-glibc23-${ARCH}.tar.gz ZendGuardLoader-php-5.3-linux-glibc23-${ARCH}.tar.gz
+        Tar_Cd ZendGuardLoader-php-5.3-linux-glibc23-${ARCH}.tar.gz
+        mkdir -p /usr/local/zend/
+        \cp ZendGuardLoader-php-5.3-linux-glibc23-${ARCH}/php-5.3.x/ZendGuardLoader.so /usr/local/zend/
+
         echo "Write ZendGuardLoader to php.ini......"
         cat >/usr/local/php/conf.d/002-zendguardloader.ini<<EOF
 [Zend Optimizer]
@@ -388,21 +375,14 @@ Upgrade_PHP_54()
     Pear_Pecl_Set
     Install_Composer
 
-    echo "Install ZendGuardLoader..."
     cd ${cur_dir}/src
-    if [ "${Is_64bit}" = "y" ] ; then
-        Download_Files ${Download_Mirror}/web/zend/ZendGuardLoader-70429-PHP-5.4-linux-glibc23-x86_64.tar.gz ZendGuardLoader-70429-PHP-5.4-linux-glibc23-x86_64.tar.gz
-        Tar_Cd ZendGuardLoader-70429-PHP-5.4-linux-glibc23-x86_64.tar.gz
-        mkdir -p /usr/local/zend/
-        \cp ZendGuardLoader-70429-PHP-5.4-linux-glibc23-x86_64/php-5.4.x/ZendGuardLoader.so /usr/local/zend/
-    else
-        Download_Files ${Download_Mirror}/web/zend/ZendGuardLoader-70429-PHP-5.4-linux-glibc23-i386.tar.gz ZendGuardLoader-70429-PHP-5.4-linux-glibc23-i386.tar.gz
-        Tar_Cd ZendGuardLoader-70429-PHP-5.4-linux-glibc23-i386.tar.gz
-        mkdir -p /usr/local/zend/
-        \cp ZendGuardLoader-70429-PHP-5.4-linux-glibc23-i386/php-5.4.x/ZendGuardLoader.so /usr/local/zend/
-    fi
-
     if [ "${Is_ARM}" != "y" ]; then
+        echo "Install ZendGuardLoader for PHP 5.4..."
+        Download_Files ${Download_Mirror}/web/zend/ZendGuardLoader-70429-PHP-5.4-linux-glibc23-${ARCH}.tar.gz ZendGuardLoader-70429-PHP-5.4-linux-glibc23-${ARCH}.tar.gz
+        Tar_Cd ZendGuardLoader-70429-PHP-5.4-linux-glibc23-${ARCH}.tar.gz
+        mkdir -p /usr/local/zend/
+        \cp ZendGuardLoader-70429-PHP-5.4-linux-glibc23-${ARCH}/php-5.4.x/ZendGuardLoader.so /usr/local/zend/
+
         echo "Write ZendGuardLoader to php.ini......"
         cat >/usr/local/php/conf.d/002-zendguardloader.ini<<EOF
 [Zend ZendGuard Loader]
@@ -475,7 +455,6 @@ Upgrade_PHP_556()
     mkdir -p /usr/local/php/{etc,conf.d}
     \cp php.ini-production /usr/local/php/etc/php.ini
 
-    cd ${cur_dir}
     # php extensions
     echo "Modify php.ini......"
     sed -i 's/post_max_size =.*/post_max_size = 50M/g' /usr/local/php/etc/php.ini
@@ -488,37 +467,22 @@ Upgrade_PHP_556()
     Pear_Pecl_Set
     Install_Composer
 
-    if echo "${php_version}" | grep -Eqi '^5.5.';then
-        echo "Install ZendGuardLoader for PHP 5.5..."
-        cd ${cur_dir}/src
-        if [ "${Is_64bit}" = "y" ] ; then
-            Download_Files ${Download_Mirror}/web/zend/zend-loader-php5.5-linux-x86_64.tar.gz zend-loader-php5.5-linux-x86_64.tar.gz
-            Tar_Cd zend-loader-php5.5-linux-x86_64.tar.gz
-            mkdir -p /usr/local/zend/
-            \cp zend-loader-php5.5-linux-x86_64/ZendGuardLoader.so /usr/local/zend/
-        else
-            Download_Files ${Download_Mirror}/web/zend/zend-loader-php5.5-linux-i386.tar.gz zend-loader-php5.5-linux-i386.tar.gz
-            Tar_Cd zend-loader-php5.5-linux-i386.tar.gz
-            mkdir -p /usr/local/zend/
-            \cp zend-loader-php5.5-linux-i386/ZendGuardLoader.so /usr/local/zend/
-        fi
-    elif echo "${php_version}" | grep -Eqi '^5.6.';then
-        echo "Install ZendGuardLoader for PHP 5.6..."
-        cd ${cur_dir}/src
-        if [ "${Is_64bit}" = "y" ] ; then
-            Download_Files ${Download_Mirror}/web/zend/zend-loader-php5.6-linux-x86_64.tar.gz zend-loader-php5.6-linux-x86_64.tar.gz
-            Tar_Cd zend-loader-php5.6-linux-x86_64.tar.gz
-            mkdir -p /usr/local/zend/
-            \cp zend-loader-php5.6-linux-x86_64/ZendGuardLoader.so /usr/local/zend/
-        else
-            Download_Files ${Download_Mirror}/web/zend/zend-loader-php5.6-linux-i386.tar.gz zend-loader-php5.6-linux-i386.tar.gz
-            Tar_Cd zend-loader-php5.6-linux-i386.tar.gz
-            mkdir -p /usr/local/zend/
-            \cp zend-loader-php5.6-linux-i386/ZendGuardLoader.so /usr/local/zend/
-        fi
-    fi
-
+    cd ${cur_dir}/src
     if [ "${Is_ARM}" != "y" ]; then
+        if echo "${php_version}" | grep -Eqi '^5.5.';then
+            echo "Install ZendGuardLoader for PHP 5.5..."
+            Download_Files ${Download_Mirror}/web/zend/zend-loader-php5.5-linux-${ARCH}.tar.gz zend-loader-php5.5-linux-${ARCH}.tar.gz
+            Tar_Cd zend-loader-php5.5-linux-${ARCH}.tar.gz
+            mkdir -p /usr/local/zend/
+            \cp zend-loader-php5.5-linux-${ARCH}/ZendGuardLoader.so /usr/local/zend/
+        elif echo "${php_version}" | grep -Eqi '^5.6.';then
+            echo "Install ZendGuardLoader for PHP 5.6..."
+            Download_Files ${Download_Mirror}/web/zend/zend-loader-php5.6-linux-${ARCH}.tar.gz zend-loader-php5.6-linux-${ARCH}.tar.gz
+            Tar_Cd zend-loader-php5.6-linux-${ARCH}.tar.gz
+            mkdir -p /usr/local/zend/
+            \cp zend-loader-php5.6-linux-${ARCH}/ZendGuardLoader.so /usr/local/zend/
+        fi
+
         echo "Write ZendGuardLoader to php.ini......"
         cat >/usr/local/php/conf.d/002-zendguardloader.ini<<EOF
 [Zend ZendGuard Loader]
@@ -594,7 +558,6 @@ Upgrade_PHP_7()
     mkdir -p /usr/local/php/{etc,conf.d}
     \cp php.ini-production /usr/local/php/etc/php.ini
 
-    cd ${cur_dir}
     # php extensions
     echo "Modify php.ini......"
     sed -i 's/post_max_size =.*/post_max_size = 50M/g' /usr/local/php/etc/php.ini
@@ -607,6 +570,7 @@ Upgrade_PHP_7()
     Pear_Pecl_Set
     Install_Composer
 
+    cd ${cur_dir}/src
     echo "Install ZendGuardLoader for PHP 7..."
     echo "unavailable now."
 
@@ -669,7 +633,6 @@ Upgrade_PHP_72()
     mkdir -p /usr/local/php/{etc,conf.d}
     \cp php.ini-production /usr/local/php/etc/php.ini
 
-    cd ${cur_dir}
     # php extensions
     echo "Modify php.ini......"
     sed -i 's/post_max_size =.*/post_max_size = 50M/g' /usr/local/php/etc/php.ini
@@ -682,6 +645,7 @@ Upgrade_PHP_72()
     Pear_Pecl_Set
     Install_Composer
 
+    cd ${cur_dir}/src
     echo "Install ZendGuardLoader for PHP 7..."
     echo "unavailable now."
 
@@ -744,7 +708,6 @@ Upgrade_PHP_73()
     mkdir -p /usr/local/php/{etc,conf.d}
     \cp php.ini-production /usr/local/php/etc/php.ini
 
-    cd ${cur_dir}
     # php extensions
     echo "Modify php.ini......"
     sed -i 's/post_max_size =.*/post_max_size = 50M/g' /usr/local/php/etc/php.ini
@@ -757,6 +720,7 @@ Upgrade_PHP_73()
     Pear_Pecl_Set
     Install_Composer
 
+    cd ${cur_dir}/src
     echo "Install ZendGuardLoader for PHP 7..."
     echo "unavailable now."
 
@@ -820,7 +784,6 @@ Upgrade_PHP_74()
     mkdir -p /usr/local/php/{etc,conf.d}
     \cp php.ini-production /usr/local/php/etc/php.ini
 
-    cd ${cur_dir}
     # php extensions
     echo "Modify php.ini......"
     sed -i 's/post_max_size =.*/post_max_size = 50M/g' /usr/local/php/etc/php.ini
@@ -833,6 +796,7 @@ Upgrade_PHP_74()
     Pear_Pecl_Set
     Install_Composer
 
+    cd ${cur_dir}/src
     echo "Install ZendGuardLoader for PHP 7..."
     echo "unavailable now."
 
@@ -896,7 +860,6 @@ Upgrade_PHP_80()
     mkdir -p /usr/local/php/{etc,conf.d}
     \cp php.ini-production /usr/local/php/etc/php.ini
 
-    cd ${cur_dir}
     # php extensions
     echo "Modify php.ini......"
     sed -i 's/post_max_size =.*/post_max_size = 50M/g' /usr/local/php/etc/php.ini
@@ -909,6 +872,7 @@ Upgrade_PHP_80()
     Pear_Pecl_Set
     Install_Composer
 
+    cd ${cur_dir}/src
     echo "Install ZendGuardLoader for PHP 8..."
     echo "unavailable now."
 
@@ -973,7 +937,6 @@ Upgrade_PHP_81()
     mkdir -p /usr/local/php/{etc,conf.d}
     \cp php.ini-production /usr/local/php/etc/php.ini
 
-    cd ${cur_dir}
     # php extensions
     echo "Modify php.ini......"
     sed -i 's/post_max_size =.*/post_max_size = 50M/g' /usr/local/php/etc/php.ini
@@ -986,6 +949,7 @@ Upgrade_PHP_81()
     Pear_Pecl_Set
     Install_Composer
 
+    cd ${cur_dir}/src
     echo "Install ZendGuardLoader for PHP 8..."
     echo "unavailable now."
 

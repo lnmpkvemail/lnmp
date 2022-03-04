@@ -2,7 +2,6 @@
 
 MySQL_ARM_Patch()
 {
-    Get_ARM
     if [ "${Is_ARM}" = "y" ]; then
         patch -p1 < ${cur_dir}/src/patch/mysql-5.5-fix-arm-client_plugin.patch
     fi

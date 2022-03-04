@@ -442,15 +442,21 @@ Get_OS_Bit()
 {
     if [[ `getconf WORD_BIT` = '32' && `getconf LONG_BIT` = '64' ]] ; then
         Is_64bit='y'
+        ARCH='x86_64'
     else
         Is_64bit='n'
+        ARCH='i386'
     fi
-}
 
-Get_ARM()
-{
     if uname -m | grep -Eqi "arm|aarch64"; then
         Is_ARM='y'
+        if uname -m | grep -Eqi "armv7|armv6"; then
+            ARCH='armhf'
+        elif uname -m | grep -Eqi "aarch64"; then
+            ARCH='aarch64'
+        else
+            ARCH='arm'
+        fi
     fi
 }
 
