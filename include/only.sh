@@ -120,6 +120,7 @@ Install_Database()
     Get_Dist_Version
     Modify_Source
     DB_Dependent
+    Check_Openssl
     if [ "${DBSelect}" = "1" ]; then
         Install_MySQL_51
     elif [ "${DBSelect}" = "2" ]; then
