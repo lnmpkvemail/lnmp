@@ -587,7 +587,7 @@ Print_Sys_Info()
     MemTotal=`free -m | grep Mem | awk '{print  $2}'`
     echo "Memory is: ${MemTotal} MB "
     df -h
-    openssl version
+    Check_Openssl
     Check_WSL
 }
 
@@ -838,5 +838,13 @@ Check_WSL() {
         isWSL="y"
     else
         isWSL="n"
+    fi
+}
+
+Check_Openssl()
+{
+    openssl version
+    if openssl version | grep -Eqi "OpenSSL 3.*"; then
+        isOpenSSL3='y'
     fi
 }

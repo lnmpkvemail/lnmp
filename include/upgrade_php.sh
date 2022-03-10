@@ -79,6 +79,7 @@ Start_Upgrade_PHP()
     fi
     Check_PHP_Option
     Install_PHP_Dependent
+    Check_Openssl
 }
 
 Install_PHP_Dependent()
@@ -549,6 +550,9 @@ Upgrade_PHP_7()
 {
     Echo_Blue "[+] Installing ${php_version}"
     Tarj_Cd php-${php_version}.tar.bz2 php-${php_version}
+    if echo "${php_version}" | grep -Eqi '^7.1.';then
+        PHP_Openssl3_Patch
+    fi
     if [ "${Stack}" = "lnmp" ]; then
         ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-config-file-scan-dir=/usr/local/php/conf.d --enable-fpm --with-fpm-user=www --with-fpm-group=www --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization ${with_curl} --enable-mbregex --enable-mbstring --enable-intl --enable-pcntl --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf ${with_openssl} --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext ${with_fileinfo} --enable-opcache --with-xsl ${PHP_Buildin_Option} ${PHP_Modules_Options}
     else
