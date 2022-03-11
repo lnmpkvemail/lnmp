@@ -10,14 +10,21 @@ Set_Timezone()
 CentOS_InstallNTP()
 {
     if [ "${CheckMirror}" != "n" ]; then
-        if echo "${CentOS_Version}" | grep -Eqi "^8|9" || echo "${RHEL_Version}" | grep -Eqi "^8|9" || echo "${Oracle_Version}" | grep -Eqi "^8|9" || echo "${Rocky_Version}" | grep -Eqi "^8|9" || echo "${Alma_Version}" | grep -Eqi "^8|9"; then
-            Echo_Blue "[+] Installing chrony..."
-            dnf install chrony -y
+        if command -v ntpdate >/dev/null 2>&1; then
+            ntpdate -u pool.ntp.org
+        elif command -v chronyd >/dev/null 2>&1; then
             chronyd -d -q "server pool.ntp.org iburst"
         else
-            Echo_Blue "[+] Installing ntp..."
-            yum install -y ntpdate
-            ntpdate -u pool.ntp.org
+            yum info ntpdate && check_ntp="y"
+            if [ "${check_ntp}" = "y" ]; then
+                Echo_Blue "[+] Installing ntp..."
+                yum install -y ntpdate
+                ntpdate -u pool.ntp.org
+            else
+                Echo_Blue "[+] Installing chrony..."
+                yum install chrony -y
+                chronyd -d -q "server pool.ntp.org iburst"
+            fi
         fi
     fi
     date
