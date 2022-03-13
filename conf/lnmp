@@ -162,6 +162,24 @@ Function_Ftp()
     esac
 }
 
+Function_Ssl()
+{
+    case "$1" in
+        [aA][dD][dD])
+            info="n"
+            Add_SSL_Menu
+            Add_SSL
+            ;;
+        [lL][iI][sS][tT])
+            List_Ssl
+            ;;
+        *)
+            echo "Usage: lnmp ssl {add|list}"
+            exit 1
+            ;;
+    esac
+}
+
 Add_VHost_Config()
 {
     if [ ! -f /usr/local/nginx/conf/rewrite/${rewrite}.conf ]; then
@@ -1072,6 +1090,39 @@ Add_DNS_SSL_Only_Info_Menu()
     fi
 }
 
+List_Ssl()
+{
+    if [ ! -d "/usr/local/nginx/conf/ssl" ];then
+        Echo_Red "There are no certificates on this server."
+        exit 1
+    fi
+    
+    Echo_Blue "Domain | Created | Expired | Overage" > /root/.ssl.list.cache
+
+    for domain in $(ls /usr/local/nginx/conf/ssl | grep -v dhparam.pem)
+    do
+        effective_time=$(openssl x509 -in /usr/local/nginx/conf/ssl/${domain}/fullchain.cer -noout -dates | grep notBefore | sed 's#notBefore=##g')
+        expiration_time=$(openssl x509 -in /usr/local/nginx/conf/ssl/${domain}/fullchain.cer -noout -dates | grep notAfter | sed 's#notAfter=##g')
+        effective_time=$(date -d "${effective_time}" +'%Y-%m-%d %H:%M:%S')
+        expiration_time=$(date -d "${expiration_time}" +'%Y-%m-%d %H:%M:%S')
+        expiration_timestamp=$(date -d "${expiration_time}" "+%s")
+        expiry_time_distance=$(expr $(expr ${expiration_timestamp} - $(date +%s)) / 86400)
+
+        if [[ ${expiry_time_distance} -ge "31" ]]; then
+            Echo_Green "${domain} | ${effective_time} | ${expiration_time} | ${expiry_time_distance} day" >> /root/.ssl.list.cache
+        fi
+        if [[ ${expiry_time_distance} -ge "14" ]] && [[ ${expiry_time_distance} -lt "31" ]]; then
+            Echo_Yellow "${domain} | ${effective_time} | ${expiration_time} | ${expiry_time_distance} day" >> /root/.ssl.list.cache
+        fi
+        if [[ ${expiry_time_distance} -ge "1" ]] && [[ ${expiry_time_distance} -lt "14" ]]; then
+            Echo_Red "${domain} | ${effective_time} | ${expiration_time} | ${expiry_time_distance} day" >> /root/.ssl.list.cache
+        fi
+    done
+
+    cat /root/.ssl.list.cache | column -t -s '|'
+    rm /root/.ssl.list.cache
+}
+
 Add_SSL_Menu()
 {
     if [ "${info}" == "n" ]; then
@@ -1524,9 +1575,7 @@ case "${arg1}" in
         Function_Ftp ${arg2}
         ;;
     ssl)
-        info="n"
-        Add_SSL_Menu
-        Add_SSL
+        Function_Ssl ${arg2}
         ;;
     dnsssl|dns)
         Add_Dns_SSL ${arg2}
@@ -1540,7 +1589,7 @@ case "${arg1}" in
         echo "Usage: lnmp vhost {add|list|del}"
         echo "Usage: lnmp database {add|list|edit|del}"
         echo "Usage: lnmp ftp {add|list|edit|del|show}"
-        echo "Usage: lnmp ssl add"
+        echo "Usage: lnmp ssl {add|list}"
         echo "Usage: lnmp {dnsssl|dns} {cx|ali|cf|dp|he|gd|aws}"
         echo "Usage: lnmp onlyssl {cx|ali|cf|dp|he|gd|aws}"
         ;;
