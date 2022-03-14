@@ -1033,6 +1033,17 @@ Check_Acme_EMail()
     fi
 }
 
+Return_301_Menu()
+{
+    Echo_Yellow "Using 301 to Redirect HTTP to HTTPS? (y/n) "
+    read using_301
+    if [[ "${using_301}" == "n" || "${using_301}" == "" ]]; then
+        echo "DO not setting 301 Redirect."
+    elif [ "${using_301}" == "y" ]; then
+        echo "Redirect http://${domain} to https://${domain} "
+    fi
+}
+
 Add_DNS_SSL_Select_Menu()
 {
     echo "1: Use Let's Encrypt to create SSL Certificate and Key"
@@ -1111,6 +1122,8 @@ Add_SSL_Menu()
             Echo_Red "Please Enter 1, 2, 3 or 4!"
         fi
     done
+
+    Return_301_Menu
 }
 
 Install_Check_Acme.sh()
@@ -1219,6 +1232,10 @@ server
     }
 EOF
 
+    if [ "${using_301}" == "y" ]; then
+        sed -i '0,/^access_log/!b;//i\        location / {\n            return 301 https://$host$request_uri;\n        }\n' /usr/local/nginx/conf/vhost/${domain}.conf
+    fi
+
     echo "Test Nginx configure file......"
     /usr/local/nginx/sbin/nginx -t
     echo "Reload Nginx......"
@@ -1296,6 +1313,7 @@ Add_Dns_SSL()
 
     Add_SSL_Info_Menu
     Add_DNS_SSL_Select_Menu
+    Return_301_Menu
     Install_Check_Acme.sh
 
     if [[ ! -s /usr/local/acme.sh/dnsapi/dns_${provider}.sh && "${provider}" != "" ]]; then
@@ -1507,9 +1525,6 @@ case "${arg1}" in
         ;;
     pureftpd)
         /etc/init.d/pureftpd ${arg2}
-        ;;
-    httpd)
-        /etc/init.d/httpd ${arg2}
         ;;
     vhost)
         Function_Vhost ${arg2}
