@@ -8,6 +8,8 @@ LNMP 1.9
 增加ngx_fancyindex模块，lnmp.conf中开启后，安装lnmp或升级nginx；
 增加nginx模块--with-stream_ssl_preread_module，方便使用stream ssl相关配置；
 增加统信服务器操作系统V20版本支持；
+增加CentOS Stream 9支持；
+lnmp管理脚本增加HTTP 301跳转HTTPS的选项；
 移除mariadb 10.1, 10.2增加mariadb 10.5, 10.6；
 泛域名SSL增加了ZeroSSL支持；
 优化AlibabaCloud支持；
@@ -15,6 +17,7 @@ LNMP 1.9
 优化FTP用户添加部分代码；
 优化离线安装；
 优化部分EOL Linux发行版的安装；
+优化OpenSSL支持；
 调整MariaDB升级下载地址；
 更新诸多软件版本；
 其他一些功能优化及调整......
