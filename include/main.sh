@@ -410,7 +410,7 @@ Get_Dist_Name()
         PM='apt'
     elif grep -Eqi "UnionTech OS" /etc/issue || grep -Eq "UnionTech OS" /etc/*-release; then
         DISTRO='UOS'
-        PM='apt'
+        PM='yum'
     else
         DISTRO='unknow'
     fi
