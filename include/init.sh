@@ -347,6 +347,14 @@ Check_Codeready()
     [ -z "${repo_id}" ] && repo_id="ol8_codeready_builder"
 }
 
+Check_UOS_PowerTools()
+{
+    if ! yum -v repolist all|grep "PowerTools"; then
+        Echo_Red "PowerTools repository not found!"
+    fi
+    repo_id=$(yum repolist all|grep -Ei "PowerTools"|head -n 1|awk '{print $1}')
+}
+
 CentOS_Dependent()
 {
     if [ -s /etc/yum.conf ]; then
@@ -401,6 +409,12 @@ CentOS_Dependent()
 
     if [ "${DISTRO}" = "Fedora" ] || echo "${CentOS_Version}" | grep -Eqi "^9"; then
         dnf install chkconfig -y
+    fi
+
+    if [ "${DISTRO}" = "UOS" ]; then
+        Check_UOS_PowerTools
+        for uospackages in rpcgen re2c oniguruma-devel;
+        do dnf --enablerepo=${repo_id} install ${uospackages} -y; done
     fi
 
     if [ -s /etc/yum.conf.lnmp ]; then
