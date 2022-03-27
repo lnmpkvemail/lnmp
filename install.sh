@@ -62,10 +62,10 @@ Init_Install()
     Print_Sys_Info
     Check_Hosts
     Check_CMPT
+    Modify_Source
     if [ "${CheckMirror}" != "n" ]; then
         Check_Mirror
     fi
-    Modify_Source
     Add_Swap
     Set_Timezone
     if [ "$PM" = "yum" ]; then

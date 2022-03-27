@@ -209,7 +209,7 @@ Ubuntu_Modify_Source()
     elif grep -Eqi "19.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^19.10'; then
         CodeName='eoan'
     elif grep -Eqi "20.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^20.10'; then
-        Ubuntu_Deadline groovy
+        CodeName='groovy'
     elif grep -Eqi "21.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^21.04'; then
         Ubuntu_Deadline hirsute
     elif grep -Eqi "21.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^21.10'; then
@@ -245,7 +245,6 @@ Ubuntu_Deadline()
 {
     trusty_deadline=`date -d "2022-4-30 00:00:00" +%s`
     xenial_deadline=`date -d "2024-4-30 00:00:00" +%s`
-    groovy_deadline=`date -d "2021-7-30 00:00:00" +%s`
     hirsute_deadline=`date -d "2022-1-30 00:00:00" +%s`
     impish_deadline=`date -d "2022-7-30 00:00:00" +%s`
     cur_time=`date  +%s`
@@ -266,12 +265,6 @@ Ubuntu_Deadline()
             if [ ${cur_time} -gt ${eoan_deadline} ]; then
                 echo "${cur_time} > ${eoan_deadline}"
                 Check_Old_Releases_URL eoan
-            fi
-            ;;
-        groovy)
-            if [ ${cur_time} -gt ${groovy_deadline} ]; then
-                echo "${cur_time} > ${groovy_deadline}"
-                Check_Old_Releases_URL groovy
             fi
             ;;
         hirsute)
