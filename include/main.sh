@@ -447,9 +447,11 @@ Get_OS_Bit()
     if [[ `getconf WORD_BIT` = '32' && `getconf LONG_BIT` = '64' ]] ; then
         Is_64bit='y'
         ARCH='x86_64'
+        DB_ARCH='x86_64'
     else
         Is_64bit='n'
         ARCH='i386'
+        DB_ARCH='i686'
     fi
 
     if uname -m | grep -Eqi "arm|aarch64"; then
