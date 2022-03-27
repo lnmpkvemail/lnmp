@@ -595,6 +595,8 @@ Print_Sys_Info()
     df -h
     Check_Openssl
     Check_WSL
+    Get_Country
+    echo "Server Location: ${country}"
 }
 
 StartUp()
@@ -632,9 +634,13 @@ Remove_StartUp()
 
 Get_Country()
 {
-    country=`curl -sSk --connect-timeout 30 -m 60 https://ip.vpszt.com/country`
-    if [ $? -ne 0 ]; then
-        country=`curl -sSk --connect-timeout 30 -m 60 https://ip.vpser.net/country`
+    if command -v curl >/dev/null 2>&1; then
+        country=`curl -sSk --connect-timeout 30 -m 60 http://ip.vpszt.com/country`
+        if [ $? -ne 0 ]; then
+            country=`curl -sSk --connect-timeout 30 -m 60 https://ip.vpser.net/country`
+        fi
+    else
+        country=`wget --timeout=5 --no-check-certificate -q -O - http://ip.vpszt.com/country`
     fi
 }
 
@@ -649,8 +655,6 @@ Check_Mirror()
             apt-get install -y curl
         fi
     fi
-    Get_Country
-    echo "Server Location: ${country}"
     if [ "${Download_Mirror}" = "https://soft.vpser.net" ]; then
         echo "Try http://soft.vpser.net ..."
         mirror_code=`curl -o /dev/null -m 20 --connect-timeout 20 -sk -w %{http_code} http://soft.vpser.net`

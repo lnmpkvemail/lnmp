@@ -163,7 +163,7 @@ RHEL_Modify_Source()
 Ubuntu_Modify_Source()
 {
     if [ "${country}" = "CN" ]; then
-        OldReleasesURL='http://mirrors.ustc.edu.cn/ubuntu-old-releases/ubuntu/'
+        OldReleasesURL='http://mirrors.aliyun.com/oldubuntu-releases/ubuntu/'
     else
         OldReleasesURL='http://old-releases.ubuntu.com/ubuntu/'
     fi
