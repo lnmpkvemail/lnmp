@@ -47,11 +47,11 @@ Database_Selection()
             ;;
         [nN][oO]|[nN])
             echo "You will install MySQL ${DB_Info[4]} Source code."
-            Bin=="n"
+            Bin="n"
             ;;
         *)
             echo "Default install MySQL ${DB_Info[4]} Generic Binaries."
-            Bin=="y"
+            Bin="y"
         esac
         ;;
     6)

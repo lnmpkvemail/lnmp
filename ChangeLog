@@ -7,8 +7,9 @@ LNMP 1.9
 增加PHP模块exif、fileinfo、ldap、bz2、sodium、imap、swoole和SourceGuardian Loader的支持安装，安装lnmp前lnmp.conf 中开启后安装lnmp或 ./addons.sh 安装以上模块；
 增加ngx_fancyindex模块，lnmp.conf中开启后，安装lnmp或升级nginx；
 增加nginx模块--with-stream_ssl_preread_module，方便使用stream ssl相关配置；
-增加统信服务器操作系统V20版本支持；
+增加UOS统信桌面家庭版、桌面专业版、服务器版支持；
 增加CentOS Stream 9支持；
+增加MySQL 8.0 二进制安装方式；
 lnmp管理脚本增加HTTP 301跳转HTTPS的选项；
 移除mariadb 10.1, 10.2增加mariadb 10.5, 10.6；
 泛域名SSL增加了ZeroSSL支持；

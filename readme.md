@@ -96,6 +96,7 @@ ApacheSelect | Apache版本序号，仅LNMPA和LAMP模式需添加该参数
 ServerAdmin | 管理员邮箱，仅LNMPA和LAMP模式需添加该参数
 RHELRepo | (非必选)设为 local 时，RHEL使用本地源，不设置源为163 centos源
 CheckMirror | (非必选)安装时不检查下载镜像，方便无网络安装
+Bin | (非必选)MySQL 8.0使用二进制方式安装，y 或 n，默认使用二进制方式安装
 
 * 各程序版本对应序号
 
