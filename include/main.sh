@@ -39,6 +39,20 @@ Database_Selection()
         ;;
     5)
         echo "You will install ${DB_Info[4]}"
+        read -p "Using Generic Binaries [y/n]: " Bin
+        case "${Bin}" in
+        [yY][eE][sS]|[yY])
+            echo "You will install MySQL ${DB_Info[4]} Using Generic Binaries."
+            Bin="y"
+            ;;
+        [nN][oO]|[nN])
+            echo "You will install MySQL ${DB_Info[4]} Source code."
+            Bin=="n"
+            ;;
+        *)
+            echo "Default install MySQL ${DB_Info[4]} Generic Binaries."
+            Bin=="y"
+        esac
         ;;
     6)
         echo "You will install ${DB_Info[5]}"
