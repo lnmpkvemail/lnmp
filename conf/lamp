@@ -910,7 +910,7 @@ EOF
     fi
 
     if [ "${using_301}" = "y" ]; then
-        sed -i "/^ServerName ${domain}$/a\RewriteEngine On\nRewriteCond %{HTTPS} off\nRewriteCond %{REQUEST_URI} \!\^\\\/\\\.well-known\/.*$\nRewriteRule ^(.*)\$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]" /usr/local/apache/conf/vhost/${domain}.conf
+        sed -i '0,/^ServerName/!b;//a\RewriteEngine On\nRewriteCond %{HTTPS} off\nRewriteCond %{REQUEST_URI} !^\/\.well-known/.*$\nRewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]' /usr/local/apache/conf/vhost/${domain}.conf
     fi
 
     if [ "${moredomain}" != "" ]; then
