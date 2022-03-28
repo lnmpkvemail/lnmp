@@ -974,7 +974,7 @@ server
 EOF
 
     if [ "${using_301}" == "y" ]; then
-        sed -i '0,/^access_log/!b;//i\        location / {\n            return 301 https://$host$request_uri;\n        }\n' /usr/local/nginx/conf/vhost/${domain}.conf
+        sed -i '0,/access_log/!b;//i\        location / {\n            return 301 https://$host$request_uri;\n        }\n' /usr/local/nginx/conf/vhost/${domain}.conf
     fi
 
     echo "Test Nginx configure file......"
