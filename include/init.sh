@@ -406,8 +406,10 @@ CentOS_Dependent()
 
     if [ "${DISTRO}" = "UOS" ]; then
         Check_UOS_PowerTools
-        for uospackages in rpcgen re2c oniguruma-devel;
-        do dnf --enablerepo=${repo_id} install ${uospackages} -y; done
+        if [ "${repo_id}" != "" ]; then
+            for uospackages in rpcgen re2c oniguruma-devel;
+            do dnf --enablerepo=${repo_id} install ${uospackages} -y; done
+        fi
     fi
 
     if [ -s /etc/yum.conf.lnmp ]; then
@@ -451,6 +453,9 @@ Check_Download()
                 Download_Files https://mirrors.aliyun.com/mysql/MySQL-8.0/${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.xz ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.xz
             else
                 Download_Files https://cdn.mysql.com/Downloads/MySQL-8.0/${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.xz ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.xz
+            fi
+            if [ $? -ne 0 ]; then
+                Download_Files https://cdn.mysql.com/archives/mysql-8.0/${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.xz ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.xz
             fi
         else
             Download_Files ${Download_Mirror}/datebase/mysql/${Mysql_Ver}.tar.gz ${Mysql_Ver}.tar.gz
