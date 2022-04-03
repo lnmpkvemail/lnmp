@@ -52,6 +52,7 @@ Database_Selection()
         *)
             echo "Default install MySQL ${DB_Info[4]} Generic Binaries."
             Bin="y"
+            ;;
         esac
         ;;
     6)

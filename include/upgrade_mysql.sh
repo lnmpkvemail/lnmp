@@ -446,13 +446,20 @@ EOF
 
 Upgrade_MySQL80()
 {
-    echo "Starting upgrade MySQL..."
-    Tar_Cd ${mysql_src} mysql-${mysql_version}
-    Install_Boost
-    Check_Openssl
-    mkdir build && cd build
-    cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL_WITH_BOOST}
-    Make_Install
+    if [ "${Bin}" = "y" ]; then
+        Echo_Blue "Starting upgrade MySQL ${mysql_version} Using Generic Binaries..."
+        TarJ_Cd ${mysql_src}
+        mkdir /usr/local/mysql
+        mv mysql-${mysql_version}-linux-glibc2.12-${DB_ARCH}/* /usr/local/mysql/
+    else
+        Echo_Blue "Starting upgrade MySQL ${mysql_version} Using Source code..."
+        Tar_Cd ${mysql_src} mysql-${mysql_version}
+        Install_Boost
+        Check_Openssl
+        mkdir build && cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL_WITH_BOOST}
+        Make_Install
+    fi
 
     groupadd mysql
     useradd -s /sbin/nologin -M -g mysql mysql
@@ -544,7 +551,11 @@ EOF
 Restore_Start_MySQL()
 {
     chgrp -R mysql /usr/local/mysql/.
-    \cp support-files/mysql.server /etc/init.d/mysql
+    if [ "${mysql_short_version}" = "8.0" ]; then
+        \cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql
+    else
+        \cp support-files/mysql.server /etc/init.d/mysql
+    fi
     chmod 755 /etc/init.d/mysql
 
     ldconfig
@@ -607,6 +618,24 @@ Upgrade_MySQL()
         exit 1
     fi
 
+    if echo "${mysql_version}" | grep -Eqi '^8.0.';then
+        read -p "Using Generic Binaries [y/n]: " Bin
+        case "${Bin}" in
+        [yY][eE][sS]|[yY])
+            echo "You will install MySQL ${mysql_version} Using Generic Binaries."
+            Bin="y"
+            ;;
+        [nN][oO]|[nN])
+            echo "You will install MySQL ${mysql_version} Source code."
+            Bin="n"
+            ;;
+        *)
+            echo "Default install MySQL ${mysql_version} Generic Binaries."
+            Bin="y"
+            ;;
+        esac
+    fi
+
     #do you want to install the InnoDB Storage Engine?
     echo "==========================="
 
@@ -650,28 +679,31 @@ Upgrade_MySQL()
 
     echo "============================check files=================================="
     cd ${cur_dir}/src
-    if [[ "${mysql_short_version}" = "5.7" || "${mysql_short_version}" = "8.0" ]]; then
-        mysql_src="mysql-boost-${mysql_version}.tar.gz"
+    if [[ "${Bin}" = "y" && "${mysql_short_version}" = "8.0" ]]; then
+        mysql_src="mysql-${mysql_version}-linux-glibc2.12-${DB_ARCH}.tar.xz"
     else
-        mysql_src="mysql-${mysql_version}.tar.gz"
+        if [[ "${mysql_short_version}" = "5.7" || "${mysql_short_version}" = "8.0" ]]; then
+            mysql_src="mysql-boost-${mysql_version}.tar.gz"
+        else
+            mysql_src="mysql-${mysql_version}.tar.gz"
+        fi
     fi
     if [ -s "${mysql_src}" ]; then
         echo "${mysql_src} [found]"
     else
-        echo "Notice: ${mysql_src} not found!!!download now......"
         Get_Country
         if [ "${country}" = "CN" ]; then
-            wget -c --progress=bar:force http://mirrors.ustc.edu.cn/mysql-ftp/Downloads/MySQL-${mysql_short_version}/${mysql_src}
+            Download_Files http://mirrors.aliyun.com/mysql/MySQL-${mysql_short_version}/${mysql_src} ${mysql_src}
             if [ $? -ne 0 ]; then
-                wget -c --progress=bar:force http://cdn.mysql.com/Downloads/MySQL-${mysql_short_version}/${mysql_src}
+                Download_Files http://cdn.mysql.com/Downloads/MySQL-${mysql_short_version}/${mysql_src} ${mysql_src}
             fi
         else
-            wget -c --progress=bar:force http://cdn.mysql.com/Downloads/MySQL-${mysql_short_version}/${mysql_src}
+            Download_Files http://cdn.mysql.com/Downloads/MySQL-${mysql_short_version}/${mysql_src} ${mysql_src}
         fi
         if [ $? -eq 0 ]; then
             echo "Download ${mysql_src} successfully!"
         else
-            wget -c --progress=bar:force https://cdn.mysql.com/archives/MySQL-${mysql_short_version}/${mysql_src}
+            Download_Files https://cdn.mysql.com/archives/MySQL-${mysql_short_version}/${mysql_src} ${mysql_src}
             if [ $? -ne 0 ]; then
                 echo "You enter MySQL Version was: ${mysql_version}"
                 Echo_Red "Error! You entered a wrong version number, please check!"
