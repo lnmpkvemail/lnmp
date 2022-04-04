@@ -319,33 +319,15 @@ Modify_Source()
 Check_PowerTools()
 {
     if ! yum -v repolist all|grep "PowerTools"; then
-        echo "PowerTools repository not found, add PowerTools repository ..."
-        cat >/etc/yum.repos.d/CentOS-Linux-PowerTools.repo<<EOF
-[powertools]
-name=CentOS-\$releasever - PowerTools
-#mirrorlist=http://mirrorlist.centos.org/?release=\$releasever&arch=\$basearch&repo=PowerTools&infra=\$infra
-baseurl=http://mirrors.aliyun.com/centos-vault/\$contentdir/\$releasever/PowerTools/\$basearch/os/
-gpgcheck=1
-enabled=0
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
-EOF
+        Echo_Red "PowerTools repository not found!"
     fi
     repo_id=$(yum repolist all|grep -Ei "PowerTools"|head -n 1|awk '{print $1}')
-    [ -z "${repo_id}" ] && repo_id="powertools"
 }
 
 Check_Codeready()
 {
     repo_id=$(yum repolist all|grep -E "CodeReady"|head -n 1|awk '{print $1}')
     [ -z "${repo_id}" ] && repo_id="ol8_codeready_builder"
-}
-
-Check_UOS_PowerTools()
-{
-    if ! yum -v repolist all|grep "PowerTools"; then
-        Echo_Red "PowerTools repository not found!"
-    fi
-    repo_id=$(yum repolist all|grep -Ei "PowerTools"|head -n 1|awk '{print $1}')
 }
 
 CentOS_Dependent()
@@ -363,8 +345,11 @@ CentOS_Dependent()
 
     if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${Rocky_Version}" | grep -Eqi "^8" || echo "${Alma_Version}" | grep -Eqi "^8"; then
         Check_PowerTools
-        dnf --enablerepo=${repo_id} install rpcgen re2c -y
-        dnf --enablerepo=${repo_id} install oniguruma-devel -y
+        if [ "${repo_id}" != "" ]; then
+            echo "Installing packages in PowerTools repository..."
+            for c8packages in rpcgen re2c oniguruma-devel;
+            do dnf --enablerepo=${repo_id} install ${c8packages} -y; done
+        fi
         dnf install libarchive -y
 
         dnf install gcc-toolset-10 -y
@@ -377,8 +362,8 @@ CentOS_Dependent()
 
     if [ "${DISTRO}" = "Oracle" ] && echo "${Oracle_Version}" | grep -Eqi "^8"; then
         Check_Codeready
-        dnf --enablerepo=${repo_id} install rpcgen re2c -y
-        dnf --enablerepo=${repo_id} install oniguruma-devel -y
+        for o8packages in rpcgen re2c oniguruma-devel;
+        do dnf --enablerepo=${repo_id} install ${o8packages} -y; done
         dnf install libarchive -y
     fi
 
@@ -405,8 +390,9 @@ CentOS_Dependent()
     fi
 
     if [ "${DISTRO}" = "UOS" ]; then
-        Check_UOS_PowerTools
+        Check_PowerTools
         if [ "${repo_id}" != "" ]; then
+            echo "Installing packages in PowerTools repository..."
             for uospackages in rpcgen re2c oniguruma-devel;
             do dnf --enablerepo=${repo_id} install ${uospackages} -y; done
         fi
