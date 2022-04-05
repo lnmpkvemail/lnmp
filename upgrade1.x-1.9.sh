@@ -136,6 +136,19 @@ if [ "${isSSL}" == "ssl" ]; then
             exit 1
         fi
 
+        if [ ! -s /usr/local/acme.sh/account.conf ] || ! cat /usr/local/acme.sh/account.conf | grep -Eq "^ACCOUNT_EMAIL="; then
+            while :;do
+                Echo_Yellow "Please enter your email address: "
+                read email_address
+                if [[ "${email_address}" =~ ^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$ ]]; then
+                    echo "Email address ${email_address} is valid."
+                    break
+                else
+                    echo "Email address ${email_address} is invalid! Please re-enter."
+                fi
+            done
+        fi
+
         letsdomain=""
         if [ "${moredomain}" != "" ]; then
             letsdomain="-d ${domain}"
@@ -154,7 +167,7 @@ if [ "${isSSL}" == "ssl" ]; then
             wget https://soft.vpser.net/lib/acme.sh/latest.tar.gz --prefer-family=IPv4 --no-check-certificate
             tar zxf latest.tar.gz
             cd acme.sh-*
-            ./acme.sh --install --log --home /usr/local/acme.sh --certhome /usr/local/nginx/conf/ssl
+            ./acme.sh --install --log --home /usr/local/acme.sh --certhome /usr/local/nginx/conf/ssl -m ${email_address}
             cd ..
             rm -f latest.tar.gz
             rm -rf acme.sh-*
@@ -177,7 +190,7 @@ if [ "${isSSL}" == "ssl" ]; then
         fi
 
         echo "Starting create SSL Certificate use Let's Encrypt..."
-        /usr/local/acme.sh/acme.sh --issue ${letsdomain} -w ${vhostdir} --reloadcmd "/etc/init.d/nginx reload"
+        /usr/local/acme.sh/acme.sh --server letsencrypt --issue ${letsdomain} -w ${vhostdir} --reloadcmd "/etc/init.d/nginx reload"
         lets_status=$?
         if [ "${lets_status}" = 0 ]; then
             Echo_Green "Let's Encrypt SSL Certificate create successfully."
@@ -239,6 +252,19 @@ if [ "${isSSL}" == "ssl" ]; then
             exit 1
         fi
 
+        if [ ! -s /usr/local/acme.sh/account.conf ] || ! cat /usr/local/acme.sh/account.conf | grep -Eq "^ACCOUNT_EMAIL="; then
+            while :;do
+                Echo_Yellow "Please enter your email address: "
+                read email_address
+                if [[ "${email_address}" =~ ^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$ ]]; then
+                    echo "Email address ${email_address} is valid."
+                    break
+                else
+                    echo "Email address ${email_address} is invalid! Please re-enter."
+                fi
+            done
+        fi
+
         letsdomain=""
         if [ "${moredomain}" != "" ]; then
             letsdomain="-d ${domain}"
@@ -257,7 +283,7 @@ if [ "${isSSL}" == "ssl" ]; then
             wget https://soft.vpser.net/lib/acme.sh/latest.tar.gz --prefer-family=IPv4 --no-check-certificate
             tar zxf latest.tar.gz
             cd acme.sh-*
-            ./acme.sh --install --log --home /usr/local/acme.sh --certhome /usr/local/apache/conf/ssl
+            ./acme.sh --install --log --home /usr/local/acme.sh --certhome /usr/local/apache/conf/ssl -m ${email_address}
             cd ..
             rm -f latest.tar.gz
             rm -rf acme.sh-*
@@ -281,7 +307,7 @@ if [ "${isSSL}" == "ssl" ]; then
         fi
 
         echo "Starting create SSL Certificate use Let's Encrypt..."
-        /usr/local/acme.sh/acme.sh --issue ${letsdomain} -w ${vhostdir} --reloadcmd "/etc/init.d/httpd graceful"
+        /usr/local/acme.sh/acme.sh --server letsencrypt --issue ${letsdomain} -w ${vhostdir} --reloadcmd "/etc/init.d/httpd graceful"
         lets_status=$?
         if [ "${lets_status}" = 0 ]; then
             Echo_Green "Let's Encrypt SSL Certificate create successfully."
