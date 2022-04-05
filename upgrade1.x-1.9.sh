@@ -27,10 +27,13 @@ Upgrade_Dependent()
         do yum -y install $packages; done
         yum -y update nss
 
-        if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${Rocky_Version}" | grep -Eqi "^8" || echo "${Alma_Version}" | grep -Eqi "^8"; then
+        if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${Rocky_Version}" | grep -Eqi "^8" || echo "${Alma_Version}" | grep -Eqi "^8" || echo "${Anolis_Version}" | grep -Eqi "^8"; then
             Check_PowerTools
-            dnf --enablerepo=${repo_id} install rpcgen re2c -y
-            dnf --enablerepo=${repo_id} install oniguruma-devel -y
+            if [ "${repo_id}" != "" ]; then
+                echo "Installing packages in PowerTools repository..."
+                for c8packages in rpcgen re2c oniguruma-devel;
+                do dnf --enablerepo=${repo_id} install ${c8packages} -y; done
+            fi
             dnf install libarchive -y
 
             dnf install gcc-toolset-10 -y
@@ -38,8 +41,8 @@ Upgrade_Dependent()
 
         if [ "${DISTRO}" = "Oracle" ] && echo "${Oracle_Version}" | grep -Eqi "^8"; then
             Check_Codeready
-            dnf --enablerepo=${repo_id} install rpcgen re2c -y
-            dnf --enablerepo=${repo_id} install oniguruma-devel -y
+            for o8packages in rpcgen re2c oniguruma-devel;
+            do dnf --enablerepo=${repo_id} install ${o8packages} -y; done
             dnf install libarchive -y
         fi
 
@@ -64,6 +67,15 @@ Upgrade_Dependent()
                 cd ${cur_dir}/src/
                 yum -y install ./oniguruma-6.8.2-1.el7.x86_64.rpm
                 yum -y install ./oniguruma-devel-6.8.2-1.el7.x86_64.rpm
+            fi
+        fi
+
+        if [ "${DISTRO}" = "UOS" ]; then
+            Check_PowerTools
+            if [ "${repo_id}" != "" ]; then
+                echo "Installing packages in PowerTools repository..."
+                for uospackages in rpcgen re2c oniguruma-devel;
+                do dnf --enablerepo=${repo_id} install ${uospackages} -y; done
             fi
         fi
     elif [ "$PM" = "apt" ]; then

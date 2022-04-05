@@ -408,6 +408,9 @@ Get_Dist_Name()
     elif grep -Eqi "openEuler" /etc/issue || grep -Eq "openEuler" /etc/*-release; then
         DISTRO='openEuler'
         PM='yum'
+    elif grep -Eqi "Anolis OS" /etc/issue || grep -Eq "Anolis OS" /etc/*-release; then
+        DISTRO='Anolis'
+        PM='yum'
     elif grep -Eqi "Debian" /etc/issue || grep -Eq "Debian" /etc/*-release; then
         DISTRO='Debian'
         PM='apt'

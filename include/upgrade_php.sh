@@ -100,16 +100,26 @@ Install_PHP_Dependent()
         do apt-get --no-install-recommends install -y $packages; done
     fi
 
-    if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${Rocky_Version}" | grep -Eqi "^8" || echo "${Alma_Version}" | grep -Eqi "^8"; then
+    if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${Rocky_Version}" | grep -Eqi "^8" || echo "${Alma_Version}" | grep -Eqi "^8" || echo "${Anolis_Version}" | grep -Eqi "^8"; then
         Check_PowerTools
-        dnf --enablerepo=${repo_id} install rpcgen re2c -y
-        dnf --enablerepo=${repo_id} install oniguruma-devel -y
+        if [ "${repo_id}" != "" ]; then
+            echo "Installing packages in PowerTools repository..."
+            for c8packages in rpcgen re2c oniguruma-devel;
+            do dnf --enablerepo=${repo_id} install ${c8packages} -y; done
+        fi
         dnf install libarchive -y
     fi
 
     if echo "${CentOS_Version}" | grep -Eqi "^9"; then
         for cs9packages in oniguruma-devel libzip-devel libtirpc-devel;
         do dnf --enablerepo=crb install ${cs9packages} -y; done
+    fi
+
+    if [ "${DISTRO}" = "Oracle" ] && echo "${Oracle_Version}" | grep -Eqi "^8"; then
+        Check_Codeready
+        for o8packages in rpcgen re2c oniguruma-devel;
+        do dnf --enablerepo=${repo_id} install ${o8packages} -y; done
+        dnf install libarchive -y
     fi
 
     if echo "${CentOS_Version}" | grep -Eqi "^7" || echo "${RHEL_Version}" | grep -Eqi "^7"  || echo "${Aliyun_Version}" | grep -Eqi "^2" || echo "${Alibaba_Version}" | grep -Eqi "^2" || echo "${Oracle_Version}" | grep -Eqi "^7"; then
@@ -130,6 +140,15 @@ Install_PHP_Dependent()
         fi
         yum -y install libsodium-devel
         yum -y install libc-client-devel uw-imap-devel
+    fi
+
+    if [ "${DISTRO}" = "UOS" ]; then
+        Check_PowerTools
+        if [ "${repo_id}" != "" ]; then
+            echo "Installing packages in PowerTools repository..."
+            for uospackages in rpcgen re2c oniguruma-devel;
+            do dnf --enablerepo=${repo_id} install ${uospackages} -y; done
+        fi
     fi
 
     Install_Icu4c
