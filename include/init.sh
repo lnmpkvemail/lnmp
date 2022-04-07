@@ -434,7 +434,16 @@ Check_Download()
         Download_Files ${Download_Mirror}/web/nginx/${Nginx_Ver}.tar.gz ${Nginx_Ver}.tar.gz
     fi
     if [[ "${DBSelect}" =~ ^[12345]$ ]]; then
-        if [[ "${Bin}" = "y" && "${DBSelect}" = "5" ]]; then
+        if [[ "${Bin}" = "y" && "${DBSelect}" = "4" ]]; then
+            if [ "${country}" = "CN" ]; then
+                Download_Files https://mirrors.aliyun.com/mysql/MySQL-5.7/${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz
+            else
+                Download_Files https://cdn.mysql.com/Downloads/MySQL-5.7/${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz
+            fi
+            if [ $? -ne 0 ]; then
+                Download_Files https://cdn.mysql.com/archives/mysql-5.7/${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz
+            fi
+        elif [[ "${Bin}" = "y" && "${DBSelect}" = "5" ]]; then
             if [ "${country}" = "CN" ]; then
                 Download_Files https://mirrors.aliyun.com/mysql/MySQL-8.0/${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.xz ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.xz
             else

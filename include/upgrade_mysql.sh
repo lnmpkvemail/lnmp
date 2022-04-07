@@ -351,11 +351,18 @@ EOF
 
 Upgrade_MySQL57()
 {
-    echo "Starting upgrade MySQL..."
-    Tar_Cd ${mysql_src} mysql-${mysql_version}
-    Install_Boost
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL_WITH_BOOST}
-    Make_Install
+    if [ "${Bin}" = "y" ]; then
+        Echo_Blue "Starting upgrade MySQL ${mysql_version} Using Generic Binaries..."
+        Tar_Cd ${mysql_src}
+        mkdir /usr/local/mysql
+        mv mysql-${mysql_version}-linux-glibc2.12-${DB_ARCH}/* /usr/local/mysql/
+    else
+        Echo_Blue "Starting upgrade MySQL ${mysql_version} Using Source code..."
+        Tar_Cd ${mysql_src} mysql-${mysql_version}
+        Install_Boost
+        cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL_WITH_BOOST}
+        Make_Install
+    fi
 
     groupadd mysql
     useradd -s /sbin/nologin -M -g mysql mysql
@@ -551,7 +558,7 @@ EOF
 Restore_Start_MySQL()
 {
     chgrp -R mysql /usr/local/mysql/.
-    if [ "${mysql_short_version}" = "8.0" ]; then
+    if [[ "${mysql_short_version}" = "8.0" || "${mysql_short_version}" = "5.7" ]]; then
         \cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql
     else
         \cp support-files/mysql.server /etc/init.d/mysql
@@ -618,7 +625,7 @@ Upgrade_MySQL()
         exit 1
     fi
 
-    if echo "${mysql_version}" | grep -Eqi '^8.0.';then
+    if echo "${mysql_version}" | grep -Eqi '^8.0.|5.7.';then
         read -p "Using Generic Binaries [y/n]: " Bin
         case "${Bin}" in
         [yY][eE][sS]|[yY])
@@ -681,6 +688,8 @@ Upgrade_MySQL()
     cd ${cur_dir}/src
     if [[ "${Bin}" = "y" && "${mysql_short_version}" = "8.0" ]]; then
         mysql_src="mysql-${mysql_version}-linux-glibc2.12-${DB_ARCH}.tar.xz"
+    elif [[ "${Bin}" = "y" && "${mysql_short_version}" = "5.7" ]]; then
+        mysql_src="mysql-${mysql_version}-linux-glibc2.12-${DB_ARCH}.tar.gz"
     else
         if [[ "${mysql_short_version}" = "5.7" || "${mysql_short_version}" = "8.0" ]]; then
             mysql_src="mysql-boost-${mysql_version}.tar.gz"
@@ -703,7 +712,7 @@ Upgrade_MySQL()
         if [ $? -eq 0 ]; then
             echo "Download ${mysql_src} successfully!"
         else
-            Download_Files https://cdn.mysql.com/archives/MySQL-${mysql_short_version}/${mysql_src} ${mysql_src}
+            Download_Files https://cdn.mysql.com/archives/mysql-${mysql_short_version}/${mysql_src} ${mysql_src}
             if [ $? -ne 0 ]; then
                 echo "You enter MySQL Version was: ${mysql_version}"
                 Echo_Red "Error! You entered a wrong version number, please check!"
