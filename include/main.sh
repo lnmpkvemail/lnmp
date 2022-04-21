@@ -454,6 +454,9 @@ Get_Dist_Name()
         elif command -v yum >/dev/null 2>&1; then
             PM='yum'
         fi
+    elif grep -Eqi "Kylin Linux Desktop" /etc/issue || grep -Eq "Kylin Linux Desktop" /etc/*-release; then
+        DISTRO='Kylin'
+        PM='yum'
     else
         DISTRO='unknow'
     fi
@@ -629,7 +632,7 @@ Print_Sys_Info()
     cat /etc/issue
     cat /etc/*-release
     uname -a
-    MemTotal=`free -m | grep Mem | awk '{print  $2}'`
+    MemTotal=$(free -m | grep Mem | awk '{print  $2}')
     echo "Memory is: ${MemTotal} MB "
     df -h
     Check_Openssl
