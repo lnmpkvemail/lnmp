@@ -295,11 +295,10 @@ CentOS8_Modify_Source()
 {
     if echo "${CentOS_Version}" | grep -Eqi "^8" && [ "${isCentosStream}" != "y" ]; then
         Echo_Yellow "CentOS 8 is now end of life, use vault repository."
-        if grep -q "^mirrorlist" /etc/yum.repos.d/CentOS-Linux-AppStream.repo && grep -q "#baseurl" /etc/yum.repos.d/CentOS-Linux-AppStream.repo; then
-            sed -i 's/^mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-*.repo
-            sed -i 's@#baseurl=.*$contentdir@baseurl=http://mirrors.aliyun.com/centos-vault/$contentdir@g' /etc/yum.repos.d/CentOS-Linux-*.repo
-        else
-            sed -i 's@baseurl=.*$contentdir@baseurl=http://mirrors.aliyun.com/centos-vault/$contentdir@g' /etc/yum.repos.d/CentOS-Linux-*.repo
+        if [ ! -s /etc/yum.repos.d/CentOS8-vault.repo ]; then
+            mkdir /etc/yum.repos.d/backup
+            mv /etc/yum.repos.d/*.repo /etc/yum.repos.d/backup/
+            \cp ${cur_dir}/conf/CentOS8-vault.repo /etc/yum.repos.d/CentOS8-vault.repo
         fi
     fi
 }
