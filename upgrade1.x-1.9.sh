@@ -23,7 +23,7 @@ Upgrade_Dependent()
     if [ "$PM" = "yum" ]; then
         Echo_Blue "[+] Yum installing dependent packages..."
         Get_Dist_Version
-        for packages in patch wget crontabs unzip tar ca-certificates net-tools libc-client-devel psmisc libXpm-devel git-core c-ares-devel libicu-devel libxslt libxslt-devel xz expat-devel bzip2 bzip2-devel libaio-devel rpcgen libtirpc-devel perl cyrus-sasl-devel sqlite-devel oniguruma-devel re2c pkg-config libarchive;
+        for packages in patch wget crontabs unzip tar ca-certificates net-tools libc-client-devel psmisc libXpm-devel git-core c-ares-devel libicu-devel libxslt libxslt-devel xz expat-devel bzip2 bzip2-devel libaio-devel rpcgen libtirpc-devel perl cyrus-sasl-devel sqlite-devel oniguruma-devel re2c pkg-config libarchive hostname ncurses-libs numactl-devel libxcrypt;
         do yum -y install $packages; done
         yum -y update nss
 
@@ -46,9 +46,18 @@ Upgrade_Dependent()
             dnf install libarchive -y
         fi
 
-        if echo "${CentOS_Version}" | grep -Eqi "^9"; then
-            for cs9packages in oniguruma-devel libzip-devel libtirpc-devel;
+        if echo "${CentOS_Version}" | grep -Eqi "^9" || echo "${Alma_Version}" | grep -Eqi "^9" || echo "${Rocky_Version}" | grep -Eqi "^9"; then
+            for cs9packages in oniguruma-devel libzip-devel libtirpc-devel libxcrypt-compat;
             do dnf --enablerepo=crb install ${cs9packages} -y; done
+
+            if ! rpm -qa | grep "libc-client-2007f" || ! rpm -qa | grep "uw-imap-devel"; then
+                if [ "${CheckMirror}" = "n" ]; then
+                    rpm -ivh ${cur_dir}/src/libc-client-2007f-24.el9.x86_64.rpm ${cur_dir}/src/uw-imap-devel-2007f-24.el9.x86_64.rpm
+                else
+                    rpm -ivh ${Download_Mirror}/lib/uw-imap/libc-client-2007f-24.el9.x86_64.rpm
+                    rpm -ivh ${Download_Mirror}/lib/uw-imap/uw-imap-devel-2007f-24.el9.x86_64.rpm
+                fi
+            fi
         fi
 
         if echo "${CentOS_Version}" | grep -Eqi "^7" || echo "${RHEL_Version}" | grep -Eqi "^7"  || echo "${Aliyun_Version}" | grep -Eqi "^2" || echo "${Alibaba_Version}" | grep -Eqi "^2" || echo "${Oracle_Version}" | grep -Eqi "^7"; then
@@ -64,9 +73,7 @@ Upgrade_Dependent()
             fi
             yum -y install oniguruma oniguruma-devel
             if [ "${CheckMirror}" = "n" ]; then
-                cd ${cur_dir}/src/
-                yum -y install ./oniguruma-6.8.2-1.el7.x86_64.rpm
-                yum -y install ./oniguruma-devel-6.8.2-1.el7.x86_64.rpm
+                rpm -ivh ${cur_dir}/src/oniguruma-6.8.2-1.el7.x86_64.rpm ${cur_dir}/src/oniguruma-devel-6.8.2-1.el7.x86_64.rpm
             fi
         fi
 
@@ -78,12 +85,28 @@ Upgrade_Dependent()
                 do dnf --enablerepo=${repo_id} install ${uospackages} -y; done
             fi
         fi
+
+        if [ "${DISTRO}" = "Fedora" ] || echo "${CentOS_Version}" | grep -Eqi "^9" || echo "${Alma_Version}" | grep -Eqi "^9" || echo "${Rocky_Version}" | grep -Eqi "^9"; then
+            dnf install chkconfig -y
+        fi
+
+        if [ -s /usr/lib64/libtinfo.so.6 ]; then
+            ln -sf /usr/lib64/libtinfo.so.6 /usr/lib64/libtinfo.so.5
+        elif [ -s /usr/lib/libtinfo.so.6 ]; then
+            ln -sf /usr/lib/libtinfo.so.6 /usr/lib/libtinfo.so.5
+        fi
+
+        if [ -s /usr/lib64/libncurses.so.6 ]; then
+            ln -sf /usr/lib64/libncurses.so.6 /usr/lib64/libncurses.so.5
+        elif [ -s /usr/lib/libncurses.so.6 ]; then
+            ln -sf /usr/lib/libncurses.so.6 /usr/lib/libncurses.so.5
+        fi
     elif [ "$PM" = "apt" ]; then
         Echo_Blue "[+] apt-get installing dependent packages..."
         export DEBIAN_FRONTEND=noninteractive
         apt-get update -y
         [[ $? -ne 0 ]] && apt-get update --allow-releaseinfo-change -y
-        for packages in debian-keyring debian-archive-keyring build-essential bison libkrb5-dev libcurl3-gnutls libcurl4-gnutls-dev libcurl4-openssl-dev libcap-dev ca-certificates libc-client2007e-dev psmisc patch git libc-ares-dev libicu-dev e2fsprogs libxslt1.1 libxslt1-dev libc-client-dev xz-utils libexpat1-dev bzip2 libbz2-dev libaio-dev libtirpc-dev libsqlite3-dev libonig-dev pkg-config;
+        for packages in debian-keyring debian-archive-keyring build-essential bison libkrb5-dev libcurl3-gnutls libcurl4-gnutls-dev libcurl4-openssl-dev libcap-dev ca-certificates libc-client2007e-dev psmisc patch git libc-ares-dev libicu-dev e2fsprogs libxslt1.1 libxslt1-dev libc-client-dev xz-utils libexpat1-dev bzip2 libbz2-dev libaio-dev libtirpc-dev libsqlite3-dev libonig-dev pkg-config libtinfo-dev libnuma-dev;
         do apt-get --no-install-recommends install -y $packages; done
     fi
 }

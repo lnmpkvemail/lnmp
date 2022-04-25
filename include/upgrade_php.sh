@@ -110,7 +110,7 @@ Install_PHP_Dependent()
         dnf install libarchive -y
     fi
 
-    if echo "${CentOS_Version}" | grep -Eqi "^9"; then
+    if echo "${CentOS_Version}" | grep -Eqi "^9" || echo "${Alma_Version}" | grep -Eqi "^9" || echo "${Rocky_Version}" | grep -Eqi "^9"; then
         for cs9packages in oniguruma-devel libzip-devel libtirpc-devel;
         do dnf --enablerepo=crb install ${cs9packages} -y; done
     fi
@@ -171,7 +171,7 @@ Check_PHP_Upgrade_Files()
     Echo_LNMPA_Upgrade_PHP_Failed()
     {
         Echo_Red "======== upgrade php failed ======"
-        Echo_Red "upgrade php log: /root/upgrade_a_php.log"
+        Echo_Red "upgrade php log: /root/upgrade_a_php${Upgrade_Date}.log"
         echo "You upload upgrade_a_php.log to LNMP Forum for help."    
     }
     rm -rf ${cur_dir}/src/php-${php_version}
@@ -180,7 +180,7 @@ Check_PHP_Upgrade_Files()
             Echo_Green "======== upgrade php completed ======"
         else
             Echo_Red "======== upgrade php failed ======"
-            Echo_Red "upgrade php log: /root/upgrade_lnmp_php.log"
+            Echo_Red "upgrade php log: /root/upgrade_lnmp_php${Upgrade_Date}.log"
             echo "You upload upgrade_lnmp_php.log to LNMP Forum for help."
         fi
     else

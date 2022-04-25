@@ -337,7 +337,7 @@ CentOS_Dependent()
     fi
 
     Echo_Blue "[+] Yum installing dependent packages..."
-    for packages in make cmake gcc gcc-c++ gcc-g77 kernel-headers glibc-headers flex bison file libtool libtool-libs autoconf patch wget crontabs libjpeg libjpeg-devel libjpeg-turbo-devel libpng libpng-devel libpng10 libpng10-devel gd gd-devel libxml2 libxml2-devel zlib zlib-devel glib2 glib2-devel unzip tar bzip2 bzip2-devel libzip-devel libevent libevent-devel ncurses ncurses-devel curl curl-devel libcurl libcurl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel libidn libidn-devel openssl openssl-devel pcre-devel gettext gettext-devel ncurses-devel gmp-devel pspell-devel unzip libcap diffutils ca-certificates net-tools libc-client-devel psmisc libXpm-devel git-core c-ares-devel libicu-devel libxslt libxslt-devel xz expat-devel libaio-devel rpcgen libtirpc-devel perl cyrus-sasl-devel sqlite-devel oniguruma-devel lsof re2c pkg-config libarchive hostname ncurses-compat-libs numactl-devel;
+    for packages in make cmake gcc gcc-c++ gcc-g77 kernel-headers glibc-headers flex bison file libtool libtool-libs autoconf patch wget crontabs libjpeg libjpeg-devel libjpeg-turbo-devel libpng libpng-devel libpng10 libpng10-devel gd gd-devel libxml2 libxml2-devel zlib zlib-devel glib2 glib2-devel unzip tar bzip2 bzip2-devel libzip-devel libevent libevent-devel ncurses ncurses-devel curl curl-devel libcurl libcurl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel libidn libidn-devel openssl openssl-devel pcre-devel gettext gettext-devel ncurses-devel gmp-devel pspell-devel unzip libcap diffutils ca-certificates net-tools libc-client-devel psmisc libXpm-devel git-core c-ares-devel libicu-devel libxslt libxslt-devel xz expat-devel libaio-devel rpcgen libtirpc-devel perl cyrus-sasl-devel sqlite-devel oniguruma-devel lsof re2c pkg-config libarchive hostname ncurses-libs numactl-devel libxcrypt;
     do yum -y install $packages; done
 
     yum -y update nss
@@ -354,9 +354,18 @@ CentOS_Dependent()
         dnf install gcc-toolset-10 -y
     fi
 
-    if echo "${CentOS_Version}" | grep -Eqi "^9"; then
-        for cs9packages in oniguruma-devel libzip-devel libtirpc-devel;
+    if echo "${CentOS_Version}" | grep -Eqi "^9" || echo "${Alma_Version}" | grep -Eqi "^9" || echo "${Rocky_Version}" | grep -Eqi "^9"; then
+        for cs9packages in oniguruma-devel libzip-devel libtirpc-devel libxcrypt-compat;
         do dnf --enablerepo=crb install ${cs9packages} -y; done
+
+        if ! rpm -qa | grep "libc-client-2007f" || ! rpm -qa | grep "uw-imap-devel"; then
+            if [ "${CheckMirror}" = "n" ]; then
+                rpm -ivh ${cur_dir}/src/libc-client-2007f-24.el9.x86_64.rpm ${cur_dir}/src/uw-imap-devel-2007f-24.el9.x86_64.rpm
+            else
+                rpm -ivh ${Download_Mirror}/lib/uw-imap/libc-client-2007f-24.el9.x86_64.rpm
+                rpm -ivh ${Download_Mirror}/lib/uw-imap/uw-imap-devel-2007f-24.el9.x86_64.rpm
+            fi
+        fi
     fi
 
     if [ "${DISTRO}" = "Oracle" ] && echo "${Oracle_Version}" | grep -Eqi "^8"; then
@@ -378,13 +387,11 @@ CentOS_Dependent()
         fi
         yum -y install oniguruma oniguruma-devel
         if [ "${CheckMirror}" = "n" ]; then
-            cd ${cur_dir}/src/
-            yum -y install ./oniguruma-6.8.2-1.el7.x86_64.rpm
-            yum -y install ./oniguruma-devel-6.8.2-1.el7.x86_64.rpm
+            rpm -ivh ${cur_dir}/src/oniguruma-6.8.2-1.el7.x86_64.rpm ${cur_dir}/src/oniguruma-devel-6.8.2-1.el7.x86_64.rpm
         fi
     fi
 
-    if [ "${DISTRO}" = "Fedora" ] || echo "${CentOS_Version}" | grep -Eqi "^9"; then
+    if [ "${DISTRO}" = "Fedora" ] || echo "${CentOS_Version}" | grep -Eqi "^9" || echo "${Alma_Version}" | grep -Eqi "^9" || echo "${Rocky_Version}" | grep -Eqi "^9"; then
         dnf install chkconfig -y
     fi
 
@@ -829,6 +836,18 @@ eof
 
     if echo "${Fedora_Version}" | grep -Eqi "3[0-9]" && [ ! -d "/etc/init.d" ]; then
         ln -sf /etc/rc.d/init.d /etc/init.d
+    fi
+
+    if [ -s /usr/lib64/libtinfo.so.6 ]; then
+        ln -sf /usr/lib64/libtinfo.so.6 /usr/lib64/libtinfo.so.5
+    elif [ -s /usr/lib/libtinfo.so.6 ]; then
+        ln -sf /usr/lib/libtinfo.so.6 /usr/lib/libtinfo.so.5
+    fi
+
+    if [ -s /usr/lib64/libncurses.so.6 ]; then
+        ln -sf /usr/lib64/libncurses.so.6 /usr/lib64/libncurses.so.5
+    elif [ -s /usr/lib/libncurses.so.6 ]; then
+        ln -sf /usr/lib/libncurses.so.6 /usr/lib/libncurses.so.5
     fi
 }
 

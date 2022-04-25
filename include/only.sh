@@ -67,7 +67,7 @@ DB_Dependent()
             rpm -e mysql mysql-libs --nodeps
             rpm -e mariadb mariadb-libs --nodeps
         fi
-        for packages in make cmake gcc gcc-c++ gcc-g77 flex bison wget zlib zlib-devel openssl openssl-devel ncurses ncurses-devel libaio-devel rpcgen libtirpc-devel patch cyrus-sasl-devel pkg-config pcre-devel libxml2-devel hostname ncurses-compat-libs numactl-devel;
+        for packages in make cmake gcc gcc-c++ gcc-g77 flex bison wget zlib zlib-devel openssl openssl-devel ncurses ncurses-devel libaio-devel rpcgen libtirpc-devel patch cyrus-sasl-devel pkg-config pcre-devel libxml2-devel hostname ncurses-libs numactl-devel libxcrypt;
         do yum -y install $packages; done
         if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${Rocky_Version}" | grep -Eqi "^8" || echo "${Alma_Version}" | grep -Eqi "^8"; then
             Check_PowerTools
@@ -77,8 +77,8 @@ DB_Dependent()
             dnf install gcc-toolset-10 -y
         fi
 
-        if echo "${CentOS_Version}" | grep -Eqi "^9"; then
-            for cs9packages in oniguruma-devel libzip-devel libtirpc-devel;
+        if echo "${CentOS_Version}" | grep -Eqi "^9" || echo "${Alma_Version}" | grep -Eqi "^9" || echo "${Rocky_Version}" | grep -Eqi "^9"; then
+            for cs9packages in oniguruma-devel libzip-devel libtirpc-devel libxcrypt-compat;
             do dnf --enablerepo=crb install ${cs9packages} -y; done
         fi
 
@@ -88,8 +88,20 @@ DB_Dependent()
             dnf install libarchive -y
         fi
 
-        if [ "${DISTRO}" = "Fedora" ] || echo "${CentOS_Version}" | grep -Eqi "^9"; then
+        if [ "${DISTRO}" = "Fedora" ] || echo "${CentOS_Version}" | grep -Eqi "^9" || echo "${Alma_Version}" | grep -Eqi "^9" || echo "${Rocky_Version}" | grep -Eqi "^9"; then
             dnf install chkconfig -y
+        fi
+
+        if [ -s /usr/lib64/libtinfo.so.6 ]; then
+            ln -sf /usr/lib64/libtinfo.so.6 /usr/lib64/libtinfo.so.5
+        elif [ -s /usr/lib/libtinfo.so.6 ]; then
+            ln -sf /usr/lib/libtinfo.so.6 /usr/lib/libtinfo.so.5
+        fi
+
+        if [ -s /usr/lib64/libncurses.so.6 ]; then
+            ln -sf /usr/lib64/libncurses.so.6 /usr/lib64/libncurses.so.5
+        elif [ -s /usr/lib/libncurses.so.6 ]; then
+            ln -sf /usr/lib/libncurses.so.6 /usr/lib/libncurses.so.5
         fi
     elif [ "$PM" = "apt" ]; then
         export DEBIAN_FRONTEND=noninteractive
