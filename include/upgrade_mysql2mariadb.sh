@@ -202,9 +202,9 @@ EOF
     else
         mkdir -p ${MariaDB_Data_Dir}
     fi
-    chown -R mariadb:mariadb ${MariaDB_Data_Dir}
+    chown -R mariadb:mariadb /usr/local/mariadb
     /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
-    chgrp -R mariadb /usr/local/mariadb/.
+    chown -R mariadb:mariadb ${MariaDB_Data_Dir}
     \cp support-files/mysql.server /etc/init.d/mariadb
     \cp ${cur_dir}/init.d/mariadb.service /etc/systemd/system/mariadb.service
     chmod 755 /etc/init.d/mariadb
@@ -233,7 +233,7 @@ EOF
         Echo_Green "======== upgrade MySQL to MariaDB completed ======"
     else
         Echo_Red "======== upgrade MySQL to MariaDB failed ======"
-        Echo_Red "upgrade MariaDB log: /root/upgrade_mysql2mariadb.log"
-        echo "You upload upgrade_mysql2mariadb.log to LNMP Forum for help."
+        Echo_Red "upgrade MariaDB log: /root/upgrade_mysql2mariadb${Upgrade_Date}.log"
+        echo "You upload upgrade_mysql2mariadb${Upgrade_Date}.log to LNMP Forum for help."
     fi
 }

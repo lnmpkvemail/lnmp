@@ -192,9 +192,9 @@ EOF
     fi
     MySQL_Opt
     Check_MariaDB_Data_Dir
-    chown -R mariadb:mariadb ${MariaDB_Data_Dir}
+    chown -R mariadb:mariadb /usr/local/mariadb
     /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
-    chgrp -R mariadb /usr/local/mariadb/.
+    chown -R mariadb:mariadb ${MariaDB_Data_Dir}
     \cp support-files/mysql.server /etc/init.d/mariadb
     \cp ${cur_dir}/init.d/mariadb.service /etc/systemd/system/mariadb.service
     chmod 755 /etc/init.d/mariadb
@@ -289,9 +289,9 @@ EOF
     fi
     MySQL_Opt
     Check_MariaDB_Data_Dir
-    chown -R mariadb:mariadb ${MariaDB_Data_Dir}
+    chown -R mariadb:mariadb /usr/local/mariadb
     /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
-    chgrp -R mariadb /usr/local/mariadb/.
+    chown -R mariadb:mariadb ${MariaDB_Data_Dir}
     \cp support-files/mysql.server /etc/init.d/mariadb
     \cp ${cur_dir}/init.d/mariadb.service /etc/systemd/system/mariadb.service
     chmod 755 /etc/init.d/mariadb
@@ -387,9 +387,9 @@ EOF
     fi
     MySQL_Opt
     Check_MariaDB_Data_Dir
-    chown -R mariadb:mariadb ${MariaDB_Data_Dir}
+    chown -R mariadb:mariadb /usr/local/mariadb
     /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
-    chgrp -R mariadb /usr/local/mariadb/.
+    chown -R mariadb:mariadb ${MariaDB_Data_Dir}
     \cp support-files/mysql.server /etc/init.d/mariadb
     \cp ${cur_dir}/init.d/mariadb.service /etc/systemd/system/mariadb.service
     chmod 755 /etc/init.d/mariadb
@@ -484,9 +484,9 @@ EOF
     fi
     MySQL_Opt
     Check_MariaDB_Data_Dir
-    chown -R mariadb:mariadb ${MariaDB_Data_Dir}
+    chown -R mariadb:mariadb /usr/local/mariadb
     /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
-    chgrp -R mariadb /usr/local/mariadb/.
+    chown -R mariadb:mariadb ${MariaDB_Data_Dir}
     \cp support-files/mysql.server /etc/init.d/mariadb
     \cp ${cur_dir}/init.d/mariadb.service /etc/systemd/system/mariadb.service
     chmod 755 /etc/init.d/mariadb
@@ -581,9 +581,9 @@ EOF
     fi
     MySQL_Opt
     Check_MariaDB_Data_Dir
-    chown -R mariadb:mariadb ${MariaDB_Data_Dir}
+    chown -R mariadb:mariadb /usr/local/mariadb
     /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
-    chgrp -R mariadb /usr/local/mariadb/.
+    chown -R mariadb:mariadb ${MariaDB_Data_Dir}
     \cp support-files/mysql.server /etc/init.d/mariadb
     \cp ${cur_dir}/init.d/mariadb.service /etc/systemd/system/mariadb.service
     chmod 755 /etc/init.d/mariadb

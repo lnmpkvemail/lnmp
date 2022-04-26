@@ -438,8 +438,9 @@ EOF
     else
         mkdir -p ${MySQL_Data_Dir}
     fi
-    chown -R mysql:mysql ${MySQL_Data_Dir}
+    chown -R mysql:mysql /usr/local/mysql/
     /usr/local/mysql/bin/mysqld --initialize-insecure --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
+    chown -R mysql:mysql ${MySQL_Data_Dir}
 
     cat > /etc/ld.so.conf.d/mysql.conf<<EOF
 /usr/local/mysql/lib
@@ -542,8 +543,9 @@ EOF
     else
         mkdir -p ${MySQL_Data_Dir}
     fi
-    chown -R mysql:mysql ${MySQL_Data_Dir}
+    chown -R mysql:mysql /usr/local/mysql/
     /usr/local/mysql/bin/mysqld --initialize-insecure --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
+    chown -R mysql:mysql ${MySQL_Data_Dir}
 
     cat > /etc/ld.so.conf.d/mysql.conf<<EOF
 /usr/local/mysql/lib
@@ -594,8 +596,8 @@ Restore_Start_MySQL()
         Echo_Green "======== upgrade MySQL completed ======"
     else
         Echo_Red "======== upgrade MySQL failed ======"
-        Echo_Red "upgrade MySQL log: /root/upgrade_mysql.log"
-        echo "You upload upgrade_mysql.log to LNMP Forum for help."
+        Echo_Red "upgrade MySQL log: /root/upgrade_mysq${Upgrade_Date}.log"
+        echo "You upload upgrade_mysq${Upgrade_Date}.log to LNMP Forum for help."
     fi
 }
 

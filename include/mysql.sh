@@ -273,9 +273,9 @@ EOF
     fi
     MySQL_Opt
     Check_MySQL_Data_Dir
-    chown -R mysql:mysql ${MySQL_Data_Dir}
+    chown -R mysql:mysql /usr/local/mysql
     /usr/local/mysql/bin/mysql_install_db --user=mysql --datadir=${MySQL_Data_Dir}
-    chgrp -R mysql /usr/local/mysql/.
+    chown -R mysql:mysql ${MySQL_Data_Dir}
     \cp /usr/local/mysql/share/mysql/mysql.server /etc/init.d/mysql
     chmod 755 /etc/init.d/mysql
 
@@ -374,9 +374,9 @@ EOF
     fi
     MySQL_Opt
     Check_MySQL_Data_Dir
-    chown -R mysql:mysql ${MySQL_Data_Dir}
+    chown -R mysql:mysql /usr/local/mysql
     /usr/local/mysql/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
-    chgrp -R mysql /usr/local/mysql/.
+    chown -R mysql:mysql ${MySQL_Data_Dir}
     \cp support-files/mysql.server /etc/init.d/mysql
     \cp ${cur_dir}/init.d/mysql.service /etc/systemd/system/mysql.service
     chmod 755 /etc/init.d/mysql
@@ -505,9 +505,9 @@ EOF
     fi
     MySQL_Opt
     Check_MySQL_Data_Dir
-    chown -R mysql:mysql ${MySQL_Data_Dir}
+    chown -R mysql:mysql /usr/local/mysql
     /usr/local/mysql/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
-    chgrp -R mysql /usr/local/mysql/.
+    chown -R mysql:mysql ${MySQL_Data_Dir}
     \cp support-files/mysql.server /etc/init.d/mysql
     \cp ${cur_dir}/init.d/mysql.service /etc/systemd/system/mysql.service
     chmod 755 /etc/init.d/mysql
@@ -610,9 +610,9 @@ EOF
 
     MySQL_Opt
     Check_MySQL_Data_Dir
-    chown -R mysql:mysql ${MySQL_Data_Dir}
+    chown -R mysql:mysql /usr/local/mysql
     /usr/local/mysql/bin/mysqld --initialize-insecure --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
-    chgrp -R mysql /usr/local/mysql/.
+    chown -R mysql:mysql ${MySQL_Data_Dir}
     \cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql
     \cp ${cur_dir}/init.d/mysql.service /etc/systemd/system/mysql.service
     chmod 755 /etc/init.d/mysql
@@ -720,9 +720,9 @@ EOF
 
     MySQL_Opt
     Check_MySQL_Data_Dir
-    chown -R mysql:mysql ${MySQL_Data_Dir}
+    chown -R mysql:mysql /usr/local/mysql
     /usr/local/mysql/bin/mysqld --initialize-insecure --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
-    chgrp -R mysql /usr/local/mysql/.
+    chown -R mysql:mysql ${MySQL_Data_Dir}
     \cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql
     \cp ${cur_dir}/init.d/mysql.service /etc/systemd/system/mysql.service
     chmod 755 /etc/init.d/mysql
