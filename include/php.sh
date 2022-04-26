@@ -180,7 +180,7 @@ Install_Composer()
 {
     if [ "${CheckMirror}" != "n" ]; then
         echo "Downloading Composer..."
-        wget --prefer-family=IPv4 --no-check-certificate -T 120 -t3 ${Download_Mirror}/web/php/composer/composer.phar -O /usr/local/bin/composer
+        wget --prefer-family=IPv4 --no-check-certificate -T 120 -t3 https://mirrors.aliyun.com/composer/composer.phar -O /usr/local/bin/composer
         if [ $? -eq 0 ]; then
             echo "Composer install successfully."
             chmod +x /usr/local/bin/composer
