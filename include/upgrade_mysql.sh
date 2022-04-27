@@ -627,7 +627,7 @@ Upgrade_MySQL()
         exit 1
     fi
 
-    if echo "${mysql_version}" | grep -Eqi '^8.0.|5.7.';then
+    if [[ "${ARCH}" = "x86_64" || "${ARCH}" = "i386" ]] && echo "${mysql_version}" | grep -Eqi '^8.0.|5.7.';then
         read -p "Using Generic Binaries [y/n]: " Bin
         case "${Bin}" in
         [yY][eE][sS]|[yY])
@@ -643,6 +643,8 @@ Upgrade_MySQL()
             Bin="y"
             ;;
         esac
+    else
+        Bin="n"
     fi
 
     #do you want to install the InnoDB Storage Engine?
