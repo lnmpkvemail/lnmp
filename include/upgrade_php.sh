@@ -134,9 +134,7 @@ Install_PHP_Dependent()
         fi
         yum -y install oniguruma oniguruma-devel
         if [ "${CheckMirror}" = "n" ]; then
-            cd ${cur_dir}/src/
-            yum -y install ./oniguruma-6.8.2-1.el7.x86_64.rpm
-            yum -y install ./oniguruma-devel-6.8.2-1.el7.x86_64.rpm
+            rpm -ivh ${cur_dir}/src/oniguruma-6.8.2-1.el7.x86_64.rpm ${cur_dir}/src/oniguruma-devel-6.8.2-1.el7.x86_64.rpm
         fi
         yum -y install libsodium-devel
         yum -y install libc-client-devel uw-imap-devel

@@ -77,11 +77,6 @@ DB_Dependent()
             dnf install gcc-toolset-10 -y
         fi
 
-        if echo "${CentOS_Version}" | grep -Eqi "^9" || echo "${Alma_Version}" | grep -Eqi "^9" || echo "${Rocky_Version}" | grep -Eqi "^9"; then
-            for cs9packages in oniguruma-devel libzip-devel libtirpc-devel libxcrypt-compat;
-            do dnf --enablerepo=crb install ${cs9packages} -y; done
-        fi
-
         if [ "${DISTRO}" = "Oracle" ] && echo "${Oracle_Version}" | grep -Eqi "^8"; then
             Check_Codeready
             dnf --enablerepo=${repo_id} install rpcgen re2c -y
