@@ -207,6 +207,10 @@ EOF
     ServerAlias ${moredomain}" /usr/local/apache/conf/vhost/${domain}.conf
     fi
 
+    if [ "${enable_ipv6}" == "y" ]; then
+        sed -i 's/#listen \[::\]:80;/listen \[::\]:80;/g' /usr/local/nginx/conf/vhost/${domain}.conf
+    fi
+
     echo "Test Nginx configure file......"
     /usr/local/nginx/sbin/nginx -t
     echo ""
@@ -266,6 +270,16 @@ Add_VHost()
         fi
         al="access_log  /home/wwwlogs/${al_name}.log;"
         echo "You access log filename: ${al_name}.log"
+    fi
+
+    Echo_Yellow "Enable IPv6? (y/n) "
+    read enable_ipv6
+    if [[ "${enable_ipv6}" == "n" || "${enable_ipv6}" == "" ]]; then
+        echo "Disabled IPv6 Support in current Virtualhost."
+        enable_ipv6="n"
+    else
+        echo "Enabled IPv6 Support in current Virtualhost."
+        enable_ipv6="y"
     fi
 
     email=""
@@ -367,6 +381,11 @@ Add_VHost()
         elif [ "${ssl_choice}" == "4" ]; then
             echo "  =>ZeroSSL"
         fi
+    fi
+    if [ "${enable_ipv6}" == "y" ]; then
+        echo "IPv6 Support: Enabled"
+    else
+        echo "IPv6 Support: Disabled"
     fi
     Echo_Green "================================================"
 }
@@ -748,6 +767,16 @@ Add_SSL_Info_Menu()
         echo "You access log filename: ${al_name}.log"
     fi
 
+    Echo_Yellow "Enable IPv6? (y/n) "
+    read enable_ipv6
+    if [[ "${enable_ipv6}" == "n" || "${enable_ipv6}" == "" ]]; then
+        echo "Disabled IPv6 Support in current Virtualhost."
+        enable_ipv6="n"
+    else
+        echo "Enabled IPv6 Support in current Virtualhost."
+        enable_ipv6="y"
+    fi
+
     email=""
     Echo_Yellow "Please enter Administrator Email Address: "
     read email
@@ -975,6 +1004,10 @@ EOF
 
     if [ "${using_301}" == "y" ]; then
         sed -i '0,/access_log/!b;//i\        location / {\n            return 301 https://$host$request_uri;\n        }\n' /usr/local/nginx/conf/vhost/${domain}.conf
+    fi
+
+    if [ "${enable_ipv6}" == "y" ]; then
+        sed -i 's/#listen \[::\]:443 ssl http2;/listen \[::\]:443 ssl http2;/g' /usr/local/nginx/conf/vhost/${domain}.conf
     fi
 
     echo "Test Nginx configure file......"
