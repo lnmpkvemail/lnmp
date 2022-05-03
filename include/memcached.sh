@@ -49,8 +49,8 @@ Install_PHPMemcached()
     cd ${cur_dir}/src
     if echo "${Cur_PHP_Version}" | grep -Eqi '^8.';then
         [[ -d "${PHP8Memcached_Ver}" ]] && rm -rf "${PHP8Memcached_Ver}"
-        Download_Files ${Download_Mirror}/web/php-memcached/${PHP8Memcached_Ver}.tar.gz ${PHP8Memcached_Ver}.tar.gz
-        Tar_Cd ${PHP8Memcached_Ver}.tar.gz ${PHP8Memcached_Ver}
+        Download_Files ${Download_Mirror}/web/php-memcached/${PHP8Memcached_Ver}.tgz ${PHP8Memcached_Ver}.tgz
+        Tar_Cd ${PHP8Memcached_Ver}.tgz ${PHP8Memcached_Ver}
     elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.';then
         [[ -d "${PHP7Memcached_Ver}" ]] && rm -rf "${PHP7Memcached_Ver}"
         Download_Files ${Download_Mirror}/web/php-memcached/${PHP7Memcached_Ver}.tgz ${PHP7Memcached_Ver}.tgz
