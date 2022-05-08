@@ -914,7 +914,7 @@ Remove_Error_Libcurl()
 Add_Swap()
 {
 
-    Disk_Avail=$(($(df -m /var | tail -1 | awk '{print $4}' | sed s/[[:space:]]//g)/1024))
+    Disk_Avail=$(($(df -mP /var | tail -1 | awk '{print $4}' | sed s/[[:space:]]//g)/1024))
 
     DD_Count='1024'
     if [[ "${MemTotal}" -lt 1024 ]]; then
