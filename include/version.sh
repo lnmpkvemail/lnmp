@@ -16,7 +16,7 @@ Libicu4c_Ver='icu4c-58_3'
 Boost_Ver='boost_1_59_0'
 Boost_New_Ver='boost_1_67_0'
 Openssl_Ver='openssl-1.0.2u'
-Openssl_New_Ver='openssl-1.1.1m'
+Openssl_New_Ver='openssl-1.1.1o'
 Nghttp2_Ver='nghttp2-1.40.0'
 Libzip_Ver='libzip-1.3.2'
 Luajit_Ver='luajit2-2.1-20190329'
@@ -31,19 +31,19 @@ elif [ "${DBSelect}" = "2" ]; then
 elif [ "${DBSelect}" = "3" ]; then
     Mysql_Ver='mysql-5.6.51'
 elif [ "${DBSelect}" = "4" ]; then
-    Mysql_Ver='mysql-5.7.34'
+    Mysql_Ver='mysql-5.7.38'
 elif [ "${DBSelect}" = "5" ]; then
-    Mysql_Ver='mysql-8.0.28'
+    Mysql_Ver='mysql-8.0.29'
 elif [ "${DBSelect}" = "6" ]; then
     Mariadb_Ver='mariadb-5.5.68'
 elif [ "${DBSelect}" = "7" ]; then
-    Mariadb_Ver='mariadb-10.3.32'
+    Mariadb_Ver='mariadb-10.3.34'
 elif [ "${DBSelect}" = "8" ]; then
-    Mariadb_Ver='mariadb-10.4.22'
+    Mariadb_Ver='mariadb-10.4.24'
 elif [ "${DBSelect}" = "9" ]; then
-    Mariadb_Ver='mariadb-10.5.13'
+    Mariadb_Ver='mariadb-10.5.15'
 elif [ "${DBSelect}" = "10" ]; then
-    Mariadb_Ver='mariadb-10.6.5'
+    Mariadb_Ver='mariadb-10.6.7'
 fi
 if [ "${PHPSelect}" = "1" ]; then
     Php_Ver='php-5.2.17'
@@ -66,16 +66,16 @@ elif [ "${PHPSelect}" = "9" ]; then
 elif [ "${PHPSelect}" = "10" ]; then
     Php_Ver='php-7.4.28'
 elif [ "${PHPSelect}" = "11" ]; then
-    Php_Ver='php-8.0.16'
+    Php_Ver='php-8.0.19'
 elif [ "${PHPSelect}" = "12" ]; then
-    Php_Ver='php-8.1.3'
+    Php_Ver='php-8.1.6'
 fi
 if [[ "${PHPSelect}" =~ ^[123]$ ]]; then
     PhpMyAdmin_Ver='phpMyAdmin-4.0.10.20-all-languages'
 elif [[ "${PHPSelect}" =~ ^[456]$ ]]; then
     PhpMyAdmin_Ver='phpMyAdmin-4.9.10-all-languages'
 else
-    PhpMyAdmin_Ver='phpMyAdmin-5.1.3-all-languages'
+    PhpMyAdmin_Ver='phpMyAdmin-5.2.0-all-languages'
 fi
 APR_Ver='apr-1.7.0'
 APR_Util_Ver='apr-util-1.6.1'
@@ -88,7 +88,7 @@ fi
 Pureftpd_Ver='pure-ftpd-1.0.49'
 
 XCache_Ver='xcache-3.2.0'
-ImageMagick_Ver='ImageMagick-7.0.10-53'
+ImageMagick_Ver='ImageMagick-7.1.0-33'
 Imagick_Ver='imagick-3.7.0'
 ZendOpcache_Ver='zendopcache-7.0.5'
 Redis_Stable_Ver='redis-6.2.7'
