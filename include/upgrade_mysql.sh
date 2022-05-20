@@ -706,7 +706,7 @@ Upgrade_MySQL()
     else
         Get_Country
         if [ "${country}" = "CN" ]; then
-            Download_Files http://mirrors.aliyun.com/mysql/MySQL-${mysql_short_version}/${mysql_src} ${mysql_src}
+            Download_Files http://mirrors.ustc.edu.cn/mysql-ftp/Downloads/MySQL-${mysql_short_version}/${mysql_src} ${mysql_src}
             if [ $? -ne 0 ]; then
                 Download_Files http://cdn.mysql.com/Downloads/MySQL-${mysql_short_version}/${mysql_src} ${mysql_src}
             fi
