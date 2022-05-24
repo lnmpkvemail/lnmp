@@ -639,7 +639,7 @@ Upgrade_MySQL()
             Bin="n"
             ;;
         *)
-            echo "Default install MySQL ${mysql_version} Generic Binaries."
+            echo "Default install MySQL ${mysql_version} Using Generic Binaries."
             Bin="y"
             ;;
         esac

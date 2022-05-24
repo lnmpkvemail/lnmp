@@ -35,20 +35,21 @@ Database_Selection()
         echo "You will Install ${DB_Info[2]}"
         ;;
     4)
-        echo "You will install ${DB_Info[3]}"
         if [[ "${ARCH}" = "x86_64" || "${ARCH}" = "i386" ]]; then
-            read -p "Using Generic Binaries [y/n]: " Bin
+            if [ -z ${Bin} ]; then
+                read -p "Using Generic Binaries [y/n]: " Bin
+            fi
             case "${Bin}" in
             [yY][eE][sS]|[yY])
-                echo "You will install MySQL ${DB_Info[3]} Using Generic Binaries."
+                echo "You will install ${DB_Info[3]} Using Generic Binaries."
                 Bin="y"
                 ;;
             [nN][oO]|[nN])
-                echo "You will install MySQL ${DB_Info[3]} Source code."
+                echo "You will install ${DB_Info[3]} from Source."
                 Bin="n"
                 ;;
             *)
-                echo "Default install MySQL ${DB_Info[3]} Generic Binaries."
+                echo "Default install ${DB_Info[3]} Using Generic Binaries."
                 Bin="y"
                 ;;
             esac
@@ -57,20 +58,21 @@ Database_Selection()
         fi
         ;;
     5)
-        echo "You will install ${DB_Info[4]}"
         if [[ "${ARCH}" = "x86_64" || "${ARCH}" = "i386" ]]; then
-            read -p "Using Generic Binaries [y/n]: " Bin
+            if [ -z ${Bin} ]; then
+                read -p "Using Generic Binaries [y/n]: " Bin
+            fi
             case "${Bin}" in
             [yY][eE][sS]|[yY])
-                echo "You will install MySQL ${DB_Info[4]} Using Generic Binaries."
+                echo "You will install ${DB_Info[4]} Using Generic Binaries."
                 Bin="y"
                 ;;
             [nN][oO]|[nN])
-                echo "You will install MySQL ${DB_Info[4]} Source code."
+                echo "You will install ${DB_Info[4]} from Source."
                 Bin="n"
                 ;;
             *)
-                echo "Default install MySQL ${DB_Info[4]} Generic Binaries."
+                echo "Default install ${DB_Info[4]} Using Generic Binaries."
                 Bin="y"
                 ;;
             esac
