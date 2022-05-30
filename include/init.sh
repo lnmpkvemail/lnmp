@@ -606,7 +606,7 @@ Install_Pcre()
         cd ${cur_dir}/src
         Download_Files ${Download_Mirror}/web/pcre/${Pcre_Ver}.tar.bz2 ${Pcre_Ver}.tar.bz2
         Tarj_Cd ${Pcre_Ver}.tar.bz2
-        Nginx_With_Pcre="--with-pcre=${cur_dir}/src/${Pcre_Ver}"
+        Nginx_With_Pcre="--with-pcre=${cur_dir}/src/${Pcre_Ver} --with-pcre-jit"
     fi
 }
 
