@@ -15,7 +15,8 @@ Get_Dist_Version
 Press_Start
 
 if [ "${PM}" = "yum" ]; then
-    yum install python rsyslog python-ipaddr -y
+    for packages in python rsyslog python-ipaddr;
+    do yum -y install $packages; done
     if [ "${DISTRO}" = "CentOS" ] && echo "${CentOS_Version}" | grep -Eqi "^8"; then
         dnf install python2 -y
         alternatives --set python /usr/bin/python2
@@ -25,7 +26,8 @@ if [ "${PM}" = "yum" ]; then
     cat /dev/null > /var/log/secure
 elif [ "${PM}" = "apt" ]; then
     apt-get update
-    apt-get install python rsyslog python-ipaddr -y
+    for packages in python rsyslog python-ipaddr;
+    do apt-get install $packages -y; done
     /etc/init.d/rsyslog restart
     cat /dev/null > /var/log/auth.log
 fi
