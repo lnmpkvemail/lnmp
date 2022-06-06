@@ -2,11 +2,11 @@
 
 ## LNMP一键安装包是什么?
 
-LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RHEL/Fedora/Aliyun/Amazon、Debian/Ubuntu/Raspbian/Deepin/Mint Linux VPS或独立主机安装LNMP(Nginx/MySQL/PHP)、LNMPA(Nginx/MySQL/PHP/Apache)、LAMP(Apache/MySQL/PHP)生产环境的Shell程序。
+LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RHEL/Fedora/Debian/Ubuntu/Raspbian/Deepin/Alibaba/Amazon/Mint/Oracle/Rocky/Alma/Kali/UOS/银河麒麟/openEuler/Anolis OS Linux VPS或独立主机安装LNMP(Nginx/MySQL/PHP)、LNMPA(Nginx/MySQL/PHP/Apache)、LAMP(Apache/MySQL/PHP)生产环境的Shell程序。
 
 ## LNMP一键安装包有哪些功能？
 
-支持自定义Nginx、PHP编译参数及网站和数据库目录、支持生成LetseEcrypt证书、LNMP模式支持多PHP版本、支持单独安装Nginx/MySQL/MariaDB/Pureftpd服务器，同时提供一些实用的辅助工具如：虚拟主机管理、FTP用户管理、Nginx、MySQL/MariaDB、PHP的升级、常用缓存组件Redis/Xcache等的安装、重置MySQL root密码、502自动重启、日志切割、SSH防护DenyHosts/Fail2Ban、备份等许多实用脚本。
+支持自定义Nginx、PHP编译参数及网站和数据库目录、支持生成Let's Ecrypt/ZeroSSL/BuyPass免费SSL证书、支持无人值守、LNMP模式支持多PHP版本、支持单独安装Nginx/MySQL/MariaDB/Pureftpd服务器，同时提供一些实用的辅助工具如：虚拟主机管理、FTP用户管理、Nginx、MySQL/MariaDB、PHP的升级、常见PHP模块exif、fileinfo、ldap、bz2、sodium、imap和swoole的一键安装、常用缓存组件Redis/Xcache等的安装、重置MySQL root密码、502自动重启、日志切割、SSH防护DenyHosts/Fail2Ban、备份等许多实用脚本。
 
 * LNMP官网：<https://lnmp.org>
 * 作者: licess <admin@lnmp.org>
@@ -17,7 +17,7 @@ LNMP一键安装包是一个用Linux Shell编写的可以为CentOS/RHEL/Fedora/A
 
 安装前确认已经安装wget命令，如提示wget: command not found ，使用`yum install wget` 或 `apt-get install wget` 命令安装。
 为防止掉线等情况，建议使用screen，可以先执行：screen -S lnmp 命令后，再执行LNMP安装命令：
-`wget http://soft.vpser.net/lnmp/lnmp1.9beta.tar.gz -cO lnmp1.9beta.tar.gz && tar zxf lnmp1.9beta.tar.gz && cd lnmp1.9 && ./install.sh {lnmp|lnmpa|lamp}`
+`wget http://soft.vpser.net/lnmp/lnmp1.9.tar.gz -cO lnmp1.9.tar.gz && tar zxf lnmp1.9.tar.gz && cd lnmp1.9 && ./install.sh {lnmp|lnmpa|lamp}`
 
 如断线可使用`screen -r lnmp` 恢复。**详细安装教程参考：<https://lnmp.org/install.html>**
 
@@ -117,7 +117,7 @@ MariaDB 10.6 | 10 | PHP 7.4 | 10 | | | |
 
 * 以LNMP模式，默认选项安装MySQL 5.5、MySQL root密码设置为lnmp.org、启用InnoDB、PHP 5.6、不安装内存分配器为例，先执行([建议先运行screen](https://www.vpser.net/manage/run-screen-lnmp.html))，再下载解压lnmp安装包：
 
-`wget http://soft.vpser.net/lnmp/lnmp1.9beta.tar.gz -cO lnmp1.9beta.tar.gz && tar zxf lnmp1.9beta.tar.gz && cd lnmp1.9`
+`wget http://soft.vpser.net/lnmp/lnmp1.9.tar.gz -cO lnmp1.9.tar.gz && tar zxf lnmp1.9.tar.gz && cd lnmp1.9`
 
 然后设置无人值守参数并安装：
 
