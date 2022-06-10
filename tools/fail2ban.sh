@@ -39,7 +39,7 @@ cd ../src
 Download_Files ${Download_Mirror}/security/fail2ban/fail2ban-0.11.2.tar.gz fail2ban-0.11.2.tar.gz
 tar zxf fail2ban-0.11.2.tar.gz && cd fail2ban-0.11.2
 echo "Installing..."
-python setup.py install
+python setup.py install --prefix=/usr
 
 echo "Copy configure file..."
 \cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
@@ -67,10 +67,9 @@ if [ "${PM}" = "yum" ]; then
     sed -i 's#logpath  = /var/log/auth.log#logpath  = /var/log/secure#g' /etc/fail2ban/jail.local
     \cp files/redhat-initd /etc/init.d/fail2ban
 elif [ "${PM}" = "apt" ]; then
-    ln -sf /usr/local/bin/fail2ban-client /usr/bin/fail2ban-client
     \cp files/debian-initd /etc/init.d/fail2ban
 fi
-\cp ../../init.d/fail2ban.service /etc/systemd/system/fail2ban.service
+\cp build/fail2ban.service /etc/systemd/system/fail2ban.service
 chmod +x /etc/init.d/fail2ban
 cd ..
 rm -rf fail2ban-0.11.1
