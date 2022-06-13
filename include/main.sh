@@ -905,6 +905,16 @@ Check_WSL() {
 
 Check_Openssl()
 {
+    if ! command -v openssl >/dev/null 2>&1; then
+        Echo_Blue "[+] Installing openssl..."
+        if [ "${PM}" = "yum" ]; then
+            yum install -y ntpdate
+        elif [ "${PM}" = "apt" ]; then
+            apt-get update -y
+            [[ $? -ne 0 ]] && apt-get update --allow-releaseinfo-change -y
+            apt-get install -y openssl
+        fi
+    fi
     openssl version
     if openssl version | grep -Eqi "OpenSSL 3.*"; then
         isOpenSSL3='y'
