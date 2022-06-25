@@ -232,6 +232,7 @@ EOF
     echo "Copy php-fpm init.d file..."
     \cp ${cur_dir}/src/php-${php_version}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm5.6
     chmod +x /etc/init.d/php-fpm5.6
+    sed -i 's@# Provides:          php-fpm@# Provides:          php-fpm5.6@g' /etc/init.d/php-fpm5.6
 
     StartUp php-fpm5.6
 
@@ -310,6 +311,7 @@ EOF
     echo "Copy php-fpm init.d file..."
     \cp ${cur_dir}/src/php-${php_version}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm7.0
     chmod +x /etc/init.d/php-fpm7.0
+    sed -i 's@# Provides:          php-fpm@# Provides:          php-fpm7.0@g' /etc/init.d/php-fpm7.0
 
     StartUp php-fpm7.0
 
@@ -389,6 +391,7 @@ EOF
     echo "Copy php-fpm init.d file..."
     \cp ${cur_dir}/src/php-${php_version}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm7.1
     chmod +x /etc/init.d/php-fpm7.1
+    sed -i 's@# Provides:          php-fpm@# Provides:          php-fpm7.1@g' /etc/init.d/php-fpm7.1
 
     StartUp php-fpm7.1
 
@@ -468,6 +471,7 @@ EOF
     echo "Copy php-fpm init.d file..."
     \cp ${cur_dir}/src/php-${php_version}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm7.2
     chmod +x /etc/init.d/php-fpm7.2
+    sed -i 's@# Provides:          php-fpm@# Provides:          php-fpm7.2@g' /etc/init.d/php-fpm7.2
 
     StartUp php-fpm7.2
 
@@ -547,6 +551,7 @@ EOF
     echo "Copy php-fpm init.d file..."
     \cp ${cur_dir}/src/php-${php_version}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm7.3
     chmod +x /etc/init.d/php-fpm7.3
+    sed -i 's@# Provides:          php-fpm@# Provides:          php-fpm7.3@g' /etc/init.d/php-fpm7.3
 
     StartUp php-fpm7.3
 
@@ -627,6 +632,7 @@ EOF
     echo "Copy php-fpm init.d file..."
     \cp ${cur_dir}/src/php-${php_version}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm7.4
     chmod +x /etc/init.d/php-fpm7.4
+    sed -i 's@# Provides:          php-fpm@# Provides:          php-fpm7.4@g' /etc/init.d/php-fpm7.4
 
     StartUp php-fpm7.4
 
@@ -707,6 +713,7 @@ EOF
     echo "Copy php-fpm init.d file..."
     \cp ${cur_dir}/src/php-${php_version}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm8.0
     chmod +x /etc/init.d/php-fpm8.0
+    sed -i 's@# Provides:          php-fpm@# Provides:          php-fpm8.0@g' /etc/init.d/php-fpm8.0
 
     StartUp php-fpm8.0
 
@@ -786,6 +793,7 @@ EOF
     echo "Copy php-fpm init.d file..."
     \cp ${cur_dir}/src/php-${php_version}/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm8.1
     chmod +x /etc/init.d/php-fpm8.1
+    sed -i 's@# Provides:          php-fpm@# Provides:          php-fpm8.1@g' /etc/init.d/php-fpm8.1
 
     StartUp php-fpm8.1
 
