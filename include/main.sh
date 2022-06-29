@@ -49,8 +49,13 @@ Database_Selection()
                 Bin="n"
                 ;;
             *)
-                echo "Default install ${DB_Info[3]} Using Generic Binaries."
-                Bin="y"
+                if [ "${CheckMirror}" != "n" ]; then
+                    echo "Default install ${DB_Info[3]} Using Generic Binaries."
+                    Bin="y"
+                else
+                    echo "Default install ${DB_Info[3]} from Source."
+                    Bin="n"
+                fi
                 ;;
             esac
         else
@@ -72,8 +77,13 @@ Database_Selection()
                 Bin="n"
                 ;;
             *)
-                echo "Default install ${DB_Info[4]} Using Generic Binaries."
-                Bin="y"
+                if [ "${CheckMirror}" != "n" ]; then
+                    echo "Default install ${DB_Info[4]} Using Generic Binaries."
+                    Bin="y"
+                else
+                    echo "Default install ${DB_Info[4]} from Source."
+                    Bin="n"
+                fi
                 ;;
             esac
         else
