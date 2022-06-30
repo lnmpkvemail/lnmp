@@ -107,7 +107,7 @@ DB_Dependent()
         dpkg -l |grep mysql
         dpkg -P mysql-server mysql-common libmysqlclient15off libmysqlclient15-dev
         dpkg -P mariadb-client mariadb-server mariadb-common
-        for packages in debian-keyring debian-archive-keyring build-essential gcc g++ make cmake autoconf automake wget openssl libssl-dev zlib1g zlib1g-dev libncurses5 libncurses5-dev bison libaio-dev libtirpc-dev libsasl2-dev pkg-config libpcre2-dev libxml2-dev libtinfo-dev libnuma-dev;
+        for packages in debian-keyring debian-archive-keyring build-essential gcc g++ make cmake autoconf automake wget openssl libssl-dev zlib1g zlib1g-dev libncurses5 libncurses5-dev bison libaio-dev libtirpc-dev libsasl2-dev pkg-config libpcre2-dev libxml2-dev libtinfo-dev libnuma-dev gnutls-dev;
         do apt-get --no-install-recommends install -y $packages; done
     fi
 }
