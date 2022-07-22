@@ -162,37 +162,37 @@ Select_PHP()
                 PHPFPM_Initd='/etc/init.d/php-fpm5.6'
                 ;;
             7)
-                echo "Current selection:: PHP `/usr/local/php7.0/bin/php-config --version`"
+                echo "Current selection: PHP `/usr/local/php7.0/bin/php-config --version`"
                 PHP_Path='/usr/local/php7.0'
                 PHPFPM_Initd='/etc/init.d/php-fpm7.0'
                 ;;
             8)
-                echo "Current selection:: PHP `/usr/local/php7.1/bin/php-config --version`"
+                echo "Current selection: PHP `/usr/local/php7.1/bin/php-config --version`"
                 PHP_Path='/usr/local/php7.1'
                 PHPFPM_Initd='/etc/init.d/php-fpm7.1'
                 ;;
             9)
-                echo "Current selection:: PHP `/usr/local/php7.2/bin/php-config --version`"
+                echo "Current selection: PHP `/usr/local/php7.2/bin/php-config --version`"
                 PHP_Path='/usr/local/php7.2'
                 PHPFPM_Initd='/etc/init.d/php-fpm7.2'
                 ;;
             10)
-                echo "Current selection:: PHP `/usr/local/php7.3/bin/php-config --version`"
+                echo "Current selection: PHP `/usr/local/php7.3/bin/php-config --version`"
                 PHP_Path='/usr/local/php7.3'
                 PHPFPM_Initd='/etc/init.d/php-fpm7.3'
                 ;;
             11)
-                echo "Current selection:: PHP `/usr/local/php7.4/bin/php-config --version`"
+                echo "Current selection: PHP `/usr/local/php7.4/bin/php-config --version`"
                 PHP_Path='/usr/local/php7.4'
                 PHPFPM_Initd='/etc/init.d/php-fpm7.4'
                 ;;
             12)
-                echo "Current selection:: PHP `/usr/local/php8.0/bin/php-config --version`"
+                echo "Current selection: PHP `/usr/local/php8.0/bin/php-config --version`"
                 PHP_Path='/usr/local/php8.0'
                 PHPFPM_Initd='/etc/init.d/php-fpm8.0'
                 ;;
             13)
-                echo "Current selection:: PHP `/usr/local/php8.1/bin/php-config --version`"
+                echo "Current selection: PHP `/usr/local/php8.1/bin/php-config --version`"
                 PHP_Path='/usr/local/php8.1'
                 PHPFPM_Initd='/etc/init.d/php-fpm8.1'
                 ;;
