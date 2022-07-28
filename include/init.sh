@@ -375,8 +375,11 @@ CentOS_Dependent()
         else
             yum -y install epel-release
             if [ "${country}" = "CN" ]; then
-                sed -i "s@^#baseurl=http://download.fedoraproject.org/pub@baseurl=http://mirrors.aliyun.com@g" /etc/yum.repos.d/epel*.repo
-                sed -i "s@^metalink@#metalink@g" /etc/yum.repos.d/epel*.repo
+                sed -e 's!^metalink=!#metalink=!g' \
+                    -e 's!^#baseurl=!baseurl=!g' \
+                    -e 's!//download\.fedoraproject\.org/pub!//mirrors.ustc.edu.cn!g' \
+                    -e 's!//download\.example/pub!//mirrors.ustc.edu.cn!g' \
+                    -i /etc/yum.repos.d/epel*.repo
             fi
         fi
         yum -y install oniguruma oniguruma-devel
