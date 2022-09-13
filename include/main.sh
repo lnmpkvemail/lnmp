@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-DB_Info=('MySQL 5.1.73' 'MySQL 5.5.62' 'MySQL 5.6.51' 'MySQL 5.7.38' 'MySQL 8.0.29' 'MariaDB 5.5.68' 'MariaDB 10.3.35' 'MariaDB 10.4.25' 'MariaDB 10.5.16' 'MariaDB 10.6.8')
+DB_Info=('MySQL 5.1.73' 'MySQL 5.5.62' 'MySQL 5.6.51' 'MySQL 5.7.38' 'MySQL 8.0.30' 'MariaDB 5.5.68' 'MariaDB 10.3.35' 'MariaDB 10.4.25' 'MariaDB 10.5.16' 'MariaDB 10.6.8')
 PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.38' 'PHP 5.6.40' 'PHP 7.0.33' 'PHP 7.1.33' 'PHP 7.2.34' 'PHP 7.3.33' 'PHP 7.4.30' 'PHP 8.0.20' 'PHP 8.1.7')
 Apache_Info=('Apache 2.2.34' 'Apache 2.4.53')
 
