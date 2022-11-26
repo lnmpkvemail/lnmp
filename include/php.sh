@@ -160,6 +160,20 @@ PHP_with_Imap()
     fi
 }
 
+PHP_with_Intl()
+{
+    if echo "${Ubuntu_Version}" | grep -Eqi "^19|2[0-7]\." || echo "${Debian_Version}" | grep -Eqi "^1[0-9]" || echo "${Raspbian_Version}" | grep -Eqi "^1[0-9]" || echo "${Deepin_Version}" | grep -Eqi "^2[0-9]" || echo "${UOS_Version}" | grep -Eqi "^2[0-9]"; then
+        if echo "${PHPSelect}" | grep -Eqi '^[3-6]' || echo "${php_version}" | grep -Eqi '^5.[4-6].*|7.0.*' || echo "${Php_Ver}" | grep -Eqi "php-5.[4-6].*|php-7.0.*"; then
+            Install_Icu60
+            with_icu_dir='--with-icu-dir=/usr/local/icu'
+        fi
+    fi
+    if pkg-config --modversion icu-i18n | grep -Eqi '^6[89]|7[0-9]'; then
+        export CXX="g++ -DTRUE=1 -DFALSE=0"
+        export  CC="gcc -DTRUE=1 -DFALSE=0"
+    fi
+}
+
 Check_PHP_Option()
 {
     PHP_with_openssl
@@ -170,7 +184,8 @@ Check_PHP_Option()
     PHP_with_Bz2
     PHP_with_Sodium
     PHP_with_Imap
-    PHP_Buildin_Option="${with_exif} ${with_ldap} ${with_bz2} ${with_sodium} ${with_imap}"
+    PHP_with_Intl
+    PHP_Buildin_Option="${with_exif} ${with_ldap} ${with_bz2} ${with_sodium} ${with_imap} ${with_icu_dir}"
 }
 
 Ln_PHP_Bin()
@@ -237,10 +252,6 @@ PHP_ICU70_Patch()
         fi
         echo "icu 7x+, apply a patch to PHP ${PHP_Short_Ver}..."
         patch -p1 < ${cur_dir}/src/patch/php-${PHP_Short_Ver}-icu70.patch
-    fi
-    if echo "${Fedora_Version}" | grep -Eqi "3[5-9]" || echo "${Ubuntu_Version}" | grep -Eqi "2[2-9]"; then
-        export CXX="g++ -DTRUE=1 -DFALSE=0"
-        export  CC="gcc -DTRUE=1 -DFALSE=0"
     fi
 }
 

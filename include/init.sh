@@ -668,6 +668,22 @@ Install_Icu4c()
     fi
 }
 
+Install_Icu60()
+{
+    if [ ! -s /usr/local/icu/bin/icu-config ]; then
+        Echo_Blue "[+] Installing icu4c-60_3..."
+        cd ${cur_dir}/src
+        Download_Files ${Download_Mirror}/lib/icu4c/icu4c-60_3-src.tgz icu4c-60_3-src.tgz
+        Tar_Cd icu4c-60_3-src.tgz icu/source
+        ./configure --prefix=/usr/local/icu
+        Make_Install
+        cd ${cur_dir}/src/
+
+        echo "/usr/local/icu/lib" > /etc/ld.so.conf.d/icu.conf
+        ldconfig
+    fi
+}
+
 Download_Boost()
 {
     Echo_Blue "[+] Download or use exist boost..."
