@@ -410,13 +410,7 @@ Get_Dist_Version()
 
 Get_Dist_Name()
 {
-    if grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
-        DISTRO='CentOS'
-        PM='yum'
-        if grep -Eq "CentOS Stream" /etc/*-release; then
-            isCentosStream='y'
-        fi
-    elif grep -Eqi "Alibaba" /etc/issue || grep -Eq "Alibaba Cloud Linux" /etc/*-release; then
+    if grep -Eqi "Alibaba" /etc/issue || grep -Eq "Alibaba Cloud Linux" /etc/*-release; then
         DISTRO='Alibaba'
         PM='yum'
     elif grep -Eqi "Aliyun" /etc/issue || grep -Eq "Aliyun Linux" /etc/*-release; then
@@ -449,9 +443,12 @@ Get_Dist_Name()
     elif grep -Eqi "Kylin Linux Advanced Server" /etc/issue || grep -Eq "Kylin Linux Advanced Server" /etc/*-release; then
         DISTRO='Kylin'
         PM='yum'
-    elif grep -Eqi "Debian" /etc/issue || grep -Eq "Debian" /etc/*-release; then
-        DISTRO='Debian'
-        PM='apt'
+    elif grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
+        DISTRO='CentOS'
+        PM='yum'
+        if grep -Eq "CentOS Stream" /etc/*-release; then
+            isCentosStream='y'
+        fi
     elif grep -Eqi "Ubuntu" /etc/issue || grep -Eq "Ubuntu" /etc/*-release; then
         DISTRO='Ubuntu'
         PM='apt'
@@ -466,6 +463,9 @@ Get_Dist_Name()
         PM='apt'
     elif grep -Eqi "Kali" /etc/issue || grep -Eq "Kali" /etc/*-release; then
         DISTRO='Kali'
+        PM='apt'
+    elif grep -Eqi "Debian" /etc/issue || grep -Eq "Debian" /etc/*-release; then
+        DISTRO='Debian'
         PM='apt'
     elif grep -Eqi "UnionTech OS" /etc/issue || grep -Eq "UnionTech OS" /etc/*-release; then
         DISTRO='UOS'
