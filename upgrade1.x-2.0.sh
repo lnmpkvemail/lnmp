@@ -351,7 +351,7 @@ if [ "${isSSL}" == "ssl" ]; then
     fi
 else
     echo "+--------------------------------------------------+"
-    echo "|  A tool to upgrade lnmp manager from 1.x to 1.9  |"
+    echo "|  A tool to upgrade lnmp manager from 1.x to 2.0  |"
     echo "+--------------------------------------------------+"
     echo "|For more information please visit https://lnmp.org|"
     echo "+--------------------------------------------------+"
