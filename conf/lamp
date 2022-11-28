@@ -175,7 +175,7 @@ Add_VHost()
     while :;do
         Echo_Yellow "Please enter domain(example: www.lnmp.org): "
         read domain
-        if [ "${domain}" != "" ]; then
+        if [ "${domain}" != "" ] && [[ "$domain" = "${domain%[[:space:]]*}" ]]; then
             if [ -f "/usr/local/apache/conf/vhost/${domain}.conf" ]; then
                 Echo_Red " ${domain} is exist,please check!"
                 exit 1
@@ -184,7 +184,7 @@ Add_VHost()
             fi
             break
         else
-            Echo_Red "Domain name can't be empty!"
+            Echo_Red "Domain name can't be empty or contain spaces!"
         fi
     done
 
@@ -653,11 +653,11 @@ Add_SSL_Info_Menu()
     while :;do
         Echo_Yellow "Please enter domain(example: www.lnmp.org): "
         read domain
-        if [ "${domain}" != "" ]; then
+        if [ "${domain}" != "" ] && [[ "$domain" = "${domain%[[:space:]]*}" ]]; then
             echo " Your domain: ${domain}"
             break
         else
-            Echo_Red "Domain name can't be empty!"
+            Echo_Red "Domain name can't be empty or contain spaces!"
         fi
     done
 
@@ -752,11 +752,11 @@ Add_DNS_SSL_Only_Info_Menu()
     while :;do
         Echo_Yellow "Please enter domain(example: lnmp.org): "
         read domain
-        if [ "${domain}" != "" ]; then
+        if [ "${domain}" != "" ] && [[ "$domain" = "${domain%[[:space:]]*}" ]]; then
             echo " Your domain: ${domain}"
             break
         else
-            Echo_Red "Domain name can't be empty!"
+            Echo_Red "Domain name can't be empty or contain spaces!"
         fi
     done
 
