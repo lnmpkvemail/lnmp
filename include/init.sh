@@ -928,7 +928,7 @@ Add_Swap()
             Enable_Swap='n'
         fi
     elif [[ "${MemTotal}" -ge 1024 && "${MemTotal}" -le 2048 ]]; then
-        DD_Count='2028'
+        DD_Count='2048'
         if [[ "${Disk_Avail}" -lt 13 ]]; then
             Enable_Swap='n'
         fi
