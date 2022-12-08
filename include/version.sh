@@ -69,6 +69,8 @@ elif [ "${PHPSelect}" = "11" ]; then
     Php_Ver='php-8.0.20'
 elif [ "${PHPSelect}" = "12" ]; then
     Php_Ver='php-8.1.7'
+elif [ "${PHPSelect}" = "13" ]; then
+    Php_Ver='php-8.2.0'
 fi
 if [[ "${PHPSelect}" =~ ^[123]$ ]]; then
     PhpMyAdmin_Ver='phpMyAdmin-4.0.10.20-all-languages'
@@ -105,4 +107,4 @@ PHPOldApcu_Ver='apcu-4.0.11'
 PHPNewApcu_Ver='apcu-5.1.21'
 PHPApcu_Bc_Ver='apcu_bc-1.0.5'
 PHPSodium_Ver='libsodium-2.0.23'
-PHPSwoole_Ver='swoole-4.8.11'
+PHPSwoole_Ver='swoole-5.0.1'

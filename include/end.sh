@@ -166,7 +166,7 @@ Check_Apache_Files()
         else
             Echo_Red "Error: Apache install failed."
         fi
-    elif [[ "${PHPSelect}" =~ ^1[12]$ ]]; then
+    elif [[ "${PHPSelect}" =~ ^1[1-3]$ ]]; then
         if [[ -s /usr/local/apache/bin/httpd && -s /usr/local/apache/modules/libphp.so && -s /usr/local/apache/conf/httpd.conf ]]; then
             Echo_Green "Apache: OK"
             isApache="ok"
