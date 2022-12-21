@@ -661,8 +661,10 @@ Print_Sys_Info()
     df -h
     Check_Openssl
     Check_WSL
-    Get_Country
-    echo "Server Location: ${country}"
+    if [ "${CheckMirror}" != "n" ]; then
+        Get_Country
+        echo "Server Location: ${country}"
+    fi
 }
 
 StartUp()
