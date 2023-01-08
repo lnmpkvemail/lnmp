@@ -1,5 +1,20 @@
 更新记录
 
+LNMP 2.0
+增加PHP 8.2支持；
+添加zblog伪静态；
+添加php-redis测试脚本；
+优化低版本PHP在新Linux发行版下的支持；
+优化Anolis OS 7支持；
+优化Oracle 7支持；
+优化SourceGuardian安装脚本；
+优化php-memcached安装脚本；
+优化离线安装；
+修复apache2.4邮箱设置问题；
+国内centos源默认使用ustc源；
+更新诸多软件版本；
+其他一些功能优化及调整......
+
 LNMP 1.9
 
 增加rocky linux 和alma linux支持；
