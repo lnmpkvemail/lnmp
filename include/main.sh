@@ -924,7 +924,7 @@ Check_Openssl()
     if ! command -v openssl >/dev/null 2>&1; then
         Echo_Blue "[+] Installing openssl..."
         if [ "${PM}" = "yum" ]; then
-            yum install -y ntpdate
+            yum install -y openssl
         elif [ "${PM}" = "apt" ]; then
             apt-get update -y
             [[ $? -ne 0 ]] && apt-get update --allow-releaseinfo-change -y
