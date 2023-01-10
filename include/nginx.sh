@@ -29,6 +29,8 @@ Install_Nginx_Lua()
         Download_Files ${Download_Mirror}/lib/lua/${Luajit_Ver}.tar.gz ${Luajit_Ver}.tar.gz
         Download_Files ${Download_Mirror}/lib/lua/${LuaNginxModule}.tar.gz ${LuaNginxModule}.tar.gz
         Download_Files ${Download_Mirror}/lib/lua/${NgxDevelKit}.tar.gz ${NgxDevelKit}.tar.gz
+        Download_Files ${Download_Mirror}/lib/lua/${LuaRestyCore}.tar.gz ${LuaRestyCore}.tar.gz
+        Download_Files ${Download_Mirror}/lib/lua/${LuaRestyLrucache}.tar.gz ${LuaRestyLrucache}.tar.gz
 
         Echo_Blue "[+] Installing ${Luajit_Ver}... "
         tar zxf ${LuaNginxModule}.tar.gz
@@ -57,6 +59,13 @@ export LUAJIT_INC=/usr/local/luajit/include/luajit-2.1
 EOF
 
         source /etc/profile.d/luajit.sh
+
+        Tar_Cd ${LuaRestyCore}.tar.gz ${LuaRestyCore}
+        make install PREFIX=/usr/local/nginx
+        cd -
+        Tar_Cd ${LuaRestyLrucache}.tar.gz ${LuaRestyLrucache}
+        make install PREFIX=/usr/local/nginx
+        cd -
 
         Nginx_Ver_Com=$(${cur_dir}/include/version_compare 1.21.5 ${Nginx_Version})
         if [[  "${Nginx_Ver_Com}" == "1" ]]; then
@@ -130,6 +139,9 @@ Install_Nginx()
     \cp conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php-pathinfo.conf
     \cp -ra conf/example /usr/local/nginx/conf/example
     if [ "${Enable_Nginx_Lua}" = 'y' ]; then
+        if ! grep -q 'lua_package_path "/usr/local/nginx/lib/lua/?.lua";' /usr/local/nginx/conf/nginx.conf; then
+            sed -i "/server_tokens off;/i\        lua_package_path \"/usr/local/nginx/lib/lua/?.lua\";\n" /usr/local/nginx/conf/nginx.conf
+        fi
         if [ "${Stack}" = "lnmp" ]; then
             sed -i "/include enable-php.conf;/i\        location /lua\n        {\n            default_type text/html;\n            content_by_lua 'ngx.say\(\"hello world\"\)';\n        }\n" /usr/local/nginx/conf/nginx.conf
         else
