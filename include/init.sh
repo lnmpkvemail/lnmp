@@ -164,7 +164,7 @@ RHEL_Modify_Source()
 Ubuntu_Modify_Source()
 {
     if [ "${country}" = "CN" ]; then
-        OldReleasesURL='http://mirrors.aliyun.com/oldubuntu-releases/ubuntu/'
+        OldReleasesURL='http://mirrors.ustc.edu.cn/ubuntu-old-releases/'
     else
         OldReleasesURL='http://old-releases.ubuntu.com/ubuntu/'
     fi
@@ -203,6 +203,8 @@ Ubuntu_Modify_Source()
         Ubuntu_Deadline xenial
     elif grep -Eqi "16.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^16.10'; then
         CodeName='yakkety'
+    elif grep -Eqi "18.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^18.04'; then
+        Ubuntu_Deadline bionic
     elif grep -Eqi "18.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^18.10'; then
         CodeName='cosmic'
     elif grep -Eqi "19.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^19.04'; then
@@ -212,9 +214,9 @@ Ubuntu_Modify_Source()
     elif grep -Eqi "20.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^20.10'; then
         CodeName='groovy'
     elif grep -Eqi "21.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^21.04'; then
-        Ubuntu_Deadline hirsute
+        CodeName='hirsute'
     elif grep -Eqi "21.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^21.10'; then
-        Ubuntu_Deadline impish
+        CodeName='impish'
     fi
     if [ "${CodeName}" != "" ]; then
         \cp /etc/apt/sources.list /etc/apt/sources.list.$(date +"%Y%m%d")
@@ -244,10 +246,10 @@ Check_Old_Releases_URL()
 
 Ubuntu_Deadline()
 {
-    trusty_deadline=`date -d "2022-4-30 00:00:00" +%s`
-    xenial_deadline=`date -d "2024-4-30 00:00:00" +%s`
-    hirsute_deadline=`date -d "2022-1-30 00:00:00" +%s`
-    impish_deadline=`date -d "2022-7-30 00:00:00" +%s`
+    trusty_deadline=`date -d "2024-4-30 00:00:00" +%s`
+    xenial_deadline=`date -d "2026-4-30 00:00:00" +%s`
+    kinetic_deadline=`date -d "2023-7-30 00:00:00" +%s`
+    bionic_deadline=`date -d "2028-7-30 00:00:00" +%s`
     cur_time=`date  +%s`
     case "$1" in
         trusty)
@@ -268,16 +270,10 @@ Ubuntu_Deadline()
                 Check_Old_Releases_URL eoan
             fi
             ;;
-        hirsute)
-            if [ ${cur_time} -gt ${hirsute_deadline} ]; then
-                echo "${cur_time} > ${hirsute_deadline}"
-                Check_Old_Releases_URL hirsute
-            fi
-            ;;
-        impish)
-            if [ ${cur_time} -gt ${impish_deadline} ]; then
-                echo "${cur_time} > ${impish_deadline}"
-                Check_Old_Releases_URL impish
+        bionic)
+            if [ ${cur_time} -gt ${bionic_deadline} ]; then
+                echo "${cur_time} > ${bionic_deadline}"
+                Check_Old_Releases_URL bionic
             fi
             ;;
     esac
