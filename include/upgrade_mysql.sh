@@ -704,15 +704,7 @@ Upgrade_MySQL()
     if [ -s "${mysql_src}" ]; then
         echo "${mysql_src} [found]"
     else
-        Get_Country
-        if [ "${country}" = "CN" ]; then
-            Download_Files http://mirrors.ustc.edu.cn/mysql-ftp/Downloads/MySQL-${mysql_short_version}/${mysql_src} ${mysql_src}
-            if [ $? -ne 0 ]; then
-                Download_Files http://cdn.mysql.com/Downloads/MySQL-${mysql_short_version}/${mysql_src} ${mysql_src}
-            fi
-        else
-            Download_Files http://cdn.mysql.com/Downloads/MySQL-${mysql_short_version}/${mysql_src} ${mysql_src}
-        fi
+        Download_Files http://cdn.mysql.com/Downloads/MySQL-${mysql_short_version}/${mysql_src} ${mysql_src}
         if [ $? -eq 0 ]; then
             echo "Download ${mysql_src} successfully!"
         else

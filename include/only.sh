@@ -118,13 +118,7 @@ Install_Database()
     cd ${cur_dir}/src
     if [[ "${DBSelect}" =~ ^[12345]$ ]]; then
         if [[ "${Bin}" = "y" && "${DBSelect}" = "4" ]]; then
-            Get_Country
-            if [ "${country}" = "CN" ]; then
-                Download_Files http://mirrors.ustc.edu.cn/mysql-ftp/Downloads/MySQL-5.7/${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz
-                [[ $? -ne 0 ]] && Download_Files https://cdn.mysql.com/Downloads/MySQL-5.7/${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz
-            else
-                Download_Files https://cdn.mysql.com/Downloads/MySQL-5.7/${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz
-            fi
+            Download_Files https://cdn.mysql.com/Downloads/MySQL-5.7/${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz
             [[ $? -ne 0 ]] && Download_Files https://cdn.mysql.com/archives/mysql-5.7/${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz
             if [ ! -s ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz ]; then
                 Echo_Red "Error! Unable to download MySQL 5.7 Generic Binaries, please download it to src directory manually."
@@ -132,13 +126,7 @@ Install_Database()
                 exit 1
             fi
         elif [[ "${Bin}" = "y" && "${DBSelect}" = "5" ]]; then
-            Get_Country
-            if [ "${country}" = "CN" ]; then
-                Download_Files http://mirrors.ustc.edu.cn/mysql-ftp/Downloads/MySQL-8.0/${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.xz ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.xz
-                [[ $? -ne 0 ]] && Download_Files https://cdn.mysql.com/Downloads/MySQL-8.0/${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.xz ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.xz
-            else
-                Download_Files https://cdn.mysql.com/Downloads/MySQL-8.0/${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.xz ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.xz
-            fi
+            Download_Files https://cdn.mysql.com/Downloads/MySQL-8.0/${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.xz ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.xz
             [[ $? -ne 0 ]] && Download_Files https://cdn.mysql.com/archives/mysql-8.0/${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.xz ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.xz
             if [ ! -s ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.xz ]; then
                 Echo_Red "Error! Unable to download MySQL 8.0 Generic Binaries, please download it to src directory manually."

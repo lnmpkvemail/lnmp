@@ -35,7 +35,7 @@ Database_Selection()
         echo "You will Install ${DB_Info[2]}"
         ;;
     4)
-        if [[ "${ARCH}" = "x86_64" || "${ARCH}" = "i386" ]]; then
+        if [[ "${DB_ARCH}" = "x86_64" || "${DB_ARCH}" = "i686" ]]; then
             if [ -z ${Bin} ]; then
                 read -p "Using Generic Binaries [y/n]: " Bin
             fi
@@ -63,7 +63,7 @@ Database_Selection()
         fi
         ;;
     5)
-        if [[ "${ARCH}" = "x86_64" || "${ARCH}" = "i386" ]]; then
+        if [[ "${DB_ARCH}" = "x86_64" || "${DB_ARCH}" = "i686" || "${DB_ARCH}" = "aarch64" ]]; then
             if [ -z ${Bin} ]; then
                 read -p "Using Generic Binaries [y/n]: " Bin
             fi
@@ -526,6 +526,7 @@ Get_OS_Bit()
             ARCH='armhf'
         elif uname -m | grep -Eqi "aarch64"; then
             ARCH='aarch64'
+            DB_ARCH='aarch64'
         else
             ARCH='arm'
         fi
