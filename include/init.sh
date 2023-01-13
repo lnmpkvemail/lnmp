@@ -447,7 +447,13 @@ Check_Download()
             Download_Files ${Download_Mirror}/datebase/mysql/${Mysql_Ver}.tar.gz ${Mysql_Ver}.tar.gz
         fi
     elif [[ "${DBSelect}" =~ ^[6789]|10$ ]]; then
-        Download_Files ${Download_Mirror}/datebase/mariadb/${Mariadb_Ver}.tar.gz ${Mariadb_Ver}.tar.gz
+        Mariadb_Version=$(echo ${Mariadb_Ver} | cut -d- -f2)
+        if [ "${Bin}" = "y" ]; then
+            MariaDB_FileName="${Mariadb_Ver}-linux-systemd-${DB_ARCH}"
+        else
+            MariaDB_FileName="${Mariadb_Ver}"
+        fi
+        Download_Files https://downloads.mariadb.org/rest-api/mariadb/${Mariadb_Version}/${MariaDB_FileName}.tar.gz ${MariaDB_FileName}.tar.gz
     fi
     Download_Files ${Download_Mirror}/web/php/${Php_Ver}.tar.bz2 ${Php_Ver}.tar.bz2
     if [ ${PHPSelect} = "1" ]; then

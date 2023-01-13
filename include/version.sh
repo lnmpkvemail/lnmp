@@ -39,13 +39,13 @@ elif [ "${DBSelect}" = "5" ]; then
 elif [ "${DBSelect}" = "6" ]; then
     Mariadb_Ver='mariadb-5.5.68'
 elif [ "${DBSelect}" = "7" ]; then
-    Mariadb_Ver='mariadb-10.3.35'
+    Mariadb_Ver='mariadb-10.3.37'
 elif [ "${DBSelect}" = "8" ]; then
-    Mariadb_Ver='mariadb-10.4.25'
+    Mariadb_Ver='mariadb-10.4.27'
 elif [ "${DBSelect}" = "9" ]; then
-    Mariadb_Ver='mariadb-10.5.16'
+    Mariadb_Ver='mariadb-10.5.18'
 elif [ "${DBSelect}" = "10" ]; then
-    Mariadb_Ver='mariadb-10.6.8'
+    Mariadb_Ver='mariadb-10.6.11'
 fi
 if [ "${PHPSelect}" = "1" ]; then
     Php_Ver='php-5.2.17'

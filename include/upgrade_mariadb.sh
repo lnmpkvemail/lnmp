@@ -45,6 +45,48 @@ Upgrade_MariaDB()
         exit 1
     fi
 
+    if echo "${mariadb_version}" | grep -Eqi '^10.6.';then
+        if [[ "${DB_ARCH}" = "x86_64" ]]; then
+            read -p "Using Generic Binaries [y/n]: " Bin
+            case "${Bin}" in
+            [yY][eE][sS]|[yY])
+                echo "You will install mariadb-${mariadb_version} Using Generic Binaries."
+                Bin="y"
+                ;;
+            [nN][oO]|[nN])
+                echo "You will install mariadb-${mariadb_version} from Source."
+                Bin="n"
+                ;;
+            *)
+                echo "You will install mariadb-${mariadb_version} Using Generic Binaries."
+                Bin="y"
+                ;;
+            esac
+        else
+            Bin="n"
+        fi
+    else
+        if [[ "${DB_ARCH}" = "x86_64" || "${DB_ARCH}" = "i686" ]]; then
+            read -p "Using Generic Binaries [y/n]: " Bin
+            case "${Bin}" in
+            [yY][eE][sS]|[yY])
+                echo "You will install mariadb-${mariadb_version} Using Generic Binaries."
+                Bin="y"
+                ;;
+            [nN][oO]|[nN])
+                echo "You will install mariadb-${mariadb_version} from Source."
+                Bin="n"
+                ;;
+            *)
+                echo "You will install mariadb-${mariadb_version} Using Generic Binaries."
+                Bin="y"
+                ;;
+            esac
+        else
+            Bin="n"
+        fi
+    fi
+
     #do you want to install the InnoDB Storage Engine?
     echo "==========================="
 
@@ -82,43 +124,50 @@ Upgrade_MariaDB()
 
     echo "============================check files=================================="
     cd ${cur_dir}/src
-    if [ -s mariadb-${mariadb_version}.tar.gz ]; then
-        echo "mariadb-${mariadb_version}.tar.gz [found]"
+    if [ "${Bin}" = "y" ]; then
+        MariaDB_FileName="mariadb-${mariadb_version}-linux-systemd-${DB_ARCH}"
     else
-        echo "Notice: mariadb-${mariadb_version}.tar.gz not found!!!download now......"
-        wget -c --progress=bar:force https://archive.mariadb.org/mariadb-${mariadb_version}/source/mariadb-${mariadb_version}.tar.gz
+        MariaDB_FileName="mariadb-${mariadb_version}"
+    fi
+    if [ -s ${MariaDB_FileName}.tar.gz ]; then
+        echo "${MariaDB_FileName}.tar.gz [found]"
+    else
+        echo "Notice: ${MariaDB_FileName}.tar.gz not found!!!download now......"
+        Download_Files https://downloads.mariadb.org/rest-api/mariadb/${mariadb_version}/${MariaDB_FileName}.tar.gz ${MariaDB_FileName}.tar.gz
         if [ $? -eq 0 ]; then
-            echo "Download mariadb-${mariadb_version}.tar.gz successfully!"
+            echo "Download ${MariaDB_FileName}.tar.gz successfully!"
         else
-            wget -c --progress=bar:force https://mirrors.aliyun.com/mariadb/mariadb-${mariadb_version}/source/mariadb-${mariadb_version}.tar.gz
-            if [ $? -eq 0 ]; then
-                echo "Download mariadb-${mariadb_version}.tar.gz successfully!"
-            else
-                echo "You enter MariaDB Version was:"${mariadb_version}
-                Echo_Red "Error! You entered a wrong version number, please check!"
-                sleep 5
-                exit 1
-            fi
+            echo "You enter MariaDB Version was:"${mariadb_version}
+            Echo_Red "Error! You entered a wrong version number or can't download from mariadb mirror, please check!"
+            sleep 5
+            exit 1
         fi
     fi
     echo "============================check files=================================="
 
     Backup_MariaDB
 
-    echo "Starting upgrade MariaDB..."
-    Tar_Cd mariadb-${mariadb_version}.tar.gz mariadb-${mariadb_version}
-    MariaDB_WITHSSL
-    if echo "${mariadb_version}" | grep -Eqi '^10.[56].';then
-        cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DMYSQL_UNIX_ADDR=/tmp/mysql.sock -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1
-    elif echo "${mariadb_version}" | grep -Eqi '^10.4.';then
-        patch -p1 < ${cur_dir}/src/patch/mariadb_10.4_install_db.patch
-        cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DMYSQL_UNIX_ADDR=/tmp/mysql.sock -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1
-    elif echo "${mariadb_version}" | grep -Eqi '^10.[123].';then
-        cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1 ${MariaDBWITHSSL}
+    if [ "${Bin}" = "y" ]; then
+        Echo_Blue "[+] Starting upgrade mariadb-${Mariadb_Ver} Using Generic Binaries..."
+        Tar_Cd ${MariaDB_FileName}.tar.gz
+        mkdir /usr/local/mariadb
+        mv ${MariaDB_FileName}/* /usr/local/mariadb/
     else
-        cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MariaDBWITHSSL}
+        Echo_Blue "[+] Starting upgrade ${Mariadb_Ver} Using Source code..."
+        Tar_Cd mariadb-${mariadb_version}.tar.gz mariadb-${mariadb_version}
+        MariaDB_WITHSSL
+        if echo "${mariadb_version}" | grep -Eqi '^10.[56].';then
+            cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DMYSQL_UNIX_ADDR=/tmp/mysql.sock -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1
+        elif echo "${mariadb_version}" | grep -Eqi '^10.4.';then
+            patch -p1 < ${cur_dir}/src/patch/mariadb_10.4_install_db.patch
+            cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DMYSQL_UNIX_ADDR=/tmp/mysql.sock -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1
+        elif echo "${mariadb_version}" | grep -Eqi '^10.[123].';then
+            cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1 ${MariaDBWITHSSL}
+        else
+            cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MariaDBWITHSSL}
+        fi
+        Make_Install
     fi
-    Make_Install
 
     groupadd mariadb
     useradd -s /sbin/nologin -M -g mariadb mariadb
@@ -204,7 +253,7 @@ EOF
     chown -R mariadb:mariadb /usr/local/mariadb
     /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
     chown -R mariadb:mariadb ${MariaDB_Data_Dir}
-    \cp support-files/mysql.server /etc/init.d/mariadb
+    \cp /usr/local/mariadb/support-files/mysql.server /etc/init.d/mariadb
     chmod 755 /etc/init.d/mariadb
 
     Mariadb_Sec_Setting

@@ -142,9 +142,15 @@ Install_Database()
             fi
         fi
     elif [[ "${DBSelect}" =~ ^[6789]|10$ ]]; then
-        Download_Files ${Download_Mirror}/datebase/mariadb/${Mariadb_Ver}.tar.gz ${Mariadb_Ver}.tar.gz
-        if [ ! -s ${Mariadb_Ver}.tar.gz ]; then
-            Echo_Red "Error! Unable to download MariaDB source code, please download it to src directory manually."
+        Mariadb_Version=$(echo ${Mariadb_Ver} | cut -d- -f2)
+        if [ "${Bin}" = "y" ]; then
+            MariaDB_FileName="${Mariadb_Ver}-linux-systemd-${DB_ARCH}"
+        else
+            MariaDB_FileName="${Mariadb_Ver}"
+        fi
+        Download_Files https://downloads.mariadb.org/rest-api/mariadb/${Mariadb_Version}/${MariaDB_FileName}.tar.gz ${MariaDB_FileName}.tar.gz
+        if [ ! -s ${MariaDB_FileName}.tar.gz ]; then
+            Echo_Red "Error! Unable to download MariaDB, please download it to src directory manually."
             sleep 5
             exit 1
         fi

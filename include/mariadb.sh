@@ -72,9 +72,6 @@ EOF
     if [ $? -eq 0 ]; then
         echo "OK, MySQL root password correct."
     fi
-    echo "Update root password..."
-    Do_Query "UPDATE mysql.user SET Password=PASSWORD('${DB_Root_Password}') WHERE User='root';"
-    [ $? -eq 0 ] && echo " ... Success." || echo " ... Failed!"
     echo "Remove anonymous users..."
     Do_Query "DELETE FROM mysql.user WHERE User='';"
     Do_Query "DROP USER ''@'%';"
@@ -106,11 +103,17 @@ Check_MariaDB_Data_Dir()
 
 Install_MariaDB_5()
 {
-    Echo_Blue "[+] Installing ${Mariadb_Ver}..."
-    rm -f /etc/my.cnf
-    Tar_Cd ${Mariadb_Ver}.tar.gz ${Mariadb_Ver}
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1
-    Make_Install
+    if [ "${Bin}" = "y" ]; then
+        Echo_Blue "[+] Installing ${Mariadb_Ver} Using Generic Binaries..."
+        Tar_Cd ${MariaDB_FileName}.tar.gz
+        mkdir /usr/local/mariadb
+        mv ${MariaDB_FileName}/* /usr/local/mariadb/
+    else
+        Echo_Blue "[+] Installing ${Mariadb_Ver} Using Source code..."
+        Tar_Cd ${Mariadb_Ver}.tar.gz ${Mariadb_Ver}
+        cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1
+        Make_Install
+    fi
 
     groupadd mariadb
     useradd -s /sbin/nologin -M -g mariadb mariadb
@@ -195,7 +198,7 @@ EOF
     chown -R mariadb:mariadb /usr/local/mariadb
     /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
     chown -R mariadb:mariadb ${MariaDB_Data_Dir}
-    \cp support-files/mysql.server /etc/init.d/mariadb
+    \cp /usr/local/mariadb/support-files/mysql.server /etc/init.d/mariadb
     \cp ${cur_dir}/init.d/mariadb.service /etc/systemd/system/mariadb.service
     chmod 755 /etc/init.d/mariadb
 
@@ -204,11 +207,17 @@ EOF
 
 Install_MariaDB_103()
 {
-    Echo_Blue "[+] Installing ${Mariadb_Ver}..."
-    rm -f /etc/my.cnf
-    Tar_Cd ${Mariadb_Ver}.tar.gz ${Mariadb_Ver}
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1
-    Make_Install
+    if [ "${Bin}" = "y" ]; then
+        Echo_Blue "[+] Installing ${Mariadb_Ver} Using Generic Binaries..."
+        Tar_Cd ${MariaDB_FileName}.tar.gz
+        mkdir /usr/local/mariadb
+        mv ${MariaDB_FileName}/* /usr/local/mariadb/
+    else
+        Echo_Blue "[+] Installing ${Mariadb_Ver} Using Source code..."
+        Tar_Cd ${Mariadb_Ver}.tar.gz ${Mariadb_Ver}
+        cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1
+        Make_Install
+    fi
 
     groupadd mariadb
     useradd -s /sbin/nologin -M -g mariadb mariadb
@@ -292,7 +301,7 @@ EOF
     chown -R mariadb:mariadb /usr/local/mariadb
     /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
     chown -R mariadb:mariadb ${MariaDB_Data_Dir}
-    \cp support-files/mysql.server /etc/init.d/mariadb
+    \cp /usr/local/mariadb/support-files/mysql.server /etc/init.d/mariadb
     \cp ${cur_dir}/init.d/mariadb.service /etc/systemd/system/mariadb.service
     chmod 755 /etc/init.d/mariadb
 
@@ -301,12 +310,18 @@ EOF
 
 Install_MariaDB_104()
 {
-    Echo_Blue "[+] Installing ${Mariadb_Ver}..."
-    rm -f /etc/my.cnf
-    Tar_Cd ${Mariadb_Ver}.tar.gz ${Mariadb_Ver}
-    patch -p1 < ${cur_dir}/src/patch/mariadb_10.4_install_db.patch
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DMYSQL_UNIX_ADDR=/tmp/mysql.sock -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1
-    Make_Install
+    if [ "${Bin}" = "y" ]; then
+        Echo_Blue "[+] Installing ${Mariadb_Ver} Using Generic Binaries..."
+        Tar_Cd ${MariaDB_FileName}.tar.gz
+        mkdir /usr/local/mariadb
+        mv ${MariaDB_FileName}/* /usr/local/mariadb/
+    else
+        Echo_Blue "[+] Installing ${Mariadb_Ver} Using Source code..."
+        Tar_Cd ${Mariadb_Ver}.tar.gz ${Mariadb_Ver}
+        patch -p1 < ${cur_dir}/src/patch/mariadb_10.4_install_db.patch
+        cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DMYSQL_UNIX_ADDR=/tmp/mysql.sock -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1
+        Make_Install
+    fi
 
     groupadd mariadb
     useradd -s /sbin/nologin -M -g mariadb mariadb
@@ -390,7 +405,7 @@ EOF
     chown -R mariadb:mariadb /usr/local/mariadb
     /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
     chown -R mariadb:mariadb ${MariaDB_Data_Dir}
-    \cp support-files/mysql.server /etc/init.d/mariadb
+    \cp /usr/local/mariadb/support-files/mysql.server /etc/init.d/mariadb
     \cp ${cur_dir}/init.d/mariadb.service /etc/systemd/system/mariadb.service
     chmod 755 /etc/init.d/mariadb
 
@@ -399,11 +414,18 @@ EOF
 
 Install_MariaDB_105()
 {
-    Echo_Blue "[+] Installing ${Mariadb_Ver}..."
-    rm -f /etc/my.cnf
-    Tar_Cd ${Mariadb_Ver}.tar.gz ${Mariadb_Ver}
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DMYSQL_UNIX_ADDR=/tmp/mysql.sock -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1
-    Make_Install
+    if [ "${Bin}" = "y" ]; then
+        Echo_Blue "[+] Installing ${Mariadb_Ver} Using Generic Binaries..."
+        Tar_Cd ${MariaDB_FileName}.tar.gz
+        mkdir /usr/local/mariadb
+        mv ${MariaDB_FileName}/* /usr/local/mariadb/
+    else
+        Echo_Blue "[+] Installing ${Mariadb_Ver} Using Source code..."
+        rm -f /etc/my.cnf
+        Tar_Cd ${Mariadb_Ver}.tar.gz ${Mariadb_Ver}
+        cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DMYSQL_UNIX_ADDR=/tmp/mysql.sock -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1
+        Make_Install
+    fi
 
     groupadd mariadb
     useradd -s /sbin/nologin -M -g mariadb mariadb
@@ -487,7 +509,7 @@ EOF
     chown -R mariadb:mariadb /usr/local/mariadb
     /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
     chown -R mariadb:mariadb ${MariaDB_Data_Dir}
-    \cp support-files/mysql.server /etc/init.d/mariadb
+    \cp /usr/local/mariadb/support-files/mysql.server /etc/init.d/mariadb
     \cp ${cur_dir}/init.d/mariadb.service /etc/systemd/system/mariadb.service
     chmod 755 /etc/init.d/mariadb
 
@@ -496,11 +518,18 @@ EOF
 
 Install_MariaDB_106()
 {
-    Echo_Blue "[+] Installing ${Mariadb_Ver}..."
-    rm -f /etc/my.cnf
-    Tar_Cd ${Mariadb_Ver}.tar.gz ${Mariadb_Ver}
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DMYSQL_UNIX_ADDR=/tmp/mysql.sock -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1
-    Make_Install
+    if [ "${Bin}" = "y" ]; then
+        Echo_Blue "[+] Installing ${Mariadb_Ver} Using Generic Binaries..."
+        Tar_Cd ${MariaDB_FileName}.tar.gz
+        mkdir /usr/local/mariadb
+        mv ${MariaDB_FileName}/* /usr/local/mariadb/
+    else
+        Echo_Blue "[+] Installing ${Mariadb_Ver} Using Source code..."
+        rm -f /etc/my.cnf
+        Tar_Cd ${Mariadb_Ver}.tar.gz ${Mariadb_Ver}
+        cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DMYSQL_UNIX_ADDR=/tmp/mysql.sock -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1
+        Make_Install
+    fi
 
     groupadd mariadb
     useradd -s /sbin/nologin -M -g mariadb mariadb
@@ -584,7 +613,7 @@ EOF
     chown -R mariadb:mariadb /usr/local/mariadb
     /usr/local/mariadb/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mariadb --datadir=${MariaDB_Data_Dir} --user=mariadb
     chown -R mariadb:mariadb ${MariaDB_Data_Dir}
-    \cp support-files/mysql.server /etc/init.d/mariadb
+    \cp /usr/local/mariadb/support-files/mysql.server /etc/init.d/mariadb
     \cp ${cur_dir}/init.d/mariadb.service /etc/systemd/system/mariadb.service
     chmod 755 /etc/init.d/mariadb
 

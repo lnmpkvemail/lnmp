@@ -92,18 +92,148 @@ Database_Selection()
         ;;
     6)
         echo "You will install ${DB_Info[5]}"
+        if [[ "${DB_ARCH}" = "x86_64" || "${DB_ARCH}" = "i686" ]]; then
+            if [ -z ${Bin} ]; then
+                read -p "Using Generic Binaries [y/n]: " Bin
+            fi
+            case "${Bin}" in
+            [yY][eE][sS]|[yY])
+                echo "You will install ${DB_Info[3]} Using Generic Binaries."
+                Bin="y"
+                ;;
+            [nN][oO]|[nN])
+                echo "You will install ${DB_Info[3]} from Source."
+                Bin="n"
+                ;;
+            *)
+                if [ "${CheckMirror}" != "n" ]; then
+                    echo "Default install ${DB_Info[3]} Using Generic Binaries."
+                    Bin="y"
+                else
+                    echo "Default install ${DB_Info[3]} from Source."
+                    Bin="n"
+                fi
+                ;;
+            esac
+        else
+            Bin="n"
+        fi
         ;;
     7)
         echo "You will install ${DB_Info[6]}"
+        if [[ "${DB_ARCH}" = "x86_64" || "${DB_ARCH}" = "i686" ]]; then
+            if [ -z ${Bin} ]; then
+                read -p "Using Generic Binaries [y/n]: " Bin
+            fi
+            case "${Bin}" in
+            [yY][eE][sS]|[yY])
+                echo "You will install ${DB_Info[3]} Using Generic Binaries."
+                Bin="y"
+                ;;
+            [nN][oO]|[nN])
+                echo "You will install ${DB_Info[3]} from Source."
+                Bin="n"
+                ;;
+            *)
+                if [ "${CheckMirror}" != "n" ]; then
+                    echo "Default install ${DB_Info[3]} Using Generic Binaries."
+                    Bin="y"
+                else
+                    echo "Default install ${DB_Info[3]} from Source."
+                    Bin="n"
+                fi
+                ;;
+            esac
+        else
+            Bin="n"
+        fi
         ;;
     8)
         echo "You will install ${DB_Info[7]}"
+        if [[ "${DB_ARCH}" = "x86_64" || "${DB_ARCH}" = "i686" ]]; then
+            if [ -z ${Bin} ]; then
+                read -p "Using Generic Binaries [y/n]: " Bin
+            fi
+            case "${Bin}" in
+            [yY][eE][sS]|[yY])
+                echo "You will install ${DB_Info[3]} Using Generic Binaries."
+                Bin="y"
+                ;;
+            [nN][oO]|[nN])
+                echo "You will install ${DB_Info[3]} from Source."
+                Bin="n"
+                ;;
+            *)
+                if [ "${CheckMirror}" != "n" ]; then
+                    echo "Default install ${DB_Info[3]} Using Generic Binaries."
+                    Bin="y"
+                else
+                    echo "Default install ${DB_Info[3]} from Source."
+                    Bin="n"
+                fi
+                ;;
+            esac
+        else
+            Bin="n"
+        fi
         ;;
     9)
         echo "You will install ${DB_Info[8]}"
+        if [[ "${DB_ARCH}" = "x86_64" || "${DB_ARCH}" = "i686" ]]; then
+            if [ -z ${Bin} ]; then
+                read -p "Using Generic Binaries [y/n]: " Bin
+            fi
+            case "${Bin}" in
+            [yY][eE][sS]|[yY])
+                echo "You will install ${DB_Info[3]} Using Generic Binaries."
+                Bin="y"
+                ;;
+            [nN][oO]|[nN])
+                echo "You will install ${DB_Info[3]} from Source."
+                Bin="n"
+                ;;
+            *)
+                if [ "${CheckMirror}" != "n" ]; then
+                    echo "Default install ${DB_Info[3]} Using Generic Binaries."
+                    Bin="y"
+                else
+                    echo "Default install ${DB_Info[3]} from Source."
+                    Bin="n"
+                fi
+                ;;
+            esac
+        else
+            Bin="n"
+        fi
         ;;
     10)
         echo "You will install ${DB_Info[9]}"
+        if [[ "${DB_ARCH}" = "x86_64" ]]; then
+            if [ -z ${Bin} ]; then
+                read -p "Using Generic Binaries [y/n]: " Bin
+            fi
+            case "${Bin}" in
+            [yY][eE][sS]|[yY])
+                echo "You will install ${DB_Info[3]} Using Generic Binaries."
+                Bin="y"
+                ;;
+            [nN][oO]|[nN])
+                echo "You will install ${DB_Info[3]} from Source."
+                Bin="n"
+                ;;
+            *)
+                if [ "${CheckMirror}" != "n" ]; then
+                    echo "Default install ${DB_Info[3]} Using Generic Binaries."
+                    Bin="y"
+                else
+                    echo "Default install ${DB_Info[3]} from Source."
+                    Bin="n"
+                fi
+                ;;
+            esac
+        else
+            Bin="n"
+        fi
         ;;
     0)
         echo "Do not install MySQL/MariaDB!"
