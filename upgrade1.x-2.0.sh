@@ -207,7 +207,7 @@ if [ "${isSSL}" == "ssl" ]; then
         fi
 
         echo "Starting create SSL Certificate use Let's Encrypt..."
-        /usr/local/acme.sh/acme.sh --server letsencrypt --issue ${letsdomain} -w ${vhostdir} --reloadcmd "/etc/init.d/nginx reload"
+        /usr/local/acme.sh/acme.sh --server letsencrypt --issue ${letsdomain} -w ${vhostdir} -k 2048 --reloadcmd "/etc/init.d/nginx reload"
         lets_status=$?
         if [ "${lets_status}" = 0 ]; then
             Echo_Green "Let's Encrypt SSL Certificate create successfully."
@@ -324,7 +324,7 @@ if [ "${isSSL}" == "ssl" ]; then
         fi
 
         echo "Starting create SSL Certificate use Let's Encrypt..."
-        /usr/local/acme.sh/acme.sh --server letsencrypt --issue ${letsdomain} -w ${vhostdir} --reloadcmd "/etc/init.d/httpd graceful"
+        /usr/local/acme.sh/acme.sh --server letsencrypt --issue ${letsdomain} -w ${vhostdir} -k 2048 --reloadcmd "/etc/init.d/httpd graceful"
         lets_status=$?
         if [ "${lets_status}" = 0 ]; then
             Echo_Green "Let's Encrypt SSL Certificate create successfully."

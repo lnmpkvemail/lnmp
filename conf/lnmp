@@ -1001,6 +1001,7 @@ Add_SSL_Info_Menu()
     fi
 
     Echo_Yellow "Please enter the directory for the domain: $domain"
+    echo
     echo "Default directory: /home/wwwroot/${domain}: "
     read vhostdir
     if [ "${vhostdir}" == "" ]; then
@@ -1192,15 +1193,17 @@ Install_Check_Acme.sh()
 . "/usr/local/acme.sh/acme.sh.env"
 /usr/local/acme.sh/acme.sh --upgrade
 sed -i 's/cat "\\\$CERT_PATH"\$/#cat "\\\$CERT_PATH"/g' /usr/local/acme.sh/acme.sh
+sed -i 's/DEFAULT_ACCOUNT_KEY_LENGTH=ec-256/DEFAULT_ACCOUNT_KEY_LENGTH=2048/g' /usr/local/acme.sh/acme.sh
+sed -i 's/DEFAULT_DOMAIN_KEY_LENGTH=ec-256/DEFAULT_DOMAIN_KEY_LENGTH=2048/g' /usr/local/acme.sh/acme.sh
 EOF
 
         chmod +x /usr/local/acme.sh/upgrade.sh
-        if crontab -l|grep -q "/usr/local/acme.sh/upgrade.sh"; then
-            echo "acme.sh upgrade crontab rule is exist."
-        else
-            echo "Add acme.sh upgrade crontab rule..."
-            (crontab -l ; echo '0 3 */7 * * /usr/local/acme.sh/upgrade.sh') | crontab -
-        fi
+        #if crontab -l|grep -q "/usr/local/acme.sh/upgrade.sh"; then
+        #    echo "acme.sh upgrade crontab rule is exist."
+        #else
+        #    echo "Add acme.sh upgrade crontab rule..."
+        #    (crontab -l ; echo '0 3 */7 * * /usr/local/acme.sh/upgrade.sh') | crontab -
+        #fi
         if command -v yum >/dev/null 2>&1; then
             yum -y update nss
             yum -y install ca-certificates
@@ -1328,13 +1331,13 @@ Add_SSL()
 
         if [ "${ssl_choice}" == "2" ]; then
             echo "Generate ssl certificate using Let's Encrypt..."
-            /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server letsencrypt --issue ${letsdomain} -w ${vhostdir} --reloadcmd "/etc/init.d/nginx reload"
+            /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server letsencrypt --issue ${letsdomain} -w ${vhostdir} -k 2048 --reloadcmd "/etc/init.d/nginx reload"
         elif [ "${ssl_choice}" == "3" ]; then
             echo "Generate ssl certificate using BuyPass..."
-            /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server buypass --issue ${letsdomain} -w ${vhostdir} --days 170 --reloadcmd "/etc/init.d/nginx reload"
+            /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server buypass --issue ${letsdomain} -w ${vhostdir} -k 2048 --days 170 --reloadcmd "/etc/init.d/nginx reload"
         elif [ "${ssl_choice}" == "4" ]; then
             echo "Generate ssl certificate using ZeroSSL..."
-            /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server zerossl --issue ${letsdomain} -w ${vhostdir} --reloadcmd "/etc/init.d/nginx reload"
+            /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server zerossl --issue ${letsdomain} -w ${vhostdir} -k 2048 --reloadcmd "/etc/init.d/nginx reload"
         fi
         lets_status=$?
 
@@ -1396,10 +1399,10 @@ Add_Dns_SSL()
 
     echo "Generate ssl certificate using ${ca_server}..."
     if [ "${provider}" != "" ]; then
-        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server ${ca_server} --issue ${letsdomain} --dns ${dns_provider} --reloadcmd "/etc/init.d/nginx reload"
+        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server ${ca_server} --issue ${letsdomain} -k 2048 --dns ${dns_provider} --reloadcmd "/etc/init.d/nginx reload"
         lets_status=$?
     else
-        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server ${ca_server} --issue ${letsdomain} --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please
+        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server ${ca_server} --issue ${letsdomain} -k 2048 --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please
         Echo_Yellow "Please add the above TXT record to the domain in 120 seconds!!!"
         echo
         Sleep_Sec 120
@@ -1477,10 +1480,10 @@ Add_Dns_SSL_Only()
 
     echo "Starting create SSL Certificate use ${ca_server}..."
     if [ "${provider}" != "" ]; then
-        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server ${ca_server} --issue ${letsdomain} --dns ${dns_provider} --reloadcmd "/etc/init.d/nginx reload"
+        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server ${ca_server} --issue ${letsdomain} -k 2048 --dns ${dns_provider} --reloadcmd "/etc/init.d/nginx reload"
         lets_status=$?
     else
-        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server ${ca_server} --issue ${letsdomain} --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please
+        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server ${ca_server} --issue ${letsdomain} -k 2048 --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please
         Echo_Yellow "Please add the above TXT record to the domain in 120 seconds!!!"
         echo
         Sleep_Sec 120
