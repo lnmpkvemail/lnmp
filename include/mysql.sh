@@ -293,12 +293,18 @@ EOF
 
 Install_MySQL_55()
 {
-    Echo_Blue "[+] Installing ${Mysql_Ver}..."
-    rm -f /etc/my.cnf
-    Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}
-    MySQL_ARM_Patch
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1
-    Make_Install
+    if [ "${Bin}" = "y" ]; then
+        Echo_Blue "[+] Installing ${Mysql_Ver} Using Generic Binaries..."
+        Tar_Cd ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz
+        mkdir /usr/local/mysql
+        mv ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}/* /usr/local/mysql/
+    else
+        Echo_Blue "[+] Installing ${Mysql_Ver} Using Source code..."
+        Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}
+        MySQL_ARM_Patch
+        cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1
+        Make_Install
+    fi
 
     groupadd mysql
     useradd -s /sbin/nologin -M -g mysql mysql
@@ -377,7 +383,7 @@ EOF
     chown -R mysql:mysql /usr/local/mysql
     /usr/local/mysql/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
     chown -R mysql:mysql ${MySQL_Data_Dir}
-    \cp support-files/mysql.server /etc/init.d/mysql
+    \cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql
     \cp ${cur_dir}/init.d/mysql.service /etc/systemd/system/mysql.service
     chmod 755 /etc/init.d/mysql
 
@@ -394,11 +400,17 @@ EOF
 
 Install_MySQL_56()
 {
-    Echo_Blue "[+] Installing ${Mysql_Ver}..."
-    rm -f /etc/my.cnf
-    Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1
-    Make_Install
+    if [ "${Bin}" = "y" ]; then
+        Echo_Blue "[+] Installing ${Mysql_Ver} Using Generic Binaries..."
+        Tar_Cd ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz
+        mkdir /usr/local/mysql
+        mv ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}/* /usr/local/mysql/
+    else
+        Echo_Blue "[+] Installing ${Mysql_Ver} Using Source code..."
+        Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}
+        cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1
+        Make_Install
+    fi
 
     groupadd mysql
     useradd -s /sbin/nologin -M -g mysql mysql
@@ -508,7 +520,7 @@ EOF
     chown -R mysql:mysql /usr/local/mysql
     /usr/local/mysql/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
     chown -R mysql:mysql ${MySQL_Data_Dir}
-    \cp support-files/mysql.server /etc/init.d/mysql
+    \cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql
     \cp ${cur_dir}/init.d/mysql.service /etc/systemd/system/mysql.service
     chmod 755 /etc/init.d/mysql
 
