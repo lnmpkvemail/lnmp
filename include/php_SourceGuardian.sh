@@ -18,7 +18,7 @@ Install_SourceGuardian()
 
     if [ "${ARCH}" = "x86_64" ]; then
         echo "${ARCH}"
-        Download_Files ${Download_Mirror}/web/sourceguardian/13.0.3/loaders.linux-${ARCH}.zip loaders.linux-${ARCH}.zip
+        Download_Files ${Download_Mirror}/web/sourceguardian/14.0.0/loaders.linux-${ARCH}.zip loaders.linux-${ARCH}.zip
     elif [ "${ARCH}" = "i386" ]; then
         if echo "${Cur_PHP_Version}" | grep -Eqi '^7.[2-4].*|8.[1-2].*'; then
             Echo_Red "Current PHP version does not support SourceGuardian!"
