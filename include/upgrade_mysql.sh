@@ -469,9 +469,9 @@ Upgrade_MySQL80()
 {
     if [ "${Bin}" = "y" ]; then
         Echo_Blue "Starting upgrade MySQL ${mysql_version} Using Generic Binaries..."
-        TarJ_Cd ${mysql_src}
+        Tar_Cd ${mysql_src}
         mkdir /usr/local/mysql
-        mv mysql-${mysql_version}-linux-glibc2.12-${DB_ARCH}/* /usr/local/mysql/
+        mv mysql-${mysql_version}-linux-glibc${mysql8_glibc_ver}-${DB_ARCH}/* /usr/local/mysql/
     else
         Echo_Blue "Starting upgrade MySQL ${mysql_version} Using Source code..."
         Tar_Cd ${mysql_src} mysql-${mysql_version}
@@ -716,7 +716,9 @@ Upgrade_MySQL()
     echo "============================check files=================================="
     cd ${cur_dir}/src
     if [[ "${Bin}" = "y" && "${mysql_short_version}" = "8.0" ]]; then
-        mysql_src="mysql-${mysql_version}-linux-glibc2.12-${DB_ARCH}.tar.xz"
+        [[ "${DB_ARCH}" = "aarch64" ]] && mysql8_glibc_ver="2.17" || mysql8_glibc_ver="2.12"
+        [[ "${DB_ARCH}" = "aarch64" ]] && mysql8_ext="tar.gz" || mysql8_ext="tar.xz"
+        mysql_src="mysql-${mysql_version}-linux-glibc${mysql8_glibc_ver}-${DB_ARCH}.${mysql8_ext}"
     elif [[ "${Bin}" = "y" && "${mysql_short_version}" =~ ^5.[5-7]$ ]]; then
         mysql_src="mysql-${mysql_version}-linux-glibc2.12-${DB_ARCH}.tar.gz"
     else

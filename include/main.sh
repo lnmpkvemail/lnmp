@@ -724,10 +724,17 @@ Tar_Cd()
 {
     local FileName=$1
     local DirName=$2
+    local extension=${FileName##*.}
     cd ${cur_dir}/src
     [[ -d "${DirName}" ]] && rm -rf ${DirName}
     echo "Uncompress ${FileName}..."
-    tar zxf ${FileName}
+    if [ "$extension" == "gz" ] || [ "$extension" == "tgz" ]; then
+        tar zxf "${FileName}"
+    elif [ "$extension" == "bz2" ]; then
+        tar jxf "${FileName}"
+    elif [ "$extension" == "xz" ]; then
+        tar Jxf "${FileName}"
+    fi
     if [ -n "${DirName}" ]; then
         echo "cd ${DirName}..."
         cd ${DirName}
