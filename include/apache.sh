@@ -12,7 +12,7 @@ Install_Apache_22()
         chmod 777 /home/wwwlogs
         chown -R www:www ${Default_Website_Dir}
     fi
-    Tarj_Cd ${Apache_Ver}.tar.bz2 ${Apache_Ver}
+    Tar_Cd ${Apache_Ver}.tar.bz2 ${Apache_Ver}
     ./configure --prefix=/usr/local/apache --enable-mods-shared=most --enable-headers --enable-mime-magic --enable-proxy --enable-so --enable-rewrite --with-ssl --enable-ssl --enable-deflate --enable-suexec --with-included-apr --with-expat=builtin
     Make_Install
     cd ${cur_dir}/src
@@ -72,7 +72,7 @@ Install_Apache_24()
         Install_Openssl_New
         Install_Nghttp2
     fi
-    Tarj_Cd ${Apache_Ver}.tar.bz2 ${Apache_Ver}
+    Tar_Cd ${Apache_Ver}.tar.bz2 ${Apache_Ver}
     cd srclib
     if [ -s "${cur_dir}/src/${APR_Ver}.tar.bz2" ]; then
         echo "${APR_Ver}.tar.bz2 [found]"

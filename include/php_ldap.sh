@@ -31,7 +31,7 @@ Install_PHP_Ldap()
 
     Download_PHP_Src
 
-    Tarj_Cd php-${Cur_PHP_Version}.tar.bz2 php-${Cur_PHP_Version}/ext/ldap
+    Tar_Cd php-${Cur_PHP_Version}.tar.bz2 php-${Cur_PHP_Version}/ext/ldap
     ${PHP_Path}/bin/phpize
     ./configure --with-php-config=${PHP_Path}/bin/php-config --with-ldap --with-ldap-sasl
     make && make install

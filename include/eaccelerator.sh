@@ -15,7 +15,7 @@ Install_Old_eA()
     fi
 
     Download_Files ${Download_Mirror}/web/eaccelerator/eaccelerator-0.9.5.3.tar.bz2 eaccelerator-0.9.5.3.tar.bz2
-    Tarj_Cd eaccelerator-0.9.5.3.tar.bz2 eaccelerator-0.9.5.3
+    Tar_Cd eaccelerator-0.9.5.3.tar.bz2 eaccelerator-0.9.5.3
     ${PHP_Path}/bin/phpize
     ./configure --enable-eaccelerator=shared --with-php-config=${PHP_Path}/bin/php-config --with-eaccelerator-shared-memory
     make
@@ -36,7 +36,7 @@ Install_New_eA()
     fi
 
     Download_Files ${Download_Mirror}/web/eaccelerator/eaccelerator-0.9.6.1.tar.bz2 eaccelerator-0.9.6.1.tar.bz2
-    Tarj_Cd eaccelerator-0.9.6.1.tar.bz2 eaccelerator-0.9.6.1
+    Tar_Cd eaccelerator-0.9.6.1.tar.bz2 eaccelerator-0.9.6.1
     ${PHP_Path}/bin/phpize
     ./configure --enable-eaccelerator=shared --with-php-config=${PHP_Path}/bin/php-config
     make

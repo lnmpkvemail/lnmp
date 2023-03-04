@@ -543,7 +543,7 @@ Install_Mcrypt()
 Install_Mhash()
 {
     Echo_Blue "[+] Installing ${Mhash_Ver}"
-    Tarj_Cd ${Mhash_Ver}.tar.bz2 ${Mhash_Ver}
+    Tar_Cd ${Mhash_Ver}.tar.bz2 ${Mhash_Ver}
     ./configure
     Make_Install
     ln -sf /usr/local/lib/libmhash.a /usr/lib/libmhash.a
@@ -561,12 +561,12 @@ Install_Freetype()
     if echo "${Ubuntu_Version}" | grep -Eqi "^1[89]\.|2[0-9]\." || echo "${Mint_Version}" | grep -Eqi "^19|2[0-9]" || echo "${Deepin_Version}" | grep -Eqi "^15\.[7-9]|15.1[0-9]|1[6-9]|2[0-9]" || echo "${Debian_Version}" | grep -Eqi "^9|1[0-9]" || echo "${Raspbian_Version}" | grep -Eqi "^9|1[0-9]" || echo "${Kali_Version}" | grep -Eqi "^202[0-9]" || echo "${UOS_Version}" | grep -Eqi "^2[0-9]" || echo "${CentOS_Version}" | grep -Eqi "^8|9" || echo "${RHEL_Version}" | grep -Eqi "^8|9" || echo "${Oracle_Version}" | grep -Eqi "^8|9" || echo "${Fedora_Version}" | grep -Eqi "^3[0-9]|29" || echo "${Rocky_Version}" | grep -Eqi "^8|9" || echo "${Alma_Version}" | grep -Eqi "^8|9" || echo "${openEuler_Version}" | grep -Eqi "^2[0-9]" || echo "${Anolis_Version}" | grep -Eqi "^8|9" || echo "${Kylin_Version}" | grep -Eqi "^V1[0-9]"; then
         Download_Files ${Download_Mirror}/lib/freetype/${Freetype_New_Ver}.tar.xz ${Freetype_New_Ver}.tar.xz
         Echo_Blue "[+] Installing ${Freetype_New_Ver}"
-        TarJ_Cd ${Freetype_New_Ver}.tar.xz ${Freetype_New_Ver}
+        Tar_Cd ${Freetype_New_Ver}.tar.xz ${Freetype_New_Ver}
         ./configure --prefix=/usr/local/freetype --enable-freetype-config
     else
         Download_Files ${Download_Mirror}/lib/freetype/${Freetype_Ver}.tar.bz2 ${Freetype_Ver}.tar.bz2
         Echo_Blue "[+] Installing ${Freetype_Ver}"
-        Tarj_Cd ${Freetype_Ver}.tar.bz2 ${Freetype_Ver}
+        Tar_Cd ${Freetype_Ver}.tar.bz2 ${Freetype_Ver}
         ./configure --prefix=/usr/local/freetype
     fi
     Make_Install
@@ -587,7 +587,7 @@ Install_Curl()
         Echo_Blue "[+] Installing ${Curl_Ver}"
         cd ${cur_dir}/src
         Download_Files ${Download_Mirror}/lib/curl/${Curl_Ver}.tar.bz2 ${Curl_Ver}.tar.bz2
-        Tarj_Cd ${Curl_Ver}.tar.bz2 ${Curl_Ver}
+        Tar_Cd ${Curl_Ver}.tar.bz2 ${Curl_Ver}
         if [ -s /usr/local/openssl/bin/openssl ] || /usr/local/openssl/bin/openssl version | grep -Eqi 'OpenSSL 1.0.2'; then
             ./configure --prefix=/usr/local/curl --enable-ares --without-nss --with-zlib --with-ssl=/usr/local/openssl
         else
@@ -607,7 +607,7 @@ Install_Pcre()
         Echo_Blue "[+] Installing ${Pcre_Ver}"
         cd ${cur_dir}/src
         Download_Files ${Download_Mirror}/web/pcre/${Pcre_Ver}.tar.bz2 ${Pcre_Ver}.tar.bz2
-        Tarj_Cd ${Pcre_Ver}.tar.bz2
+        Tar_Cd ${Pcre_Ver}.tar.bz2
         Nginx_With_Pcre="--with-pcre=${cur_dir}/src/${Pcre_Ver} --with-pcre-jit"
     fi
 }
@@ -616,7 +616,7 @@ Install_Jemalloc()
 {
     Echo_Blue "[+] Installing ${Jemalloc_Ver}"
     cd ${cur_dir}/src
-    Tarj_Cd ${Jemalloc_Ver}.tar.bz2 ${Jemalloc_Ver}
+    Tar_Cd ${Jemalloc_Ver}.tar.bz2 ${Jemalloc_Ver}
     ./configure
     Make_Install
     ldconfig
@@ -773,7 +773,7 @@ Install_Nghttp2()
         cd ${cur_dir}/src
         Download_Files ${Download_Mirror}/lib/nghttp2/${Nghttp2_Ver}.tar.xz ${Nghttp2_Ver}.tar.xz
         [[ -d "${Nghttp2_Ver}" ]] && rm -rf ${Nghttp2_Ver}
-        TarJ_Cd ${Nghttp2_Ver}.tar.xz ${Nghttp2_Ver}
+        Tar_Cd ${Nghttp2_Ver}.tar.xz ${Nghttp2_Ver}
         ./configure --prefix=/usr/local/nghttp2
         Make_Install
         cd ${cur_dir}/src/
@@ -788,7 +788,7 @@ Install_Libzip()
             Echo_Blue "[+] Installing ${Libzip_Ver}"
             cd ${cur_dir}/src
             Download_Files ${Download_Mirror}/lib/libzip/${Libzip_Ver}.tar.xz ${Libzip_Ver}.tar.xz
-            TarJ_Cd ${Libzip_Ver}.tar.xz ${Libzip_Ver}
+            Tar_Cd ${Libzip_Ver}.tar.xz ${Libzip_Ver}
             ./configure
             Make_Install
             cd ${cur_dir}/src/
