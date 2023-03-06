@@ -62,8 +62,8 @@ Init_Install()
     Print_Sys_Info
     Check_Hosts
     Check_CMPT
-    Modify_Source
     if [ "${CheckMirror}" != "n" ]; then
+        Modify_Source
         Check_Mirror
     fi
     Add_Swap
