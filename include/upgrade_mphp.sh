@@ -165,6 +165,9 @@ Upgrade_Multiplephp()
         Upgrade_MPHP8.1
     elif [ "${MPHP_Select}" = "9" ]; then
         Upgrade_MPHP8.2
+    else
+        Echo_Red "PHP version: ${php_version} is not supported."
+        exit 1
     fi
 }
 

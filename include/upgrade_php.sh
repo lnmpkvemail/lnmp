@@ -1139,5 +1139,8 @@ Upgrade_PHP()
         Upgrade_PHP_81
     elif echo "${php_version}" | grep -Eqi '^8.2.';then
         Upgrade_PHP_82
+    else
+        Echo_Red "PHP version: ${php_version} is not supported."
+        exit 1
     fi
 }
