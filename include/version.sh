@@ -70,9 +70,9 @@ elif [ "${PHPSelect}" = "10" ]; then
 elif [ "${PHPSelect}" = "11" ]; then
     Php_Ver='php-8.0.27'
 elif [ "${PHPSelect}" = "12" ]; then
-    Php_Ver='php-8.1.14'
+    Php_Ver='php-8.1.17'
 elif [ "${PHPSelect}" = "13" ]; then
-    Php_Ver='php-8.2.1'
+    Php_Ver='php-8.2.4'
 fi
 if [[ "${PHPSelect}" =~ ^[123]$ ]]; then
     PhpMyAdmin_Ver='phpMyAdmin-4.0.10.20-all-languages'
