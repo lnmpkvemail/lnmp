@@ -304,7 +304,19 @@ CentOS8_Modify_Source()
 Modify_Source()
 {
     if [ "${DISTRO}" = "RHEL" ]; then
-        RHEL_Modify_Source
+        if subscription-manager status; then
+            Echo_Blue "RHEL subscription exists on the system, skip setting up third-party sources."
+            Get_RHEL_Version
+            if echo "${RHEL_Version}" | grep -Eqi "^8"; then
+                if [ "${ARCH}" = "x86_64" ]; then
+                    subscription-manager repos --enable codeready-builder-for-rhel-8-x86_64-rpms
+                else
+                    subscription-manager repos --enable codeready-builder-for-rhel-8-aarch64-rpms
+                fi
+            fi
+        else
+            RHEL_Modify_Source
+        fi
     elif [ "${DISTRO}" = "Ubuntu" ]; then
         Ubuntu_Modify_Source
     elif [ "${DISTRO}" = "CentOS" ]; then
