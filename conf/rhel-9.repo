@@ -1,0 +1,29 @@
+[baseos]
+name=CentOS Stream $releasever - BaseOS
+baseurl=http://mirrors.ustc.edu.cn/centos-stream/9-stream/BaseOS/$basearch/os/
+gpgkey=http://mirrors.aliyun.com/centos/RPM-GPG-KEY-CentOS-Official
+gpgcheck=0
+repo_gpgcheck=0
+metadata_expire=6h
+countme=1
+enabled=1
+
+[appstream]
+name=CentOS Stream $releasever - AppStream
+baseurl=http://mirrors.ustc.edu.cn/centos-stream/9-stream/AppStream/$basearch/os/
+gpgkey=http://mirrors.aliyun.com/centos/RPM-GPG-KEY-CentOS-Official
+gpgcheck=1
+repo_gpgcheck=0
+metadata_expire=6h
+countme=1
+enabled=1
+
+[crb]
+name=CentOS Stream $releasever - CRB
+baseurl=http://mirrors.ustc.edu.cn/centos-stream/9-stream/CRB/$basearch/os/
+gpgkey=http://mirrors.aliyun.com/centos/RPM-GPG-KEY-CentOS-Official
+gpgcheck=0
+repo_gpgcheck=0
+metadata_expire=6h
+countme=1
+enabled=1

@@ -678,6 +678,9 @@ Get_RHEL_Version()
         elif grep -Eqi "release 8." /etc/redhat-release; then
             echo "Current Version: RHEL Ver 8"
             RHEL_Ver='8'
+        elif grep -Eqi "release 9." /etc/redhat-release; then
+            echo "Current Version: RHEL Ver 9"
+            RHEL_Ver='9'
         fi
         RHEL_Version="$(cat /etc/redhat-release | sed 's/.*release\ //' | sed 's/\ .*//')"
     fi

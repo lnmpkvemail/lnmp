@@ -154,6 +154,9 @@ RHEL_Modify_Source()
             sed -i "s/\$releasever/7/g" /etc/yum.repos.d/Centos-${RHEL_Ver}.repo
         elif echo "${RHEL_Version}" | grep -Eqi "^8"; then
             sed -i "s#centos/\$releasever#centos-vault/8.5.2111#g" /etc/yum.repos.d/Centos-${RHEL_Ver}.repo
+        elif echo "${RHEL_Version}" | grep -Eqi "^9"; then
+            [[ -s /etc/yum.repos.d/Centos-9.repo ]] && rm -f /etc/yum.repos.d/Centos-9.repo
+            \cp ${cur_dir}/conf/rhel-9.repo /etc/yum.repos.d/Centos-9.repo
         fi
         yum clean all
         yum makecache
@@ -307,12 +310,8 @@ Modify_Source()
         if subscription-manager status; then
             Echo_Blue "RHEL subscription exists on the system, skip setting up third-party sources."
             Get_RHEL_Version
-            if echo "${RHEL_Version}" | grep -Eqi "^8"; then
-                if [ "${ARCH}" = "x86_64" ]; then
-                    subscription-manager repos --enable codeready-builder-for-rhel-8-x86_64-rpms
-                else
-                    subscription-manager repos --enable codeready-builder-for-rhel-8-aarch64-rpms
-                fi
+            if echo "${RHEL_Version}" | grep -Eqi "^[89]"; then
+                subscription-manager repos --enable codeready-builder-for-rhel-${RHEL_Version}-${DB_ARCH}-rpms
             fi
         else
             RHEL_Modify_Source
