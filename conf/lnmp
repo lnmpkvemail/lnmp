@@ -1049,6 +1049,8 @@ Add_SSL_Info_Menu()
         enable_pathinfo="y"
     fi
 
+    Echo_Yellow "Enable IPv6? (y/n) "
+    read enable_ipv6
     if [[ "${enable_ipv6}" == "n" || "${enable_ipv6}" == "" ]]; then
         echo "Disabled IPv6 Support in current Virtualhost."
         enable_ipv6="n"
