@@ -70,6 +70,7 @@ lnmp.conf配置文件，可以修改lnmp.conf自定义下载服务器地址、�
 #### 解密：
 * IonCube安装执行：`./addons.sh {install|uninstall} ionCube`。
 * Sodium加密库扩展模块安装/卸载执行：`./addons.sh {install|uninstall} sodium `，一般微信支付之类的需要使用，PHP 7.2以下版本不支持通过lnmp.conf开启安装。
+* SourceGuardian Loader加密库扩展模块安装/卸载执行：`./addons.sh {install|uninstall} sg `，SourceGuardian加密的PHP文件需要使用此组件解码运行。
 
 #### 其他常用脚本：
 * 可选1，多PHP版本安装执行：`./install.sh mphp` 可以安装多个PHP版本 ，只支持LNMP模式，lnmp vhost add时进行选择或使用时需要将nginx虚拟主机配置文件里的include enable-php.conf替换为 include enable-php5.6.conf 即可前面的5.6换成你刚才安装的PHP的大版本号5.* 或7.0之类的。
@@ -98,7 +99,7 @@ ApacheSelect | Apache版本序号，仅LNMPA和LAMP模式需添加该参数
 ServerAdmin | 管理员邮箱，仅LNMPA和LAMP模式需添加该参数
 RHELRepo | (非必选)设为 local 时，RHEL使用本地源，不设置源为163 centos源
 CheckMirror | (非必选)安装时不检查下载镜像，方便无网络安装
-Bin | (非必选)MySQL 8.0使用二进制方式安装，y 或 n，默认使用二进制方式安装
+Bin | (非必选)MySQL 5.7-8.0/MariaDB使用二进制方式安装，y 或 n，默认使用二进制方式安装,离线默认使用源码编译安装
 
 * 各程序版本对应序号
 
