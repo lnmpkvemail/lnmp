@@ -9,6 +9,7 @@ LNMP 2.0
 添加zblog伪静态；
 添加php-redis测试脚本；
 添加Nginx编译参数--with-http_realip_module参数；
+添加RHEL9支持；
 优化低版本PHP在新Linux发行版下的支持；
 优化Anolis OS 7支持；
 优化Oracle 7支持；
@@ -16,6 +17,7 @@ LNMP 2.0
 优化php-memcached安装脚本；
 优化离线安装；
 优化lua-nginx-module安装并使用最新版本；
+优化RHEL有订阅时不使用CentOS源；
 修复apache2.4邮箱设置问题；
 国内centos源默认使用ustc源；
 调整acme.sh默认使用RSA证书；
