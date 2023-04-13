@@ -156,7 +156,7 @@ Upgrade_MariaDB()
         Echo_Blue "[+] Starting upgrade ${Mariadb_Ver} Using Source code..."
         Tar_Cd mariadb-${mariadb_version}.tar.gz mariadb-${mariadb_version}
         MariaDB_WITHSSL
-        if echo "${mariadb_version}" | grep -Eqi '^10.[56].';then
+        if echo "${mariadb_version}" | grep -Eqi '^10.[5-9]|1[01].';then
             cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb -DMYSQL_UNIX_ADDR=/tmp/mysql.sock -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1
         elif echo "${mariadb_version}" | grep -Eqi '^10.4.';then
             patch -p1 < ${cur_dir}/src/patch/mariadb_10.4_install_db.patch
