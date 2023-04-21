@@ -35,13 +35,11 @@ Install_Nginx_Lua()
         Echo_Blue "[+] Installing ${Luajit_Ver}... "
         tar zxf ${LuaNginxModule}.tar.gz
         tar zxf ${NgxDevelKit}.tar.gz
-        if [[ ! -s /usr/local/luajit/bin/luajit || ! -s /usr/local/luajit/include/luajit-2.1/luajit.h || ! -s /usr/local/luajit/lib/libluajit-5.1.so ]]; then
-            Tar_Cd ${Luajit_Ver}.tar.gz ${Luajit_Ver}
-            make
-            make install PREFIX=/usr/local/luajit
-            cd ${cur_dir}/src
-            rm -rf ${cur_dir}/src/${Luajit_Ver}
-        fi
+        Tar_Cd ${Luajit_Ver}.tar.gz ${Luajit_Ver}
+        make
+        make install PREFIX=/usr/local/luajit
+        cd ${cur_dir}/src
+        rm -rf ${cur_dir}/src/${Luajit_Ver}
 
         cat > /etc/ld.so.conf.d/luajit.conf<<EOF
 /usr/local/luajit/lib
