@@ -819,6 +819,7 @@ Print_Sys_Info()
     df -h
     Check_Openssl
     Check_WSL
+    Check_Docker
     if [ "${CheckMirror}" != "n" ]; then
         Get_Country
         echo "Server Location: ${country}"
@@ -829,7 +830,7 @@ StartUp()
 {
     init_name=$1
     echo "Add ${init_name} service at system startup..."
-    if [ "${isWSL}" != "y" ] && command -v systemctl >/dev/null 2>&1 && [[ -s /etc/systemd/system/${init_name}.service || -s /lib/systemd/system/${init_name}.service || -s /usr/lib/systemd/system/${init_name}.service ]]; then
+    if [ "${isWSL}" = "n" ] && [ "${isDocker}" = "n" ] && command -v systemctl >/dev/null 2>&1 && [[ -s /etc/systemd/system/${init_name}.service || -s /lib/systemd/system/${init_name}.service || -s /usr/lib/systemd/system/${init_name}.service ]]; then
         systemctl daemon-reload
         systemctl enable ${init_name}.service
     else
@@ -846,7 +847,7 @@ Remove_StartUp()
 {
     init_name=$1
     echo "Removing ${init_name} service at system startup..."
-    if [ "${isWSL}" != "y" ] && command -v systemctl >/dev/null 2>&1 && [[ -s /etc/systemd/system/${init_name}.service || -s /lib/systemd/system/${init_name}.service || -s /usr/lib/systemd/system/${init_name}.service ]]; then
+    if [ "${isWSL}" = "n" ] && [ "${isDocker}" = "n" ] && command -v systemctl >/dev/null 2>&1 && [[ -s /etc/systemd/system/${init_name}.service || -s /lib/systemd/system/${init_name}.service || -s /usr/lib/systemd/system/${init_name}.service ]]; then
         systemctl disable ${init_name}.service
     else
         if [ "$PM" = "yum" ]; then
@@ -1061,7 +1062,7 @@ StartOrStop()
 {
     local action=$1
     local service=$2
-    if [ "${isWSL}" = "n" ] && command -v systemctl >/dev/null 2>&1 && [[ -s /etc/systemd/system/${service}.service ]]; then
+    if [ "${isWSL}" = "n" ] && [ "${isDocker}" = "n" ] && command -v systemctl >/dev/null 2>&1 && [[ -s /etc/systemd/system/${service}.service ]]; then
         systemctl ${action} ${service}.service
     else
         /etc/init.d/${service} ${action}
@@ -1074,6 +1075,15 @@ Check_WSL() {
         isWSL="y"
     else
         isWSL="n"
+    fi
+}
+
+Check_Docker() {
+    if grep -q '/docker/' /proc/1/cgroup; then
+        echo "running on Docker"
+        isDocker="y"
+    else
+        isDocker="n"
     fi
 }
 
