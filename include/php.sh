@@ -56,7 +56,7 @@ PHP_with_openssl()
 PHP_with_fileinfo()
 {
     if [ "${Enable_PHP_Fileinfo}" = "n" ]; then
-        if [[ $(free -m | grep Mem | awk '{print  $2}') -lt 1024 ]]; then
+        if [[ $(awk '/MemTotal/ {printf( "%d\n", $2 / 1024 )}' /proc/meminfo) -lt 1024 ]]; then
             with_fileinfo='--disable-fileinfo'
         else
             with_fileinfo=''

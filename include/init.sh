@@ -972,7 +972,7 @@ Add_Swap()
             Enable_Swap='n'
         fi
     fi
-    Swap_Total=$(free -m | grep Swap | awk '{print  $2}')
+    Swap_Total=$(awk '/SwapTotal/ {printf( "%d\n", $2 / 1024 )}' /proc/meminfo)
     if [[ "${Enable_Swap}" = "y" && "${Swap_Total}" -le 512 && ! -s /var/swapfile ]]; then
         echo "Add Swap file..."
         [ $(cat /proc/sys/vm/swappiness) -eq 0 ] && sysctl vm.swappiness=10

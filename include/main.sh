@@ -288,7 +288,7 @@ Database_Selection()
         DBSelect="2"
     esac
 
-    if [ "${Bin}" != "y" ] && [[ "${DBSelect}" =~ ^5|[7-9]|10$ ]] && [ $(free -m | grep Mem | awk '{print  $2}') -le 1024 ]; then
+    if [ "${Bin}" != "y" ] && [[ "${DBSelect}" =~ ^5|[7-9]|10$ ]] && [ $(awk '/MemTotal/ {printf( "%d\n", $2 / 1024 )}' /proc/meminfo) -le 1024 ]; then
         echo "Memory less than 1GB, can't install MySQL 8.0 or MairaDB 10.3+!"
         exit 1
     fi
@@ -814,7 +814,7 @@ Print_Sys_Info()
     cat /etc/issue
     cat /etc/*-release
     uname -a
-    MemTotal=$(free -m | grep Mem | awk '{print  $2}')
+    MemTotal=$(awk '/MemTotal/ {printf( "%d\n", $2 / 1024 )}' /proc/meminfo)
     echo "Memory is: ${MemTotal} MB "
     df -h
     Check_Openssl
