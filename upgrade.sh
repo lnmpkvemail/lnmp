@@ -30,7 +30,7 @@ Upgrade_Date=$(date +"%Y%m%d%H%M%S")
 
 Get_Dist_Name
 Get_Dist_Version
-MemTotal=`free -m | grep Mem | awk '{print  $2}'`
+MemTotal=$(awk '/MemTotal/ {printf( "%d\n", $2 / 1024 )}' /proc/meminfo)
 
 Display_Upgrade_Menu()
 {
