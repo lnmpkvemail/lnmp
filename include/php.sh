@@ -162,7 +162,7 @@ PHP_with_Imap()
 
 PHP_with_Intl()
 {
-    if echo "${Ubuntu_Version}" | grep -Eqi "^19|2[0-7]\." || echo "${Debian_Version}" | grep -Eqi "^1[0-9]" || echo "${Raspbian_Version}" | grep -Eqi "^1[0-9]" || echo "${Deepin_Version}" | grep -Eqi "^2[0-9]" || echo "${UOS_Version}" | grep -Eqi "^2[0-9]"; then
+    if echo "${Ubuntu_Version}" | grep -Eqi "^19|2[0-7]\." || echo "${Debian_Version}" | grep -Eqi "^1[0-9]" || echo "${Raspbian_Version}" | grep -Eqi "^1[0-9]" || echo "${Deepin_Version}" | grep -Eqi "^2[0-9]" || echo "${UOS_Version}" | grep -Eqi "^2[0-9]" || echo "${Amazon_Version}" | grep -Eqi "^202[3-9]"; then
         if echo "${PHPSelect}" | grep -Eqi '^[3-6]' || echo "${php_version}" | grep -Eqi '^5.[4-6].*|7.0.*' || echo "${Php_Ver}" | grep -Eqi "php-5.[4-6].*|php-7.0.*"; then
             Install_Icu60
             with_icu_dir='--with-icu-dir=/usr/local/icu'
@@ -506,6 +506,9 @@ Install_PHP_55()
 {
     Echo_Blue "[+] Installing ${Php_Ver}..."
     Tar_Cd ${Php_Ver}.tar.bz2 ${Php_Ver}
+    if [ "${ARCH}" = "aarch64" ]; then
+        patch -p1 < ${cur_dir}/src/patch/php-5.5-5.6-asm-aarch64.patch
+    fi
     if [ "${Stack}" = "lnmp" ]; then
         ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-config-file-scan-dir=/usr/local/php/conf.d --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir=/usr/local/freetype --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization ${with_curl} --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf ${with_openssl} --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --with-gettext ${with_fileinfo} --enable-opcache --enable-intl --with-xsl ${PHP_Buildin_Option} ${PHP_Modules_Options}
     else
@@ -596,6 +599,9 @@ Install_PHP_56()
 {
     Echo_Blue "[+] Installing ${Php_Ver}"
     Tar_Cd ${Php_Ver}.tar.bz2 ${Php_Ver}
+    if [ "${ARCH}" = "aarch64" ]; then
+        patch -p1 < ${cur_dir}/src/patch/php-5.5-5.6-asm-aarch64.patch
+    fi
     if command -v pkg-config >/dev/null 2>&1 && pkg-config --modversion icu-i18n | grep -Eqi '^6[1-9]|[7-9][0-9]'; then
         patch -p1 < ${cur_dir}/src/patch/php-5.6-intl.patch
     fi

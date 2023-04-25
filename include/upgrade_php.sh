@@ -467,6 +467,9 @@ Upgrade_PHP_556()
 {
     Echo_Blue "Start install php-${php_version}"
     Tar_Cd php-${php_version}.tar.bz2 php-${php_version}
+    if [ "${ARCH}" = "aarch64" ]; then
+        patch -p1 < ${cur_dir}/src/patch/php-5.5-5.6-asm-aarch64.patch
+    fi
     if echo "${php_version}" | grep -Eqi '^5.6.' && command -v pkg-config >/dev/null 2>&1 && pkg-config --modversion icu-i18n | grep -Eqi '^6[1-9]|[7-9][0-9]'; then
         patch -p1 < ${cur_dir}/src/patch/php-5.6-intl.patch
     fi
