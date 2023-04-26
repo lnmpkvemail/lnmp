@@ -604,9 +604,6 @@ Get_Dist_Name()
     elif grep -Eqi "Oracle Linux" /etc/issue || grep -Eq "Oracle Linux" /etc/*-release; then
         DISTRO='Oracle'
         PM='yum'
-    elif grep -Eqi "Red Hat Enterprise Linux" /etc/issue || grep -Eq "Red Hat Enterprise Linux" /etc/*-release; then
-        DISTRO='RHEL'
-        PM='yum'
     elif grep -Eqi "rockylinux" /etc/issue || grep -Eq "Rocky Linux" /etc/*-release; then
         DISTRO='Rocky'
         PM='yum'
@@ -628,6 +625,9 @@ Get_Dist_Name()
         if grep -Eq "CentOS Stream" /etc/*-release; then
             isCentosStream='y'
         fi
+    elif grep -Eqi "Red Hat Enterprise Linux" /etc/issue || grep -Eq "Red Hat Enterprise Linux" /etc/*-release; then
+        DISTRO='RHEL'
+        PM='yum'
     elif grep -Eqi "Ubuntu" /etc/issue || grep -Eq "Ubuntu" /etc/*-release; then
         DISTRO='Ubuntu'
         PM='apt'
