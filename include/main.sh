@@ -1079,7 +1079,13 @@ Check_WSL() {
 }
 
 Check_Docker() {
-    if grep -q '/docker/' /proc/1/cgroup; then
+    if [ -f /.dockerenv ]; then
+        echo "running on Docker"
+        isDocker="y"
+    elif [ -f /proc/1/cgroup ] && grep -q docker /proc/1/cgroup; then
+        echo "running on Docker"
+        isDocker="y"
+    elif [ -f /proc/self/cgroup ] && grep -q docker /proc/self/cgroup; then
         echo "running on Docker"
         isDocker="y"
     else
