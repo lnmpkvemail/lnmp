@@ -655,7 +655,7 @@ Get_Dist_Name()
         fi
     elif grep -Eqi "Kylin Linux Desktop" /etc/issue || grep -Eq "Kylin Linux Desktop" /etc/*-release; then
         DISTRO='Kylin'
-        PM='yum'
+        PM='apt'
     else
         DISTRO='unknow'
     fi
