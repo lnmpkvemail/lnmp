@@ -719,7 +719,7 @@ Download_Files()
         echo "${FileName} [found]"
     else
         echo "Notice: ${FileName} not found!!!download now..."
-        wget -c --progress=bar:force --prefer-family=IPv4 --no-check-certificate ${URL}
+        wget -c --progress=dot -e dotbytes=100M --prefer-family=IPv4 --no-check-certificate ${URL}
     fi
 }
 
