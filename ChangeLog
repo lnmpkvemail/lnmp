@@ -10,14 +10,22 @@ LNMP 2.0
 添加php-redis测试脚本；
 添加Nginx编译参数--with-http_realip_module参数；
 添加RHEL9支持；
+添加MariaDB 10.11，移除MariaDB 10.3；
+增加Amazon Linux 2023支持；
+增加MySQL升级到MariaDB时二进制安装方式；
 优化低版本PHP在新Linux发行版下的支持；
 优化Anolis OS 7支持；
 优化Oracle 7支持；
 优化SourceGuardian安装脚本；
 优化php-memcached安装脚本；
 优化离线安装；
-优化lua-nginx-module安装并使用最新版本；
+优化lua安装流程并使用最新版本；
 优化RHEL有订阅时不使用CentOS源；
+优化MariaDB 10.5+版本升级；
+优化PHP 7.0及以下版本在高版本Linux版本下的支持；
+优化PHP 5.5-5.6在AARCH64架构下的支持；
+优化composer安装脚本；
+升级Nginx至1.24.0；
 修复apache2.4邮箱设置问题；
 国内centos源默认使用ustc源；
 调整acme.sh默认使用RSA证书；
@@ -142,7 +150,7 @@ LNMP 1.5
 增加修复MySQL gcc7 bug；
 增加magento2实例配置文件 magento2-example.conf；
 增加无人值守安装，官网上有具体教程；
-增加LetseEcrypt 通配符/泛域名 SSL证书生成，官网上有具体教程；
+增加Let's Ecrypt 通配符/泛域名 SSL证书生成，官网上有具体教程；
 优化MySQL/MariaDB root密码重装工具；
 修复深度Deepin桌面版问题；
 修复MySQL bug；
