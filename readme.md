@@ -111,10 +111,10 @@ MySQL 5.6 | 3 | PHP 5.4 | 3 | TCMalloc | 3 | |
 MySQL 5.7 | 4 | PHP 5.5 | 4 | | | |
 MySQL 8.0 | 5 | PHP 5.6 | 5 | | | |
 MariaDB 5.5 | 6 | PHP 7.0 | 6 | | | |
-MariaDB 10.3 | 7 | PHP 7.1 | 7 | | | |
-MariaDB 10.4 | 8 | PHP 7.2 | 8 | | | |
-MariaDB 10.5 | 9 | PHP 7.3 | 9 | | | |
-MariaDB 10.6 | 10 | PHP 7.4 | 10 | | | |
+MariaDB 10.4 | 7 | PHP 7.1 | 7 | | | |
+MariaDB 10.5 | 8 | PHP 7.2 | 8 | | | |
+MariaDB 10.6 | 9 | PHP 7.3 | 9 | | | |
+MariaDB 10.11 | 10 | PHP 7.4 | 10 | | | |
 不安装数据库 | 0 | PHP 8.0 | 11 | | | |
 | | | PHP 8.1 | 12 | | | |
 | | | PHP 8.2 | 13 | | | |
