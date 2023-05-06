@@ -23,7 +23,7 @@ Upgrade_Dependent()
     if [ "$PM" = "yum" ]; then
         Echo_Blue "[+] Yum installing dependent packages..."
         Get_Dist_Version
-        for packages in patch wget crontabs unzip tar ca-certificates net-tools libc-client-devel psmisc libXpm-devel git-core c-ares-devel libicu-devel libxslt libxslt-devel xz expat-devel bzip2 bzip2-devel libaio-devel rpcgen libtirpc-devel perl cyrus-sasl-devel sqlite-devel oniguruma-devel re2c pkg-config libarchive hostname ncurses-libs numactl-devel libxcrypt libwebp-devel;
+        for packages in patch wget crontabs unzip tar ca-certificates net-tools libc-client-devel psmisc libXpm-devel git-core c-ares-devel libicu-devel libxslt libxslt-devel xz expat-devel bzip2 bzip2-devel libaio-devel rpcgen libtirpc-devel perl cyrus-sasl-devel sqlite-devel oniguruma-devel re2c pkg-config libarchive hostname ncurses-libs numactl-devel libxcrypt libwebp-devel gnutls-devel initscripts iproute libxcrypt-compat;
         do yum -y install $packages; done
         yum -y update nss
 
