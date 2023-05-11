@@ -68,11 +68,11 @@ elif [ "${PHPSelect}" = "9" ]; then
 elif [ "${PHPSelect}" = "10" ]; then
     Php_Ver='php-7.4.33'
 elif [ "${PHPSelect}" = "11" ]; then
-    Php_Ver='php-8.0.27'
+    Php_Ver='php-8.0.28'
 elif [ "${PHPSelect}" = "12" ]; then
-    Php_Ver='php-8.1.17'
+    Php_Ver='php-8.1.19'
 elif [ "${PHPSelect}" = "13" ]; then
-    Php_Ver='php-8.2.4'
+    Php_Ver='php-8.2.6'
 fi
 if [[ "${PHPSelect}" =~ ^[123]$ ]]; then
     PhpMyAdmin_Ver='phpMyAdmin-4.0.10.20-all-languages'
@@ -86,7 +86,7 @@ APR_Util_Ver='apr-util-1.6.1'
 if [ "${ApacheSelect}" = "1" ]; then
     Apache_Ver='httpd-2.2.34'
 elif [ "${ApacheSelect}" = "2" ]; then
-    Apache_Ver='httpd-2.4.53'
+    Apache_Ver='httpd-2.4.57'
 fi
 
 Pureftpd_Ver='pure-ftpd-1.0.49'
