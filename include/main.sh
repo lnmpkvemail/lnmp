@@ -619,6 +619,9 @@ Get_Dist_Name()
     elif grep -Eqi "Kylin Linux Advanced Server" /etc/issue || grep -Eq "Kylin Linux Advanced Server" /etc/*-release; then
         DISTRO='Kylin'
         PM='yum'
+    elif grep -Eqi "OpenCloudOS" /etc/issue || grep -Eq "OpenCloudOS" /etc/*-release; then
+        DISTRO='OpenCloudOS'
+        PM='yum'
     elif grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
         DISTRO='CentOS'
         PM='yum'
