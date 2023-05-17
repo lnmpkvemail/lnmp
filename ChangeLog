@@ -13,6 +13,7 @@ LNMP 2.0
 添加MariaDB 10.11，移除MariaDB 10.3；
 增加Amazon Linux 2023支持；
 增加MySQL升级到MariaDB时二进制安装方式；
+增加OpenCloudOS支持；
 优化低版本PHP在新Linux发行版下的支持；
 优化Anolis OS 7支持；
 优化Oracle 7支持；
@@ -25,6 +26,7 @@ LNMP 2.0
 优化PHP 7.0及以下版本在高版本Linux版本下的支持；
 优化PHP 5.5-5.6在AARCH64架构下的支持；
 优化composer安装脚本；
+优化MySQL 5.5,5.6,5.7在OpenSSL3.0下安装失败的问题；
 升级Nginx至1.24.0；
 修复apache2.4邮箱设置问题；
 国内centos源默认使用ustc源；
