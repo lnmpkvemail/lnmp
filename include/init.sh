@@ -366,6 +366,9 @@ CentOS_Dependent()
     if echo "${CentOS_Version}" | grep -Eqi "^9" || echo "${Alma_Version}" | grep -Eqi "^9" || echo "${Rocky_Version}" | grep -Eqi "^9"; then
         for cs9packages in oniguruma-devel libzip-devel libtirpc-devel libxcrypt-compat;
         do dnf --enablerepo=crb install ${cs9packages} -y; done
+        if [[ "${Bin}" != "y" && "${DBSelect}" = "5" ]]; then
+            dnf install gcc-toolset-12-gcc gcc-toolset-12-gcc-c++ gcc-toolset-12-binutils gcc-toolset-12-annobin-annocheck gcc-toolset-12-annobin-plugin-gcc -y
+        fi
     fi
 
     if [ "${DISTRO}" = "Oracle" ] && echo "${Oracle_Version}" | grep -Eqi "^8"; then
@@ -373,6 +376,14 @@ CentOS_Dependent()
         for o8packages in rpcgen re2c oniguruma-devel;
         do dnf --enablerepo=${repo_id} install ${o8packages} -y; done
         dnf install libarchive -y
+    fi
+
+    if [ "${DISTRO}" = "Oracle" ] && echo "${Oracle_Version}" | grep -Eqi "^9"; then
+        Check_Codeready
+        dnf --enablerepo=${repo_id} install libtirpc-devel -y
+        if [[ "${Bin}" != "y" && "${DBSelect}" = "5" ]]; then
+            dnf install gcc-toolset-12-gcc gcc-toolset-12-gcc-c++ gcc-toolset-12-binutils gcc-toolset-12-annobin-annocheck gcc-toolset-12-annobin-plugin-gcc -y
+        fi
     fi
 
     if echo "${CentOS_Version}" | grep -Eqi "^7" || echo "${RHEL_Version}" | grep -Eqi "^7"  || echo "${Aliyun_Version}" | grep -Eqi "^2" || echo "${Alibaba_Version}" | grep -Eqi "^2" || echo "${Oracle_Version}" | grep -Eqi "^7" || echo "${Anolis_Version}" | grep -Eqi "^7"; then
@@ -756,7 +767,7 @@ Install_Openssl()
 Install_Openssl_New()
 {
     if openssl version | grep -vEqi "OpenSSL 1.1.1*"; then
-        if [ ! -s /usr/local/openssl1.1.1/bin/openssl ] || /usr/local/openssl1.1.1/bin/openssl version | grep -Eqi 'OpenSSL 1.1.1*'; then
+        if [ ! -s /usr/local/openssl1.1.1/bin/openssl ] || /usr/local/openssl1.1.1/bin/openssl version | grep -v 'OpenSSL 1.1.1'; then
             Echo_Blue "[+] Installing ${Openssl_New_Ver}"
             cd ${cur_dir}/src
             Download_Files ${Download_Mirror}/lib/openssl/${Openssl_New_Ver}.tar.gz ${Openssl_New_Ver}.tar.gz

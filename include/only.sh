@@ -83,8 +83,23 @@ DB_Dependent()
             dnf install libarchive -y
         fi
 
+        if [ "${DISTRO}" = "Oracle" ] && echo "${Oracle_Version}" | grep -Eqi "^9"; then
+            Check_Codeready
+            dnf --enablerepo=${repo_id} install libtirpc-devel -y
+            if [[ "${Bin}" != "y" && "${DBSelect}" = "5" ]]; then
+                dnf install gcc-toolset-12-gcc gcc-toolset-12-gcc-c++ gcc-toolset-12-binutils gcc-toolset-12-annobin-annocheck gcc-toolset-12-annobin-plugin-gcc -y
+            fi
+        fi
+
         if [ "${DISTRO}" = "Fedora" ] || echo "${CentOS_Version}" | grep -Eqi "^9" || echo "${Alma_Version}" | grep -Eqi "^9" || echo "${Rocky_Version}" | grep -Eqi "^9"; then
             dnf install chkconfig -y
+        fi
+
+        if echo "${CentOS_Version}" | grep -Eqi "^9" || echo "${Alma_Version}" | grep -Eqi "^9" || echo "${Rocky_Version}" | grep -Eqi "^9"; then
+            dnf --enablerepo=crb install libtirpc-devel libxcrypt-compat -y
+            if [[ "${Bin}" != "y" && "${DBSelect}" = "5" ]]; then
+                dnf install gcc-toolset-12-gcc gcc-toolset-12-gcc-c++ gcc-toolset-12-binutils gcc-toolset-12-annobin-annocheck gcc-toolset-12-annobin-plugin-gcc -y
+            fi
         fi
 
         if [ -s /usr/lib64/libtinfo.so.6 ]; then
