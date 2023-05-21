@@ -17,7 +17,10 @@ Install_PHP_Exif()
 
     Download_PHP_Src
 
-    Tarj_Cd php-${Cur_PHP_Version}.tar.bz2 php-${Cur_PHP_Version}/ext/exif
+    Tar_Cd php-${Cur_PHP_Version}.tar.bz2 php-${Cur_PHP_Version}/ext/exif
+    if echo "${Cur_PHP_Version}" | grep -Eqi '^8.' && gcc -dumpversion|grep -Eq "^[3-4].";then
+        export CFLAGS="-std=c99"
+    fi
     ${PHP_Path}/bin/phpize
     ./configure --with-php-config=${PHP_Path}/bin/php-config
     make && make install

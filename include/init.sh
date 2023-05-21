@@ -10,14 +10,21 @@ Set_Timezone()
 CentOS_InstallNTP()
 {
     if [ "${CheckMirror}" != "n" ]; then
-        if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${Oracle_Version}" | grep -Eqi "^8" || echo "${Rocky_Version}" | grep -Eqi "^8" || echo "${Alma_Version}" | grep -Eqi "^8"; then
-            Echo_Blue "[+] Installing chrony..."
-            dnf install chrony -y
+        if command -v ntpdate >/dev/null 2>&1; then
+            ntpdate -u pool.ntp.org
+        elif command -v chronyd >/dev/null 2>&1; then
             chronyd -d -q "server pool.ntp.org iburst"
         else
-            Echo_Blue "[+] Installing ntp..."
-            yum install -y ntpdate
-            ntpdate -u pool.ntp.org
+            yum info ntpdate && check_ntp="y"
+            if [ "${check_ntp}" = "y" ]; then
+                Echo_Blue "[+] Installing ntp..."
+                yum install -y ntpdate
+                ntpdate -u pool.ntp.org
+            else
+                Echo_Blue "[+] Installing chrony..."
+                yum install chrony -y
+                chronyd -d -q "server pool.ntp.org iburst"
+            fi
         fi
     fi
     date
@@ -94,6 +101,7 @@ Deb_RemoveAMP()
 Disable_Selinux()
 {
     if [ -s /etc/selinux/config ]; then
+        setenforce 0
         sed -i 's/^SELINUX=.*/SELINUX=disabled/g' /etc/selinux/config
     fi
 }
@@ -146,6 +154,9 @@ RHEL_Modify_Source()
             sed -i "s/\$releasever/7/g" /etc/yum.repos.d/Centos-${RHEL_Ver}.repo
         elif echo "${RHEL_Version}" | grep -Eqi "^8"; then
             sed -i "s#centos/\$releasever#centos-vault/8.5.2111#g" /etc/yum.repos.d/Centos-${RHEL_Ver}.repo
+        elif echo "${RHEL_Version}" | grep -Eqi "^9"; then
+            [[ -s /etc/yum.repos.d/Centos-9.repo ]] && rm -f /etc/yum.repos.d/Centos-9.repo
+            \cp ${cur_dir}/conf/rhel-9.repo /etc/yum.repos.d/Centos-9.repo
         fi
         yum clean all
         yum makecache
@@ -156,7 +167,7 @@ RHEL_Modify_Source()
 Ubuntu_Modify_Source()
 {
     if [ "${country}" = "CN" ]; then
-        OldReleasesURL='http://mirrors.ustc.edu.cn/ubuntu-old-releases/ubuntu/'
+        OldReleasesURL='http://mirrors.ustc.edu.cn/ubuntu-old-releases/'
     else
         OldReleasesURL='http://old-releases.ubuntu.com/ubuntu/'
     fi
@@ -195,6 +206,8 @@ Ubuntu_Modify_Source()
         Ubuntu_Deadline xenial
     elif grep -Eqi "16.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^16.10'; then
         CodeName='yakkety'
+    elif grep -Eqi "18.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^18.04'; then
+        Ubuntu_Deadline bionic
     elif grep -Eqi "18.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^18.10'; then
         CodeName='cosmic'
     elif grep -Eqi "19.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^19.04'; then
@@ -202,11 +215,11 @@ Ubuntu_Modify_Source()
     elif grep -Eqi "19.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^19.10'; then
         CodeName='eoan'
     elif grep -Eqi "20.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^20.10'; then
-        Ubuntu_Deadline groovy
+        CodeName='groovy'
     elif grep -Eqi "21.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^21.04'; then
-        Ubuntu_Deadline hirsute
+        CodeName='hirsute'
     elif grep -Eqi "21.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^21.10'; then
-        Ubuntu_Deadline impish
+        CodeName='impish'
     fi
     if [ "${CodeName}" != "" ]; then
         \cp /etc/apt/sources.list /etc/apt/sources.list.$(date +"%Y%m%d")
@@ -236,11 +249,10 @@ Check_Old_Releases_URL()
 
 Ubuntu_Deadline()
 {
-    trusty_deadline=`date -d "2022-4-30 00:00:00" +%s`
-    xenial_deadline=`date -d "2024-4-30 00:00:00" +%s`
-    groovy_deadline=`date -d "2021-7-30 00:00:00" +%s`
-    hirsute_deadline=`date -d "2022-1-30 00:00:00" +%s`
-    impish_deadline=`date -d "2022-7-30 00:00:00" +%s`
+    trusty_deadline=`date -d "2024-4-30 00:00:00" +%s`
+    xenial_deadline=`date -d "2026-4-30 00:00:00" +%s`
+    kinetic_deadline=`date -d "2023-7-30 00:00:00" +%s`
+    bionic_deadline=`date -d "2028-7-30 00:00:00" +%s`
     cur_time=`date  +%s`
     case "$1" in
         trusty)
@@ -261,22 +273,10 @@ Ubuntu_Deadline()
                 Check_Old_Releases_URL eoan
             fi
             ;;
-        groovy)
-            if [ ${cur_time} -gt ${groovy_deadline} ]; then
-                echo "${cur_time} > ${groovy_deadline}"
-                Check_Old_Releases_URL groovy
-            fi
-            ;;
-        hirsute)
-            if [ ${cur_time} -gt ${hirsute_deadline} ]; then
-                echo "${cur_time} > ${hirsute_deadline}"
-                Check_Old_Releases_URL hirsute
-            fi
-            ;;
-        impish)
-            if [ ${cur_time} -gt ${impish_deadline} ]; then
-                echo "${cur_time} > ${impish_deadline}"
-                Check_Old_Releases_URL impish
+        bionic)
+            if [ ${cur_time} -gt ${bionic_deadline} ]; then
+                echo "${cur_time} > ${bionic_deadline}"
+                Check_Old_Releases_URL bionic
             fi
             ;;
     esac
@@ -286,7 +286,8 @@ CentOS6_Modify_Source()
 {
     if echo "${CentOS_Version}" | grep -Eqi "^6"; then
         Echo_Yellow "CentOS 6 is now end of life, use vault repository."
-        \cp /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+        mkdir /etc/yum.repos.d/backup
+        mv /etc/yum.repos.d/*.repo /etc/yum.repos.d/backup/
         \cp ${cur_dir}/conf/CentOS6-Base-Vault.repo /etc/yum.repos.d/CentOS-Base.repo
     fi
 }
@@ -295,11 +296,10 @@ CentOS8_Modify_Source()
 {
     if echo "${CentOS_Version}" | grep -Eqi "^8" && [ "${isCentosStream}" != "y" ]; then
         Echo_Yellow "CentOS 8 is now end of life, use vault repository."
-        if grep -q "^mirrorlist" /etc/yum.repos.d/CentOS-Linux-AppStream.repo && grep -q "#baseurl" /etc/yum.repos.d/CentOS-Linux-AppStream.repo; then
-            sed -i 's/^mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-*.repo
-            sed -i 's@#baseurl=.*$contentdir@baseurl=http://mirrors.aliyun.com/centos-vault/$contentdir@g' /etc/yum.repos.d/CentOS-Linux-*.repo
-        else
-            sed -i 's@baseurl=.*$contentdir@baseurl=http://mirrors.aliyun.com/centos-vault/$contentdir@g' /etc/yum.repos.d/CentOS-Linux-*.repo
+        if [ ! -s /etc/yum.repos.d/CentOS8-vault.repo ]; then
+            mkdir /etc/yum.repos.d/backup
+            mv /etc/yum.repos.d/*.repo /etc/yum.repos.d/backup/
+            \cp ${cur_dir}/conf/CentOS8-vault.repo /etc/yum.repos.d/CentOS8-vault.repo
         fi
     fi
 }
@@ -307,7 +307,15 @@ CentOS8_Modify_Source()
 Modify_Source()
 {
     if [ "${DISTRO}" = "RHEL" ]; then
-        RHEL_Modify_Source
+        if subscription-manager status; then
+            Echo_Blue "RHEL subscription exists on the system, skip setting up third-party sources."
+            Get_RHEL_Version
+            if echo "${RHEL_Version}" | grep -Eqi "^[89]"; then
+                subscription-manager repos --enable codeready-builder-for-rhel-${RHEL_Version}-${DB_ARCH}-rpms
+            fi
+        else
+            RHEL_Modify_Source
+        fi
     elif [ "${DISTRO}" = "Ubuntu" ]; then
         Ubuntu_Modify_Source
     elif [ "${DISTRO}" = "CentOS" ]; then
@@ -319,19 +327,9 @@ Modify_Source()
 Check_PowerTools()
 {
     if ! yum -v repolist all|grep "PowerTools"; then
-        echo "PowerTools repository not found, add PowerTools repository ..."
-        cat >/etc/yum.repos.d/CentOS-Linux-PowerTools.repo<<EOF
-[powertools]
-name=CentOS-\$releasever - PowerTools
-#mirrorlist=http://mirrorlist.centos.org/?release=\$releasever&arch=\$basearch&repo=PowerTools&infra=\$infra
-baseurl=http://mirrors.aliyun.com/centos-vault/\$contentdir/\$releasever/PowerTools/\$basearch/os/
-gpgcheck=1
-enabled=0
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
-EOF
+        Echo_Red "PowerTools repository not found!"
     fi
     repo_id=$(yum repolist all|grep -Ei "PowerTools"|head -n 1|awk '{print $1}')
-    [ -z "${repo_id}" ] && repo_id="powertools"
 }
 
 Check_Codeready()
@@ -348,47 +346,66 @@ CentOS_Dependent()
     fi
 
     Echo_Blue "[+] Yum installing dependent packages..."
-    for packages in make cmake gcc gcc-c++ gcc-g77 flex bison file libtool libtool-libs autoconf patch wget crontabs libjpeg libjpeg-devel libjpeg-turbo-devel libpng libpng-devel libpng10 libpng10-devel gd gd-devel libxml2 libxml2-devel zlib zlib-devel glib2 glib2-devel unzip tar bzip2 bzip2-devel libzip-devel libevent libevent-devel ncurses ncurses-devel curl curl-devel libcurl libcurl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel libidn libidn-devel openssl openssl-devel pcre-devel gettext gettext-devel ncurses-devel gmp-devel pspell-devel unzip libcap diffutils ca-certificates net-tools libc-client-devel psmisc libXpm-devel git-core c-ares-devel libicu-devel libxslt libxslt-devel xz expat-devel libaio-devel rpcgen libtirpc-devel perl cyrus-sasl-devel sqlite-devel oniguruma-devel lsof re2c pkg-config libarchive hostname;
+    for packages in make cmake gcc gcc-c++ gcc-g77 kernel-headers glibc-headers flex bison file libtool libtool-libs autoconf patch wget crontabs libjpeg libjpeg-devel libjpeg-turbo-devel libpng libpng-devel libpng10 libpng10-devel gd gd-devel libxml2 libxml2-devel zlib zlib-devel glib2 glib2-devel unzip tar bzip2 bzip2-devel libzip-devel libevent libevent-devel ncurses ncurses-devel curl curl-devel libcurl libcurl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel libidn libidn-devel openssl openssl-devel pcre-devel gettext gettext-devel ncurses-devel gmp-devel pspell-devel unzip libcap diffutils ca-certificates net-tools libc-client-devel psmisc libXpm-devel git-core c-ares-devel libicu-devel libxslt libxslt-devel xz expat-devel libaio-devel rpcgen libtirpc-devel perl cyrus-sasl-devel sqlite-devel oniguruma-devel lsof re2c pkg-config libarchive hostname ncurses-libs numactl-devel libxcrypt libwebp-devel gnutls-devel initscripts iproute libxcrypt-compat;
     do yum -y install $packages; done
 
     yum -y update nss
 
-    if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${Rocky_Version}" | grep -Eqi "^8" || echo "${Alma_Version}" | grep -Eqi "^8"; then
+    if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${Rocky_Version}" | grep -Eqi "^8" || echo "${Alma_Version}" | grep -Eqi "^8" || echo "${Anolis_Version}" | grep -Eqi "^8" || echo "${OpenCloudOS_Version}" | grep -Eqi "^8"; then
         Check_PowerTools
-        dnf --enablerepo=${repo_id} install rpcgen re2c -y
-        dnf --enablerepo=${repo_id} install oniguruma-devel -y
+        if [ "${repo_id}" != "" ]; then
+            echo "Installing packages in PowerTools repository..."
+            for c8packages in rpcgen re2c oniguruma-devel;
+            do dnf --enablerepo=${repo_id} install ${c8packages} -y; done
+        fi
         dnf install libarchive -y
 
         dnf install gcc-toolset-10 -y
     fi
 
+    if echo "${CentOS_Version}" | grep -Eqi "^9" || echo "${Alma_Version}" | grep -Eqi "^9" || echo "${Rocky_Version}" | grep -Eqi "^9"; then
+        for cs9packages in oniguruma-devel libzip-devel libtirpc-devel libxcrypt-compat;
+        do dnf --enablerepo=crb install ${cs9packages} -y; done
+    fi
+
     if [ "${DISTRO}" = "Oracle" ] && echo "${Oracle_Version}" | grep -Eqi "^8"; then
         Check_Codeready
-        dnf --enablerepo=${repo_id} install rpcgen re2c -y
-        dnf --enablerepo=${repo_id} install oniguruma-devel -y
+        for o8packages in rpcgen re2c oniguruma-devel;
+        do dnf --enablerepo=${repo_id} install ${o8packages} -y; done
         dnf install libarchive -y
     fi
 
-    if echo "${CentOS_Version}" | grep -Eqi "^7" || echo "${RHEL_Version}" | grep -Eqi "^7"  || echo "${Aliyun_Version}" | grep -Eqi "^2" || echo "${Alibaba_Version}" | grep -Eqi "^2" || echo "${Oracle_Version}" | grep -Eqi "^7"; then
+    if echo "${CentOS_Version}" | grep -Eqi "^7" || echo "${RHEL_Version}" | grep -Eqi "^7"  || echo "${Aliyun_Version}" | grep -Eqi "^2" || echo "${Alibaba_Version}" | grep -Eqi "^2" || echo "${Oracle_Version}" | grep -Eqi "^7" || echo "${Anolis_Version}" | grep -Eqi "^7"; then
         if [ "${DISTRO}" = "Oracle" ]; then
             yum -y install oracle-epel-release
+            yum -y --enablerepo=*EPEL* install oniguruma-devel
         else
             yum -y install epel-release
             if [ "${country}" = "CN" ]; then
-                sed -i "s@^#baseurl=http://download.fedoraproject.org/pub@baseurl=http://mirrors.aliyun.com@g" /etc/yum.repos.d/epel*.repo
-                sed -i "s@^metalink@#metalink@g" /etc/yum.repos.d/epel*.repo
+                sed -e 's!^metalink=!#metalink=!g' \
+                    -e 's!^#baseurl=!baseurl=!g' \
+                    -e 's!//download\.fedoraproject\.org/pub!//mirrors.ustc.edu.cn!g' \
+                    -e 's!//download\.example/pub!//mirrors.ustc.edu.cn!g' \
+                    -i /etc/yum.repos.d/epel*.repo
             fi
         fi
         yum -y install oniguruma oniguruma-devel
         if [ "${CheckMirror}" = "n" ]; then
-            cd ${cur_dir}/src/
-            yum -y install ./oniguruma-6.8.2-1.el7.x86_64.rpm
-            yum -y install ./oniguruma-devel-6.8.2-1.el7.x86_64.rpm
+            rpm -ivh ${cur_dir}/src/oniguruma-6.8.2-1.el7.x86_64.rpm ${cur_dir}/src/oniguruma-devel-6.8.2-1.el7.x86_64.rpm
         fi
     fi
 
-    if [ "${DISTRO}" = "Fedora" ]; then
+    if [ "${DISTRO}" = "Fedora" ] || echo "${CentOS_Version}" | grep -Eqi "^9" || echo "${Alma_Version}" | grep -Eqi "^9" || echo "${Rocky_Version}" | grep -Eqi "^9" || echo "${Amazon_Version}" | grep -Eqi "^202[3-9]" || echo "${OpenCloudOS_Version}" | grep -Eqi "^9"; then
         dnf install chkconfig -y
+    fi
+
+    if [ "${DISTRO}" = "UOS" ]; then
+        Check_PowerTools
+        if [ "${repo_id}" != "" ]; then
+            echo "Installing packages in PowerTools repository..."
+            for uospackages in rpcgen re2c oniguruma-devel;
+            do dnf --enablerepo=${repo_id} install ${uospackages} -y; done
+        fi
     fi
 
     if [ -s /etc/yum.conf.lnmp ]; then
@@ -405,7 +422,7 @@ Deb_Dependent()
     apt-get -fy install
     export DEBIAN_FRONTEND=noninteractive
     apt-get --no-install-recommends install -y build-essential gcc g++ make
-    for packages in debian-keyring debian-archive-keyring build-essential gcc g++ make cmake autoconf automake re2c wget cron bzip2 libzip-dev libc6-dev bison file rcconf flex bison m4 gawk less cpp binutils diffutils unzip tar bzip2 libbz2-dev libncurses5 libncurses5-dev libtool libevent-dev openssl libssl-dev zlibc libsasl2-dev libltdl3-dev libltdl-dev zlib1g zlib1g-dev libbz2-1.0 libbz2-dev libglib2.0-0 libglib2.0-dev libpng3 libjpeg-dev libpng-dev libpng12-0 libpng12-dev libkrb5-dev curl libcurl3-gnutls libcurl4-gnutls-dev libcurl4-openssl-dev libpcre3-dev libpq-dev libpq5 gettext libpng12-dev libxml2-dev libcap-dev ca-certificates libc-client2007e-dev psmisc patch git libc-ares-dev libicu-dev e2fsprogs libxslt1.1 libxslt1-dev libc-client-dev xz-utils libexpat1-dev libaio-dev libtirpc-dev libsqlite3-dev libonig-dev lsof pkg-config;
+    for packages in debian-keyring debian-archive-keyring build-essential gcc g++ make cmake autoconf automake re2c wget cron bzip2 libzip-dev libc6-dev bison file rcconf flex bison m4 gawk less cpp binutils diffutils unzip tar bzip2 libbz2-dev libncurses5 libncurses5-dev libtool libevent-dev openssl libssl-dev zlibc libsasl2-dev libltdl3-dev libltdl-dev zlib1g zlib1g-dev libbz2-1.0 libbz2-dev libglib2.0-0 libglib2.0-dev libpng3 libjpeg-dev libpng-dev libpng12-0 libpng12-dev libkrb5-dev curl libcurl3-gnutls libcurl4-gnutls-dev libcurl4-openssl-dev libpcre3-dev libpq-dev libpq5 gettext libpng12-dev libxml2-dev libcap-dev ca-certificates libc-client2007e-dev psmisc patch git libc-ares-dev libicu-dev e2fsprogs libxslt1.1 libxslt1-dev libc-client-dev xz-utils libexpat1-dev libaio-dev libtirpc-dev libsqlite3-dev libonig-dev lsof pkg-config libtinfo-dev libnuma-dev libwebp-dev gnutls-dev iproute2;
     do apt-get --no-install-recommends install -y $packages; done
 }
 
@@ -427,9 +444,30 @@ Check_Download()
         Download_Files ${Download_Mirror}/web/nginx/${Nginx_Ver}.tar.gz ${Nginx_Ver}.tar.gz
     fi
     if [[ "${DBSelect}" =~ ^[12345]$ ]]; then
-        Download_Files ${Download_Mirror}/datebase/mysql/${Mysql_Ver}.tar.gz ${Mysql_Ver}.tar.gz
+        if [[ "${Bin}" = "y" && "${DBSelect}" =~ ^[2-4]$ ]]; then
+            Mysql_Ver_Short=$(echo ${Mysql_Ver} | sed 's/mysql-//' | cut -d. -f1-2)
+            Download_Files https://cdn.mysql.com/Downloads/MySQL-${Mysql_Ver_Short}/${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz
+            if [ $? -ne 0 ]; then
+                Download_Files https://cdn.mysql.com/archives/mysql-${Mysql_Ver_Short}/${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz
+            fi
+        elif [[ "${Bin}" = "y" && "${DBSelect}" = "5" ]]; then
+            [[ "${DB_ARCH}" = "aarch64" ]] && mysql8_glibc_ver="2.17" || mysql8_glibc_ver="2.12"
+            [[ "${DB_ARCH}" = "aarch64" ]] && mysql8_ext="tar.gz" || mysql8_ext="tar.xz"
+            Download_Files https://cdn.mysql.com/Downloads/MySQL-8.0/${Mysql_Ver}-linux-glibc${mysql8_glibc_ver}-${DB_ARCH}.${mysql8_ext} ${Mysql_Ver}-linux-glibc${mysql8_glibc_ver}-${DB_ARCH}.${mysql8_ext}
+            if [ $? -ne 0 ]; then
+                Download_Files https://cdn.mysql.com/archives/mysql-8.0/${Mysql_Ver}-linux-glibc${mysql8_glibc_ver}-${DB_ARCH}.${mysql8_ext} ${Mysql_Ver}-linux-glibc${mysql8_glibc_ver}-${DB_ARCH}.${mysql8_ext}
+            fi
+        else
+            Download_Files ${Download_Mirror}/datebase/mysql/${Mysql_Ver}.tar.gz ${Mysql_Ver}.tar.gz
+        fi
     elif [[ "${DBSelect}" =~ ^[6789]|10$ ]]; then
-        Download_Files ${Download_Mirror}/datebase/mariadb/${Mariadb_Ver}.tar.gz ${Mariadb_Ver}.tar.gz
+        Mariadb_Version=$(echo ${Mariadb_Ver} | cut -d- -f2)
+        if [ "${Bin}" = "y" ]; then
+            MariaDB_FileName="${Mariadb_Ver}-linux-systemd-${DB_ARCH}"
+        else
+            MariaDB_FileName="${Mariadb_Ver}"
+        fi
+        Download_Files https://downloads.mariadb.org/rest-api/mariadb/${Mariadb_Version}/${MariaDB_FileName}.tar.gz ${MariaDB_FileName}.tar.gz
     fi
     Download_Files ${Download_Mirror}/web/php/${Php_Ver}.tar.bz2 ${Php_Ver}.tar.bz2
     if [ ${PHPSelect} = "1" ]; then
@@ -516,7 +554,7 @@ Install_Mcrypt()
 Install_Mhash()
 {
     Echo_Blue "[+] Installing ${Mhash_Ver}"
-    Tarj_Cd ${Mhash_Ver}.tar.bz2 ${Mhash_Ver}
+    Tar_Cd ${Mhash_Ver}.tar.bz2 ${Mhash_Ver}
     ./configure
     Make_Install
     ln -sf /usr/local/lib/libmhash.a /usr/lib/libmhash.a
@@ -531,15 +569,15 @@ Install_Mhash()
 
 Install_Freetype()
 {
-    if echo "${Ubuntu_Version}" | grep -Eqi "^1[89]\.|2[0-9]\." || echo "${Mint_Version}" | grep -Eqi "^19|2[0-9]" || echo "${Deepin_Version}" | grep -Eqi "^15\.[7-9]|15.1[0-9]|1[6-9]|2[0-9]" || echo "${Debian_Version}" | grep -Eqi "^9|1[0-9]" || echo "${Raspbian_Version}" | grep -Eqi "^9|1[0-9]" || echo "${Kali_Version}" | grep -Eqi "^202[0-9]" || echo "${UOS_Version}" | grep -Eqi "^2[0-9]" || echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${Oracle_Version}" | grep -Eqi "^8" || echo "${Fedora_Version}" | grep -Eqi "^3[0-9]|29" || echo "${Rocky_Version}" | grep -Eqi "^8" || echo "${Alma_Version}" | grep -Eqi "^8"; then
+    if echo "${Ubuntu_Version}" | grep -Eqi "^1[89]\.|2[0-9]\." || echo "${Mint_Version}" | grep -Eqi "^19|2[0-9]" || echo "${Deepin_Version}" | grep -Eqi "^15\.[7-9]|15.1[0-9]|1[6-9]|2[0-9]" || echo "${Debian_Version}" | grep -Eqi "^9|1[0-9]" || echo "${Raspbian_Version}" | grep -Eqi "^9|1[0-9]" || echo "${Kali_Version}" | grep -Eqi "^202[0-9]" || echo "${UOS_Version}" | grep -Eqi "^2[0-9]" || echo "${CentOS_Version}" | grep -Eqi "^8|9" || echo "${RHEL_Version}" | grep -Eqi "^8|9" || echo "${Oracle_Version}" | grep -Eqi "^8|9" || echo "${Fedora_Version}" | grep -Eqi "^3[0-9]|29" || echo "${Rocky_Version}" | grep -Eqi "^8|9" || echo "${Alma_Version}" | grep -Eqi "^8|9" || echo "${openEuler_Version}" | grep -Eqi "^2[0-9]" || echo "${Anolis_Version}" | grep -Eqi "^8|9" || echo "${Kylin_Version}" | grep -Eqi "^V1[0-9]" || echo "${Amazon_Version}" | grep -Eqi "^202[3-9]" || echo "${OpenCloudOS_Version}" | grep -Eqi "^8|9|23"; then
         Download_Files ${Download_Mirror}/lib/freetype/${Freetype_New_Ver}.tar.xz ${Freetype_New_Ver}.tar.xz
         Echo_Blue "[+] Installing ${Freetype_New_Ver}"
-        TarJ_Cd ${Freetype_New_Ver}.tar.xz ${Freetype_New_Ver}
+        Tar_Cd ${Freetype_New_Ver}.tar.xz ${Freetype_New_Ver}
         ./configure --prefix=/usr/local/freetype --enable-freetype-config
     else
         Download_Files ${Download_Mirror}/lib/freetype/${Freetype_Ver}.tar.bz2 ${Freetype_Ver}.tar.bz2
         Echo_Blue "[+] Installing ${Freetype_Ver}"
-        Tarj_Cd ${Freetype_Ver}.tar.bz2 ${Freetype_Ver}
+        Tar_Cd ${Freetype_Ver}.tar.bz2 ${Freetype_Ver}
         ./configure --prefix=/usr/local/freetype
     fi
     Make_Install
@@ -560,7 +598,7 @@ Install_Curl()
         Echo_Blue "[+] Installing ${Curl_Ver}"
         cd ${cur_dir}/src
         Download_Files ${Download_Mirror}/lib/curl/${Curl_Ver}.tar.bz2 ${Curl_Ver}.tar.bz2
-        Tarj_Cd ${Curl_Ver}.tar.bz2 ${Curl_Ver}
+        Tar_Cd ${Curl_Ver}.tar.bz2 ${Curl_Ver}
         if [ -s /usr/local/openssl/bin/openssl ] || /usr/local/openssl/bin/openssl version | grep -Eqi 'OpenSSL 1.0.2'; then
             ./configure --prefix=/usr/local/curl --enable-ares --without-nss --with-zlib --with-ssl=/usr/local/openssl
         else
@@ -580,8 +618,8 @@ Install_Pcre()
         Echo_Blue "[+] Installing ${Pcre_Ver}"
         cd ${cur_dir}/src
         Download_Files ${Download_Mirror}/web/pcre/${Pcre_Ver}.tar.bz2 ${Pcre_Ver}.tar.bz2
-        Tarj_Cd ${Pcre_Ver}.tar.bz2
-        Nginx_With_Pcre="--with-pcre=${cur_dir}/src/${Pcre_Ver}"
+        Tar_Cd ${Pcre_Ver}.tar.bz2
+        Nginx_With_Pcre="--with-pcre=${cur_dir}/src/${Pcre_Ver} --with-pcre-jit"
     fi
 }
 
@@ -589,7 +627,7 @@ Install_Jemalloc()
 {
     Echo_Blue "[+] Installing ${Jemalloc_Ver}"
     cd ${cur_dir}/src
-    Tarj_Cd ${Jemalloc_Ver}.tar.bz2 ${Jemalloc_Ver}
+    Tar_Cd ${Jemalloc_Ver}.tar.bz2 ${Jemalloc_Ver}
     ./configure
     Make_Install
     ldconfig
@@ -635,6 +673,22 @@ Install_Icu4c()
         Make_Install
         cd ${cur_dir}/src/
         rm -rf ${cur_dir}/src/icu
+    fi
+}
+
+Install_Icu60()
+{
+    if [ ! -s /usr/local/icu/bin/icu-config ]; then
+        Echo_Blue "[+] Installing icu4c-60_3..."
+        cd ${cur_dir}/src
+        Download_Files ${Download_Mirror}/lib/icu4c/icu4c-60_3-src.tgz icu4c-60_3-src.tgz
+        Tar_Cd icu4c-60_3-src.tgz icu/source
+        ./configure --prefix=/usr/local/icu
+        Make_Install
+        cd ${cur_dir}/src/
+
+        echo "/usr/local/icu/lib" > /etc/ld.so.conf.d/icu.conf
+        ldconfig
     fi
 }
 
@@ -730,7 +784,7 @@ Install_Nghttp2()
         cd ${cur_dir}/src
         Download_Files ${Download_Mirror}/lib/nghttp2/${Nghttp2_Ver}.tar.xz ${Nghttp2_Ver}.tar.xz
         [[ -d "${Nghttp2_Ver}" ]] && rm -rf ${Nghttp2_Ver}
-        TarJ_Cd ${Nghttp2_Ver}.tar.xz ${Nghttp2_Ver}
+        Tar_Cd ${Nghttp2_Ver}.tar.xz ${Nghttp2_Ver}
         ./configure --prefix=/usr/local/nghttp2
         Make_Install
         cd ${cur_dir}/src/
@@ -740,12 +794,12 @@ Install_Nghttp2()
 
 Install_Libzip()
 {
-    if echo "${CentOS_Version}" | grep -Eqi "^7"  || echo "${RHEL_Version}" | grep -Eqi "^7"  || echo "${Aliyun_Version}" | grep -Eqi "^2" || echo "${Alibaba_Version}" | grep -Eqi "^2" || echo "${Oracle_Version}" | grep -Eqi "^7"; then
+    if echo "${CentOS_Version}" | grep -Eqi "^7"  || echo "${RHEL_Version}" | grep -Eqi "^7"  || echo "${Aliyun_Version}" | grep -Eqi "^2" || echo "${Alibaba_Version}" | grep -Eqi "^2" || echo "${Oracle_Version}" | grep -Eqi "^7" || echo "${Anolis_Version}" | grep -Eqi "^7"; then
         if [ ! -s /usr/local/lib/libzip.so ]; then
             Echo_Blue "[+] Installing ${Libzip_Ver}"
             cd ${cur_dir}/src
             Download_Files ${Download_Mirror}/lib/libzip/${Libzip_Ver}.tar.xz ${Libzip_Ver}.tar.xz
-            TarJ_Cd ${Libzip_Ver}.tar.xz ${Libzip_Ver}
+            Tar_Cd ${Libzip_Ver}.tar.xz ${Libzip_Ver}
             ./configure
             Make_Install
             cd ${cur_dir}/src/
@@ -803,6 +857,18 @@ eof
 
     if echo "${Fedora_Version}" | grep -Eqi "3[0-9]" && [ ! -d "/etc/init.d" ]; then
         ln -sf /etc/rc.d/init.d /etc/init.d
+    fi
+
+    if [ -s /usr/lib64/libtinfo.so.6 ]; then
+        ln -sf /usr/lib64/libtinfo.so.6 /usr/lib64/libtinfo.so.5
+    elif [ -s /usr/lib/libtinfo.so.6 ]; then
+        ln -sf /usr/lib/libtinfo.so.6 /usr/lib/libtinfo.so.5
+    fi
+
+    if [ -s /usr/lib64/libncurses.so.6 ]; then
+        ln -sf /usr/lib64/libncurses.so.6 /usr/lib64/libncurses.so.5
+    elif [ -s /usr/lib/libncurses.so.6 ]; then
+        ln -sf /usr/lib/libncurses.so.6 /usr/lib/libncurses.so.5
     fi
 }
 
@@ -877,7 +943,7 @@ Remove_Error_Libcurl()
 Add_Swap()
 {
 
-    Disk_Avail=$(($(df -m /var | tail -1 | awk '{print $4}' | sed s/[[:space:]]//g)/1024))
+    Disk_Avail=$(($(df -mP /var | tail -1 | awk '{print $4}' | sed s/[[:space:]]//g)/1024))
 
     DD_Count='1024'
     if [[ "${MemTotal}" -lt 1024 ]]; then
@@ -886,7 +952,7 @@ Add_Swap()
             Enable_Swap='n'
         fi
     elif [[ "${MemTotal}" -ge 1024 && "${MemTotal}" -le 2048 ]]; then
-        DD_Count='2028'
+        DD_Count='2048'
         if [[ "${Disk_Avail}" -lt 13 ]]; then
             Enable_Swap='n'
         fi
@@ -906,7 +972,7 @@ Add_Swap()
             Enable_Swap='n'
         fi
     fi
-    Swap_Total=$(free -m | grep Swap | awk '{print  $2}')
+    Swap_Total=$(awk '/SwapTotal/ {printf( "%d\n", $2 / 1024 )}' /proc/meminfo)
     if [[ "${Enable_Swap}" = "y" && "${Swap_Total}" -le 512 && ! -s /var/swapfile ]]; then
         echo "Add Swap file..."
         [ $(cat /proc/sys/vm/swappiness) -eq 0 ] && sysctl vm.swappiness=10

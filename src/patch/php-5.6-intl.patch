@@ -1,0 +1,615 @@
+diff -ruN php-5.6.40-orig/acinclude.m4 php-5.6.40/acinclude.m4
+--- php-5.6.40-orig/acinclude.m4	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/acinclude.m4	2022-05-09 22:00:51.138399730 +0800
+@@ -2201,49 +2201,16 @@
+ dnl Common setup macro for ICU
+ dnl
+ AC_DEFUN([PHP_SETUP_ICU],[
+-  PHP_ARG_WITH(icu-dir,,
+-  [  --with-icu-dir=DIR      Specify where ICU libraries and headers can be found], DEFAULT, no)
++  PKG_CHECK_MODULES([ICU], [icu-io >= 50.1])
+ 
+-  if test "$PHP_ICU_DIR" = "no"; then
+-    PHP_ICU_DIR=DEFAULT
+-  fi
+-
+-  if test "$PHP_ICU_DIR" = "DEFAULT"; then
+-    dnl Try to find icu-config
+-    AC_PATH_PROG(ICU_CONFIG, icu-config, no, [$PATH:/usr/local/bin])
+-  else
+-    ICU_CONFIG="$PHP_ICU_DIR/bin/icu-config"
+-  fi
+-
+-  AC_MSG_CHECKING([for location of ICU headers and libraries])
+-
+-  dnl Trust icu-config to know better what the install prefix is..
+-  icu_install_prefix=`$ICU_CONFIG --prefix 2> /dev/null`
+-  if test "$?" != "0" || test -z "$icu_install_prefix"; then
+-    AC_MSG_RESULT([not found])
+-    AC_MSG_ERROR([Unable to detect ICU prefix or $ICU_CONFIG failed. Please verify ICU install prefix and make sure icu-config works.])
+-  else
+-    AC_MSG_RESULT([$icu_install_prefix])
+-
+-    dnl Check ICU version
+-    AC_MSG_CHECKING([for ICU 4.0 or greater])
+-    icu_version_full=`$ICU_CONFIG --version`
+-    ac_IFS=$IFS
+-    IFS="."
+-    set $icu_version_full
+-    IFS=$ac_IFS
+-    icu_version=`expr [$]1 \* 1000 + [$]2`
+-    AC_MSG_RESULT([found $icu_version_full])
++  PHP_EVAL_INCLINE($ICU_CFLAGS)
++  PHP_EVAL_LIBLINE($ICU_LIBS, $1)
+ 
+-    if test "$icu_version" -lt "4000"; then
+-      AC_MSG_ERROR([ICU version 4.0 or later is required])
+-    fi
++  ICU_CFLAGS="$ICU_CFLAGS -DU_NO_DEFAULT_INCLUDE_UTF_HEADERS=1"
++  ICU_CXXFLAGS="$ICU_CXXFLAGS -DUNISTR_FROM_CHAR_EXPLICIT=explicit -DUNISTR_FROM_STRING_EXPLICIT=explicit"
+ 
+-    ICU_VERSION=$icu_version
+-    ICU_INCS=`$ICU_CONFIG --cppflags-searchpath`
+-    ICU_LIBS=`$ICU_CONFIG --ldflags --ldflags-icuio`
+-    PHP_EVAL_INCLINE($ICU_INCS)
+-    PHP_EVAL_LIBLINE($ICU_LIBS, $1)
++  if test "$PKG_CONFIG icu-io --atleast-version=60"; then
++    ICU_CFLAGS="$ICU_CFLAGS -DU_HIDE_OBSOLETE_UTF_OLD_H=1"
+   fi
+ ])
+ 
+diff -ruN php-5.6.40-orig/ext/intl/breakiterator/breakiterator_class.cpp php-5.6.40/ext/intl/breakiterator/breakiterator_class.cpp
+--- php-5.6.40-orig/ext/intl/breakiterator/breakiterator_class.cpp	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/breakiterator/breakiterator_class.cpp	2022-05-09 22:05:12.232925252 +0800
+@@ -38,6 +38,7 @@
+ }
+ 
+ using PHP::CodePointBreakIterator;
++using icu::RuleBasedBreakIterator;
+ 
+ /* {{{ Global variables */
+ zend_class_entry *BreakIterator_ce_ptr;
+diff -ruN php-5.6.40-orig/ext/intl/breakiterator/breakiterator_class.h php-5.6.40/ext/intl/breakiterator/breakiterator_class.h
+--- php-5.6.40-orig/ext/intl/breakiterator/breakiterator_class.h	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/breakiterator/breakiterator_class.h	2022-05-09 22:05:12.232925252 +0800
+@@ -26,6 +26,8 @@
+ 
+ #ifndef USE_BREAKITERATOR_POINTER
+ typedef void BreakIterator;
++#else
++using icu::BreakIterator;
+ #endif
+ 
+ typedef struct {
+diff -ruN php-5.6.40-orig/ext/intl/breakiterator/breakiterator_methods.cpp php-5.6.40/ext/intl/breakiterator/breakiterator_methods.cpp
+--- php-5.6.40-orig/ext/intl/breakiterator/breakiterator_methods.cpp	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/breakiterator/breakiterator_methods.cpp	2022-05-09 22:05:12.232925252 +0800
+@@ -32,6 +32,8 @@
+ }
+ 
+ using PHP::CodePointBreakIterator;
++using icu::BreakIterator;
++using icu::Locale;
+ 
+ U_CFUNC PHP_METHOD(BreakIterator, __construct)
+ {
+diff -ruN php-5.6.40-orig/ext/intl/breakiterator/codepointiterator_internal.cpp php-5.6.40/ext/intl/breakiterator/codepointiterator_internal.cpp
+--- php-5.6.40-orig/ext/intl/breakiterator/codepointiterator_internal.cpp	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/breakiterator/codepointiterator_internal.cpp	2022-05-09 22:05:12.233925208 +0800
+@@ -31,6 +31,8 @@
+ 
+ using namespace PHP;
+ 
++using icu::UCharCharacterIterator;
++
+ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(CodePointBreakIterator);
+ 
+ CodePointBreakIterator::CodePointBreakIterator()
+diff -ruN php-5.6.40-orig/ext/intl/breakiterator/codepointiterator_internal.h php-5.6.40/ext/intl/breakiterator/codepointiterator_internal.h
+--- php-5.6.40-orig/ext/intl/breakiterator/codepointiterator_internal.h	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/breakiterator/codepointiterator_internal.h	2022-05-09 22:05:12.233925208 +0800
+@@ -18,8 +18,11 @@
+ #define CODEPOINTITERATOR_INTERNAL_H
+ 
+ #include <unicode/brkiter.h>
++#include <unicode/unistr.h>
+ 
+-using U_ICU_NAMESPACE::BreakIterator;
++using icu::BreakIterator;
++using icu::CharacterIterator;
++using icu::UnicodeString;
+ 
+ namespace PHP {
+ 
+diff -ruN php-5.6.40-orig/ext/intl/breakiterator/rulebasedbreakiterator_methods.cpp php-5.6.40/ext/intl/breakiterator/rulebasedbreakiterator_methods.cpp
+--- php-5.6.40-orig/ext/intl/breakiterator/rulebasedbreakiterator_methods.cpp	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/breakiterator/rulebasedbreakiterator_methods.cpp	2022-05-09 22:05:12.233925208 +0800
+@@ -25,6 +25,9 @@
+ 
+ #include "../intl_convertcpp.h"
+ 
++using icu::RuleBasedBreakIterator;
++using icu::Locale;
++
+ static inline RuleBasedBreakIterator *fetch_rbbi(BreakIterator_object *bio) {
+ 	return (RuleBasedBreakIterator*)bio->biter;
+ }
+diff -ruN php-5.6.40-orig/ext/intl/calendar/calendar_class.cpp php-5.6.40/ext/intl/calendar/calendar_class.cpp
+--- php-5.6.40-orig/ext/intl/calendar/calendar_class.cpp	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/calendar/calendar_class.cpp	2022-05-09 22:05:12.234925164 +0800
+@@ -34,6 +34,9 @@
+ #include <assert.h>
+ }
+ 
++using icu::GregorianCalendar;
++using icu::Locale;
++
+ /* {{{ Global variables */
+ zend_class_entry *Calendar_ce_ptr;
+ zend_class_entry *GregorianCalendar_ce_ptr;
+diff -ruN php-5.6.40-orig/ext/intl/calendar/calendar_class.h php-5.6.40/ext/intl/calendar/calendar_class.h
+--- php-5.6.40-orig/ext/intl/calendar/calendar_class.h	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/calendar/calendar_class.h	2022-05-09 22:05:12.234925164 +0800
+@@ -26,6 +26,8 @@
+ 
+ #ifndef USE_CALENDAR_POINTER
+ typedef void Calendar;
++#else
++using icu::Calendar;
+ #endif
+ 
+ typedef struct {
+diff -ruN php-5.6.40-orig/ext/intl/calendar/calendar_methods.cpp php-5.6.40/ext/intl/calendar/calendar_methods.cpp
+--- php-5.6.40-orig/ext/intl/calendar/calendar_methods.cpp	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/calendar/calendar_methods.cpp	2022-05-09 22:05:12.234925164 +0800
+@@ -40,6 +40,8 @@
+ }
+ #include "../common/common_enum.h"
+ 
++using icu::Locale;
++
+ U_CFUNC PHP_METHOD(IntlCalendar, __construct)
+ {
+ 	zend_throw_exception( NULL,
+diff -ruN php-5.6.40-orig/ext/intl/calendar/gregoriancalendar_methods.cpp php-5.6.40/ext/intl/calendar/gregoriancalendar_methods.cpp
+--- php-5.6.40-orig/ext/intl/calendar/gregoriancalendar_methods.cpp	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/calendar/gregoriancalendar_methods.cpp	2022-05-09 22:05:12.235925120 +0800
+@@ -23,6 +23,8 @@
+ #include <unicode/locid.h>
+ #include <unicode/calendar.h>
+ #include <unicode/gregocal.h>
++#include <unicode/ustring.h>
++
+ extern "C" {
+ #include "../php_intl.h"
+ #define USE_TIMEZONE_POINTER 1
+@@ -32,6 +34,11 @@
+ #include <ext/date/php_date.h>
+ }
+ 
++using icu::GregorianCalendar;
++using icu::Locale;
++using icu::UnicodeString;
++using icu::StringPiece;
++
+ static inline GregorianCalendar *fetch_greg(Calendar_object *co) {
+ 	return (GregorianCalendar*)co->ucal;
+ }
+diff -ruN php-5.6.40-orig/ext/intl/common/common_date.cpp php-5.6.40/ext/intl/common/common_date.cpp
+--- php-5.6.40-orig/ext/intl/common/common_date.cpp	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/common/common_date.cpp	2022-05-09 22:05:12.235925120 +0800
+@@ -25,6 +25,9 @@
+ #include <ext/date/php_date.h>
+ }
+ 
++using icu::TimeZone;
++using icu::UnicodeString;
++
+ #ifndef INFINITY
+ #define INFINITY (DBL_MAX+DBL_MAX)
+ #endif
+diff -ruN php-5.6.40-orig/ext/intl/common/common_date.h php-5.6.40/ext/intl/common/common_date.h
+--- php-5.6.40-orig/ext/intl/common/common_date.h	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/common/common_date.h	2022-05-09 22:05:12.235925120 +0800
+@@ -28,6 +28,8 @@
+ 
+ #include <unicode/timezone.h>
+ 
++using icu::TimeZone;
++
+ U_CFUNC TimeZone *timezone_convert_datetimezone(int type, void *object, int is_datetime, intl_error *outside_error, const char *func TSRMLS_DC);
+ U_CFUNC int intl_datetime_decompose(zval *z, double *millis, TimeZone **tz,
+ 		intl_error *err, const char *func TSRMLS_DC);
+diff -ruN php-5.6.40-orig/ext/intl/common/common_enum.h php-5.6.40/ext/intl/common/common_enum.h
+--- php-5.6.40-orig/ext/intl/common/common_enum.h	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/common/common_enum.h	2022-05-09 22:05:12.235925120 +0800
+@@ -69,6 +69,7 @@
+ U_CFUNC void zoi_with_current_invalidate_current(zend_object_iterator *iter TSRMLS_DC);
+ 
+ #ifdef __cplusplus
++using icu::StringEnumeration;
+ U_CFUNC void IntlIterator_from_StringEnumeration(StringEnumeration *se, zval *object TSRMLS_DC);
+ #endif
+ 
+diff -ruN php-5.6.40-orig/ext/intl/config.m4 php-5.6.40/ext/intl/config.m4
+--- php-5.6.40-orig/ext/intl/config.m4	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/config.m4	2022-05-09 22:00:51.139399686 +0800
+@@ -9,18 +9,10 @@
+   PHP_SETUP_ICU(INTL_SHARED_LIBADD)
+   PHP_SUBST(INTL_SHARED_LIBADD)
+   PHP_REQUIRE_CXX()
+-  if test "$icu_version" -ge "4002"; then
+-    icu_spoof_src=" spoofchecker/spoofchecker_class.c \
+-    spoofchecker/spoofchecker.c\
+-    spoofchecker/spoofchecker_create.c\
+-    spoofchecker/spoofchecker_main.c"
+-  else
+-    icu_spoof_src=""
+-  fi
++  INTL_COMMON_FLAGS="$ICU_CFLAGS -Wno-write-strings -D__STDC_LIMIT_MACROS -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1"
+   PHP_NEW_EXTENSION(intl, php_intl.c \
+     intl_error.c \
+     intl_convert.c \
+-	intl_convertcpp.cpp \
+     collator/collator.c \
+     collator/collator_class.c \
+     collator/collator_sort.c \
+@@ -32,8 +24,6 @@
+     collator/collator_is_numeric.c \
+     collator/collator_error.c \
+     common/common_error.c \
+-	common/common_enum.cpp \
+-	common/common_date.cpp \
+     converter/converter.c \
+     formatter/formatter.c \
+     formatter/formatter_main.c \
+@@ -53,17 +43,12 @@
+     dateformat/dateformat_attr.c \
+     dateformat/dateformat_data.c \
+     dateformat/dateformat_format.c \
+-    dateformat/dateformat_format_object.cpp \
+     dateformat/dateformat_parse.c \
+-    dateformat/dateformat_create.cpp \
+-    dateformat/dateformat_attrcpp.cpp \
+-    dateformat/dateformat_helpers.cpp \
+     msgformat/msgformat.c \
+     msgformat/msgformat_attr.c \
+     msgformat/msgformat_class.c \
+     msgformat/msgformat_data.c  \
+     msgformat/msgformat_format.c \
+-    msgformat/msgformat_helpers.cpp \
+     msgformat/msgformat_parse.c \
+     grapheme/grapheme_string.c \
+     grapheme/grapheme_util.c \
+@@ -73,6 +58,20 @@
+     transliterator/transliterator.c \
+     transliterator/transliterator_class.c \
+     transliterator/transliterator_methods.c \
++    idn/idn.c \
++    spoofchecker/spoofchecker_class.c \
++    spoofchecker/spoofchecker.c\
++    spoofchecker/spoofchecker_create.c\
++    spoofchecker/spoofchecker_main.c, $ext_shared,,$INTL_COMMON_FLAGS,cxx)
++
++  PHP_INTL_CPP_SOURCES="intl_convertcpp.cpp \
++    common/common_enum.cpp \
++    common/common_date.cpp \
++    dateformat/dateformat_format_object.cpp \
++    dateformat/dateformat_create.cpp \
++    dateformat/dateformat_attrcpp.cpp \
++    dateformat/dateformat_helpers.cpp \
++    msgformat/msgformat_helpers.cpp \
+     timezone/timezone_class.cpp \
+     timezone/timezone_methods.cpp \
+     calendar/calendar_class.cpp \
+@@ -83,9 +82,15 @@
+     breakiterator/breakiterator_methods.cpp \
+     breakiterator/rulebasedbreakiterator_methods.cpp \
+     breakiterator/codepointiterator_internal.cpp \
+-    breakiterator/codepointiterator_methods.cpp \
+-    idn/idn.c \
+-    $icu_spoof_src, $ext_shared,,$ICU_INCS -Wno-write-strings)
++    breakiterator/codepointiterator_methods.cpp"
++
++  PHP_INTL_CPP_FLAGS="$ICU_CXXFLAGS -Wno-write-strings -D__STDC_LIMIT_MACROS -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1"
++  if test "$ext_shared" = "no"; then
++    PHP_ADD_SOURCES(PHP_EXT_DIR(intl), $PHP_INTL_CPP_SOURCES, $PHP_INTL_CPP_FLAGS)
++  else
++    PHP_ADD_SOURCES_X(PHP_EXT_DIR(intl), $PHP_INTL_CPP_SOURCES, $PHP_INTL_CPP_FLAGS, shared_objects_intl, yes)
++  fi
++
+   PHP_ADD_BUILD_DIR($ext_builddir/collator)
+   PHP_ADD_BUILD_DIR($ext_builddir/converter)
+   PHP_ADD_BUILD_DIR($ext_builddir/common)
+diff -ruN php-5.6.40-orig/ext/intl/converter/converter.c php-5.6.40/ext/intl/converter/converter.c
+--- php-5.6.40-orig/ext/intl/converter/converter.c	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/converter/converter.c	2022-05-09 22:05:12.236925076 +0800
+@@ -18,6 +18,8 @@
+ #include "zend_exceptions.h"
+ 
+ #include <unicode/utypes.h>
++#include <unicode/utf8.h>
++#include <unicode/utf16.h>
+ #include <unicode/ucnv.h>
+ #include <unicode/ustring.h>
+ 
+diff -ruN php-5.6.40-orig/ext/intl/dateformat/dateformat_format_object.cpp php-5.6.40/ext/intl/dateformat/dateformat_format_object.cpp
+--- php-5.6.40-orig/ext/intl/dateformat/dateformat_format_object.cpp	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/dateformat/dateformat_format_object.cpp	2022-05-09 22:05:12.236925076 +0800
+@@ -33,6 +33,12 @@
+ #include "../common/common_date.h"
+ }
+ 
++using icu::Locale;
++using icu::DateFormat;
++using icu::GregorianCalendar;
++using icu::StringPiece;
++using icu::SimpleDateFormat;
++
+ static const DateFormat::EStyle valid_styles[] = {
+ 		DateFormat::kNone,
+ 		DateFormat::kFull,
+diff -ruN php-5.6.40-orig/ext/intl/dateformat/dateformat_helpers.cpp php-5.6.40/ext/intl/dateformat/dateformat_helpers.cpp
+--- php-5.6.40-orig/ext/intl/dateformat/dateformat_helpers.cpp	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/dateformat/dateformat_helpers.cpp	2022-05-09 22:05:12.236925076 +0800
+@@ -28,6 +28,8 @@
+ #include "../calendar/calendar_class.h"
+ }
+ 
++using icu::GregorianCalendar;
++
+ int datefmt_process_calendar_arg(zval* calendar_zv,
+ 								 Locale const& locale,
+ 								 const char *func_name,
+diff -ruN php-5.6.40-orig/ext/intl/dateformat/dateformat_helpers.h php-5.6.40/ext/intl/dateformat/dateformat_helpers.h
+--- php-5.6.40-orig/ext/intl/dateformat/dateformat_helpers.h	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/dateformat/dateformat_helpers.h	2022-05-09 22:05:12.236925076 +0800
+@@ -22,11 +22,16 @@
+ #endif
+ 
+ #include <unicode/calendar.h>
++#include <unicode/datefmt.h>
+ 
+ extern "C" {
+ #include "../php_intl.h"
+ }
+ 
++using icu::Locale;
++using icu::Calendar;
++using icu::DateFormat;
++
+ int datefmt_process_calendar_arg(zval* calendar_zv,
+ 								 Locale const& locale,
+ 								 const char *func_name,
+diff -ruN php-5.6.40-orig/ext/intl/grapheme/grapheme_string.c php-5.6.40/ext/intl/grapheme/grapheme_string.c
+--- php-5.6.40-orig/ext/intl/grapheme/grapheme_string.c	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/grapheme/grapheme_string.c	2022-05-09 22:05:12.237925032 +0800
+@@ -24,6 +24,7 @@
+ #include "grapheme_util.h"
+ 
+ #include <unicode/utypes.h>
++#include <unicode/utf8.h>
+ #include <unicode/ucol.h>
+ #include <unicode/ustring.h>
+ #include <unicode/ubrk.h>
+@@ -860,10 +861,10 @@
+ 	pstr = str + start;
+ 
+ 	/* just in case pstr points in the middle of a character, move forward to the start of the next char */
+-	if ( !UTF8_IS_SINGLE(*pstr) && !U8_IS_LEAD(*pstr) ) {
++	if ( !U8_IS_SINGLE(*pstr) && !U8_IS_LEAD(*pstr) ) {
+ 		unsigned char *str_end = str + str_len;
+ 
+-		while ( !UTF8_IS_SINGLE(*pstr) && !U8_IS_LEAD(*pstr) ) {
++		while ( !U8_IS_SINGLE(*pstr) && !U8_IS_LEAD(*pstr) ) {
+ 			pstr++;
+ 			if ( pstr >= str_end ) {
+ 				intl_error_set( NULL, U_ILLEGAL_ARGUMENT_ERROR,
+diff -ruN php-5.6.40-orig/ext/intl/intl_convertcpp.h php-5.6.40/ext/intl/intl_convertcpp.h
+--- php-5.6.40-orig/ext/intl/intl_convertcpp.h	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/intl_convertcpp.h	2022-05-09 22:05:12.237925032 +0800
+@@ -25,6 +25,8 @@
+ 
+ #include <unicode/unistr.h>
+ 
++using icu::UnicodeString;
++
+ int intl_stringFromChar(UnicodeString &ret, char *str, int32_t str_len, UErrorCode *status);
+ 
+ int intl_charFromString(const UnicodeString &from, char **res, int *res_len, UErrorCode *status);
+diff -ruN php-5.6.40-orig/ext/intl/msgformat/msgformat_helpers.cpp php-5.6.40/ext/intl/msgformat/msgformat_helpers.cpp
+--- php-5.6.40-orig/ext/intl/msgformat/msgformat_helpers.cpp	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/msgformat/msgformat_helpers.cpp	2022-05-09 22:05:12.237925032 +0800
+@@ -27,6 +27,7 @@
+ #include <unicode/timezone.h>
+ #include <unicode/datefmt.h>
+ #include <unicode/calendar.h>
++#include <unicode/strenum.h>
+ 
+ #include <vector>
+ 
+@@ -45,6 +46,7 @@
+ 
+ #if U_ICU_VERSION_MAJOR_NUM * 10 + U_ICU_VERSION_MINOR_NUM >= 48
+ #define HAS_MESSAGE_PATTERN 1
++#define HAS_MISALLOCATE_MEMORY_BUG 1
+ #endif
+ 
+ U_NAMESPACE_BEGIN
+@@ -76,6 +78,16 @@
+ #endif
+ U_NAMESPACE_END
+ 
++using icu::Formattable;
++using icu::Format;
++using icu::DateFormat;
++using icu::MessageFormat;
++#ifdef HAS_MESSAGE_PATTERN
++using icu::MessagePattern;
++#endif
++using icu::MessageFormatAdapter;
++using icu::FieldPosition;
++
+ U_CFUNC int32_t umsg_format_arg_count(UMessageFormat *fmt)
+ {
+ 	int32_t fmt_count = 0;
+@@ -227,15 +239,16 @@
+ 					UnicodeString typeString = mp.getSubstring(type_part);
+ 					/* This is all based on the rules in the docs for MessageFormat
+ 					 * @see http://icu-project.org/apiref/icu4c/classMessageFormat.html */
+-					if (typeString == "number") {
++#define ASCII_LITERAL(s) UNICODE_STRING(s, sizeof(s)-1)
++					if (typeString == ASCII_LITERAL("number")) {
+ 						MessagePattern::Part style_part = mp.getPart(i + 1); /* Not advancing i */
+ 						if (style_part.getType() == UMSGPAT_PART_TYPE_ARG_STYLE) {
+ 							UnicodeString styleString = mp.getSubstring(style_part);
+-							if (styleString == "integer") {
++							if (styleString == ASCII_LITERAL("integer")) {
+ 								type = Formattable::kInt64;
+-							} else if (styleString == "currency") {
++							} else if (styleString == ASCII_LITERAL("currency")) {
+ 								type = Formattable::kDouble;
+-							} else if (styleString == "percent") {
++							} else if (styleString == ASCII_LITERAL("percent")) {
+ 								type = Formattable::kDouble;
+ 							} else { /* some style invalid/unknown to us */
+ 								type = Formattable::kDouble;
+@@ -243,12 +256,13 @@
+ 						} else { // if missing style, part, make it a double
+ 							type = Formattable::kDouble;
+ 						}
+-					} else if ((typeString == "date") || (typeString == "time")) {
++					} else if ((typeString == ASCII_LITERAL("date")) || (typeString == ASCII_LITERAL("time"))) {
+ 						type = Formattable::kDate;
+-					} else if ((typeString == "spellout") || (typeString == "ordinal")
+-							|| (typeString == "duration")) {
++					} else if ((typeString == ASCII_LITERAL("spellout")) || (typeString == ASCII_LITERAL("ordinal"))
++							|| (typeString == ASCII_LITERAL("duration"))) {
+ 						type = Formattable::kDouble;
+ 					}
++#undef ASCII_LITERAL
+ 				} else {
+ 					/* If there's no UMSGPAT_PART_TYPE_ARG_TYPE right after a
+ 					 * UMSGPAT_ARG_TYPE_SIMPLE argument, then the pattern
+@@ -333,6 +347,26 @@
+ 		return; /* already done */
+ 	}
+ 
++#ifdef HAS_MISALLOCATE_MEMORY_BUG
++	/* There is a bug in ICU which prevents MessageFormatter::getFormats()
++	   to handle more than 10 formats correctly. The enumerator could be
++	   used to walk through the present formatters using getFormat(), which
++	   however seems to provide just a readonly access. This workaround
++	   prevents crash when there are > 10 formats but doesn't set any error.
++	   As a result, only DateFormatters with > 10 subformats are affected.
++	   This workaround should be ifdef'd out, when the bug has been fixed
++	   in ICU. */
++	icu::StringEnumeration* fnames = mf->getFormatNames(err.code);
++	if (!fnames || U_FAILURE(err.code)) {
++		return;
++	}
++	count = fnames->count(err.code);
++	delete fnames;
++	if (count > 10) {
++		return;
++	}
++#endif
++
+ 	formats = mf->getFormats(count);
+ 	
+ 	if (formats == NULL) {
+diff -ruN php-5.6.40-orig/ext/intl/normalizer/normalizer_normalize.c php-5.6.40/ext/intl/normalizer/normalizer_normalize.c
+--- php-5.6.40-orig/ext/intl/normalizer/normalizer_normalize.c	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/normalizer/normalizer_normalize.c	2022-05-09 22:05:12.238924988 +0800
+@@ -24,6 +24,7 @@
+ #include "normalizer_class.h"
+ #include "normalizer_normalize.h"
+ #include "intl_convert.h"
++#include <unicode/utf8.h>
+ 
+ /* {{{ proto string Normalizer::normalize( string $input [, string $form = FORM_C] )
+  * Normalize a string. }}} */
+diff -ruN php-5.6.40-orig/ext/intl/tests/bug74484_MessageFormatter.phpt php-5.6.40/ext/intl/tests/bug74484_MessageFormatter.phpt
+--- php-5.6.40-orig/ext/intl/tests/bug74484_MessageFormatter.phpt	1970-01-01 08:00:00.000000000 +0800
++++ php-5.6.40/ext/intl/tests/bug74484_MessageFormatter.phpt	2022-05-09 22:02:25.974231921 +0800
+@@ -0,0 +1,35 @@
++--TEST--
++Bug #74484 MessageFormatter::formatMessage memory corruption with 11+ named placeholder
++--SKIPIF--
++<?php
++if (!extension_loaded('intl'))
++	die('skip intl extension not enabled');
++if (version_compare(INTL_ICU_VERSION, '4.8') < 0)
++	die('skip for ICU 4.8+');
++?>
++--FILE--
++<?php
++$text = "{a} {b} {c} {d} {e} {f} {g} {h} {i} {j} {k} {l}";
++
++$vars = array(
++  'a' => 1,
++  'b' => 2,
++  'c' => 3,
++  'd' => 4,
++  'e' => 5,
++  'f' => 6,
++  'g' => 7,
++  'h' => 8,
++  'i' => 9,
++  'j' => 10,
++  'k' => 11,
++  'l' => 12
++);
++
++var_dump(MessageFormatter::formatMessage('en_US', $text, $vars));
++
++?>
++==DONE==
++--EXPECT--
++string(26) "1 2 3 4 5 6 7 8 9 10 11 12"
++==DONE==
+diff -ruN php-5.6.40-orig/ext/intl/timezone/timezone_class.cpp php-5.6.40/ext/intl/timezone/timezone_class.cpp
+--- php-5.6.40-orig/ext/intl/timezone/timezone_class.cpp	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/timezone/timezone_class.cpp	2022-05-09 22:05:12.238924988 +0800
+@@ -37,6 +37,8 @@
+ #include <ext/date/php_date.h>
+ }
+ 
++using icu::Calendar;
++
+ /* {{{ Global variables */
+ U_CDECL_BEGIN
+ zend_class_entry *TimeZone_ce_ptr = NULL;
+diff -ruN php-5.6.40-orig/ext/intl/timezone/timezone_class.h php-5.6.40/ext/intl/timezone/timezone_class.h
+--- php-5.6.40-orig/ext/intl/timezone/timezone_class.h	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/timezone/timezone_class.h	2022-05-09 22:05:12.238924988 +0800
+@@ -29,6 +29,8 @@
+ 
+ #ifndef USE_TIMEZONE_POINTER
+ typedef void TimeZone;
++#else
++using icu::TimeZone;
+ #endif
+ 
+ typedef struct {
+diff -ruN php-5.6.40-orig/ext/intl/timezone/timezone_methods.cpp php-5.6.40/ext/intl/timezone/timezone_methods.cpp
+--- php-5.6.40-orig/ext/intl/timezone/timezone_methods.cpp	2019-01-09 17:54:13.000000000 +0800
++++ php-5.6.40/ext/intl/timezone/timezone_methods.cpp	2022-05-09 22:05:12.239924944 +0800
+@@ -23,6 +23,7 @@
+ #include <unicode/locid.h>
+ #include <unicode/timezone.h>
+ #include <unicode/ustring.h>
++#include <unicode/calendar.h>
+ #include "intl_convertcpp.h"
+ 
+ #include "../common/common_date.h"
+@@ -37,6 +38,9 @@
+ }
+ #include "common/common_enum.h"
+ 
++using icu::Locale;
++using icu::Calendar;
++
+ U_CFUNC PHP_METHOD(IntlTimeZone, __construct)
+ {
+ 	zend_throw_exception( NULL,

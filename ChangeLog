@@ -1,5 +1,37 @@
 更新记录
 
+LNMP 2.0
+
+增加PHP 8.2支持；
+添加MySQL 5.5、5.6二进制安装和升级方式；
+添加MySQL 8.0 aarch64架构下二进制安装方式；
+添加MariaDB二进制安装和升级方式；
+添加zblog伪静态；
+添加php-redis测试脚本；
+添加Nginx编译参数--with-http_realip_module参数；
+添加RHEL9支持；
+添加MariaDB 10.11，移除MariaDB 10.3；
+增加Amazon Linux 2023支持；
+增加MySQL升级到MariaDB时二进制安装方式；
+优化低版本PHP在新Linux发行版下的支持；
+优化Anolis OS 7支持；
+优化Oracle 7支持；
+优化SourceGuardian安装脚本；
+优化php-memcached安装脚本；
+优化离线安装；
+优化lua安装流程并使用最新版本；
+优化RHEL有订阅时不使用CentOS源；
+优化MariaDB 10.5+版本升级；
+优化PHP 7.0及以下版本在高版本Linux版本下的支持；
+优化PHP 5.5-5.6在AARCH64架构下的支持；
+优化composer安装脚本；
+升级Nginx至1.24.0；
+修复apache2.4邮箱设置问题；
+国内centos源默认使用ustc源；
+调整acme.sh默认使用RSA证书；
+更新诸多软件版本；
+其他一些功能优化及调整......
+
 LNMP 1.9
 
 增加rocky linux 和alma linux支持；
@@ -7,7 +39,16 @@ LNMP 1.9
 增加PHP模块exif、fileinfo、ldap、bz2、sodium、imap、swoole和SourceGuardian Loader的支持安装，安装lnmp前lnmp.conf 中开启后安装lnmp或 ./addons.sh 安装以上模块；
 增加ngx_fancyindex模块，lnmp.conf中开启后，安装lnmp或升级nginx；
 增加nginx模块--with-stream_ssl_preread_module，方便使用stream ssl相关配置；
-增加统信服务器操作系统V20版本支持；
+增加UOS统信桌面家庭版、桌面专业版、服务器版支持；
+增加银河麒麟服务器操作系统和桌面系统支持；
+增加华为openEuler支持；
+增加阿里巴巴龙蜥Anolis OS支持；
+增加CentOS Stream 9支持；
+增加Alma Linux 9支持；
+增加MySQL 5.7、8.0 二进制安装和升级方式；
+增加PHP 7.4+ webp支持；
+lnmp管理脚本增加HTTP 301跳转HTTPS的选项；
+lnmp管理脚本增加是否启用IPv6选项；
 移除mariadb 10.1, 10.2增加mariadb 10.5, 10.6；
 泛域名SSL增加了ZeroSSL支持；
 优化AlibabaCloud支持；
@@ -15,6 +56,8 @@ LNMP 1.9
 优化FTP用户添加部分代码；
 优化离线安装；
 优化部分EOL Linux发行版的安装；
+优化OpenSSL支持；
+优化RHEL 9系下uw-imap支持情况；
 调整MariaDB升级下载地址；
 更新诸多软件版本；
 其他一些功能优化及调整......
@@ -107,7 +150,7 @@ LNMP 1.5
 增加修复MySQL gcc7 bug；
 增加magento2实例配置文件 magento2-example.conf；
 增加无人值守安装，官网上有具体教程；
-增加LetseEcrypt 通配符/泛域名 SSL证书生成，官网上有具体教程；
+增加Let's Ecrypt 通配符/泛域名 SSL证书生成，官网上有具体教程；
 优化MySQL/MariaDB root密码重装工具；
 修复深度Deepin桌面版问题；
 修复MySQL bug；

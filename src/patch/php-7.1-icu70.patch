@@ -1,0 +1,57 @@
+--- a/ext/intl/breakiterator/codepointiterator_internal.cpp
++++ b/ext/intl/breakiterator/codepointiterator_internal.cpp
+@@ -67,21 +67,25 @@
+ }
+
+ CodePointBreakIterator::~CodePointBreakIterator()
+ {
+ 	if (this->fText) {
+ 		utext_close(this->fText);
+ 	}
+ 	clearCurrentCharIter();
+ }
+
+-UBool CodePointBreakIterator::operator==(const BreakIterator& that) const
++#if U_ICU_VERSION_MAJOR_NUM >= 70
++ bool CodePointBreakIterator::operator==(const BreakIterator& that) const
++#else
++ UBool CodePointBreakIterator::operator==(const BreakIterator& that) const
++#endif
+ {
+ 	if (typeid(*this) != typeid(that)) {
+ 		return FALSE;
+ 	}
+
+ 	const CodePointBreakIterator& that2 =
+ 		static_cast<const CodePointBreakIterator&>(that);
+
+ 	if (!utext_equals(this->fText, that2.fText)) {
+ 		return FALSE;
+--- a/ext/intl/breakiterator/codepointiterator_internal.h
++++ b/ext/intl/breakiterator/codepointiterator_internal.h
+@@ -29,21 +29,25 @@
+ 		static UClassID getStaticClassID();
+
+ 		CodePointBreakIterator();
+
+ 		CodePointBreakIterator(const CodePointBreakIterator &other);
+
+ 		CodePointBreakIterator& operator=(const CodePointBreakIterator& that);
+
+ 		virtual ~CodePointBreakIterator();
+
++#if U_ICU_VERSION_MAJOR_NUM >= 70
++		virtual bool operator==(const BreakIterator& that) const;
++#else
+ 		virtual UBool operator==(const BreakIterator& that) const;
++#endif
+
+ 		virtual CodePointBreakIterator* clone(void) const;
+
+ 		virtual UClassID getDynamicClassID(void) const;
+
+ 		virtual CharacterIterator& getText(void) const;
+
+ 		virtual UText *getUText(UText *fillIn, UErrorCode &status) const;
+
+ 		virtual void setText(const UnicodeString &text);

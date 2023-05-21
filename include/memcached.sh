@@ -11,6 +11,9 @@ Install_PHPMemcache()
         Download_Files ${Download_Mirror}/web/memcache/${PHP7Memcache_Ver}.tgz ${PHP7Memcache_Ver}.tgz
         Tar_Cd ${PHP7Memcache_Ver}.tgz ${PHP7Memcache_Ver}
     else
+        if ! gcc -dumpversion|grep -q "^[34]."; then
+            export CFLAGS=" -fgnu89-inline"
+        fi
         Download_Files ${Download_Mirror}/web/memcache/${PHPMemcache_Ver}.tgz ${PHPMemcache_Ver}.tgz
         Tar_Cd ${PHPMemcache_Ver}.tgz ${PHPMemcache_Ver}
     fi
@@ -39,7 +42,7 @@ Install_PHPMemcached()
     fi
     Download_Files ${Download_Mirror}/web/libmemcached/${Libmemcached_Ver}.tar.gz
     Tar_Cd ${Libmemcached_Ver}.tar.gz ${Libmemcached_Ver}
-    if gcc -dumpversion|grep -Eq "^[7-9]|10"; then
+    if gcc -dumpversion|grep -Eq "^[7-9]|1[01]"; then
         patch -p1 < ${cur_dir}/src/patch/libmemcached-1.0.18-gcc7.patch
     fi
     ./configure --prefix=/usr/local/libmemcached --with-memcached
@@ -48,19 +51,15 @@ Install_PHPMemcached()
 
     cd ${cur_dir}/src
     if echo "${Cur_PHP_Version}" | grep -Eqi '^8.';then
-        [[ -d "php-memcached-src" ]] && rm -rf "php-memcached-src"
-        Get_Country
-        if [ "${country}" = "CN" ]; then
-            git clone https://github.com.cnpmjs.org/php-memcached-dev/php-memcached php-memcached-src
-            cd php-memcached-src
-        else
-            git clone https://github.com/php-memcached-dev/php-memcached php-memcached-src
-            cd php-memcached-src
-        fi
+        [[ -d "${PHP8Memcached_Ver}" ]] && rm -rf "${PHP8Memcached_Ver}"
+        Download_Files ${Download_Mirror}/web/php-memcached/${PHP8Memcached_Ver}.tgz ${PHP8Memcached_Ver}.tgz
+        Tar_Cd ${PHP8Memcached_Ver}.tgz ${PHP8Memcached_Ver}
     elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.';then
+        [[ -d "${PHP7Memcached_Ver}" ]] && rm -rf "${PHP7Memcached_Ver}"
         Download_Files ${Download_Mirror}/web/php-memcached/${PHP7Memcached_Ver}.tgz ${PHP7Memcached_Ver}.tgz
         Tar_Cd ${PHP7Memcached_Ver}.tgz ${PHP7Memcached_Ver}
     else
+        [[ -d "${PHPMemcached_Ver}" ]] && rm -rf "${PHPMemcached_Ver}"
         Download_Files ${Download_Mirror}/web/php-memcached/${PHPMemcached_Ver}.tgz ${PHPMemcached_Ver}.tgz
         Tar_Cd ${PHPMemcached_Ver}.tgz ${PHPMemcached_Ver}
     fi

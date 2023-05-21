@@ -29,17 +29,17 @@ Install_Nginx_Lua()
         Download_Files ${Download_Mirror}/lib/lua/${Luajit_Ver}.tar.gz ${Luajit_Ver}.tar.gz
         Download_Files ${Download_Mirror}/lib/lua/${LuaNginxModule}.tar.gz ${LuaNginxModule}.tar.gz
         Download_Files ${Download_Mirror}/lib/lua/${NgxDevelKit}.tar.gz ${NgxDevelKit}.tar.gz
+        Download_Files ${Download_Mirror}/lib/lua/${LuaRestyCore}.tar.gz ${LuaRestyCore}.tar.gz
+        Download_Files ${Download_Mirror}/lib/lua/${LuaRestyLrucache}.tar.gz ${LuaRestyLrucache}.tar.gz
 
         Echo_Blue "[+] Installing ${Luajit_Ver}... "
         tar zxf ${LuaNginxModule}.tar.gz
         tar zxf ${NgxDevelKit}.tar.gz
-        if [[ ! -s /usr/local/luajit/bin/luajit || ! -s /usr/local/luajit/include/luajit-2.1/luajit.h || ! -s /usr/local/luajit/lib/libluajit-5.1.so ]]; then
-            Tar_Cd ${Luajit_Ver}.tar.gz ${Luajit_Ver}
-            make
-            make install PREFIX=/usr/local/luajit
-            cd ${cur_dir}/src
-            rm -rf ${cur_dir}/src/${Luajit_Ver}
-        fi
+        Tar_Cd ${Luajit_Ver}.tar.gz ${Luajit_Ver}
+        make
+        make install PREFIX=/usr/local/luajit
+        cd ${cur_dir}/src
+        rm -rf ${cur_dir}/src/${Luajit_Ver}
 
         cat > /etc/ld.so.conf.d/luajit.conf<<EOF
 /usr/local/luajit/lib
@@ -58,7 +58,26 @@ EOF
 
         source /etc/profile.d/luajit.sh
 
-        Nginx_Module_Lua="--with-ld-opt=-Wl,-rpath,/usr/local/luajit/lib --add-module=${cur_dir}/src/${LuaNginxModule} --add-module=${cur_dir}/src/${NgxDevelKit}"
+        Tar_Cd ${LuaRestyCore}.tar.gz ${LuaRestyCore}
+        make install PREFIX=/usr/local/nginx
+        cd -
+        Tar_Cd ${LuaRestyLrucache}.tar.gz ${LuaRestyLrucache}
+        make install PREFIX=/usr/local/nginx
+        cd -
+
+        Nginx_Ver_Com=$(${cur_dir}/include/version_compare 1.21.5 ${Nginx_Version})
+        if [[  "${Nginx_Ver_Com}" == "1" ]]; then
+            Nginx_Module_Lua="--with-ld-opt=-Wl,-rpath,/usr/local/luajit/lib --add-module=${cur_dir}/src/${LuaNginxModule} --add-module=${cur_dir}/src/${NgxDevelKit}"
+        else
+            if [ "${Nginx_With_Pcre}" = "" ]; then
+                Nginx_Module_Lua="--with-ld-opt=-Wl,-rpath,/usr/local/luajit/lib --add-module=${cur_dir}/src/${LuaNginxModule} --add-module=${cur_dir}/src/${NgxDevelKit} --with-pcre=${cur_dir}/src/${Pcre_Ver} --with-pcre-jit"
+                cd ${cur_dir}/src
+                Download_Files ${Download_Mirror}/web/pcre/${Pcre_Ver}.tar.bz2 ${Pcre_Ver}.tar.bz2
+                Tar_Cd ${Pcre_Ver}.tar.bz2
+            else
+                Nginx_Module_Lua="--with-ld-opt=-Wl,-rpath,/usr/local/luajit/lib --add-module=${cur_dir}/src/${LuaNginxModule} --add-module=${cur_dir}/src/${NgxDevelKit}"
+            fi
+        fi
     fi
 }
 
@@ -69,7 +88,7 @@ Install_Ngx_FancyIndex()
         cd ${cur_dir}/src
         Download_Files ${Download_Mirror}/web/nginx/${NgxFancyIndex_Ver}.tar.xz ${NgxFancyIndex_Ver}.tar.xz
 
-        TarJ_Cd ${NgxFancyIndex_Ver}.tar.xz
+        Tar_Cd ${NgxFancyIndex_Ver}.tar.xz
         Ngx_FancyIndex="--add-module=${cur_dir}/src/${NgxFancyIndex_Ver}"
     fi
 }
@@ -94,9 +113,9 @@ Install_Nginx()
     fi
     Nginx_Ver_Com=$(${cur_dir}/include/version_compare 1.9.4 ${Nginx_Version})
     if [[ "${Nginx_Ver_Com}" == "0" ||  "${Nginx_Ver_Com}" == "1" ]]; then
-        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_spdy_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module ${Nginx_With_Openssl} ${Nginx_With_Pcre} ${Nginx_Module_Lua} ${NginxMAOpt} ${Ngx_FancyIndex} ${Nginx_Modules_Options}
+        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_spdy_module --with-http_gzip_static_module --with-ipv6 --with-http_sub_module --with-http_realip_module ${Nginx_With_Openssl} ${Nginx_With_Pcre} ${Nginx_Module_Lua} ${NginxMAOpt} ${Ngx_FancyIndex} ${Nginx_Modules_Options}
     else
-        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_v2_module --with-http_gzip_static_module --with-http_sub_module --with-stream --with-stream_ssl_module --with-stream_ssl_preread_module ${Nginx_With_Openssl} ${Nginx_With_Pcre} ${Nginx_Module_Lua} ${NginxMAOpt} ${Ngx_FancyIndex} ${Nginx_Modules_Options}
+        ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_v2_module --with-http_gzip_static_module --with-http_sub_module --with-stream --with-stream_ssl_module --with-stream_ssl_preread_module --with-http_realip_module ${Nginx_With_Openssl} ${Nginx_With_Pcre} ${Nginx_Module_Lua} ${NginxMAOpt} ${Ngx_FancyIndex} ${Nginx_Modules_Options}
     fi
     Make_Install
     cd ../
@@ -118,6 +137,9 @@ Install_Nginx()
     \cp conf/enable-php-pathinfo.conf /usr/local/nginx/conf/enable-php-pathinfo.conf
     \cp -ra conf/example /usr/local/nginx/conf/example
     if [ "${Enable_Nginx_Lua}" = 'y' ]; then
+        if ! grep -q 'lua_package_path "/usr/local/nginx/lib/lua/?.lua";' /usr/local/nginx/conf/nginx.conf; then
+            sed -i "/server_tokens off;/i\        lua_package_path \"/usr/local/nginx/lib/lua/?.lua\";\n" /usr/local/nginx/conf/nginx.conf
+        fi
         if [ "${Stack}" = "lnmp" ]; then
             sed -i "/include enable-php.conf;/i\        location /lua\n        {\n            default_type text/html;\n            content_by_lua 'ngx.say\(\"hello world\"\)';\n        }\n" /usr/local/nginx/conf/nginx.conf
         else

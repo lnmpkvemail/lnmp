@@ -207,6 +207,10 @@ EOF
     ServerAlias ${moredomain}" /usr/local/apache/conf/vhost/${domain}.conf
     fi
 
+    if [ "${enable_ipv6}" == "y" ]; then
+        sed -i 's/#listen \[::\]:80;/listen \[::\]:80;/g' /usr/local/nginx/conf/vhost/${domain}.conf
+    fi
+
     echo "Test Nginx configure file......"
     /usr/local/nginx/sbin/nginx -t
     echo ""
@@ -224,7 +228,7 @@ Add_VHost()
     while :;do
         Echo_Yellow "Please enter domain(example: www.lnmp.org): "
         read domain
-        if [ "${domain}" != "" ]; then
+        if [ "${domain}" != "" ] && [[ "$domain" = "${domain%[[:space:]]*}" ]]; then
             if [[ -f "/usr/local/nginx/conf/vhost/${domain}.conf" || -f "/usr/local/apache/conf/vhost/${domain}.conf" ]]; then
                 Echo_Red " ${domain} is exist,please check!"
                 exit 1
@@ -233,7 +237,7 @@ Add_VHost()
             fi
             break
         else
-            Echo_Red "Domain name can't be empty!"
+            Echo_Red "Domain name can't be empty or contain spaces!"
         fi
     done
 
@@ -266,6 +270,16 @@ Add_VHost()
         fi
         al="access_log  /home/wwwlogs/${al_name}.log;"
         echo "You access log filename: ${al_name}.log"
+    fi
+
+    Echo_Yellow "Enable IPv6? (y/n) "
+    read enable_ipv6
+    if [[ "${enable_ipv6}" == "n" || "${enable_ipv6}" == "" ]]; then
+        echo "Disabled IPv6 Support in current Virtualhost."
+        enable_ipv6="n"
+    else
+        echo "Enabled IPv6 Support in current Virtualhost."
+        enable_ipv6="y"
     fi
 
     email=""
@@ -367,6 +381,11 @@ Add_VHost()
         elif [ "${ssl_choice}" == "4" ]; then
             echo "  =>ZeroSSL"
         fi
+    fi
+    if [ "${enable_ipv6}" == "y" ]; then
+        echo "IPv6 Support: Enabled"
+    else
+        echo "IPv6 Support: Disabled"
     fi
     Echo_Green "================================================"
 }
@@ -711,11 +730,11 @@ Add_SSL_Info_Menu()
     while :;do
         Echo_Yellow "Please enter domain(example: www.lnmp.org): "
         read domain
-        if [ "${domain}" != "" ]; then
+        if [ "${domain}" != "" ] && [[ "$domain" = "${domain%[[:space:]]*}" ]]; then
             echo " Your domain: ${domain}"
             break
         else
-            Echo_Red "Domain name can't be empty!"
+            Echo_Red "Domain name can't be empty or contain spaces!"
         fi
     done
 
@@ -748,6 +767,16 @@ Add_SSL_Info_Menu()
         echo "You access log filename: ${al_name}.log"
     fi
 
+    Echo_Yellow "Enable IPv6? (y/n) "
+    read enable_ipv6
+    if [[ "${enable_ipv6}" == "n" || "${enable_ipv6}" == "" ]]; then
+        echo "Disabled IPv6 Support in current Virtualhost."
+        enable_ipv6="n"
+    else
+        echo "Enabled IPv6 Support in current Virtualhost."
+        enable_ipv6="y"
+    fi
+
     email=""
     Echo_Yellow "Please enter Administrator Email Address: "
     read email
@@ -775,6 +804,17 @@ Check_Acme_EMail()
     fi
 }
 
+Return_301_Menu()
+{
+    Echo_Yellow "Using 301 to Redirect HTTP to HTTPS? (y/n) "
+    read using_301
+    if [[ "${using_301}" == "n" || "${using_301}" == "" ]]; then
+        echo "DO not setting 301 Redirect."
+    elif [ "${using_301}" == "y" ]; then
+        echo "Redirect http://${domain} to https://${domain} "
+    fi
+}
+
 Add_DNS_SSL_Select_Menu()
 {
     echo "1: Use Let's Encrypt to create SSL Certificate and Key"
@@ -799,11 +839,11 @@ Add_DNS_SSL_Only_Info_Menu()
     while :;do
         Echo_Yellow "Please enter domain(example: lnmp.org): "
         read domain
-        if [ "${domain}" != "" ]; then
+        if [ "${domain}" != "" ] && [[ "$domain" = "${domain%[[:space:]]*}" ]]; then
             echo " Your domain: ${domain}"
             break
         else
-            Echo_Red "Domain name can't be empty!"
+            Echo_Red "Domain name can't be empty or contain spaces!"
         fi
     done
 
@@ -853,6 +893,8 @@ Add_SSL_Menu()
             Echo_Red "Please Enter 1, 2, 3 or 4!"
         fi
     done
+
+    Return_301_Menu
 }
 
 Install_Check_Acme.sh()
@@ -879,15 +921,17 @@ Install_Check_Acme.sh()
 . "/usr/local/acme.sh/acme.sh.env"
 /usr/local/acme.sh/acme.sh --upgrade
 sed -i 's/cat "\\\$CERT_PATH"\$/#cat "\\\$CERT_PATH"/g' /usr/local/acme.sh/acme.sh
+sed -i 's/DEFAULT_ACCOUNT_KEY_LENGTH=ec-256/DEFAULT_ACCOUNT_KEY_LENGTH=2048/g' /usr/local/acme.sh/acme.sh
+sed -i 's/DEFAULT_DOMAIN_KEY_LENGTH=ec-256/DEFAULT_DOMAIN_KEY_LENGTH=2048/g' /usr/local/acme.sh/acme.sh
 EOF
 
         chmod +x /usr/local/acme.sh/upgrade.sh
-        if crontab -l|grep -q "/usr/local/acme.sh/upgrade.sh"; then
-            echo "acme.sh upgrade crontab rule is exist."
-        else
-            echo "Add acme.sh upgrade crontab rule..."
-            (crontab -l ; echo '0 3 */7 * * /usr/local/acme.sh/upgrade.sh') | crontab -
-        fi
+        #if crontab -l|grep -q "/usr/local/acme.sh/upgrade.sh"; then
+        #    echo "acme.sh upgrade crontab rule is exist."
+        #else
+        #    echo "Add acme.sh upgrade crontab rule..."
+        #    (crontab -l ; echo '0 3 */7 * * /usr/local/acme.sh/upgrade.sh') | crontab -
+        #fi
         if command -v yum >/dev/null 2>&1; then
             yum -y update nss
             yum -y install ca-certificates
@@ -960,6 +1004,15 @@ server
     }
 EOF
 
+    if [ "${using_301}" == "y" ]; then
+        sed -i '0,/access_log/!b;//i\        location / {\n            return 301 https://$host$request_uri;\n        }\n' /usr/local/nginx/conf/vhost/${domain}.conf
+        sed -i '0,/include proxy-pass-php.conf;/s/include proxy-pass-php.conf;/#include proxy-pass-php.conf;/' /usr/local/nginx/conf/vhost/${domain}.conf
+    fi
+
+    if [ "${enable_ipv6}" == "y" ]; then
+        sed -i 's/#listen \[::\]:443 ssl http2;/listen \[::\]:443 ssl http2;/g' /usr/local/nginx/conf/vhost/${domain}.conf
+    fi
+
     echo "Test Nginx configure file......"
     /usr/local/nginx/sbin/nginx -t
     echo "Reload Nginx......"
@@ -1005,13 +1058,13 @@ Add_SSL()
 
         if [ "${ssl_choice}" == "2" ]; then
             echo "Generate ssl certificate using Let's Encrypt..."
-            /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server letsencrypt --issue ${letsdomain} -w ${vhostdir} --reloadcmd "/etc/init.d/nginx reload"
+            /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server letsencrypt --issue ${letsdomain} -w ${vhostdir} -k 2048 --reloadcmd "/etc/init.d/nginx reload"
         elif [ "${ssl_choice}" == "3" ]; then
             echo "Generate ssl certificate using BuyPass..."
-            /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server buypass --issue ${letsdomain} -w ${vhostdir} --days 170 --reloadcmd "/etc/init.d/nginx reload"
+            /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server buypass --issue ${letsdomain} -w ${vhostdir} -k 2048 --days 170 --reloadcmd "/etc/init.d/nginx reload"
         elif [ "${ssl_choice}" == "4" ]; then
             echo "Generate ssl certificate using ZeroSSL..."
-            /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server zerossl --issue ${letsdomain} -w ${vhostdir} --reloadcmd "/etc/init.d/nginx reload"
+            /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server zerossl --issue ${letsdomain} -w ${vhostdir} -k 2048 --reloadcmd "/etc/init.d/nginx reload"
         fi
         lets_status=$?
 
@@ -1037,6 +1090,7 @@ Add_Dns_SSL()
 
     Add_SSL_Info_Menu
     Add_DNS_SSL_Select_Menu
+    Return_301_Menu
     Install_Check_Acme.sh
 
     if [[ ! -s /usr/local/acme.sh/dnsapi/dns_${provider}.sh && "${provider}" != "" ]]; then
@@ -1072,10 +1126,10 @@ Add_Dns_SSL()
 
     echo "Generate ssl certificate using ${ca_server}..."
     if [ "${provider}" != "" ]; then
-        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server ${ca_server} --issue ${letsdomain} --dns ${dns_provider} --reloadcmd "/etc/init.d/nginx reload"
+        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server ${ca_server} --issue ${letsdomain} -k 2048 --dns ${dns_provider} --reloadcmd "/etc/init.d/nginx reload"
         lets_status=$?
     else
-        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server ${ca_server} --issue ${letsdomain} --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please
+        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server ${ca_server} --issue ${letsdomain} -k 2048 --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please
         Echo_Yellow "Please add the above TXT record to the domain in 120 seconds!!!"
         echo
         Sleep_Sec 120
@@ -1153,10 +1207,10 @@ Add_Dns_SSL_Only()
 
     echo "Starting create SSL Certificate use ${ca_server}..."
     if [ "${provider}" != "" ]; then
-        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server ${ca_server} --issue ${letsdomain} --dns ${dns_provider} --reloadcmd "/etc/init.d/nginx reload"
+        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server ${ca_server} --issue ${letsdomain} -k 2048 --dns ${dns_provider} --reloadcmd "/etc/init.d/nginx reload"
         lets_status=$?
     else
-        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server ${ca_server} --issue ${letsdomain} --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please
+        /usr/local/acme.sh/acme.sh ${acme_sh_sudo} --server ${ca_server} --issue ${letsdomain} -k 2048 --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please
         Echo_Yellow "Please add the above TXT record to the domain in 120 seconds!!!"
         echo
         Sleep_Sec 120

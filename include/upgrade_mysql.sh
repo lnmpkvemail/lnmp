@@ -124,13 +124,25 @@ EOF
 
 Upgrade_MySQL55()
 {
-    echo "Starting upgrade MySQL..."
-
-    Tar_Cd mysql-${mysql_version}.tar.gz mysql-${mysql_version}
-    MySQL_ARM_Patch
-    MySQL_Gcc7_Patch
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1
-    Make_Install
+    if [ "${Bin}" = "y" ]; then
+        Echo_Blue "Starting upgrade MySQL ${mysql_version} Using Generic Binaries..."
+        Tar_Cd ${mysql_src}
+        mkdir /usr/local/mysql
+        mv mysql-${mysql_version}-linux-glibc2.12-${DB_ARCH}/* /usr/local/mysql/
+    else
+        Echo_Blue "Starting upgrade MySQL ${mysql_version} Using Source code..."
+        if [ "${isOpenSSL3}" = "y" ]; then
+            Install_Openssl
+            MySQL_WITH_SSL='-DWITH_SSL=/usr/local/openssl'
+        else
+            MySQL_WITH_SSL=''
+        fi
+        Tar_Cd mysql-${mysql_version}.tar.gz mysql-${mysql_version}
+        MySQL_ARM_Patch
+        MySQL_Gcc7_Patch
+        cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL_WITH_SSL}
+        Make_Install
+    fi
 
     groupadd mysql
     useradd -s /sbin/nologin -M -g mysql mysql
@@ -223,10 +235,23 @@ EOF
 
 Upgrade_MySQL56()
 {
-    echo "Starting upgrade MySQL..."
-    Tar_Cd mysql-${mysql_version}.tar.gz mysql-${mysql_version}
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1
-    Make_Install
+    if [ "${Bin}" = "y" ]; then
+        Echo_Blue "Starting upgrade MySQL ${mysql_version} Using Generic Binaries..."
+        Tar_Cd ${mysql_src}
+        mkdir /usr/local/mysql
+        mv mysql-${mysql_version}-linux-glibc2.12-${DB_ARCH}/* /usr/local/mysql/
+    else
+        Echo_Blue "Starting upgrade MySQL ${mysql_version} Using Source code..."
+        if [ "${isOpenSSL3}" = "y" ]; then
+            Install_Openssl
+            MySQL_WITH_SSL='-DWITH_SSL=/usr/local/openssl'
+        else
+            MySQL_WITH_SSL=''
+        fi
+        Tar_Cd mysql-${mysql_version}.tar.gz mysql-${mysql_version}
+        cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL_WITH_SSL}
+        Make_Install
+    fi
 
     groupadd mysql
     useradd -s /sbin/nologin -M -g mysql mysql
@@ -351,11 +376,24 @@ EOF
 
 Upgrade_MySQL57()
 {
-    echo "Starting upgrade MySQL..."
-    Tar_Cd ${mysql_src} mysql-${mysql_version}
-    Install_Boost
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL_WITH_BOOST}
-    Make_Install
+    if [ "${Bin}" = "y" ]; then
+        Echo_Blue "Starting upgrade MySQL ${mysql_version} Using Generic Binaries..."
+        Tar_Cd ${mysql_src}
+        mkdir /usr/local/mysql
+        mv mysql-${mysql_version}-linux-glibc2.12-${DB_ARCH}/* /usr/local/mysql/
+    else
+        Echo_Blue "Starting upgrade MySQL ${mysql_version} Using Source code..."
+        if [ "${isOpenSSL3}" = "y" ]; then
+            Install_Openssl_New
+            MySQL_WITH_SSL='-DWITH_SSL=/usr/local/openssl1.1.1'
+        else
+            MySQL_WITH_SSL=''
+        fi
+        Tar_Cd ${mysql_src} mysql-${mysql_version}
+        Install_Boost
+        cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL_WITH_SSL} ${MySQL_WITH_BOOST}
+        Make_Install
+    fi
 
     groupadd mysql
     useradd -s /sbin/nologin -M -g mysql mysql
@@ -431,8 +469,9 @@ EOF
     else
         mkdir -p ${MySQL_Data_Dir}
     fi
-    chown -R mysql:mysql ${MySQL_Data_Dir}
+    chown -R mysql:mysql /usr/local/mysql/
     /usr/local/mysql/bin/mysqld --initialize-insecure --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
+    chown -R mysql:mysql ${MySQL_Data_Dir}
 
     cat > /etc/ld.so.conf.d/mysql.conf<<EOF
 /usr/local/mysql/lib
@@ -446,12 +485,19 @@ EOF
 
 Upgrade_MySQL80()
 {
-    echo "Starting upgrade MySQL..."
-    Tar_Cd ${mysql_src} mysql-${mysql_version}
-    Install_Boost
-    mkdir build && cd build
-    cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL_WITH_BOOST}
-    Make_Install
+    if [ "${Bin}" = "y" ]; then
+        Echo_Blue "Starting upgrade MySQL ${mysql_version} Using Generic Binaries..."
+        Tar_Cd ${mysql_src}
+        mkdir /usr/local/mysql
+        mv mysql-${mysql_version}-linux-glibc${mysql8_glibc_ver}-${DB_ARCH}/* /usr/local/mysql/
+    else
+        Echo_Blue "Starting upgrade MySQL ${mysql_version} Using Source code..."
+        Tar_Cd ${mysql_src} mysql-${mysql_version}
+        Install_Boost
+        mkdir build && cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL_WITH_BOOST}
+        Make_Install
+    fi
 
     groupadd mysql
     useradd -s /sbin/nologin -M -g mysql mysql
@@ -527,8 +573,9 @@ EOF
     else
         mkdir -p ${MySQL_Data_Dir}
     fi
-    chown -R mysql:mysql ${MySQL_Data_Dir}
+    chown -R mysql:mysql /usr/local/mysql/
     /usr/local/mysql/bin/mysqld --initialize-insecure --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
+    chown -R mysql:mysql ${MySQL_Data_Dir}
 
     cat > /etc/ld.so.conf.d/mysql.conf<<EOF
 /usr/local/mysql/lib
@@ -543,7 +590,7 @@ EOF
 Restore_Start_MySQL()
 {
     chgrp -R mysql /usr/local/mysql/.
-    \cp support-files/mysql.server /etc/init.d/mysql
+    \cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql
     chmod 755 /etc/init.d/mysql
 
     ldconfig
@@ -575,8 +622,8 @@ Restore_Start_MySQL()
         Echo_Green "======== upgrade MySQL completed ======"
     else
         Echo_Red "======== upgrade MySQL failed ======"
-        Echo_Red "upgrade MySQL log: /root/upgrade_mysql.log"
-        echo "You upload upgrade_mysql.log to LNMP Forum for help."
+        Echo_Red "upgrade MySQL log: /root/upgrade_mysq${Upgrade_Date}.log"
+        echo "You upload upgrade_mysq${Upgrade_Date}.log to LNMP Forum for help."
     fi
 }
 
@@ -604,6 +651,42 @@ Upgrade_MySQL()
     if [ "${mysql_version}" == "${cur_mysql_version}" ]; then
         echo "Error: The upgrade MYSQL Version is the same as the old Version!!"
         exit 1
+    fi
+
+    if [[ "${DB_ARCH}" = "x86_64" || "${DB_ARCH}" = "i686" ]] && echo "${mysql_version}" | grep -Eqi '^5.[5-7].';then
+        read -p "Using Generic Binaries [y/n]: " Bin
+        case "${Bin}" in
+        [yY][eE][sS]|[yY])
+            echo "You will install MySQL ${mysql_version} Using Generic Binaries."
+            Bin="y"
+            ;;
+        [nN][oO]|[nN])
+            echo "You will install MySQL ${mysql_version} Source code."
+            Bin="n"
+            ;;
+        *)
+            echo "Default install MySQL ${mysql_version} Using Generic Binaries."
+            Bin="y"
+            ;;
+        esac
+    elif [[ "${DB_ARCH}" = "x86_64" || "${DB_ARCH}" = "i686" || "${DB_ARCH}" = "aarch64" ]] && echo "${mysql_version}" | grep -Eqi '^8.';then
+        read -p "Using Generic Binaries [y/n]: " Bin
+        case "${Bin}" in
+        [yY][eE][sS]|[yY])
+            echo "You will install MySQL ${mysql_version} Using Generic Binaries."
+            Bin="y"
+            ;;
+        [nN][oO]|[nN])
+            echo "You will install MySQL ${mysql_version} Source code."
+            Bin="n"
+            ;;
+        *)
+            echo "Default install MySQL ${mysql_version} Using Generic Binaries."
+            Bin="y"
+            ;;
+        esac
+    else
+        Bin="n"
     fi
 
     #do you want to install the InnoDB Storage Engine?
@@ -649,28 +732,27 @@ Upgrade_MySQL()
 
     echo "============================check files=================================="
     cd ${cur_dir}/src
-    if [[ "${mysql_short_version}" = "5.7" || "${mysql_short_version}" = "8.0" ]]; then
-        mysql_src="mysql-boost-${mysql_version}.tar.gz"
+    if [[ "${Bin}" = "y" && "${mysql_short_version}" = "8.0" ]]; then
+        [[ "${DB_ARCH}" = "aarch64" ]] && mysql8_glibc_ver="2.17" || mysql8_glibc_ver="2.12"
+        [[ "${DB_ARCH}" = "aarch64" ]] && mysql8_ext="tar.gz" || mysql8_ext="tar.xz"
+        mysql_src="mysql-${mysql_version}-linux-glibc${mysql8_glibc_ver}-${DB_ARCH}.${mysql8_ext}"
+    elif [[ "${Bin}" = "y" && "${mysql_short_version}" =~ ^5.[5-7]$ ]]; then
+        mysql_src="mysql-${mysql_version}-linux-glibc2.12-${DB_ARCH}.tar.gz"
     else
-        mysql_src="mysql-${mysql_version}.tar.gz"
+        if [[ "${mysql_short_version}" = "5.7" || "${mysql_short_version}" = "8.0" ]]; then
+            mysql_src="mysql-boost-${mysql_version}.tar.gz"
+        else
+            mysql_src="mysql-${mysql_version}.tar.gz"
+        fi
     fi
     if [ -s "${mysql_src}" ]; then
         echo "${mysql_src} [found]"
     else
-        echo "Notice: ${mysql_src} not found!!!download now......"
-        Get_Country
-        if [ "${country}" = "CN" ]; then
-            wget -c --progress=bar:force http://mirrors.ustc.edu.cn/mysql-ftp/Downloads/MySQL-${mysql_short_version}/${mysql_src}
-            if [ $? -ne 0 ]; then
-                wget -c --progress=bar:force http://cdn.mysql.com/Downloads/MySQL-${mysql_short_version}/${mysql_src}
-            fi
-        else
-            wget -c --progress=bar:force http://cdn.mysql.com/Downloads/MySQL-${mysql_short_version}/${mysql_src}
-        fi
+        Download_Files http://cdn.mysql.com/Downloads/MySQL-${mysql_short_version}/${mysql_src} ${mysql_src}
         if [ $? -eq 0 ]; then
             echo "Download ${mysql_src} successfully!"
         else
-            wget -c --progress=bar:force https://cdn.mysql.com/archives/MySQL-${mysql_short_version}/${mysql_src}
+            Download_Files https://cdn.mysql.com/archives/mysql-${mysql_short_version}/${mysql_src} ${mysql_src}
             if [ $? -ne 0 ]; then
                 echo "You enter MySQL Version was: ${mysql_version}"
                 Echo_Red "Error! You entered a wrong version number, please check!"
@@ -679,6 +761,7 @@ Upgrade_MySQL()
             fi
         fi
     fi
+    Check_Openssl
     echo "============================check files=================================="
 
     Backup_MySQL

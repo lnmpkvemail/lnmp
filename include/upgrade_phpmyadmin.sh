@@ -21,7 +21,7 @@ Upgrade_phpMyAdmin()
         echo "phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.xz [found]"
     else
         echo "Notice: phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.xz not found!!!download now......"
-        wget -c --progress=bar:force https://files.phpmyadmin.net/phpMyAdmin/${phpMyAdmin_Version}/phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.xz
+        wget -c --progress=dot:giga https://files.phpmyadmin.net/phpMyAdmin/${phpMyAdmin_Version}/phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.xz
         if [ $? -eq 0 ]; then
             echo "Download phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.xz successfully!"
         else
@@ -38,7 +38,7 @@ Upgrade_phpMyAdmin()
     tar Jxf phpMyAdmin-${phpMyAdmin_Version}-all-languages.tar.xz
     mv phpMyAdmin-${phpMyAdmin_Version}-all-languages ${Default_Website_Dir}/phpmyadmin
     \cp ${cur_dir}/conf/config.inc.php ${Default_Website_Dir}/phpmyadmin/config.inc.php
-    sed -i 's/LNMPORG/LNMP.org_0'$RANDOM`date '+%s'`$RANDOM'9_VPSer.net/g' ${Default_Website_Dir}/phpmyadmin/config.inc.php
+    sed -i 's/LNMPORG/LNMP.org_'`date +%s%N | head -c 13`'_VPSer.net/g' ${Default_Website_Dir}/phpmyadmin/config.inc.php
     mkdir ${Default_Website_Dir}/phpmyadmin/{upload,save}
     chmod 755 -R ${Default_Website_Dir}/phpmyadmin/
     chown www:www -R ${Default_Website_Dir}/phpmyadmin/

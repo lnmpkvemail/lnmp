@@ -273,9 +273,9 @@ EOF
     fi
     MySQL_Opt
     Check_MySQL_Data_Dir
-    chown -R mysql:mysql ${MySQL_Data_Dir}
+    chown -R mysql:mysql /usr/local/mysql
     /usr/local/mysql/bin/mysql_install_db --user=mysql --datadir=${MySQL_Data_Dir}
-    chgrp -R mysql /usr/local/mysql/.
+    chown -R mysql:mysql ${MySQL_Data_Dir}
     \cp /usr/local/mysql/share/mysql/mysql.server /etc/init.d/mysql
     chmod 755 /etc/init.d/mysql
 
@@ -293,12 +293,24 @@ EOF
 
 Install_MySQL_55()
 {
-    Echo_Blue "[+] Installing ${Mysql_Ver}..."
-    rm -f /etc/my.cnf
-    Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}
-    MySQL_ARM_Patch
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1
-    Make_Install
+    if [ "${Bin}" = "y" ]; then
+        Echo_Blue "[+] Installing ${Mysql_Ver} Using Generic Binaries..."
+        Tar_Cd ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz
+        mkdir /usr/local/mysql
+        mv ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}/* /usr/local/mysql/
+    else
+        Echo_Blue "[+] Installing ${Mysql_Ver} Using Source code..."
+        if [ "${isOpenSSL3}" = "y" ]; then
+            Install_Openssl
+            MySQL_WITH_SSL='-DWITH_SSL=/usr/local/openssl'
+        else
+            MySQL_WITH_SSL=''
+        fi
+        Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}
+        MySQL_ARM_Patch
+        cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL_WITH_SSL}
+        Make_Install
+    fi
 
     groupadd mysql
     useradd -s /sbin/nologin -M -g mysql mysql
@@ -374,10 +386,10 @@ EOF
     fi
     MySQL_Opt
     Check_MySQL_Data_Dir
-    chown -R mysql:mysql ${MySQL_Data_Dir}
+    chown -R mysql:mysql /usr/local/mysql
     /usr/local/mysql/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
-    chgrp -R mysql /usr/local/mysql/.
-    \cp support-files/mysql.server /etc/init.d/mysql
+    chown -R mysql:mysql ${MySQL_Data_Dir}
+    \cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql
     \cp ${cur_dir}/init.d/mysql.service /etc/systemd/system/mysql.service
     chmod 755 /etc/init.d/mysql
 
@@ -394,11 +406,23 @@ EOF
 
 Install_MySQL_56()
 {
-    Echo_Blue "[+] Installing ${Mysql_Ver}..."
-    rm -f /etc/my.cnf
-    Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1
-    Make_Install
+    if [ "${Bin}" = "y" ]; then
+        Echo_Blue "[+] Installing ${Mysql_Ver} Using Generic Binaries..."
+        Tar_Cd ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz
+        mkdir /usr/local/mysql
+        mv ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}/* /usr/local/mysql/
+    else
+        Echo_Blue "[+] Installing ${Mysql_Ver} Using Source code..."
+        if [ "${isOpenSSL3}" = "y" ]; then
+            Install_Openssl
+            MySQL_WITH_SSL='-DWITH_SSL=/usr/local/openssl'
+        else
+            MySQL_WITH_SSL=''
+        fi
+        Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}
+        cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL_WITH_SSL}
+        Make_Install
+    fi
 
     groupadd mysql
     useradd -s /sbin/nologin -M -g mysql mysql
@@ -505,10 +529,10 @@ EOF
     fi
     MySQL_Opt
     Check_MySQL_Data_Dir
-    chown -R mysql:mysql ${MySQL_Data_Dir}
+    chown -R mysql:mysql /usr/local/mysql
     /usr/local/mysql/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
-    chgrp -R mysql /usr/local/mysql/.
-    \cp support-files/mysql.server /etc/init.d/mysql
+    chown -R mysql:mysql ${MySQL_Data_Dir}
+    \cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql
     \cp ${cur_dir}/init.d/mysql.service /etc/systemd/system/mysql.service
     chmod 755 /etc/init.d/mysql
 
@@ -525,12 +549,25 @@ EOF
 
 Install_MySQL_57()
 {
-    Echo_Blue "[+] Installing ${Mysql_Ver}..."
     rm -f /etc/my.cnf
-    Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}
-    Install_Boost
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL_WITH_BOOST}
-    Make_Install
+    if [ "${Bin}" = "y" ]; then
+        Echo_Blue "[+] Installing ${Mysql_Ver} Using Generic Binaries..."
+        Tar_Cd ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}.tar.gz
+        mkdir /usr/local/mysql
+        mv ${Mysql_Ver}-linux-glibc2.12-${DB_ARCH}/* /usr/local/mysql/
+    else
+        Echo_Blue "[+] Installing ${Mysql_Ver} Using Source code..."
+        if [ "${isOpenSSL3}" = "y" ]; then
+            Install_Openssl_New
+            MySQL_WITH_SSL='-DWITH_SSL=/usr/local/openssl1.1.1'
+        else
+            MySQL_WITH_SSL=''
+        fi
+        Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}
+        Install_Boost
+        cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL_WITH_SSL} ${MySQL_WITH_BOOST}
+        Make_Install
+    fi
 
     groupadd mysql
     useradd -s /sbin/nologin -M -g mysql mysql
@@ -603,10 +640,10 @@ EOF
 
     MySQL_Opt
     Check_MySQL_Data_Dir
-    chown -R mysql:mysql ${MySQL_Data_Dir}
+    chown -R mysql:mysql /usr/local/mysql
     /usr/local/mysql/bin/mysqld --initialize-insecure --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
-    chgrp -R mysql /usr/local/mysql/.
-    \cp support-files/mysql.server /etc/init.d/mysql
+    chown -R mysql:mysql ${MySQL_Data_Dir}
+    \cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql
     \cp ${cur_dir}/init.d/mysql.service /etc/systemd/system/mysql.service
     chmod 755 /etc/init.d/mysql
 
@@ -623,17 +660,24 @@ EOF
 
 Install_MySQL_80()
 {
-    Echo_Blue "[+] Installing ${Mysql_Ver}..."
     rm -f /etc/my.cnf
-    Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}
-    if openssl version | grep -Eqi "OpenSSL 3.*"; then
-        echo "OpenSSL 3.x"
-        patch -p1 < ${cur_dir}/src/patch/mysql-openssl3.patch
+    if [ "${Bin}" = "y" ]; then
+        Echo_Blue "[+] Installing ${Mysql_Ver} Using Generic Binaries..."
+        Tar_Cd ${Mysql_Ver}-linux-glibc${mysql8_glibc_ver}-${DB_ARCH}.${mysql8_ext}
+        mkdir /usr/local/mysql
+        mv ${Mysql_Ver}-linux-glibc${mysql8_glibc_ver}-${DB_ARCH}/* /usr/local/mysql/
+    else
+        Echo_Blue "[+] Installing ${Mysql_Ver} Using Source code..."
+        Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}
+        if openssl version | grep -Eqi "OpenSSL 3.*"; then
+            echo "OpenSSL 3.x"
+            patch -p1 < ${cur_dir}/src/patch/mysql-openssl3.patch
+        fi
+        Install_Boost
+        mkdir build && cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL_WITH_BOOST}
+        Make_Install
     fi
-    Install_Boost
-    mkdir build && cd build
-    cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL_WITH_BOOST}
-    Make_Install
 
     groupadd mysql
     useradd -s /sbin/nologin -M -g mysql mysql
@@ -706,10 +750,10 @@ EOF
 
     MySQL_Opt
     Check_MySQL_Data_Dir
-    chown -R mysql:mysql ${MySQL_Data_Dir}
+    chown -R mysql:mysql /usr/local/mysql
     /usr/local/mysql/bin/mysqld --initialize-insecure --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
-    chgrp -R mysql /usr/local/mysql/.
-    \cp support-files/mysql.server /etc/init.d/mysql
+    chown -R mysql:mysql ${MySQL_Data_Dir}
+    \cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql
     \cp ${cur_dir}/init.d/mysql.service /etc/systemd/system/mysql.service
     chmod 755 /etc/init.d/mysql
 

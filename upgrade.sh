@@ -30,7 +30,7 @@ Upgrade_Date=$(date +"%Y%m%d%H%M%S")
 
 Get_Dist_Name
 Get_Dist_Version
-MemTotal=`free -m | grep Mem | awk '{print  $2}'`
+MemTotal=$(awk '/MemTotal/ {printf( "%d\n", $2 / 1024 )}' /proc/meminfo)
 
 Display_Upgrade_Menu()
 {
@@ -49,7 +49,7 @@ Display_Upgrade_Menu()
 
 clear
 echo "+-----------------------------------------------------------------------+"
-echo "|            Upgrade script for LNMP V1.9, Written by Licess            |"
+echo "|            Upgrade script for LNMP V2.0, Written by Licess            |"
 echo "+-----------------------------------------------------------------------+"
 echo "|     A tool to upgrade Nginx,MySQL/Mariadb,PHP for LNMP/LNMPA/LAMP     |"
 echo "+-----------------------------------------------------------------------+"

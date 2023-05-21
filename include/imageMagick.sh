@@ -21,12 +21,11 @@ Install_ImageMagic()
         Get_Dist_Version
         Get_Country
         if [ "${country}" = "CN" ]; then
-            if echo "${CentOS_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" | grep -Eqi "^8" || echo "${RHEL_Version}" || echo "${Rocky_Version}" | grep -Eqi "^8" || echo "${Alma_Version}" | grep -Eqi "^8"; then
-                sed -i "s@^#baseurl=https://download.fedoraproject.org/pub@baseurl=https://mirrors.aliyun.com@g" /etc/yum.repos.d/epel*.repo
-            else
-                sed -i "s@^#baseurl=http://download.fedoraproject.org/pub@baseurl=http://mirrors.aliyun.com@g" /etc/yum.repos.d/epel*.repo
-            fi
-            sed -i "s@^metalink@#metalink@g" /etc/yum.repos.d/epel*.repo
+            sed -e 's!^metalink=!#metalink=!g' \
+                -e 's!^#baseurl=!baseurl=!g' \
+                -e 's!//download\.fedoraproject\.org/pub!//mirrors.ustc.edu.cn!g' \
+                -e 's!//download\.example/pub!//mirrors.ustc.edu.cn!g' \
+                -i /etc/yum.repos.d/epel*.repo
         fi
         yum install -y libwebp-devel
     elif [ "$PM" = "apt" ]; then
@@ -45,7 +44,7 @@ Install_ImageMagic()
             Tar_Cd ImageMagick-6.9.9-27.tar.gz ImageMagick-6.9.9-27
         else
             Download_Files ${Download_Mirror}/web/imagemagick/${ImageMagick_Ver}.tar.xz ${ImageMagick_Ver}.tar.xz
-            TarJ_Cd ${ImageMagick_Ver}.tar.xz ${ImageMagick_Ver}
+            Tar_Cd ${ImageMagick_Ver}.tar.xz ${ImageMagick_Ver}
         fi
 
         ./configure --prefix=/usr/local/imagemagick

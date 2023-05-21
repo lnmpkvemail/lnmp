@@ -92,6 +92,9 @@ EOF
     Restart_PHP
     StartOrStop start redis
 
+    echo "Copy Redis PHP Test file..."
+    \cp ${cur_dir}/conf/redis.php ${Default_Website_Dir}/redis.php
+
     if [ -s "${zend_ext}" ] && [ -s /usr/local/redis/bin/redis-server ]; then
         Echo_Green "====== Redis install completed ======"
         Echo_Green "Redis installed successfully, enjoy it!"
