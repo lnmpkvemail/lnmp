@@ -20,19 +20,19 @@ Install_SourceGuardian()
         echo "${ARCH}"
         Download_Files ${Download_Mirror}/web/sourceguardian/14.0.0/loaders.linux-${ARCH}.zip loaders.linux-${ARCH}.zip
     elif [ "${ARCH}" = "i386" ]; then
-        if echo "${Cur_PHP_Version}" | grep -Eqi '^7.[2-4].*|8.[1-2].*'; then
+        if echo "${Cur_PHP_Version}" | grep -Eqi '^7.[2-4].*|8.[0-2].*'; then
             Echo_Red "Current PHP version does not support SourceGuardian!"
             exit 1
         fi
         Download_Files ${Download_Mirror}/web/sourceguardian/12.1.2/loaders.linux-${ARCH}.zip loaders.linux-${ARCH}.zip
     elif [ "${ARCH}" = "armhf" ]; then
-        if echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.*|8.1.*'; then
+        if echo "${Cur_PHP_Version}" | grep -Eqi '^5.2.*'; then
             Echo_Red "Current PHP version does not support SourceGuardian!"
             exit 1
         elif echo "${Cur_PHP_Version}" | grep -Eqi '^5.[3-6].*|7.[0-3].*'; then
             Download_Files ${Download_Mirror}/web/sourceguardian/12.1.2/loaders.linux-${ARCH}.zip loaders.linux-${ARCH}.zip
-        elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.4.*'; then
-            Download_Files ${Download_Mirror}/web/sourceguardian/13.0.3/loaders.linux-${ARCH}.zip loaders.linux-${ARCH}.zip
+        elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.4.*|^8.[0-2].*'; then
+            Download_Files ${Download_Mirror}/web/sourceguardian/14.0.3/loaders.linux-${ARCH}.zip loaders.linux-${ARCH}.zip
         fi
     elif [ "${ARCH}" = "aarch64" ]; then
         if echo "${Cur_PHP_Version}" | grep -Eqi '^5.*'; then
@@ -40,8 +40,8 @@ Install_SourceGuardian()
             exit 1
         elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.[0-3].*'; then
             Download_Files ${Download_Mirror}/web/sourceguardian/12.1.2/loaders.linux-${ARCH}.zip loaders.linux-${ARCH}.zip
-        elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.4.*|8.1.*'; then
-            Download_Files ${Download_Mirror}/web/sourceguardian/13.0.3/loaders.linux-${ARCH}.zip loaders.linux-${ARCH}.zip
+        elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.4.*|8.[0-2].*'; then
+            Download_Files ${Download_Mirror}/web/sourceguardian/14.0.3/loaders.linux-${ARCH}.zip loaders.linux-${ARCH}.zip
         fi
     else
         Echo_Red "Unsupported architecture!"
