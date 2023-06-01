@@ -9,11 +9,12 @@ LNMP 2.0
 添加zblog伪静态；
 添加php-redis测试脚本；
 添加Nginx编译参数--with-http_realip_module参数；
-添加RHEL9支持；
+添加RHEL 9、CentOS Steam 9、Oracle 9、Alma 9、Rocky 9支持；
 添加MariaDB 10.11，移除MariaDB 10.3；
 增加Amazon Linux 2023支持；
 增加MySQL升级到MariaDB时二进制安装方式；
 增加OpenCloudOS支持；
+增加SourceGuardian PHP 8.2支持；
 优化低版本PHP在新Linux发行版下的支持；
 优化Anolis OS 7支持；
 优化Oracle 7支持；
