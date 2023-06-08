@@ -235,9 +235,9 @@ Install_Composer()
                 fi
             fi
         fi
-        if [ "${country}" = "CN" ]; then
-            composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
-        fi
+        #if [ "${country}" = "CN" ]; then
+            #composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
+        #fi
     fi
 }
 
