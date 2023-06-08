@@ -50,7 +50,7 @@ Install_SourceGuardian()
 
     unzip loaders.linux-${ARCH}.zip -d loaders.linux-${ARCH}
 
-    if [ ! -s "${zend_ext}" ]; then
+    if [ ! -s "loaders.linux-${ARCH}/${zend_ext}" ]; then
         echo "${zend_ext} not found!"
         Echo_Red "SourceGuardian does not provide a loader for current PHP version."
     else
