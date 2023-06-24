@@ -775,6 +775,11 @@ Upgrade_MySQL()
         fi
     fi
     Check_Openssl
+    if [ "${Bin}" != "y" ]; then
+        Echo_Blue "Install dependent packages..."
+        . ${cur_dir}/include/only.sh
+        DB_Dependent
+    fi
     echo "============================check files=================================="
 
     Backup_MySQL
