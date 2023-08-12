@@ -833,6 +833,8 @@ StartUp()
 {
     init_name=$1
     echo "Add ${init_name} service at system startup..."
+    [[ "${isWSL}" = "" ]] && Check_WSL
+    [[ "${isDocker}" = "" ]] && Check_Docker
     if [ "${isWSL}" = "n" ] && [ "${isDocker}" = "n" ] && command -v systemctl >/dev/null 2>&1 && [[ -s /etc/systemd/system/${init_name}.service || -s /lib/systemd/system/${init_name}.service || -s /usr/lib/systemd/system/${init_name}.service ]]; then
         systemctl daemon-reload
         systemctl enable ${init_name}.service
@@ -850,6 +852,8 @@ Remove_StartUp()
 {
     init_name=$1
     echo "Removing ${init_name} service at system startup..."
+    [[ "${isWSL}" = "" ]] && Check_WSL
+    [[ "${isDocker}" = "" ]] && Check_Docker
     if [ "${isWSL}" = "n" ] && [ "${isDocker}" = "n" ] && command -v systemctl >/dev/null 2>&1 && [[ -s /etc/systemd/system/${init_name}.service || -s /lib/systemd/system/${init_name}.service || -s /usr/lib/systemd/system/${init_name}.service ]]; then
         systemctl disable ${init_name}.service
     else
@@ -1065,6 +1069,8 @@ StartOrStop()
 {
     local action=$1
     local service=$2
+    [[ "${isWSL}" = "" ]] && Check_WSL
+    [[ "${isDocker}" = "" ]] && Check_Docker
     if [ "${isWSL}" = "n" ] && [ "${isDocker}" = "n" ] && command -v systemctl >/dev/null 2>&1 && [[ -s /etc/systemd/system/${service}.service ]]; then
         systemctl ${action} ${service}.service
     else
