@@ -402,7 +402,7 @@ CentOS_Dependent()
         fi
         yum -y install oniguruma oniguruma-devel
         if [ "${CheckMirror}" = "n" ]; then
-            rpm -ivh ${cur_dir}/src/oniguruma-6.8.2-1.el7.x86_64.rpm ${cur_dir}/src/oniguruma-devel-6.8.2-1.el7.x86_64.rpm
+            rpm -ivh ${cur_dir}/src/oniguruma-6.8.2-2.el7.x86_64.rpm ${cur_dir}/src/oniguruma-devel-6.8.2-2.el7.x86_64.rpm
         fi
     fi
 
