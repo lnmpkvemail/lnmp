@@ -143,19 +143,19 @@ Database_Selection()
             fi
             case "${Bin}" in
             [yY][eE][sS]|[yY])
-                echo "You will install ${DB_Info[3]} Using Generic Binaries."
+                echo "You will install ${DB_Info[5]} Using Generic Binaries."
                 Bin="y"
                 ;;
             [nN][oO]|[nN])
-                echo "You will install ${DB_Info[3]} from Source."
+                echo "You will install ${DB_Info[5]} from Source."
                 Bin="n"
                 ;;
             *)
                 if [ "${CheckMirror}" != "n" ]; then
-                    echo "Default install ${DB_Info[3]} Using Generic Binaries."
+                    echo "Default install ${DB_Info[5]} Using Generic Binaries."
                     Bin="y"
                 else
-                    echo "Default install ${DB_Info[3]} from Source."
+                    echo "Default install ${DB_Info[5]} from Source."
                     Bin="n"
                 fi
                 ;;
@@ -172,19 +172,19 @@ Database_Selection()
             fi
             case "${Bin}" in
             [yY][eE][sS]|[yY])
-                echo "You will install ${DB_Info[3]} Using Generic Binaries."
+                echo "You will install ${DB_Info[6]} Using Generic Binaries."
                 Bin="y"
                 ;;
             [nN][oO]|[nN])
-                echo "You will install ${DB_Info[3]} from Source."
+                echo "You will install ${DB_Info[6]} from Source."
                 Bin="n"
                 ;;
             *)
                 if [ "${CheckMirror}" != "n" ]; then
-                    echo "Default install ${DB_Info[3]} Using Generic Binaries."
+                    echo "Default install ${DB_Info[6]} Using Generic Binaries."
                     Bin="y"
                 else
-                    echo "Default install ${DB_Info[3]} from Source."
+                    echo "Default install ${DB_Info[6]} from Source."
                     Bin="n"
                 fi
                 ;;
@@ -201,19 +201,19 @@ Database_Selection()
             fi
             case "${Bin}" in
             [yY][eE][sS]|[yY])
-                echo "You will install ${DB_Info[3]} Using Generic Binaries."
+                echo "You will install ${DB_Info[7]} Using Generic Binaries."
                 Bin="y"
                 ;;
             [nN][oO]|[nN])
-                echo "You will install ${DB_Info[3]} from Source."
+                echo "You will install ${DB_Info[7]} from Source."
                 Bin="n"
                 ;;
             *)
                 if [ "${CheckMirror}" != "n" ]; then
-                    echo "Default install ${DB_Info[3]} Using Generic Binaries."
+                    echo "Default install ${DB_Info[7]} Using Generic Binaries."
                     Bin="y"
                 else
-                    echo "Default install ${DB_Info[3]} from Source."
+                    echo "Default install ${DB_Info[7]} from Source."
                     Bin="n"
                 fi
                 ;;
@@ -230,19 +230,19 @@ Database_Selection()
             fi
             case "${Bin}" in
             [yY][eE][sS]|[yY])
-                echo "You will install ${DB_Info[3]} Using Generic Binaries."
+                echo "You will install ${DB_Info[8]} Using Generic Binaries."
                 Bin="y"
                 ;;
             [nN][oO]|[nN])
-                echo "You will install ${DB_Info[3]} from Source."
+                echo "You will install ${DB_Info[8]} from Source."
                 Bin="n"
                 ;;
             *)
                 if [ "${CheckMirror}" != "n" ]; then
-                    echo "Default install ${DB_Info[3]} Using Generic Binaries."
+                    echo "Default install ${DB_Info[8]} Using Generic Binaries."
                     Bin="y"
                 else
-                    echo "Default install ${DB_Info[3]} from Source."
+                    echo "Default install ${DB_Info[8]} from Source."
                     Bin="n"
                 fi
                 ;;
@@ -259,19 +259,19 @@ Database_Selection()
             fi
             case "${Bin}" in
             [yY][eE][sS]|[yY])
-                echo "You will install ${DB_Info[3]} Using Generic Binaries."
+                echo "You will install ${DB_Info[9]} Using Generic Binaries."
                 Bin="y"
                 ;;
             [nN][oO]|[nN])
-                echo "You will install ${DB_Info[3]} from Source."
+                echo "You will install ${DB_Info[9]} from Source."
                 Bin="n"
                 ;;
             *)
                 if [ "${CheckMirror}" != "n" ]; then
-                    echo "Default install ${DB_Info[3]} Using Generic Binaries."
+                    echo "Default install ${DB_Info[9]} Using Generic Binaries."
                     Bin="y"
                 else
-                    echo "Default install ${DB_Info[3]} from Source."
+                    echo "Default install ${DB_Info[9]} from Source."
                     Bin="n"
                 fi
                 ;;
