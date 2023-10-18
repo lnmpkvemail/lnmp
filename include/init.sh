@@ -220,6 +220,8 @@ Ubuntu_Modify_Source()
         CodeName='hirsute'
     elif grep -Eqi "21.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^21.10'; then
         CodeName='impish'
+    elif grep -Eqi "23.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^23.04'; then
+        CodeName='lunar'
     fi
     if [ "${CodeName}" != "" ]; then
         \cp /etc/apt/sources.list /etc/apt/sources.list.$(date +"%Y%m%d")
@@ -253,6 +255,7 @@ Ubuntu_Deadline()
     xenial_deadline=`date -d "2026-4-30 00:00:00" +%s`
     kinetic_deadline=`date -d "2023-7-30 00:00:00" +%s`
     bionic_deadline=`date -d "2028-7-30 00:00:00" +%s`
+    lunar_deadline=`date -d "2024-1-30 00:00:00" +%s`
     cur_time=`date  +%s`
     case "$1" in
         trusty)
@@ -277,6 +280,12 @@ Ubuntu_Deadline()
             if [ ${cur_time} -gt ${bionic_deadline} ]; then
                 echo "${cur_time} > ${bionic_deadline}"
                 Check_Old_Releases_URL bionic
+            fi
+            ;;
+        lunar)
+            if [ ${cur_time} -gt ${lunar_deadline} ]; then
+                echo "${cur_time} > ${lunar_deadline}"
+                Check_Old_Releases_URL lunar
             fi
             ;;
     esac
