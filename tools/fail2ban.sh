@@ -15,46 +15,34 @@ Get_Dist_Version
 Press_Start
 
 if [ "${PM}" = "yum" ]; then
-    yum install python iptables rsyslog -y
-    if [ "${DISTRO}" = "CentOS" ] && echo "${CentOS_Version}" | grep -Eqi "^8"; then
-        dnf install python2 -y
-        alternatives --set python /usr/bin/python2
-    fi
-    if ! command -v iptables >/dev/null 2>&1; then
-        yum install iptables -y
-    fi
+    for packages in python3 python3-setuptools python3-systemd iptables rsyslog;
+    do yum install $packages -y; done
     service rsyslog restart
-    \cp /var/log/secure /var/log/secure.$(date +"%Y%m%d%H%M%S")
-    cat /dev/null > /var/log/secure
 elif [ "${PM}" = "apt" ]; then
     apt-get update
-    apt-get install python iptables rsyslog -y
-    /etc/init.d/rsyslog restart
-    \cp /var/log/secure /var/log/secure.$(date +"%Y%m%d%H%M%S")
-    cat /dev/null > /var/log/auth.log
+    for packages in python3 python3-setuptools iptables rsyslog;
+    do apt-get install -y $packages; done
+    if command -v systemctl >/dev/null 2>&1; then
+        systemctl restart rsyslog
+    else
+        /etc/init.d/rsyslog restart
+    fi
 fi
 
 echo "Downloading..."
 cd ../src
-Download_Files ${Download_Mirror}/security/fail2ban/fail2ban-0.11.2.tar.gz fail2ban-0.11.2.tar.gz
-tar zxf fail2ban-0.11.2.tar.gz && cd fail2ban-0.11.2
-echo "Installing..."
-python setup.py install --prefix=/usr
+Download_Files ${Download_Mirror}/security/fail2ban/fail2ban-1.0.3.tar.gz fail2ban-1.0.3.tar.gz
+tar zxf fail2ban-1.0.3.tar.gz && cd fail2ban-1.0.3
+echo "Installing fail2ban..."
+python3 setup.py install
 
 echo "Copy configure file..."
 \cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
-cat >>/etc/fail2ban/jail.local<<EOF
-
-[sshd]
-enabled  = true
-port     = ssh
-filter   = sshd
-action   = iptables[name=SSH, port=ssh, protocol=tcp]
-#mail-whois[name=SSH, dest=yourmail@mail.com]
-logpath  = /var/log/auth.log
-maxretry = 5
-bantime  = 604800
-EOF
+sed -i '/^#mode   = normal/a \
+enabled  = true\
+filter   = sshd\
+maxretry = 5\
+bantime  = 604800' /etc/fail2ban/jail.local
 
 echo "Copy init files..."
 if [ ! -d /var/run/fail2ban ];then
@@ -63,16 +51,20 @@ fi
 if [ `iptables -h|grep -c "\-w"` -eq 0 ]; then
     sed -i 's/lockingopt =.*/lockingopt =/g' /etc/fail2ban/action.d/iptables-common.conf
 fi
+
+\cp build/fail2ban.service /etc/systemd/system/fail2ban.service
 if [ "${PM}" = "yum" ]; then
-    sed -i 's#logpath  = /var/log/auth.log#logpath  = /var/log/secure#g' /etc/fail2ban/jail.local
     \cp files/redhat-initd /etc/init.d/fail2ban
+    sed -i 's#^before = paths-debian.conf#before = paths-fedora.conf#' /etc/fail2ban/jail.local
+    sed -i 's/^Environment="PYTHONNOUSERSITE=1"/#Environment="PYTHONNOUSERSITE=1"/' /etc/systemd/system/fail2ban.service
+    sed -i 's/-xf start/-x start/' /etc/systemd/system/fail2ban.service
 elif [ "${PM}" = "apt" ]; then
     \cp files/debian-initd /etc/init.d/fail2ban
 fi
-\cp build/fail2ban.service /etc/systemd/system/fail2ban.service
+
 chmod +x /etc/init.d/fail2ban
 cd ..
-rm -rf fail2ban-0.11.1
+rm -rf fail2ban-1.0.3
 
 StartUp fail2ban
 
