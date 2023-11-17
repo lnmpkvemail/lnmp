@@ -622,6 +622,9 @@ Get_Dist_Name()
     elif grep -Eqi "OpenCloudOS" /etc/issue || grep -Eq "OpenCloudOS" /etc/*-release; then
         DISTRO='OpenCloudOS'
         PM='yum'
+    elif grep -Eqi "Huawei Cloud EulerOS" /etc/issue || grep -Eq "Huawei Cloud EulerOS" /etc/*-release; then
+        DISTRO='HCE'
+        PM='yum'
     elif grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
         DISTRO='CentOS'
         PM='yum'
