@@ -15,7 +15,7 @@ Install_PHP_Swoole()
         exit 1
     fi
 
-    if echo "${Cur_PHP_Version}" | grep -Eqi '^7.[234].|8.[0-2].'; then
+    if echo "${Cur_PHP_Version}" | grep -Eqi '^8.[0-3].'; then
         Download_Files ${Download_Mirror}/web/swoole/${PHPSwoole_Ver}.tgz ${PHPSwoole_Ver}.tgz
         Tar_Cd ${PHPSwoole_Ver}.tgz ${PHPSwoole_Ver}
         ${PHP_Path}/bin/phpize
@@ -23,6 +23,14 @@ Install_PHP_Swoole()
         make && make install
         cd -
         rm -rf ${PHPSwoole_Ver}
+    elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.[2-4].'; then
+        Download_Files ${Download_Mirror}/web/swoole/swoole-4.8.13.tgz swoole-4.8.13.tgz
+        Tar_Cd swoole-4.8.13.tgz swoole-4.8.13
+        ${PHP_Path}/bin/phpize
+        ./configure --with-php-config=${PHP_Path}/bin/php-config --enable-openssl --enable-http2 --enable-swoole-json
+        make && make install
+        cd -
+        rm -rf swoole-4.8.13
     elif echo "${Cur_PHP_Version}" | grep -Eqi '^7.1.'; then
         Download_Files ${Download_Mirror}/web/swoole/swoole-4.5.11.tgz swoole-4.5.11.tgz
         Tar_Cd swoole-4.5.11.tgz swoole-4.5.11
