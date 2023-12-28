@@ -59,6 +59,7 @@ baseurl=https://mirrors.ustc.edu.cn/centos-stream/\$stream/CRB/\$basearch/os/
 gpgcheck=1
 gpgkey=https://mirrors.ustc.edu.cn/centos-stream/RPM-GPG-KEY-CentOS-Official
 EOF
+            fi
         fi
         if echo "${CentOS_Version}" | grep -Eqi "^9" || echo "${Alma_Version}" | grep -Eqi "^9" || echo "${Rocky_Version}" | grep -Eqi "^9"; then
             for cs9packages in oniguruma-devel libzip-devel libtirpc-devel libxcrypt-compat;
