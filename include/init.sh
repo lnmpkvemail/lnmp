@@ -220,8 +220,12 @@ Ubuntu_Modify_Source()
         CodeName='hirsute'
     elif grep -Eqi "21.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^21.10'; then
         CodeName='impish'
+    elif grep -Eqi "22.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^22.10'; then
+        CodeName='kinetic'
     elif grep -Eqi "23.04" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^23.04'; then
         CodeName='lunar'
+    elif grep -Eqi "23.10" /etc/*-release || echo "${Ubuntu_Version}" | grep -Eqi '^23.10'; then
+        Ubuntu_Deadline mantic
     fi
     if [ "${CodeName}" != "" ]; then
         \cp /etc/apt/sources.list /etc/apt/sources.list.$(date +"%Y%m%d")
@@ -253,9 +257,8 @@ Ubuntu_Deadline()
 {
     trusty_deadline=`date -d "2024-4-30 00:00:00" +%s`
     xenial_deadline=`date -d "2026-4-30 00:00:00" +%s`
-    kinetic_deadline=`date -d "2023-7-30 00:00:00" +%s`
     bionic_deadline=`date -d "2028-7-30 00:00:00" +%s`
-    lunar_deadline=`date -d "2024-1-30 00:00:00" +%s`
+    mantic_deadline=`date -d "2024-7-30 00:00:00" +%s`
     cur_time=`date  +%s`
     case "$1" in
         trusty)
@@ -270,22 +273,16 @@ Ubuntu_Deadline()
                 Check_Old_Releases_URL xenial
             fi
             ;;
-        eoan)
-            if [ ${cur_time} -gt ${eoan_deadline} ]; then
-                echo "${cur_time} > ${eoan_deadline}"
-                Check_Old_Releases_URL eoan
-            fi
-            ;;
         bionic)
             if [ ${cur_time} -gt ${bionic_deadline} ]; then
                 echo "${cur_time} > ${bionic_deadline}"
                 Check_Old_Releases_URL bionic
             fi
             ;;
-        lunar)
-            if [ ${cur_time} -gt ${lunar_deadline} ]; then
-                echo "${cur_time} > ${lunar_deadline}"
-                Check_Old_Releases_URL lunar
+        mantic)
+            if [ ${cur_time} -gt ${mantic_deadline} ]; then
+                echo "${cur_time} > ${mantic_deadline}"
+                Check_Old_Releases_URL mantic
             fi
             ;;
     esac
