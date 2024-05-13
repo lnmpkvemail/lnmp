@@ -53,7 +53,7 @@ EOF
         if [ "${DBSelect}" = "4" ] || echo "${mysql_version}" | grep -Eqi '^5.7.'; then
             /usr/local/mysql/bin/mysql --defaults-file=~/.emptymy.cnf -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('${DB_Root_Password}');"
             [ $? -eq 0 ] && echo "Set password Sucessfully." || echo "Set password failed!"
-        elif [ "${DBSelect}" = "5" ] || echo "${mysql_version}" | grep -Eqi '^8.0.'; then
+        elif [ "${DBSelect}" = "5" ] || echo "${mysql_version}" | grep -Eqi '^8.'; then
             /usr/local/mysql/bin/mysql --defaults-file=~/.emptymy.cnf -e "SET PASSWORD FOR 'root'@'localhost' = '${DB_Root_Password}';"
             [ $? -eq 0 ] && echo "Set password Sucessfully." || echo "Set password failed!"
         else
@@ -677,9 +677,115 @@ Install_MySQL_80()
     rm -f /etc/my.cnf
     if [ "${Bin}" = "y" ]; then
         Echo_Blue "[+] Installing ${Mysql_Ver} Using Generic Binaries..."
-        Tar_Cd ${Mysql_Ver}-linux-glibc${mysql8_glibc_ver}-${DB_ARCH}.${mysql8_ext}
+        Tar_Cd ${Mysql_Ver}-linux-glibc${mysql8_glibc_ver}-${DB_ARCH}.tar.xz
         mkdir /usr/local/mysql
         mv ${Mysql_Ver}-linux-glibc${mysql8_glibc_ver}-${DB_ARCH}/* /usr/local/mysql/
+    else
+        Echo_Blue "[+] Installing ${Mysql_Ver} Using Source code..."
+        Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}
+        Install_Boost
+        mkdir build && cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL_WITH_BOOST}
+        Make_Install
+    fi
+
+    groupadd mysql
+    useradd -s /sbin/nologin -M -g mysql mysql
+
+    cat > /etc/my.cnf<<EOF
+[client]
+#password   = your_password
+port        = 3306
+socket      = /tmp/mysql.sock
+
+[mysqld]
+port        = 3306
+socket      = /tmp/mysql.sock
+datadir = ${MySQL_Data_Dir}
+skip-external-locking
+key_buffer_size = 16M
+max_allowed_packet = 1M
+table_open_cache = 64
+sort_buffer_size = 512K
+net_buffer_length = 8K
+read_buffer_size = 256K
+read_rnd_buffer_size = 512K
+myisam_sort_buffer_size = 8M
+thread_cache_size = 8
+tmp_table_size = 16M
+performance_schema_max_table_instances = 500
+
+explicit_defaults_for_timestamp = true
+#skip-networking
+max_connections = 500
+max_connect_errors = 100
+open_files_limit = 65535
+default_authentication_plugin = mysql_native_password
+
+log-bin=mysql-bin
+binlog_format=mixed
+server-id   = 1
+binlog_expire_logs_seconds = 864000
+early-plugin-load = ""
+
+default_storage_engine = InnoDB
+innodb_file_per_table = 1
+innodb_data_home_dir = ${MySQL_Data_Dir}
+innodb_data_file_path = ibdata1:10M:autoextend
+innodb_log_group_home_dir = ${MySQL_Data_Dir}
+innodb_buffer_pool_size = 16M
+innodb_log_file_size = 5M
+innodb_log_buffer_size = 8M
+innodb_flush_log_at_trx_commit = 1
+innodb_lock_wait_timeout = 50
+
+[mysqldump]
+quick
+max_allowed_packet = 16M
+
+[mysql]
+no-auto-rehash
+
+[myisamchk]
+key_buffer_size = 20M
+sort_buffer_size = 20M
+read_buffer_size = 2M
+write_buffer_size = 2M
+
+[mysqlhotcopy]
+interactive-timeout
+
+${MySQLMAOpt}
+EOF
+
+    MySQL_Opt
+    Check_MySQL_Data_Dir
+    chown -R mysql:mysql /usr/local/mysql
+    /usr/local/mysql/bin/mysqld --initialize-insecure --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
+    chown -R mysql:mysql ${MySQL_Data_Dir}
+    \cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql
+    \cp ${cur_dir}/init.d/mysql.service /etc/systemd/system/mysql.service
+    chmod 755 /etc/init.d/mysql
+
+    cat > /etc/ld.so.conf.d/mysql.conf<<EOF
+    /usr/local/mysql/lib
+    /usr/local/lib
+EOF
+    ldconfig
+    ln -sf /usr/local/mysql/lib/mysql /usr/lib/mysql
+    ln -sf /usr/local/mysql/include/mysql /usr/include/mysql
+
+    MySQL_Sec_Setting
+}
+
+Install_MySQL_84()
+{
+    rm -f /etc/my.cnf
+    if [ "${Bin}" = "y" ]; then
+        Echo_Blue "[+] Installing ${Mysql_Ver} Using Generic Binaries..."
+        Tar_Cd ${Mysql_Ver}-linux-glibc2.17-${DB_ARCH}.tar.xz
+        mkdir /usr/local/mysql
+        mv ${Mysql_Ver}-linux-glibc2.17-${DB_ARCH}/* /usr/local/mysql/
     else
         Echo_Blue "[+] Installing ${Mysql_Ver} Using Source code..."
         Tar_Cd ${Mysql_Ver}.tar.gz ${Mysql_Ver}

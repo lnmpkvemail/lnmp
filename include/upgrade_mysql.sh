@@ -600,6 +600,110 @@ EOF
     ln -sf /usr/local/mysql/include/mysql /usr/include/mysql
 }
 
+Upgrade_MySQL84()
+{
+    if [ "${Bin}" = "y" ]; then
+        Echo_Blue "Starting upgrade MySQL ${mysql_version} Using Generic Binaries..."
+        Tar_Cd ${mysql_src}
+        mkdir /usr/local/mysql
+        mv mysql-${mysql_version}-linux-glibc2.17-${DB_ARCH}/* /usr/local/mysql/
+    else
+        Echo_Blue "Starting upgrade MySQL ${mysql_version} Using Source code..."
+        Tar_Cd ${mysql_src} mysql-${mysql_version}
+        Install_Boost
+        mkdir build && cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${MySQL_WITH_BOOST}
+        Make_Install
+    fi
+
+    groupadd mysql
+    useradd -s /sbin/nologin -M -g mysql mysql
+
+cat > /etc/my.cnf<<EOF
+[client]
+#password   = your_password
+port        = 3306
+socket      = /tmp/mysql.sock
+
+[mysqld]
+port        = 3306
+socket      = /tmp/mysql.sock
+datadir = ${MySQL_Data_Dir}
+skip-external-locking
+key_buffer_size = 16M
+max_allowed_packet = 1M
+table_open_cache = 64
+sort_buffer_size = 512K
+net_buffer_length = 8K
+read_buffer_size = 256K
+read_rnd_buffer_size = 512K
+myisam_sort_buffer_size = 8M
+thread_cache_size = 8
+tmp_table_size = 16M
+performance_schema_max_table_instances = 500
+
+explicit_defaults_for_timestamp = true
+#skip-networking
+max_connections = 500
+max_connect_errors = 100
+open_files_limit = 65535
+default_authentication_plugin = mysql_native_password
+
+log-bin=mysql-bin
+binlog_format=mixed
+server-id   = 1
+binlog_expire_logs_seconds = 864000
+early-plugin-load = ""
+
+default_storage_engine = InnoDB
+innodb_data_home_dir = ${MySQL_Data_Dir}
+innodb_data_file_path = ibdata1:10M:autoextend
+innodb_log_group_home_dir = ${MySQL_Data_Dir}
+innodb_buffer_pool_size = 16M
+innodb_log_file_size = 5M
+innodb_log_buffer_size = 8M
+innodb_flush_log_at_trx_commit = 1
+innodb_lock_wait_timeout = 50
+
+[mysqldump]
+quick
+max_allowed_packet = 16M
+
+[mysql]
+no-auto-rehash
+
+[myisamchk]
+key_buffer_size = 20M
+sort_buffer_size = 20M
+read_buffer_size = 2M
+write_buffer_size = 2M
+
+[mysqlhotcopy]
+interactive-timeout
+
+${MySQLMAOpt}
+EOF
+
+    MySQL_Opt
+    if [ -d "${MySQL_Data_Dir}" ]; then
+        rm -rf ${MySQL_Data_Dir}/*
+    else
+        mkdir -p ${MySQL_Data_Dir}
+    fi
+    chown -R mysql:mysql /usr/local/mysql/
+    /usr/local/mysql/bin/mysqld --initialize-insecure --basedir=/usr/local/mysql --datadir=${MySQL_Data_Dir} --user=mysql
+    chown -R mysql:mysql ${MySQL_Data_Dir}
+
+    cat > /etc/ld.so.conf.d/mysql.conf<<EOF
+/usr/local/mysql/lib
+/usr/local/lib
+EOF
+
+    ldconfig
+    ln -sf /usr/local/mysql/lib/mysql /usr/lib/mysql
+    ln -sf /usr/local/mysql/include/mysql /usr/include/mysql
+}
+
 Restore_Start_MySQL()
 {
     chgrp -R mysql /usr/local/mysql/.
@@ -747,8 +851,9 @@ Upgrade_MySQL()
     cd ${cur_dir}/src
     if [[ "${Bin}" = "y" && "${mysql_short_version}" = "8.0" ]]; then
         [[ "${DB_ARCH}" = "aarch64" ]] && mysql8_glibc_ver="2.17" || mysql8_glibc_ver="2.12"
-        [[ "${DB_ARCH}" = "aarch64" ]] && mysql8_ext="tar.gz" || mysql8_ext="tar.xz"
-        mysql_src="mysql-${mysql_version}-linux-glibc${mysql8_glibc_ver}-${DB_ARCH}.${mysql8_ext}"
+        mysql_src="mysql-${mysql_version}-linux-glibc${mysql8_glibc_ver}-${DB_ARCH}.tar.xz"
+    elif [[ "${Bin}" = "y" && "${mysql_short_version}" = "8.4" ]]; then
+        mysql_src="mysql-${mysql_version}-linux-glibc2.17-${DB_ARCH}.tar.xz"
     elif [[ "${Bin}" = "y" && "${mysql_short_version}" =~ ^5.[5-7]$ ]]; then
         mysql_src="mysql-${mysql_version}-linux-glibc2.12-${DB_ARCH}.tar.gz"
     else
@@ -793,6 +898,8 @@ Upgrade_MySQL()
         Upgrade_MySQL57
     elif [ "${mysql_short_version}" = "8.0" ]; then
         Upgrade_MySQL80
+    elif [ "${mysql_short_version}" = "8.4" ]; then
+        Upgrade_MySQL84
     fi
     Restore_Start_MySQL
 }

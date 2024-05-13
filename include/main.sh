@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-DB_Info=('MySQL 5.1.73' 'MySQL 5.5.62' 'MySQL 5.6.51' 'MySQL 5.7.44' 'MySQL 8.0.37' 'MariaDB 5.5.68' 'MariaDB 10.4.33' 'MariaDB 10.5.24' 'MariaDB 10.6.17' 'MariaDB 10.11.7')
+DB_Info=('MySQL 5.1.73' 'MySQL 5.5.62' 'MySQL 5.6.51' 'MySQL 5.7.44' 'MySQL 8.0.37' 'MariaDB 5.5.68' 'MariaDB 10.4.33' 'MariaDB 10.5.24' 'MariaDB 10.6.17' 'MariaDB 10.11.7' 'MySQL 8.4.0')
 PHP_Info=('PHP 5.2.17' 'PHP 5.3.29' 'PHP 5.4.45' 'PHP 5.5.38' 'PHP 5.6.40' 'PHP 7.0.33' 'PHP 7.1.33' 'PHP 7.2.34' 'PHP 7.3.33' 'PHP 7.4.33' 'PHP 8.0.30' 'PHP 8.1.28' 'PHP 8.2.19' 'PHP 8.3.7')
 Apache_Info=('Apache 2.2.34' 'Apache 2.4.57')
 
@@ -20,8 +20,9 @@ Database_Selection()
         echo "8: Install ${DB_Info[7]}"
         echo "9: Install ${DB_Info[8]}"
         echo "10: Install ${DB_Info[9]}"
+        echo "11: Install ${DB_Info[10]}"
         echo "0: DO NOT Install MySQL/MariaDB"
-        read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8, 9, 10 or 0): " DBSelect
+        read -p "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 or 0): " DBSelect
     fi
 
     case "${DBSelect}" in
@@ -280,6 +281,35 @@ Database_Selection()
             Bin="n"
         fi
         ;;
+    11)
+        echo "You will install ${DB_Info[10]}"
+        if [[ "${DB_ARCH}" = "x86_64" || "${DB_ARCH}" = "i686" || "${DB_ARCH}" = "aarch64" ]]; then
+            if [ -z ${Bin} ]; then
+                read -p "Using Generic Binaries [y/n]: " Bin
+            fi
+            case "${Bin}" in
+            [yY][eE][sS]|[yY])
+                echo "You will install ${DB_Info[10]} Using Generic Binaries."
+                Bin="y"
+                ;;
+            [nN][oO]|[nN])
+                echo "You will install ${DB_Info[10]} from Source."
+                Bin="n"
+                ;;
+            *)
+                if [ "${CheckMirror}" != "n" ]; then
+                    echo "Default install ${DB_Info[10]} Using Generic Binaries."
+                    Bin="y"
+                else
+                    echo "Default install ${DB_Info[10]} from Source."
+                    Bin="n"
+                fi
+                ;;
+            esac
+        else
+            Bin="n"
+        fi
+        ;;
     0)
         echo "Do not install MySQL/MariaDB!"
         ;;
@@ -288,7 +318,7 @@ Database_Selection()
         DBSelect="2"
     esac
 
-    if [ "${Bin}" != "y" ] && [[ "${DBSelect}" =~ ^5|[7-9]|10$ ]] && [ $(awk '/MemTotal/ {printf( "%d\n", $2 / 1024 )}' /proc/meminfo) -le 1024 ]; then
+    if [ "${Bin}" != "y" ] && [[ "${DBSelect}" =~ ^5|[7-9]|1[0-1]$ ]] && [ $(awk '/MemTotal/ {printf( "%d\n", $2 / 1024 )}' /proc/meminfo) -le 1024 ]; then
         echo "Memory less than 1GB, can't install MySQL 8.0 or MairaDB 10.3+!"
         exit 1
     fi
@@ -297,7 +327,7 @@ Database_Selection()
         MySQL_Bin="/usr/local/mariadb/bin/mysql"
         MySQL_Config="/usr/local/mariadb/bin/mysql_config"
         MySQL_Dir="/usr/local/mariadb"
-    elif [[ "${DBSelect}" =~ ^[12345]$ ]]; then
+    elif [[ "${DBSelect}" =~ ^[12345]|11$ ]]; then
         MySQL_Bin="/usr/local/mysql/bin/mysql"
         MySQL_Config="/usr/local/mysql/bin/mysql_config"
         MySQL_Dir="/usr/local/mysql"
