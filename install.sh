@@ -117,6 +117,8 @@ Init_Install()
         Install_MariaDB_105
     elif [ "${DBSelect}" = "10" ]; then
         Install_MariaDB_106
+    elif [ "${DBSelect}" = "11" ]; then
+        Install_MySQL_84
     fi
     TempMycnf_Clean
     Clean_DB_Src_Dir

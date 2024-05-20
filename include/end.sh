@@ -46,7 +46,7 @@ Add_LNMP_Startup()
         StartUp mariadb
         StartOrStop start mariadb
         sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#' /bin/lnmp
-    elif [[ "${DBSelect}" =~ ^[12345]$ ]]; then
+    elif [[ "${DBSelect}" =~ ^[12345]|11$ ]]; then
         StartUp mysql
         StartOrStop start mysql
     elif [ "${DBSelect}" = "0" ]; then
@@ -70,7 +70,7 @@ Add_LNMPA_Startup()
         StartUp mariadb
         StartOrStop start mariadb
         sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#' /bin/lnmp
-    elif [[ "${DBSelect}" =~ ^[12345]$ ]]; then
+    elif [[ "${DBSelect}" =~ ^[12345]|11$ ]]; then
         StartUp mysql
         StartOrStop start mysql
     elif [ "${DBSelect}" = "0" ]; then
@@ -91,7 +91,7 @@ Add_LAMP_Startup()
         StartUp mariadb
         StartOrStop start mariadb
         sed -i 's#/etc/init.d/mysql#/etc/init.d/mariadb#' /bin/lnmp
-    elif [[ "${DBSelect}" =~ ^[12345]$ ]]; then
+    elif [[ "${DBSelect}" =~ ^[12345]|11$ ]]; then
         StartUp mysql
         StartOrStop start mysql
     elif [ "${DBSelect}" = "0" ]; then
@@ -122,7 +122,7 @@ Check_DB_Files()
         else
             Echo_Red "Error: MariaDB install failed."
         fi
-    elif [[ "${DBSelect}" =~ ^[12345]$ ]]; then
+    elif [[ "${DBSelect}" =~ ^[12345]|11$ ]]; then
         if [[ -s /usr/local/mysql/bin/mysql && -s /usr/local/mysql/bin/mysqld_safe && -s /etc/my.cnf ]]; then
             Echo_Green "MySQL: OK"
             isDB="ok"
@@ -186,7 +186,7 @@ Check_Apache_Files()
 Clean_DB_Src_Dir()
 {
     echo "Clean database src directory..."
-    if [[ "${DBSelect}" =~ ^[12345]$ ]]; then
+    if [[ "${DBSelect}" =~ ^[12345]|11$ ]]; then
         rm -rf ${cur_dir}/src/${Mysql_Ver}
     elif [[ "${DBSelect}" =~ ^[6789]|10$ ]]; then
         rm -rf ${cur_dir}/src/${Mariadb_Ver}

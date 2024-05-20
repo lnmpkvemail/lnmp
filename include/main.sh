@@ -807,7 +807,7 @@ Print_APP_Ver()
         echo "${Nginx_Ver}"
     fi
 
-    if [[ "${DBSelect}" =~ ^[12345]$ ]]; then
+    if [[ "${DBSelect}" =~ ^[12345]|11$ ]]; then
         echo "${Mysql_Ver}"
     elif [[ "${DBSelect}" =~ ^[6789]|10$ ]]; then
         echo "${Mariadb_Ver}"
@@ -837,7 +837,7 @@ Print_APP_Ver()
     if [ "${Enable_Nginx_Lua}" = "y" ]; then
         echo "enable Nginx Lua."
     fi
-    if [[ "${DBSelect}" =~ ^[12345]$ ]]; then
+    if [[ "${DBSelect}" =~ ^[12345]|11$ ]]; then
         echo "Database Directory: ${MySQL_Data_Dir}"
     elif [[ "${DBSelect}" =~ ^[6789]|10$ ]]; then
         echo "Database Directory: ${MariaDB_Data_Dir}"

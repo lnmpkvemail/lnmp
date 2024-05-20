@@ -826,7 +826,7 @@ explicit_defaults_for_timestamp = true
 max_connections = 500
 max_connect_errors = 100
 open_files_limit = 65535
-default_authentication_plugin = mysql_native_password
+mysql_native_password=ON
 
 log-bin=mysql-bin
 binlog_format=mixed
