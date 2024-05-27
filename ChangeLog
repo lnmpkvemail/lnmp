@@ -1,5 +1,24 @@
 更新记录
 
+LNMP 2.1
+
+增加PHP 8.3支持；
+增加MySQL 8.4支持；
+增加Nginx http3支持；
+优化重写fail2ban安装脚本；
+优化UOS下支持；
+优化MySQL升级脚本；
+优化高gcc版本下的支持；
+优化开机启动部分脚本；
+优化MySQL升级到MariaDB脚本；
+优化PHP升级脚本；
+添加Ubuntu 23.04支持；
+添加Huawei Cloud EulerOS支持；
+修复部分菜单显示错误；
+移除设置composer国内源；
+更新诸多软件版本；
+其他一些功能优化及调整......
+
 LNMP 2.0
 
 增加PHP 8.2支持；
